@@ -1142,6 +1142,127 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1331803163
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1331803164}
+  - component: {fileID: 1331803165}
+  m_Layer: 0
+  m_Name: BattleManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1331803164
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331803163}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1331803165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331803163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cac9acf183f8e794aa452b19b4c58c14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CTeamInfo:
+  - UnitName: 
+    Actor: {fileID: 510205796}
+    SlotTransform: {fileID: 871193936}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillName: Basic
+  - UnitName: 
+    Actor: {fileID: 1640962958}
+    SlotTransform: {fileID: 424177698}
+    ClassType: 1
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillName: Basic
+  - UnitName: 
+    Actor: {fileID: 1547364577}
+    SlotTransform: {fileID: 332195311}
+    ClassType: 1
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillName: Basic
+  ETeamInfo:
+  - UnitName: 
+    Actor: {fileID: 832852850}
+    SlotTransform: {fileID: 683276622}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillName: Basic
+  - UnitName: 
+    Actor: {fileID: 703128330}
+    SlotTransform: {fileID: 1710813560}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillName: Basic
+  - UnitName: 
+    Actor: {fileID: 354131968}
+    SlotTransform: {fileID: 2026558225}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillName: Basic
+  actionAttackPos1: {fileID: 4198487206292861765, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionAttackPos2: {fileID: -8368829135244921414, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionAttackPos3: {fileID: 2043867421210978648, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionLockDuration: 0.5
+  dashDuration: 0.05
+  meleeContactOffset: {x: -1, y: 0, z: 0}
+  meleeVfxPrefab: {fileID: 250774764505641135, guid: d9598a59a2db4954b995398aa0e4522d, type: 3}
+  rangedVfxPrefab: {fileID: 8068600008103418680, guid: fc5cbae039fb7fd49af34b243e9f69f4, type: 3}
+  vfxLifetime: 1.5
 --- !u!1 &1547364577
 GameObject:
   m_ObjectHideFlags: 0
@@ -1735,6 +1856,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1054858925}
+  - {fileID: 1331803164}
   - {fileID: 128722963}
   - {fileID: 357244787}
   - {fileID: 743317295}
