@@ -25,11 +25,16 @@ public class BattleManager : MonoBehaviour
         public int Atk = 10;
         public string SkillName = "Basic";
     }
+    [Header("我方固定座標（自動在 Start 記錄）")]
+    [SerializeField] private Transform[] playerPositions = new Transform[3];
 
-    [Header("我方三格（左側）")]
+    [Header("敵方固定座標（自動在 Start 記錄）")]
+    [SerializeField] private Transform[] enemyPositions = new Transform[3];
+
+    [Header("我方三格資料（左側）")]
     public TeamSlotInfo[] CTeamInfo = new TeamSlotInfo[3];
 
-    [Header("敵方三格（右側）")]
+    [Header("敵方三格資料（右側）")]
     public TeamSlotInfo[] ETeamInfo = new TeamSlotInfo[3];
 
     [Header("輸入（用 InputActionReference 綁定）")]
@@ -119,27 +124,50 @@ public class BattleManager : MonoBehaviour
         RotateTeam();
     }
 
-    private void RotateTeam()
+    private void RotateTeam() //順時針
     {
         if (CTeamInfo.Length != 3) return;
 
-        // 暫存最後一個
-        var temp = CTeamInfo[2];
+        // 資料交換（順時針：0->2, 1->0, 2->1）
+        var temp = CTeamInfo[0];
+        CTeamInfo[0] = CTeamInfo[1];
+        CTeamInfo[1] = CTeamInfo[2];
+        CTeamInfo[2] = temp;
 
-        // 位置移動
-        CTeamInfo[2] = CTeamInfo[1];
-        CTeamInfo[1] = CTeamInfo[0];
-        CTeamInfo[0] = temp;
-
-        // 更新角色位置（把 Actor 移到對應 SlotTransform）
-        for (int i = 0; i < CTeamInfo.Length; i++)
+        // 移動角色到固定座標
+        for (int i = 0; i < 3; i++)
         {
-            if (CTeamInfo[i] != null && CTeamInfo[i].Actor != null && CTeamInfo[i].SlotTransform != null)
+            if (CTeamInfo[i].Actor != null)
             {
-                CTeamInfo[i].Actor.transform.position = CTeamInfo[i].SlotTransform.position;
+                Transform actor = CTeamInfo[i].Actor.transform;
+                Vector3 targetPos = playerPositions[i].position;
+
+                StartCoroutine(SmoothMove(actor, targetPos, 0.1f));
+                actor.SetParent(playerPositions[i]); // 設為該 Position 的子物件
             }
         }
+
+        Debug.Log("Team rotated clockwise");
     }
+
+
+    private IEnumerator SmoothMove(Transform actor, Vector3 targetPos, float duration)
+    {
+        Vector3 startPos = actor.position;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            actor.position = Vector3.Lerp(startPos, targetPos, t);
+            yield return null;
+        }
+
+        actor.position = targetPos;
+    }
+
+
 
 
     // 嘗試從指定我方槽位發動攻擊（對位攻擊）
