@@ -582,7 +582,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 0742e3d30b47e8144bd342ee8de1910d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1497,6 +1497,75 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1001 &1828840425
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2421226186157800131, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.170475
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421226186157800131, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.8493932
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421226186157800131, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421226186157800131, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421226186157800131, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421226186157800131, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421226186157800131, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421226186157800131, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421226186157800131, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421226186157800131, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421226186157800132, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_Name
+      value: CFXR Flame
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421226186157800133, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8891276448460042506, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_Range
+      value: 7.4255714
+      objectReference: {fileID: 0}
+    - target: {fileID: 8891276448460042506, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
+      propertyPath: m_Intensity
+      value: 15.559321
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: af304c622ca86a045a1280a5154d2bb1, type: 3}
 --- !u!1 &2026558224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1667,3 +1736,4 @@ SceneRoots:
   - {fileID: 743317295}
   - {fileID: 1719361670}
   - {fileID: 159131745}
+  - {fileID: 1828840425}
