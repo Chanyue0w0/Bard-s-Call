@@ -11,7 +11,7 @@
                     "id": "2f1aa704-b803-46ca-b9ab-f8fc2fd190b4",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press",
+                    "interactions": "",
                     "initialStateCheck": false
                 },
                 {
@@ -20,7 +20,7 @@
                     "id": "d8166193-ddd3-45d1-9630-d77948bacf7c",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press",
+                    "interactions": "",
                     "initialStateCheck": false
                 },
                 {
@@ -29,7 +29,7 @@
                     "id": "cc89f355-f19d-4f9f-99e8-a2aeca36be48",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press",
+                    "interactions": "",
                     "initialStateCheck": false
                 },
                 {
@@ -38,7 +38,7 @@
                     "id": "5dda9972-4dd7-4b21-8f69-c60d34c8e16a",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press",
+                    "interactions": "",
                     "initialStateCheck": false
                 }
             ],
@@ -46,7 +46,7 @@
                 {
                     "name": "",
                     "id": "61d197b3-04bb-400b-ab47-0ed10f4fea3c",
-                    "path": "Q",
+                    "path": "<Keyboard>/q",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
@@ -68,7 +68,7 @@
                 {
                     "name": "",
                     "id": "15d7677d-7820-4e8f-8435-946d3e78f16a",
-                    "path": "W",
+                    "path": "<Keyboard>/w",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
@@ -90,7 +90,7 @@
                 {
                     "name": "",
                     "id": "3b234d7e-a1aa-479a-a530-c54abfcfeacd",
-                    "path": "E",
+                    "path": "<Keyboard>/e",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
@@ -112,7 +112,7 @@
                 {
                     "name": "",
                     "id": "0da63cef-0537-4e1f-b30e-2a720e1e6e8b",
-                    "path": "R",
+                    "path": "<Keyboard>/r",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
