@@ -1,0 +1,155 @@
+{
+    "name": "FightControl",
+    "maps": [
+        {
+            "name": "Abilities",
+            "id": "c8285dd0-5d3f-44c6-af41-fd5e048db76b",
+            "actions": [
+                {
+                    "name": "Character3Attack",
+                    "type": "Button",
+                    "id": "2f1aa704-b803-46ca-b9ab-f8fc2fd190b4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Character2Attack",
+                    "type": "Button",
+                    "id": "d8166193-ddd3-45d1-9630-d77948bacf7c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Character1Attack",
+                    "type": "Button",
+                    "id": "cc89f355-f19d-4f9f-99e8-a2aeca36be48",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TeamRotate",
+                    "type": "Button",
+                    "id": "5dda9972-4dd7-4b21-8f69-c60d34c8e16a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "61d197b3-04bb-400b-ab47-0ed10f4fea3c",
+                    "path": "Q",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "Character3Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec7a88a4-29e0-4c12-89dc-3c20304c7388",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "Character3Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "15d7677d-7820-4e8f-8435-946d3e78f16a",
+                    "path": "W",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "Character2Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ca7cf92b-ccb5-4e03-b0be-bd724e84476c",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "Character2Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3b234d7e-a1aa-479a-a530-c54abfcfeacd",
+                    "path": "E",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "Character1Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8696b5fc-278f-42c2-954e-80dd8f2bd876",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "Character1Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0da63cef-0537-4e1f-b30e-2a720e1e6e8b",
+                    "path": "R",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "TeamRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec1b2af6-853a-4005-bf27-65d07cd07601",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "TeamRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "FightControlScheme",
+            "bindingGroup": "FightControlScheme",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
