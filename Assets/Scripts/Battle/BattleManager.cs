@@ -238,6 +238,8 @@ public class BattleManager : MonoBehaviour
     {
         if (prefab == null) return;
         var go = Instantiate(prefab, atWorldPos, Quaternion.identity);
+        go.transform.rotation = prefab.transform.rotation;
+
         if (vfxLifetime > 0f) Destroy(go, vfxLifetime);
     }
 
