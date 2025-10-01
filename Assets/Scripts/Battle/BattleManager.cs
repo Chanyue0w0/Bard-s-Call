@@ -12,11 +12,11 @@ public class BattleManager : MonoBehaviour
     {
         [Header("場上關聯")]
         public string UnitName;
-        public GameObject Actor;           // 該格的角色物件
-        public Transform SlotTransform;    // 該格定位點（PlayerTeam/PositionX 或 EnemyTeam/PositionX）
+        public GameObject Actor;
+        public Transform SlotTransform;
         public UnitClass ClassType = UnitClass.Melee;
 
-        [Header("戰鬥數值（今日未用，先佔位）")]
+        [Header("戰鬥數值")]
         public int MaxHP = 100;
         public int HP = 100;
         public int MaxMP = 100;
@@ -24,7 +24,11 @@ public class BattleManager : MonoBehaviour
         public int OriginAtk = 10;
         public int Atk = 10;
         public string SkillName = "Basic";
+
+        [Header("輸入綁定")]
+        public int AssignedKeyIndex; // 0=E, 1=W, 2=Q
     }
+
     [Header("我方固定座標（自動在 Start 記錄）")]
     [SerializeField] private Transform[] playerPositions = new Transform[3];
 
@@ -80,12 +84,12 @@ public class BattleManager : MonoBehaviour
             actionAttackPos3.action.Enable();
         }
 
-        if (actionRotateTeam != null)
-        {
-            actionRotateTeam.action.performed -= OnRotateTeam;
-            actionRotateTeam.action.performed += OnRotateTeam;
-            actionRotateTeam.action.Enable();
-        }
+        //if (actionRotateTeam != null)
+        //{
+        //    actionRotateTeam.action.performed -= OnRotateTeam;
+        //    actionRotateTeam.action.performed += OnRotateTeam;
+        //    actionRotateTeam.action.Enable();
+        //}
     }
 
     void OnDisable()
@@ -96,76 +100,101 @@ public class BattleManager : MonoBehaviour
             actionAttackPos2.action.started -= OnAttackPos2;
         if (actionAttackPos3 != null)
             actionAttackPos3.action.started -= OnAttackPos3;
-        if (actionRotateTeam != null)
-            actionRotateTeam.action.performed -= OnRotateTeam;
+        //if (actionRotateTeam != null)
+        //    actionRotateTeam.action.performed -= OnRotateTeam;
     }
+
+    void Start()
+    {
+        // 開場固定：P1=E(0), P2=W(1), P3=Q(2)
+        for (int i = 0; i < CTeamInfo.Length; i++)
+        {
+            if (CTeamInfo[i] != null)
+                CTeamInfo[i].AssignedKeyIndex = i;
+        }
+    }
+
 
     private void OnAttackPos1(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Character1Attack pressed (E) → 攻擊 Position1");
-        TryStartAttack(0);
+        Debug.Log("E pressed → 攻擊綁定角色");
+        HandleAttackKey(0); // 0 = E
     }
 
     private void OnAttackPos2(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Character2Attack pressed (W) → 攻擊 Position2");
-        TryStartAttack(1);
+        Debug.Log("W pressed → 攻擊綁定角色");
+        HandleAttackKey(1); // 1 = W
     }
 
     private void OnAttackPos3(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Character3Attack pressed (Q) → 攻擊 Position3");
-        TryStartAttack(2);
+        Debug.Log("Q pressed → 攻擊綁定角色");
+        HandleAttackKey(2); // 2 = Q
     }
 
-    private void OnRotateTeam(InputAction.CallbackContext ctx)
+    private void HandleAttackKey(int keyIndex)
     {
-        Debug.Log("Rotate Team (R/A) pressed");
-        RotateTeam();
-    }
-
-    private void RotateTeam() //順時針
-    {
-        if (CTeamInfo.Length != 3) return;
-
-        // 資料交換（順時針：0->2, 1->0, 2->1）
-        var temp = CTeamInfo[0];
-        CTeamInfo[0] = CTeamInfo[1];
-        CTeamInfo[1] = CTeamInfo[2];
-        CTeamInfo[2] = temp;
-
-        // 移動角色到固定座標
-        for (int i = 0; i < 3; i++)
+        // 找到當前「AssignedKeyIndex=keyIndex」的角色
+        for (int i = 0; i < CTeamInfo.Length; i++)
         {
-            if (CTeamInfo[i].Actor != null)
+            if (CTeamInfo[i].AssignedKeyIndex == keyIndex)
             {
-                Transform actor = CTeamInfo[i].Actor.transform;
-                Vector3 targetPos = playerPositions[i].position;
-
-                StartCoroutine(SmoothMove(actor, targetPos, 0.1f));
-                actor.SetParent(playerPositions[i]); // 設為該 Position 的子物件
+                TryStartAttack(i); // 用他現在的位置 index 來打對應敵人
+                return;
             }
         }
-
-        Debug.Log("Team rotated clockwise");
     }
 
 
-    private IEnumerator SmoothMove(Transform actor, Vector3 targetPos, float duration)
-    {
-        Vector3 startPos = actor.position;
-        float elapsed = 0f;
+    //private void OnRotateTeam(InputAction.CallbackContext ctx)
+    //{
+    //    Debug.Log("Rotate Team (R/A) pressed");
+    //    RotateTeam();
+    //}
 
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            actor.position = Vector3.Lerp(startPos, targetPos, t);
-            yield return null;
-        }
+    //private void RotateTeam() //順時針
+    //{
+    //    if (CTeamInfo.Length != 3) return;
 
-        actor.position = targetPos;
-    }
+    //    // 資料交換（順時針：0->2, 1->0, 2->1）
+    //    var temp = CTeamInfo[0];
+    //    CTeamInfo[0] = CTeamInfo[1];
+    //    CTeamInfo[1] = CTeamInfo[2];
+    //    CTeamInfo[2] = temp;
+
+    //    // 移動角色到固定座標
+    //    for (int i = 0; i < 3; i++)
+    //    {
+    //        if (CTeamInfo[i].Actor != null)
+    //        {
+    //            Transform actor = CTeamInfo[i].Actor.transform;
+    //            Vector3 targetPos = playerPositions[i].position;
+
+    //            StartCoroutine(SmoothMove(actor, targetPos, 0.1f));
+    //            actor.SetParent(playerPositions[i]); // 設為該 Position 的子物件
+    //        }
+    //    }
+
+    //    Debug.Log("Team rotated clockwise");
+    //}
+
+
+    //private IEnumerator SmoothMove(Transform actor, Vector3 targetPos, float duration)
+    //{
+    //    Vector3 startPos = actor.position;
+    //    float elapsed = 0f;
+
+    //    while (elapsed < duration)
+    //    {
+    //        elapsed += Time.deltaTime;
+    //        float t = Mathf.Clamp01(elapsed / duration);
+    //        actor.position = Vector3.Lerp(startPos, targetPos, t);
+    //        yield return null;
+    //    }
+
+    //    actor.position = targetPos;
+    //}
 
 
 

@@ -929,6 +929,7 @@ MonoBehaviour:
     OriginAtk: 10
     Atk: 10
     SkillName: Basic
+    AssignedKeyIndex: 0
   - UnitName: 
     Actor: {fileID: 1640962958}
     SlotTransform: {fileID: 424177698}
@@ -940,6 +941,7 @@ MonoBehaviour:
     OriginAtk: 10
     Atk: 10
     SkillName: Basic
+    AssignedKeyIndex: 1
   - UnitName: 
     Actor: {fileID: 1547364577}
     SlotTransform: {fileID: 332195311}
@@ -951,6 +953,7 @@ MonoBehaviour:
     OriginAtk: 10
     Atk: 10
     SkillName: Basic
+    AssignedKeyIndex: 2
   ETeamInfo:
   - UnitName: 
     Actor: {fileID: 0}
@@ -963,6 +966,7 @@ MonoBehaviour:
     OriginAtk: 10
     Atk: 10
     SkillName: Basic
+    AssignedKeyIndex: 0
   - UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 1710813560}
@@ -974,6 +978,7 @@ MonoBehaviour:
     OriginAtk: 10
     Atk: 10
     SkillName: Basic
+    AssignedKeyIndex: 0
   - UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 2026558225}
@@ -985,6 +990,7 @@ MonoBehaviour:
     OriginAtk: 10
     Atk: 10
     SkillName: Basic
+    AssignedKeyIndex: 0
   actionAttackPos1: {fileID: 4198487206292861765, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionAttackPos2: {fileID: -8368829135244921414, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionAttackPos3: {fileID: 2043867421210978648, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
