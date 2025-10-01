@@ -72,7 +72,7 @@ public class BattleManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject); // 切場景也不會被刪除
+        //DontDestroyOnLoad(gameObject); // 切場景也不會被刪除
     }
 
     void OnEnable()

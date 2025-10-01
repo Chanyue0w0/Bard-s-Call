@@ -12,7 +12,7 @@ public class BattleEffectManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     // 技能命中回傳
