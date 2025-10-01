@@ -38,10 +38,10 @@ public class BattleManager : MonoBehaviour
     [Header("敵方固定座標（自動在 Start 記錄）")]
     [SerializeField] private Transform[] enemyPositions = new Transform[3];
 
-    [Header("我方三格資料（左側）")]
+    [Header("我方三格資料（右側）")]
     public TeamSlotInfo[] CTeamInfo = new TeamSlotInfo[3];
 
-    [Header("敵方三格資料（右側）")]
+    [Header("敵方三格資料（左側）")]
     public TeamSlotInfo[] ETeamInfo = new TeamSlotInfo[3];
 
     [Header("輸入（用 InputActionReference 綁定）")]
@@ -109,31 +109,32 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
-        // 開場固定：P1=E(0), P2=W(1), P3=Q(2)
-        for (int i = 0; i < CTeamInfo.Length; i++)
-        {
-            if (CTeamInfo[i] != null)
-                CTeamInfo[i].AssignedKeyIndex = i;
-        }
+        //// 開場固定：P1=E(0), P2=W(1), P3=Q(2)
+        //for (int i = 0; i < CTeamInfo.Length; i++)
+        //{
+        //    if (CTeamInfo[i] != null)
+        //        CTeamInfo[i].AssignedKeyIndex = i;
+        //}
     }
 
     private void OnAttackPos1(InputAction.CallbackContext ctx)
     {
-        Debug.Log("E pressed → 攻擊綁定角色");
-        HandleAttackKey(0);
+        // Q 對應 P1
+        TryStartAttack(0);
     }
 
     private void OnAttackPos2(InputAction.CallbackContext ctx)
     {
-        Debug.Log("W pressed → 攻擊綁定角色");
-        HandleAttackKey(1);
+        // W 對應 P2
+        TryStartAttack(1);
     }
 
     private void OnAttackPos3(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Q pressed → 攻擊綁定角色");
-        HandleAttackKey(2);
+        // E 對應 P3
+        TryStartAttack(2);
     }
+
 
     private void HandleAttackKey(int keyIndex)
     {
@@ -151,10 +152,13 @@ public class BattleManager : MonoBehaviour
     private void TryStartAttack(int slotIndex)
     {
         if (_isActionLocked) return;
-        if (slotIndex < 0 || slotIndex >= 3) return;
+        if (slotIndex < 0 || slotIndex >= CTeamInfo.Length) return;
 
         var attacker = CTeamInfo[slotIndex];
-        var target = ETeamInfo[slotIndex]; // ← 這裡其實就是 TeamSlotInfo
+
+        // P1 對 E1, P2 對 E2, P3 對 E3
+        int enemyIndex = (ETeamInfo.Length - 1) - slotIndex;
+        var target = ETeamInfo[enemyIndex];
 
         if (attacker == null || attacker.Actor == null || attacker.SlotTransform == null) return;
 
@@ -163,7 +167,10 @@ public class BattleManager : MonoBehaviour
             : GetFallbackEnemyPoint(slotIndex);
 
         StartCoroutine(AttackSequence(attacker, target, targetPoint));
+
+        Debug.Log($"英雄 P{slotIndex + 1} 攻擊 → 敵人 E{ETeamInfo.Length - enemyIndex}");
     }
+
 
     private IEnumerator AttackSequence(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, Vector3 targetPoint)
     {

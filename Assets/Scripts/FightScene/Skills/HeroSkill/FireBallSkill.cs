@@ -14,7 +14,10 @@ public class FireBallSkill : MonoBehaviour
         {
             StartCoroutine(MoveToTarget(target.SlotTransform.position));
         }
-        Destroy(gameObject, 2f); // 保底銷毀，避免卡住
+        else
+        {
+            Destroy(gameObject); // 沒有目標直接刪除
+        }
     }
 
     private IEnumerator MoveToTarget(Vector3 targetPos)
@@ -29,20 +32,19 @@ public class FireBallSkill : MonoBehaviour
             transform.position = Vector3.Lerp(start, targetPos, t);
             yield return null;
         }
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (target != null && target.Actor != null && other.gameObject == target.Actor)
+        // 抵達目標後生成爆炸
+        if (explosionPrefab != null)
         {
-            if (explosionPrefab != null)
-            {
-                Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-            }
-
-            BattleEffectManager.Instance.OnHit(attacker, target);
-
-            Destroy(gameObject);
+            Instantiate(explosionPrefab, targetPos, Quaternion.identity);
         }
+
+        // 回傳傷害
+        if (attacker != null && target != null)
+        {
+            BattleEffectManager.Instance.OnHit(attacker, target);
+        }
+
+        Destroy(gameObject);
     }
 }
