@@ -987,7 +987,7 @@ MonoBehaviour:
     MaxMP: 100
     MP: 0
     OriginAtk: 10
-    Atk: 10
+    Atk: 20
     SkillName: Basic
     AssignedKeyIndex: 0
   - UnitName: 
@@ -999,7 +999,7 @@ MonoBehaviour:
     MaxMP: 100
     MP: 0
     OriginAtk: 10
-    Atk: 10
+    Atk: 20
     SkillName: Basic
     AssignedKeyIndex: 1
   - UnitName: 
@@ -1011,7 +1011,7 @@ MonoBehaviour:
     MaxMP: 100
     MP: 0
     OriginAtk: 10
-    Atk: 10
+    Atk: 20
     SkillName: Basic
     AssignedKeyIndex: 2
   ETeamInfo:
