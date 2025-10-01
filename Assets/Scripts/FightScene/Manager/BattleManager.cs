@@ -147,13 +147,14 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    // 嘗試從指定我方槽位發動攻擊（對位攻擊）
     private void TryStartAttack(int slotIndex)
     {
         if (_isActionLocked) return;
         if (slotIndex < 0 || slotIndex >= 3) return;
 
         var attacker = CTeamInfo[slotIndex];
-        var target = ETeamInfo[slotIndex];
+        var target = ETeamInfo[slotIndex]; // ← 這裡其實就是 TeamSlotInfo
 
         if (attacker == null || attacker.Actor == null || attacker.SlotTransform == null) return;
 
@@ -161,10 +162,10 @@ public class BattleManager : MonoBehaviour
             ? target.SlotTransform.position
             : GetFallbackEnemyPoint(slotIndex);
 
-        StartCoroutine(AttackSequence(attacker, targetPoint));
+        StartCoroutine(AttackSequence(attacker, target, targetPoint));
     }
 
-    private IEnumerator AttackSequence(TeamSlotInfo attacker, Vector3 targetPoint)
+    private IEnumerator AttackSequence(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, Vector3 targetPoint)
     {
         _isActionLocked = true;
         float startTime = Time.time;
@@ -174,23 +175,47 @@ public class BattleManager : MonoBehaviour
 
         if (attacker.ClassType == UnitClass.Melee)
         {
+            // 計算近戰接觸點（敵人位置前方一點）
             Vector3 contactPoint = targetPoint + meleeContactOffset;
+
+            // Dash 往前
             yield return Dash(actor, origin, contactPoint, dashDuration);
-            SpawnVfx(meleeVfxPrefab, targetPoint);
-            actor.position = origin;
+
+            // 在敵人位置生成近戰技能
+            var skill = Instantiate(meleeVfxPrefab, targetPoint, Quaternion.identity);
+            var sword = skill.GetComponent<SwordHitSkill>();
+            if (sword != null)
+            {
+                sword.attacker = attacker;
+                sword.target = target;
+            }
+
+            // 等一幀（確保碰撞檢測有作用）
             yield return _endOfFrame;
+
+            // 回原位
+            actor.position = origin;
         }
-        else
+        else // Ranged
         {
-            yield return new WaitForSeconds(dashDuration);
-            SpawnVfx(rangedVfxPrefab, targetPoint);
+            // 遠程：生成技能Prefab在玩家位置，自己移動到敵人
+            var skill = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity);
+            var fireball = skill.GetComponent<FireBallSkill>();
+            if (fireball != null)
+            {
+                fireball.attacker = attacker;
+                fireball.target = target;
+            }
         }
 
+        // 鎖定動作時間
         float remain = actionLockDuration - (Time.time - startTime);
         if (remain > 0f) yield return new WaitForSeconds(remain);
 
         _isActionLocked = false;
     }
+
+
 
     private IEnumerator Dash(Transform actor, Vector3 from, Vector3 to, float duration)
     {
@@ -210,12 +235,12 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private void SpawnVfx(GameObject prefab, Vector3 atWorldPos)
-    {
-        if (prefab == null) return;
-        var go = Instantiate(prefab, atWorldPos, prefab.transform.rotation);
-        if (vfxLifetime > 0f) Destroy(go, vfxLifetime);
-    }
+    //private void SpawnVfx(GameObject prefab, Vector3 atWorldPos)
+    //{
+    //    if (prefab == null) return;
+    //    var go = Instantiate(prefab, atWorldPos, prefab.transform.rotation);
+    //    if (vfxLifetime > 0f) Destroy(go, vfxLifetime);
+    //}
 
     private Vector3 GetFallbackEnemyPoint(int slotIndex)
     {
