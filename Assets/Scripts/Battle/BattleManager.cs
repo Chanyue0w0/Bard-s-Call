@@ -4,6 +4,9 @@ using UnityEngine.InputSystem; // 新 Input System
 
 public class BattleManager : MonoBehaviour
 {
+    // 單例
+    public static BattleManager Instance { get; private set; }
+
     [System.Serializable]
     public enum UnitClass { Melee, Ranged }
 
@@ -57,17 +60,26 @@ public class BattleManager : MonoBehaviour
     public GameObject rangedVfxPrefab;
     public float vfxLifetime = 1.5f;
 
-    
-
-
     private bool _isActionLocked;
     private readonly WaitForEndOfFrame _endOfFrame = new WaitForEndOfFrame();
+
+    // ---------------- Singleton 設定 ----------------
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // 保證只有一個存在
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // 切場景也不會被刪除
+    }
 
     void OnEnable()
     {
         if (actionAttackPos1 != null)
         {
-            actionAttackPos1.action.started -= OnAttackPos1; // 確保不重複綁
+            actionAttackPos1.action.started -= OnAttackPos1;
             actionAttackPos1.action.started += OnAttackPos1;
             actionAttackPos1.action.Enable();
         }
@@ -83,13 +95,6 @@ public class BattleManager : MonoBehaviour
             actionAttackPos3.action.started += OnAttackPos3;
             actionAttackPos3.action.Enable();
         }
-
-        //if (actionRotateTeam != null)
-        //{
-        //    actionRotateTeam.action.performed -= OnRotateTeam;
-        //    actionRotateTeam.action.performed += OnRotateTeam;
-        //    actionRotateTeam.action.Enable();
-        //}
     }
 
     void OnDisable()
@@ -100,8 +105,6 @@ public class BattleManager : MonoBehaviour
             actionAttackPos2.action.started -= OnAttackPos2;
         if (actionAttackPos3 != null)
             actionAttackPos3.action.started -= OnAttackPos3;
-        //if (actionRotateTeam != null)
-        //    actionRotateTeam.action.performed -= OnRotateTeam;
     }
 
     void Start()
@@ -114,92 +117,36 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-
     private void OnAttackPos1(InputAction.CallbackContext ctx)
     {
         Debug.Log("E pressed → 攻擊綁定角色");
-        HandleAttackKey(0); // 0 = E
+        HandleAttackKey(0);
     }
 
     private void OnAttackPos2(InputAction.CallbackContext ctx)
     {
         Debug.Log("W pressed → 攻擊綁定角色");
-        HandleAttackKey(1); // 1 = W
+        HandleAttackKey(1);
     }
 
     private void OnAttackPos3(InputAction.CallbackContext ctx)
     {
         Debug.Log("Q pressed → 攻擊綁定角色");
-        HandleAttackKey(2); // 2 = Q
+        HandleAttackKey(2);
     }
 
     private void HandleAttackKey(int keyIndex)
     {
-        // 找到當前「AssignedKeyIndex=keyIndex」的角色
         for (int i = 0; i < CTeamInfo.Length; i++)
         {
             if (CTeamInfo[i].AssignedKeyIndex == keyIndex)
             {
-                TryStartAttack(i); // 用他現在的位置 index 來打對應敵人
+                TryStartAttack(i);
                 return;
             }
         }
     }
 
-
-    //private void OnRotateTeam(InputAction.CallbackContext ctx)
-    //{
-    //    Debug.Log("Rotate Team (R/A) pressed");
-    //    RotateTeam();
-    //}
-
-    //private void RotateTeam() //順時針
-    //{
-    //    if (CTeamInfo.Length != 3) return;
-
-    //    // 資料交換（順時針：0->2, 1->0, 2->1）
-    //    var temp = CTeamInfo[0];
-    //    CTeamInfo[0] = CTeamInfo[1];
-    //    CTeamInfo[1] = CTeamInfo[2];
-    //    CTeamInfo[2] = temp;
-
-    //    // 移動角色到固定座標
-    //    for (int i = 0; i < 3; i++)
-    //    {
-    //        if (CTeamInfo[i].Actor != null)
-    //        {
-    //            Transform actor = CTeamInfo[i].Actor.transform;
-    //            Vector3 targetPos = playerPositions[i].position;
-
-    //            StartCoroutine(SmoothMove(actor, targetPos, 0.1f));
-    //            actor.SetParent(playerPositions[i]); // 設為該 Position 的子物件
-    //        }
-    //    }
-
-    //    Debug.Log("Team rotated clockwise");
-    //}
-
-
-    //private IEnumerator SmoothMove(Transform actor, Vector3 targetPos, float duration)
-    //{
-    //    Vector3 startPos = actor.position;
-    //    float elapsed = 0f;
-
-    //    while (elapsed < duration)
-    //    {
-    //        elapsed += Time.deltaTime;
-    //        float t = Mathf.Clamp01(elapsed / duration);
-    //        actor.position = Vector3.Lerp(startPos, targetPos, t);
-    //        yield return null;
-    //    }
-
-    //    actor.position = targetPos;
-    //}
-
-
-
-
-    // 嘗試從指定我方槽位發動攻擊（對位攻擊）
     private void TryStartAttack(int slotIndex)
     {
         if (_isActionLocked) return;
@@ -230,10 +177,10 @@ public class BattleManager : MonoBehaviour
             Vector3 contactPoint = targetPoint + meleeContactOffset;
             yield return Dash(actor, origin, contactPoint, dashDuration);
             SpawnVfx(meleeVfxPrefab, targetPoint);
-            actor.position = origin; // 瞬間回原位
+            actor.position = origin;
             yield return _endOfFrame;
         }
-        else // Ranged
+        else
         {
             yield return new WaitForSeconds(dashDuration);
             SpawnVfx(rangedVfxPrefab, targetPoint);
@@ -266,9 +213,7 @@ public class BattleManager : MonoBehaviour
     private void SpawnVfx(GameObject prefab, Vector3 atWorldPos)
     {
         if (prefab == null) return;
-        var go = Instantiate(prefab, atWorldPos, Quaternion.identity);
-        go.transform.rotation = prefab.transform.rotation;
-
+        var go = Instantiate(prefab, atWorldPos, prefab.transform.rotation);
         if (vfxLifetime > 0f) Destroy(go, vfxLifetime);
     }
 
