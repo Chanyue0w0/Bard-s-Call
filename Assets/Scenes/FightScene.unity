@@ -1057,7 +1057,7 @@ MonoBehaviour:
   actionRotateTeam: {fileID: -5368929452861908880, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionLockDuration: 0.1
   dashDuration: 0.05
-  meleeContactOffset: {x: -1, y: 0, z: 0}
+  meleeContactOffset: {x: 0.5, y: 0, z: 0}
   meleeVfxPrefab: {fileID: 8153514251071552052, guid: f6e99efa5f51f4c458e60b1da308912d, type: 3}
   rangedVfxPrefab: {fileID: 2864930942258562462, guid: 4ca34a493ab195648a5f9c57a9b3266b, type: 3}
   vfxLifetime: 1.5
@@ -1347,7 +1347,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2397801311962783639, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.17
+      value: -1.99
       objectReference: {fileID: 0}
     - target: {fileID: 2397801311962783639, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
       propertyPath: m_LocalPosition.y

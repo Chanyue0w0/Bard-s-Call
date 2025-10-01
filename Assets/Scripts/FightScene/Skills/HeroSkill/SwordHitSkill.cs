@@ -12,9 +12,8 @@ public class SwordHitSkill : MonoBehaviour
         Destroy(gameObject, lifeTime);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        // 確保有設定 target，並且命中的對象就是 target.Actor
         if (target != null && target.Actor != null && other.gameObject == target.Actor)
         {
             if (explosionPrefab != null)
@@ -23,8 +22,8 @@ public class SwordHitSkill : MonoBehaviour
             }
 
             BattleEffectManager.Instance.OnHit(attacker, target);
-
-            Destroy(gameObject);
+            Destroy(gameObject, lifeTime);
         }
     }
+
 }

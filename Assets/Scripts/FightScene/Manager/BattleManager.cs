@@ -119,21 +119,22 @@ public class BattleManager : MonoBehaviour
 
     private void OnAttackPos1(InputAction.CallbackContext ctx)
     {
-        // Q 對應 P1
-        TryStartAttack(0);
+        // Q → P1
+        TryStartAttack(2);
     }
 
     private void OnAttackPos2(InputAction.CallbackContext ctx)
     {
-        // W 對應 P2
+        // W → P2
         TryStartAttack(1);
     }
 
     private void OnAttackPos3(InputAction.CallbackContext ctx)
     {
-        // E 對應 P3
-        TryStartAttack(2);
+        // E → P3
+        TryStartAttack(0);
     }
+
 
 
     private void HandleAttackKey(int keyIndex)
@@ -156,9 +157,8 @@ public class BattleManager : MonoBehaviour
 
         var attacker = CTeamInfo[slotIndex];
 
-        // P1 對 E1, P2 對 E2, P3 對 E3
-        int enemyIndex = (ETeamInfo.Length - 1) - slotIndex;
-        var target = ETeamInfo[enemyIndex];
+        // 改為直接相同 index 對應
+        var target = ETeamInfo[slotIndex];
 
         if (attacker == null || attacker.Actor == null || attacker.SlotTransform == null) return;
 
@@ -168,8 +168,9 @@ public class BattleManager : MonoBehaviour
 
         StartCoroutine(AttackSequence(attacker, target, targetPoint));
 
-        Debug.Log($"英雄 P{slotIndex + 1} 攻擊 → 敵人 E{ETeamInfo.Length - enemyIndex}");
+        Debug.Log($"英雄 P{slotIndex + 1} 攻擊 → 敵人 E{slotIndex + 1}");
     }
+
 
 
     private IEnumerator AttackSequence(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, Vector3 targetPoint)
@@ -182,13 +183,13 @@ public class BattleManager : MonoBehaviour
 
         if (attacker.ClassType == UnitClass.Melee)
         {
-            // 計算近戰接觸點（敵人位置前方一點）
+            // 計算近戰接觸點（敵人位置右一點）
             Vector3 contactPoint = targetPoint + meleeContactOffset;
 
             // Dash 往前
             yield return Dash(actor, origin, contactPoint, dashDuration);
 
-            // 在敵人位置生成近戰技能
+            // 在接觸點生成近戰技能
             var skill = Instantiate(meleeVfxPrefab, targetPoint, Quaternion.identity);
             var sword = skill.GetComponent<SwordHitSkill>();
             if (sword != null)
@@ -197,12 +198,12 @@ public class BattleManager : MonoBehaviour
                 sword.target = target;
             }
 
-            // 等一幀（確保碰撞檢測有作用）
             yield return _endOfFrame;
 
             // 回原位
             actor.position = origin;
         }
+
         else // Ranged
         {
             // 遠程：生成技能Prefab在玩家位置，自己移動到敵人
