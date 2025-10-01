@@ -63,6 +63,11 @@ public class BattleManager : MonoBehaviour
     private bool _isActionLocked;
     private readonly WaitForEndOfFrame _endOfFrame = new WaitForEndOfFrame();
 
+    [Header("血條 UI")]
+    public GameObject healthBarPrefab;   // 指定血條 Prefab
+    public Canvas uiCanvas;              // UI Canvas (Screen Space - Camera)
+
+
     // ---------------- Singleton 設定 ----------------
     private void Awake()
     {
@@ -109,13 +114,28 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
-        //// 開場固定：P1=E(0), P2=W(1), P3=Q(2)
-        //for (int i = 0; i < CTeamInfo.Length; i++)
-        //{
-        //    if (CTeamInfo[i] != null)
-        //        CTeamInfo[i].AssignedKeyIndex = i;
-        //}
+        // 建立我方血條
+        CreateHealthBars(CTeamInfo);
+        // 建立敵方血條
+        CreateHealthBars(ETeamInfo);
     }
+
+    private void CreateHealthBars(TeamSlotInfo[] team)
+    {
+        foreach (var slot in team)
+        {
+            if (slot != null && slot.Actor != null)
+            {
+                Transform headPoint = slot.Actor.transform.Find("HeadPoint");
+                if (headPoint != null)
+                {
+                    GameObject hb = Instantiate(healthBarPrefab, uiCanvas.transform);
+                    hb.GetComponent<HealthBarUI>().Init(slot, headPoint);
+                }
+            }
+        }
+    }
+
 
     private void OnAttackPos1(InputAction.CallbackContext ctx)
     {

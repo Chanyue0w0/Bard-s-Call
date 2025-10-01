@@ -1061,6 +1061,8 @@ MonoBehaviour:
   meleeVfxPrefab: {fileID: 8153514251071552052, guid: f6e99efa5f51f4c458e60b1da308912d, type: 3}
   rangedVfxPrefab: {fileID: 2864930942258562462, guid: 4ca34a493ab195648a5f9c57a9b3266b, type: 3}
   vfxLifetime: 1.5
+  healthBarPrefab: {fileID: 4455289404318607837, guid: 61154c866d0c3ed4187b80832d7c6ec3, type: 3}
+  uiCanvas: {fileID: 1719361669}
 --- !u!1001 &1477172856
 PrefabInstance:
   m_ObjectHideFlags: 0
