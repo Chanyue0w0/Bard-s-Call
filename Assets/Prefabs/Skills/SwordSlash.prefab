@@ -9803,7 +9803,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clearBehavior: 2
   cameraShake:
-    enabled: 1
+    enabled: 0
     useMainCamera: 1
     cameras: []
     delay: 0
@@ -10007,7 +10007,7 @@ MonoBehaviour:
     Atk: 10
     SkillName: Basic
     AssignedKeyIndex: 0
-  explosionPrefab: {fileID: 8068600008103418680, guid: fc5cbae039fb7fd49af34b243e9f69f4, type: 3}
+  explosionPrefab: {fileID: 6872082441951201123, guid: fc5cbae039fb7fd49af34b243e9f69f4, type: 3}
   lifeTime: 0.3
 --- !u!58 &4929550244015439247
 CircleCollider2D:
