@@ -8,7 +8,14 @@ public class BattleManager : MonoBehaviour
     public static BattleManager Instance { get; private set; }
 
     [System.Serializable]
-    public enum UnitClass { Melee, Ranged }
+    public enum UnitClass
+    {
+        Warrior,  // 原本 Melee
+        Mage,     // 原本 Ranged
+        Shield,
+        Priest,
+        Ranger
+    }
 
     [System.Serializable]
     public class TeamSlotInfo
@@ -17,7 +24,7 @@ public class BattleManager : MonoBehaviour
         public string UnitName;
         public GameObject Actor;
         public Transform SlotTransform;
-        public UnitClass ClassType = UnitClass.Melee;
+        public UnitClass ClassType = UnitClass.Warrior;
 
         [Header("戰鬥數值")]
         public int MaxHP = 100;
@@ -31,6 +38,7 @@ public class BattleManager : MonoBehaviour
         [Header("輸入綁定")]
         public int AssignedKeyIndex; // 0=E, 1=W, 2=Q
     }
+
 
     [Header("我方固定座標（自動在 Start 記錄）")]
     [SerializeField] private Transform[] playerPositions = new Transform[3];
@@ -207,7 +215,8 @@ public class BattleManager : MonoBehaviour
         var actor = attacker.Actor.transform;
         Vector3 origin = actor.position;
 
-        if (attacker.ClassType == UnitClass.Melee)
+        // 近戰型角色：Warrior、Shield
+        if (attacker.ClassType == UnitClass.Warrior)
         {
             Vector3 contactPoint = targetPoint + meleeContactOffset;
             yield return Dash(actor, origin, contactPoint, dashDuration);
@@ -218,13 +227,13 @@ public class BattleManager : MonoBehaviour
             {
                 sword.attacker = attacker;
                 sword.target = target;
-                sword.isPerfect = perfect; // ★ 新增變數，讓技能知道是否Perfect
+                sword.isPerfect = perfect;
             }
 
             yield return _endOfFrame;
             actor.position = origin;
         }
-        else // Ranged
+        else if (attacker.ClassType == UnitClass.Mage)
         {
             var skill = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity);
             var fireball = skill.GetComponent<FireBallSkill>();
@@ -232,7 +241,7 @@ public class BattleManager : MonoBehaviour
             {
                 fireball.attacker = attacker;
                 fireball.target = target;
-                fireball.isPerfect = perfect; // ★ 一樣傳判定結果
+                fireball.isPerfect = perfect;
             }
         }
 
@@ -241,6 +250,7 @@ public class BattleManager : MonoBehaviour
 
         _isActionLocked = false;
     }
+
 
 
     private IEnumerator Dash(Transform actor, Vector3 from, Vector3 to, float duration)
