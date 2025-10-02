@@ -14,10 +14,35 @@ public class BattleEffectManager : MonoBehaviour
         Instance = this;
     }
 
+    // ★ Shield 格檔狀態
+    private bool isShielding = false;
+
+    public void ActivateShield(float duration)
+    {
+        if (!isShielding)
+            StartCoroutine(ShieldCoroutine(duration));
+    }
+
+    private System.Collections.IEnumerator ShieldCoroutine(float duration)
+    {
+        isShielding = true;
+        Debug.Log("【格檔生效】全隊免傷開始");
+        yield return new WaitForSeconds(duration);
+        isShielding = false;
+        Debug.Log("【格檔結束】全隊恢復可受傷狀態");
+    }
+
     // 技能命中回傳，直接吃判定結果
     public void OnHit(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, bool isPerfect)
     {
         if (attacker == null || target == null) return;
+
+        // ★ 判斷是否在格檔狀態
+        if (isShielding)
+        {
+            Debug.Log($"{attacker.UnitName} 命中 {target.UnitName}，但被格檔免傷！");
+            return; // 直接免傷
+        }
 
         float multiplier = 0f;
 

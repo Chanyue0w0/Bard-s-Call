@@ -66,7 +66,13 @@ public class BattleManager : MonoBehaviour
     [Header("特效 Prefab（今日只做生成）")]
     public GameObject meleeVfxPrefab;
     public GameObject rangedVfxPrefab;
+    public GameObject missVfxPrefab;   // ★ 新增：Miss 特效
     public float vfxLifetime = 1.5f;
+
+    [Header("Shield 設定")]
+    public float shieldBlockDuration = 2.0f;  // ★ Shield 格檔持續時間（秒數，可依 2 拍調整）
+    public int shieldDamage = 10;             // ★ Shield 格檔時造成的傷害
+
 
     private bool _isActionLocked;
     private readonly WaitForEndOfFrame _endOfFrame = new WaitForEndOfFrame();
@@ -74,6 +80,7 @@ public class BattleManager : MonoBehaviour
     [Header("血條 UI")]
     public GameObject healthBarPrefab;   // 指定血條 Prefab
     public Canvas uiCanvas;              // UI Canvas (Screen Space - Camera)
+
 
 
     // ---------------- Singleton 設定 ----------------
@@ -215,9 +222,9 @@ public class BattleManager : MonoBehaviour
         var actor = attacker.Actor.transform;
         Vector3 origin = actor.position;
 
-        // 近戰型角色：Warrior、Shield
         if (attacker.ClassType == UnitClass.Warrior)
         {
+            // Warrior → 近戰邏輯
             Vector3 contactPoint = targetPoint + meleeContactOffset;
             yield return Dash(actor, origin, contactPoint, dashDuration);
 
@@ -235,6 +242,7 @@ public class BattleManager : MonoBehaviour
         }
         else if (attacker.ClassType == UnitClass.Mage)
         {
+            // Mage → 遠程邏輯
             var skill = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity);
             var fireball = skill.GetComponent<FireBallSkill>();
             if (fireball != null)
@@ -244,6 +252,43 @@ public class BattleManager : MonoBehaviour
                 fireball.isPerfect = perfect;
             }
         }
+        else if (attacker.ClassType == UnitClass.Shield)
+        {
+            // Shield → 格檔邏輯
+            if (perfect)
+            {
+                Debug.Log("Shield Perfect 格檔：全隊獲得免傷狀態 + 對敵人造成傷害");
+
+                // ★ 給予全隊格檔 Buff
+                BattleEffectManager.Instance.ActivateShield(shieldBlockDuration);
+
+                // ★ 找到第一個可攻擊的敵人（優先 slotIndex，若空則往後找）
+                TeamSlotInfo shieldTarget = null;
+                for (int i = target.AssignedKeyIndex; i < ETeamInfo.Length; i++)
+                {
+                    if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
+                    {
+                        shieldTarget = ETeamInfo[i];
+                        break;
+                    }
+                }
+
+                if (shieldTarget != null)
+                {
+                    shieldTarget.HP -= shieldDamage;
+                    if (shieldTarget.HP < 0) shieldTarget.HP = 0;
+                    Debug.Log($"Shield 格檔反擊 → {shieldTarget.UnitName} 受到 {shieldDamage} 傷害，剩餘HP={shieldTarget.HP}");
+                }
+            }
+            else
+            {
+                Debug.Log("Shield Miss，生成 Miss 特效");
+                if (missVfxPrefab != null)
+                {
+                    Instantiate(missVfxPrefab, actor.position, Quaternion.identity);
+                }
+            }
+        }
 
         float remain = actionLockDuration - (Time.time - startTime);
         if (remain > 0f) yield return new WaitForSeconds(remain);
@@ -251,6 +296,27 @@ public class BattleManager : MonoBehaviour
         _isActionLocked = false;
     }
 
+
+    //private void ApplyShieldBlock()
+    //{
+    //    StartCoroutine(ShieldBlockCoroutine());
+    //}
+
+    //private IEnumerator ShieldBlockCoroutine()
+    //{
+    //    Debug.Log("全隊進入免傷狀態");
+    //    bool isShielding = true;
+
+    //    // 這裡你可以做 UI 特效 or 狀態標記
+    //    // e.g., BattleEffectManager.Instance.SetInvincible(CTeamInfo, true);
+
+    //    yield return new WaitForSeconds(shieldBlockDuration);
+
+    //    // 結束免傷
+    //    isShielding = false;
+    //    Debug.Log("全隊免傷狀態結束");
+    //    // e.g., BattleEffectManager.Instance.SetInvincible(CTeamInfo, false);
+    //}
 
 
     private IEnumerator Dash(Transform actor, Vector3 from, Vector3 to, float duration)
