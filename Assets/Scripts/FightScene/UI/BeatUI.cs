@@ -25,7 +25,7 @@ public class BeatUI : MonoBehaviour
 
     public bool UpdatePosition(float musicTime)
     {
-        Debug.Log($"BeatUI Update ¡÷ musicTime={musicTime}, noteTime={noteTime}, travelTime={travelTime}, t={(musicTime - noteTime + travelTime) / travelTime}");
+        //Debug.Log($"BeatUI Update ¡÷ musicTime={musicTime}, noteTime={noteTime}, travelTime={travelTime}, t={(musicTime - noteTime + travelTime) / travelTime}");
 
         if (rect == null) return true;
 

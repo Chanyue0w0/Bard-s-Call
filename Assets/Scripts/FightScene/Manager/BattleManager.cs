@@ -112,6 +112,7 @@ public class BattleManager : MonoBehaviour
             actionAttackPos3.action.started -= OnAttackPos3;
     }
 
+
     void Start()
     {
         // 建立我方血條
@@ -130,12 +131,12 @@ public class BattleManager : MonoBehaviour
                 if (headPoint != null)
                 {
                     GameObject hb = Instantiate(healthBarPrefab, uiCanvas.transform);
-                    hb.GetComponent<HealthBarUI>().Init(slot, headPoint);
+                    hb.GetComponent<HealthBarUI>().Init(slot, headPoint, uiCanvas.worldCamera);
+
                 }
             }
         }
     }
-
 
     private void OnAttackPos1(InputAction.CallbackContext ctx)
     {

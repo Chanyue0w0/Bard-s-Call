@@ -3,16 +3,38 @@ using UnityEngine.UI;
 
 public class HealthBarUI : MonoBehaviour
 {
-    public Slider slider;
-    private Transform target;   // 角色的頭部位置
-    private Camera mainCamera;
+    [SerializeField] private Slider slider;
+    private Transform target;                // 角色的頭部位置
+    private Camera uiCamera;
+    private RectTransform rectTransform;
     private BattleManager.TeamSlotInfo info; // 關聯角色資訊
 
-    public void Init(BattleManager.TeamSlotInfo slotInfo, Transform headPoint)
+    public void Init(BattleManager.TeamSlotInfo slotInfo, Transform headPoint, Camera canvasCamera = null)
     {
         info = slotInfo;
         target = headPoint;
-        mainCamera = Camera.main;
+        uiCamera = canvasCamera != null ? canvasCamera : Camera.main;
+        rectTransform = GetComponent<RectTransform>();
+
+        if (slider != null)
+        {
+            slider.minValue = 0f;
+            slider.maxValue = 1f;
+            slider.wholeNumbers = false;
+        }
+
+        UpdateUI();
+    }
+
+    public void ForceUpdate()
+    {
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
+        if (info == null || slider == null) return;
+        slider.value = Mathf.Clamp01((float)info.HP / info.MaxHP);
     }
 
     void Update()
@@ -23,11 +45,21 @@ public class HealthBarUI : MonoBehaviour
             return;
         }
 
-        // 更新位置（世界座標 → 螢幕座標）
-        Vector3 screenPos = mainCamera.WorldToScreenPoint(target.position);
-        transform.position = screenPos;
+        if (target != null && uiCamera != null)
+        {
+            // 世界座標轉螢幕座標
+            Vector3 screenPos = uiCamera.WorldToScreenPoint(target.position);
 
-        // 更新血量 (0 ~ 1)
-        slider.value = (float)info.HP / info.MaxHP;
+            // 螢幕座標轉 Canvas 的本地座標
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rectTransform.parent as RectTransform,
+                screenPos,
+                uiCamera,
+                out Vector2 localPos);
+
+            rectTransform.localPosition = localPos;
+        }
+
+        UpdateUI();
     }
 }

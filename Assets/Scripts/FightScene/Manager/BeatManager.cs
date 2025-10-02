@@ -13,6 +13,7 @@ public class BeatManager : MonoBehaviour
     public GameObject beatPrefab;           // 節拍物件 Prefab
     public Transform spawnPoint;            // 生成起點（螢幕下方左側）
     public Transform hitPoint;              // 判定區（螢幕下方右側）
+    public Transform endPoint;              // 消失區（螢幕下方右側）
 
     [Header("移動設定")]
     [Min(1.0f)]
@@ -57,7 +58,7 @@ public class BeatManager : MonoBehaviour
 
     private void SpawnBeat(float noteTime)
     {
-        if (beatPrefab == null || spawnPoint == null || hitPoint == null) return;
+        if (beatPrefab == null || spawnPoint == null || hitPoint == null || endPoint == null) return;
 
         // 生成在 spawnPoint 所在的 Canvas 下
         GameObject beatObj = Instantiate(beatPrefab, spawnPoint.parent);
@@ -67,18 +68,19 @@ public class BeatManager : MonoBehaviour
         RectTransform beatRect = beatObj.GetComponent<RectTransform>();
         RectTransform spawnRect = spawnPoint.GetComponent<RectTransform>();
         RectTransform hitRect = hitPoint.GetComponent<RectTransform>();
+        RectTransform endRect = endPoint.GetComponent<RectTransform>();
 
         beatRect.anchoredPosition = spawnRect.anchoredPosition;
 
         BeatUI beatUI = beatObj.GetComponent<BeatUI>();
         if (beatUI == null) beatUI = beatObj.AddComponent<BeatUI>();
-        beatUI.Init(noteTime, spawnRect.anchoredPosition, hitRect.anchoredPosition, travelTime);
-        Debug.Log($"SpawnBeat noteTime={noteTime}, BeatManager.travelTime={travelTime}");
+        beatUI.Init(noteTime, spawnRect.anchoredPosition, endRect.anchoredPosition, travelTime);
+        //Debug.Log($"SpawnBeat noteTime={noteTime}, BeatManager.travelTime={travelTime}");
 
 
         activeBeats.Add(beatObj);
 
-        Debug.Log("BeatUI Spawned in Canvas!");
+        //Debug.Log("BeatUI Spawned in Canvas!");
     }
 
 
@@ -103,4 +105,37 @@ public class BeatManager : MonoBehaviour
             }
         }
     }
+
+    // BeatManager.cs
+    public BeatUI FindClosestBeat(float currentTime)
+    {
+        BeatUI closest = null;
+        float minDelta = Mathf.Infinity;
+
+        foreach (var beatObj in activeBeats)
+        {
+            if (beatObj == null) continue;
+
+            BeatUI beat = beatObj.GetComponent<BeatUI>();
+            float delta = Mathf.Abs(currentTime - beat.GetNoteTime());
+
+            if (delta < minDelta)
+            {
+                minDelta = delta;
+                closest = beat;
+            }
+        }
+        return closest;
+    }
+
+    public void RemoveBeat(GameObject beatObj)
+    {
+        if (activeBeats.Contains(beatObj))
+        {
+            activeBeats.Remove(beatObj);
+            Destroy(beatObj);
+        }
+    }
+
+
 }
