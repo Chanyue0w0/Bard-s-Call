@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System; // 為了 Action
 
 public class BeatManager : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class BeatManager : MonoBehaviour
 
     private float beatInterval;             // 每拍的間隔秒數
     private float nextBeatTime;             // 下一拍的時間點
+
+    // 新增事件：每次 SpawnBeat 的時候就算一個拍
+    public static event Action OnBeat;
 
     private List<GameObject> activeBeats = new List<GameObject>();
 
@@ -79,7 +83,9 @@ public class BeatManager : MonoBehaviour
 
 
         activeBeats.Add(beatObj);
-
+        
+         // ★ 在生成拍點時觸發事件（等同於音樂進入一個 Beat）
+        OnBeat?.Invoke();
         //Debug.Log("BeatUI Spawned in Canvas!");
     }
 

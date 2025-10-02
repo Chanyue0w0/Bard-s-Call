@@ -3,32 +3,45 @@ using UnityEngine;
 public class DebugTestSlime : MonoBehaviour
 {
     [Header("左右微動參數")]
-    [Tooltip("左右擺動的最大位移（公尺）")]
     public float amplitude = 0.05f;
-
-    [Tooltip("擺動速度（每秒的角速度，越大越快）")]
     public float speed = 1.5f;
-
-    [Tooltip("是否以自身座標系移動；否則以世界座標移動")]
     public bool useLocalSpace = true;
-
-    [Tooltip("是否在啟用時加入隨機相位，避免多隻史萊姆同時同向擺動")]
     public bool randomizePhase = true;
 
-    // 內部狀態
+    [Header("節拍縮放參數")]
+    public Vector3 baseScale = new Vector3(0.15f, 0.15f, 0.15f); // 初始大小
+    public float beatScaleMultiplier = 1.2f; // 縮放倍數
+    public float scaleLerpSpeed = 6f;       // 回復速度
+
     private float phase = 0f;
     private Vector3 basePosLocal;
     private Vector3 basePosWorld;
+
+    private Vector3 targetScale;
 
     void OnEnable()
     {
         basePosLocal = transform.localPosition;
         basePosWorld = transform.position;
         phase = randomizePhase ? Random.Range(0f, Mathf.PI * 2f) : 0f;
+
+        // 初始大小
+        transform.localScale = baseScale;
+        targetScale = baseScale;
+
+        // 訂閱 Beat 事件（假設 BeatManager 有這個事件）
+        BeatManager.OnBeat += OnBeat;
+    }
+
+    void OnDisable()
+    {
+        // 記得解除訂閱，避免錯誤
+        BeatManager.OnBeat -= OnBeat;
     }
 
     void Update()
     {
+        // 左右擺動
         float offsetX = Mathf.Sin((Time.unscaledTime + phase) * speed) * amplitude;
 
         if (useLocalSpace)
@@ -43,9 +56,20 @@ public class DebugTestSlime : MonoBehaviour
             p.x += offsetX;
             transform.position = p;
         }
+
+        // 平滑縮放回 baseScale
+        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.unscaledDeltaTime * scaleLerpSpeed);
     }
 
-    // 在參數變更時即時更新基準點
+    private void OnBeat()
+    {
+        // 每次拍點觸發時，讓大小瞬間變大一點
+        targetScale = baseScale * beatScaleMultiplier;
+
+        // 立即設回 baseScale，讓 Lerp 往大再縮回
+        transform.localScale = baseScale;
+    }
+
     void OnValidate()
     {
         amplitude = Mathf.Max(0f, amplitude);
