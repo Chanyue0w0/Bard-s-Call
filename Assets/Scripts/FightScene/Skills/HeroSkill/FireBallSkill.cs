@@ -9,6 +9,7 @@ public class FireBallSkill : MonoBehaviour
     public float travelTime = 0.05f;
     public bool isPerfect;
 
+
     [Header("UI 設定")]
     public GameObject missTextPrefab;   // UI 上的 MissText prefab
     public Canvas uiCanvas;             // 指定要生成的 UI Canvas

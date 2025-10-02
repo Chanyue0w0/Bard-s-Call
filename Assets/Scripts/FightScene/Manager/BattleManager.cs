@@ -66,6 +66,7 @@ public class BattleManager : MonoBehaviour
     [Header("特效 Prefab（今日只做生成）")]
     public GameObject meleeVfxPrefab;
     public GameObject rangedVfxPrefab;
+    public GameObject shieldStrikeVfxPrefab;
     public GameObject missVfxPrefab;   // ★ 新增：Miss 特效
     public float vfxLifetime = 1.5f;
 
@@ -257,7 +258,7 @@ public class BattleManager : MonoBehaviour
             // Shield → 格檔邏輯
             if (perfect)
             {
-                Debug.Log("Shield Perfect 格檔：全隊獲得免傷狀態 + 對敵人造成傷害");
+                Debug.Log("Shield Perfect 格檔：全隊獲得免傷狀態 + 生成反擊 Fireball");
 
                 // ★ 給予全隊格檔 Buff
                 BattleEffectManager.Instance.ActivateShield(shieldBlockDuration);
@@ -275,9 +276,16 @@ public class BattleManager : MonoBehaviour
 
                 if (shieldTarget != null)
                 {
-                    shieldTarget.HP -= shieldDamage;
-                    if (shieldTarget.HP < 0) shieldTarget.HP = 0;
-                    Debug.Log($"Shield 格檔反擊 → {shieldTarget.UnitName} 受到 {shieldDamage} 傷害，剩餘HP={shieldTarget.HP}");
+                    var strikeObj = Instantiate(shieldStrikeVfxPrefab, actor.position, Quaternion.identity);
+                    var strike = strikeObj.GetComponent<ShieldStrike>();
+                    if (strike != null)
+                    {
+                        strike.attacker = attacker;
+                        strike.target = shieldTarget;
+                        strike.overrideDamage = shieldDamage; // 固定 10 點傷害
+                    }
+
+                    Debug.Log($"Shield 反擊 Fireball → {shieldTarget.UnitName}，固定 {shieldDamage} 傷害");
                 }
             }
             else
@@ -289,6 +297,7 @@ public class BattleManager : MonoBehaviour
                 }
             }
         }
+
 
         float remain = actionLockDuration - (Time.time - startTime);
         if (remain > 0f) yield return new WaitForSeconds(remain);
