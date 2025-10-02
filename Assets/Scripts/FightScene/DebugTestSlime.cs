@@ -15,12 +15,20 @@ public class DebugTestSlime : MonoBehaviour
     public float scaleLerpSpeed = 6f;
 
     [Header("攻擊設定")]
-    public int attackDamage = 20;           // 傷害數值
-    public float minAttackInterval = 0f;    // 最小冷卻秒數
-    public float maxAttackInterval = 10f;   // 最大冷卻秒數
-    public int slotIndex = 0;               // 這個史萊姆屬於敵方的第幾格 (0,1,2)
-    public float dashDuration = 0.1f;       // 衝刺時間
-    public float actionLockDuration = 0.3f; // 攻擊鎖定時間
+    public int attackDamage = 20;
+    public float minAttackInterval = 0f;
+    public float maxAttackInterval = 10f;
+    public int slotIndex = 0;
+    public float dashDuration = 0.1f;
+    public float actionLockDuration = 0.3f;
+
+    [Header("特效設定")]
+    public GameObject attackVfxPrefab;
+    public float vfxLifetime = 1.5f;
+
+    [Header("警示設定")]
+    public int warningBeats = 2; // 提前幾個 Beat 警示
+    public Color warningColor = Color.red;
 
     private float phase = 0f;
     private Vector3 basePosLocal;
@@ -28,8 +36,13 @@ public class DebugTestSlime : MonoBehaviour
     private Vector3 targetScale;
 
     private float nextAttackTime;
+    private float warningTime; // 何時開始變紅
     private bool readyToAttack = false;
     private bool isAttacking = false;
+    private bool isWarning = false;
+
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
 
     private BattleManager.TeamSlotInfo selfSlot => BattleManager.Instance.ETeamInfo[slotIndex];
     private BattleManager.TeamSlotInfo targetSlot => BattleManager.Instance.CTeamInfo[slotIndex];
@@ -43,6 +56,10 @@ public class DebugTestSlime : MonoBehaviour
         transform.localScale = baseScale;
         targetScale = baseScale;
 
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+            originalColor = spriteRenderer.color;
+
         BeatManager.OnBeat += OnBeat;
 
         ScheduleNextAttack();
@@ -55,11 +72,10 @@ public class DebugTestSlime : MonoBehaviour
 
     void Update()
     {
-        if (isAttacking) return; // 攻擊時暫停擺動
+        if (isAttacking) return;
 
         // 左右擺動
         float offsetX = Mathf.Sin((Time.unscaledTime + phase) * speed) * amplitude;
-
         if (useLocalSpace)
         {
             Vector3 p = basePosLocal;
@@ -76,6 +92,14 @@ public class DebugTestSlime : MonoBehaviour
         // 平滑縮放
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.unscaledDeltaTime * scaleLerpSpeed);
 
+        // 到達警示時間 → 變紅
+        if (!isWarning && Time.time >= warningTime)
+        {
+            if (spriteRenderer != null)
+                spriteRenderer.color = warningColor;
+            isWarning = true;
+        }
+
         // 冷卻檢查
         if (Time.time >= nextAttackTime)
         {
@@ -85,11 +109,9 @@ public class DebugTestSlime : MonoBehaviour
 
     private void OnBeat()
     {
-        // Beat 縮放動畫
         targetScale = baseScale * beatScaleMultiplier;
         transform.localScale = baseScale;
 
-        // 如果冷卻結束，就攻擊
         if (readyToAttack && targetSlot != null && targetSlot.Actor != null)
         {
             StartCoroutine(AttackSequence());
@@ -103,24 +125,29 @@ public class DebugTestSlime : MonoBehaviour
 
         Debug.Log($"史萊姆(slot {slotIndex}) 在Beat上發動攻擊 → {targetSlot.UnitName}");
 
-        // 起點 / 終點
         Vector3 origin = transform.position;
-        Vector3 contactPoint = targetSlot.Actor.transform.position
-                             - BattleManager.Instance.meleeContactOffset; // 在玩家前方
+        Vector3 contactPoint = targetSlot.Actor.transform.position - BattleManager.Instance.meleeContactOffset;
 
-        // 衝刺
         yield return Dash(origin, contactPoint, dashDuration);
 
-        // 造成傷害
+        if (attackVfxPrefab != null)
+        {
+            var vfx = Instantiate(attackVfxPrefab, targetSlot.Actor.transform.position, Quaternion.identity);
+            if (vfxLifetime > 0f) Destroy(vfx, vfxLifetime);
+        }
+
         targetSlot.HP -= attackDamage;
         if (targetSlot.HP < 0) targetSlot.HP = 0;
 
-        // 等待鎖定時間後回到原位
         yield return new WaitForSeconds(actionLockDuration);
 
         transform.position = origin;
 
-        // 再次排程攻擊
+        // 恢復顏色
+        if (spriteRenderer != null)
+            spriteRenderer.color = originalColor;
+        isWarning = false;
+
         ScheduleNextAttack();
         isAttacking = false;
     }
@@ -147,6 +174,11 @@ public class DebugTestSlime : MonoBehaviour
     {
         float wait = Random.Range(minAttackInterval, maxAttackInterval);
         nextAttackTime = Time.time + wait;
+
+        // 換算提前警示時間 (用 BeatManager 的間隔)
+        float beatInterval = 60f / BeatManager.Instance.bpm;
+        warningTime = nextAttackTime - warningBeats * beatInterval;
+        if (warningTime < Time.time) warningTime = Time.time; // 不要比現在早
     }
 
     void OnValidate()
