@@ -12,7 +12,6 @@ public class BattleEffectManager : MonoBehaviour
             return;
         }
         Instance = this;
-        //DontDestroyOnLoad(gameObject);
     }
 
     // 技能命中回傳
@@ -20,15 +19,17 @@ public class BattleEffectManager : MonoBehaviour
     {
         if (attacker == null || target == null) return;
 
-        float multiplier = IsOnBeat() ? 1.0f : 0.5f;
-        int finalDamage = Mathf.Max(1, Mathf.RoundToInt(attacker.Atk * multiplier));
+        // ★ 改為用 BeatJudge 判斷是否對拍
+        bool onBeat = BeatJudge.Instance.IsOnBeat();
+        float multiplier = onBeat ? 1.0f : 0.0f; // 對拍 = 100% 傷害, Miss = 0%
+        int finalDamage = Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * multiplier));
 
         target.HP -= finalDamage;
-        if (target.HP < 0) target.HP = 0; // 保證不會變成負數
+        if (target.HP < 0) target.HP = 0;
 
-        Debug.Log($"{attacker.UnitName} 命中 {target.UnitName}，傷害={finalDamage} 剩餘HP={target.HP}");
+        Debug.Log($"{attacker.UnitName} 命中 {target.UnitName}，傷害={finalDamage} 剩餘HP={target.HP} (OnBeat={onBeat})");
 
-        // ★ 主動通知血條更新
+        // 通知血條 UI 更新
         var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
         if (hb != null) hb.ForceUpdate();
 
@@ -36,14 +37,6 @@ public class BattleEffectManager : MonoBehaviour
         {
             HandleUnitDefeated(target);
         }
-    }
-
-
-    // TODO：之後接節拍管理器
-    public bool IsOnBeat()
-    {
-        // 預設隨便回傳，未來由節拍管理器提供判斷
-        return Random.value > 0.5f;
     }
 
     private void HandleUnitDefeated(BattleManager.TeamSlotInfo target)

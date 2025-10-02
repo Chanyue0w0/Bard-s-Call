@@ -866,6 +866,7 @@ GameObject:
   m_Component:
   - component: {fileID: 806207501}
   - component: {fileID: 806207502}
+  - component: {fileID: 806207503}
   m_Layer: 0
   m_Name: BeatManager
   m_TagString: Untagged
@@ -907,6 +908,19 @@ MonoBehaviour:
   hitPoint: {fileID: 381415587}
   endPoint: {fileID: 830531824}
   travelTime: 1
+--- !u!114 &806207503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 806207500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 981862c8f89c9ab42b06c97d0bc73636, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  perfectRange: 0.05
 --- !u!1 &830531823
 GameObject:
   m_ObjectHideFlags: 0
