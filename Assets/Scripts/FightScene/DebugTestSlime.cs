@@ -61,14 +61,19 @@ public class DebugTestSlime : MonoBehaviour
             originalColor = spriteRenderer.color;
 
         BeatManager.OnBeat += OnBeat;
-
-        ScheduleNextAttack();
     }
-
     void OnDisable()
     {
         BeatManager.OnBeat -= OnBeat;
     }
+
+    void Start()
+    {
+        // BeatManager 已經完成 Start()，Instance 保證存在
+        ScheduleNextAttack();
+    }
+
+
 
     void Update()
     {
