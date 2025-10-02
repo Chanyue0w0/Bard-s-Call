@@ -42,7 +42,7 @@ public class BeatManager : MonoBehaviour
     private void Start()
     {
         beatInterval = 60f / bpm / beatSubdivision;
-        nextBeatTime = 0f;
+        nextBeatTime = 3f;
     }
 
     private void Update()
