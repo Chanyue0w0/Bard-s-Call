@@ -23,7 +23,7 @@ public class MusicManager : MonoBehaviour
         Instance = this;
 
         // 確保不會被銷毀
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         // 初始化 AudioSource
         audioSource = gameObject.AddComponent<AudioSource>();

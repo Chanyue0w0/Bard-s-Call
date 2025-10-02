@@ -6,7 +6,7 @@ public class BeatManager : MonoBehaviour
     public static BeatManager Instance { get; private set; }
 
     [Header("BPM 設定")]
-    public float bpm = 120f;                // 每分鐘拍數
+    public float bpm = 145f;                // 每分鐘拍數
     public int beatSubdivision = 1;         // 每拍分成幾等分（1=四分音符, 2=八分音符）
 
     [Header("UI 設定")]
@@ -15,7 +15,9 @@ public class BeatManager : MonoBehaviour
     public Transform hitPoint;              // 判定區（螢幕下方右側）
 
     [Header("移動設定")]
-    public float travelTime = 2.0f;         // 從生成點到判定點的移動時間（秒）
+    [Min(1.0f)]
+    public float travelTime = 2.0f;
+
 
     private float beatInterval;             // 每拍的間隔秒數
     private float nextBeatTime;             // 下一拍的時間點
@@ -42,28 +44,45 @@ public class BeatManager : MonoBehaviour
     {
         float musicTime = MusicManager.Instance.GetMusicTime();
 
-        // 檢查是否到生成節拍的時間
-        if (musicTime >= nextBeatTime)
+        // 這裡改成：當音樂時間超過 (noteTime - travelTime)，就生成 Beat
+        if (musicTime >= nextBeatTime - travelTime)
         {
-            SpawnBeat(nextBeatTime);
+            SpawnBeat(nextBeatTime); // noteTime 是它應該命中的時間
             nextBeatTime += beatInterval;
         }
 
-        // 更新所有節拍位置
         UpdateBeats(musicTime);
     }
+
 
     private void SpawnBeat(float noteTime)
     {
         if (beatPrefab == null || spawnPoint == null || hitPoint == null) return;
 
-        GameObject beatObj = Instantiate(beatPrefab, spawnPoint.position, Quaternion.identity, transform);
+        // 生成在 spawnPoint 所在的 Canvas 下
+        GameObject beatObj = Instantiate(beatPrefab, spawnPoint.parent);
+        beatObj.name = "BeatUI(Clone)";
 
-        BeatUI beatUI = beatObj.AddComponent<BeatUI>();
-        beatUI.Init(noteTime, spawnPoint.position, hitPoint.position, travelTime);
+        // 強制把位置放到 spawnPoint 一樣的 anchoredPosition
+        RectTransform beatRect = beatObj.GetComponent<RectTransform>();
+        RectTransform spawnRect = spawnPoint.GetComponent<RectTransform>();
+        RectTransform hitRect = hitPoint.GetComponent<RectTransform>();
+
+        beatRect.anchoredPosition = spawnRect.anchoredPosition;
+
+        BeatUI beatUI = beatObj.GetComponent<BeatUI>();
+        if (beatUI == null) beatUI = beatObj.AddComponent<BeatUI>();
+        beatUI.Init(noteTime, spawnRect.anchoredPosition, hitRect.anchoredPosition, travelTime);
+        Debug.Log($"SpawnBeat noteTime={noteTime}, BeatManager.travelTime={travelTime}");
+
 
         activeBeats.Add(beatObj);
+
+        Debug.Log("BeatUI Spawned in Canvas!");
     }
+
+
+
 
     private void UpdateBeats(float musicTime)
     {

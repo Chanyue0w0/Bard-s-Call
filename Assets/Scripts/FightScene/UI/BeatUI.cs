@@ -2,32 +2,40 @@ using UnityEngine;
 
 public class BeatUI : MonoBehaviour
 {
-    private float noteTime;          // 節拍應該命中的時間（秒）
-    private Vector3 startPos;
-    private Vector3 endPos;
+    private float noteTime;
+    private Vector2 startPos;
+    private Vector2 endPos;
     private float travelTime;
+
+    private RectTransform rect;
 
     public void Init(float noteTime, Vector3 startPos, Vector3 endPos, float travelTime)
     {
         this.noteTime = noteTime;
-        this.startPos = startPos;
+        this.startPos = startPos;   // 注意：這裡的 startPos, endPos 會被轉成 Vector2
         this.endPos = endPos;
-        this.travelTime = Mathf.Max(0.0001f, travelTime); // 防止除以 0
+        this.travelTime = Mathf.Max(0.0001f, travelTime);
+
+        rect = GetComponent<RectTransform>();
+        if (rect != null)
+        {
+            rect.anchoredPosition = this.startPos;
+        }
     }
 
-    // 回傳 true 表示已經到達終點，要銷毀
     public bool UpdatePosition(float musicTime)
     {
-        if (float.IsNaN(musicTime)) return true; // 防止非法數值
+        Debug.Log($"BeatUI Update → musicTime={musicTime}, noteTime={noteTime}, travelTime={travelTime}, t={(musicTime - noteTime + travelTime) / travelTime}");
 
-        // 計算進度
+        if (rect == null) return true;
+
         float t = (musicTime - noteTime + travelTime) / travelTime;
 
-        // 限制 t 在 [0,1]
+
         if (t < 0f) t = 0f;
         if (t > 1f) return true;
 
-        transform.position = Vector3.Lerp(startPos, endPos, t);
+        rect.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
         return false;
     }
 
