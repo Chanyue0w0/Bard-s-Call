@@ -109,14 +109,26 @@ public class DebugTestSlime : MonoBehaviour
 
     private void OnBeat()
     {
+        // Beat 縮放動畫
         targetScale = baseScale * beatScaleMultiplier;
         transform.localScale = baseScale;
 
+        // ★ 攻擊的前一拍 → Y 縮放到 1.5 倍
+        float beatInterval = 60f / BeatManager.Instance.bpm;
+        if (!readyToAttack && Time.time + beatInterval >= nextAttackTime)
+        {
+            Vector3 s = transform.localScale;
+            s.y = baseScale.y * 3f;
+            transform.localScale = s;
+        }
+
+        // 如果冷卻結束，就攻擊
         if (readyToAttack && targetSlot != null && targetSlot.Actor != null)
         {
             StartCoroutine(AttackSequence());
         }
     }
+
 
     private IEnumerator AttackSequence()
     {
