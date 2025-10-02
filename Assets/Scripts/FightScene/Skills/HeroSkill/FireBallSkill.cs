@@ -7,17 +7,31 @@ public class FireBallSkill : MonoBehaviour
     public BattleManager.TeamSlotInfo target;
     public GameObject explosionPrefab;
     public float travelTime = 0.05f;
-    public bool isPerfect; // ★ 新增
+    public bool isPerfect;
+
+    [Header("UI 設定")]
+    public GameObject missTextPrefab;   // UI 上的 MissText prefab
+    public Canvas uiCanvas;             // 指定要生成的 UI Canvas
+
+    private void Awake()
+    {
+        if (uiCanvas == null)
+        {
+            uiCanvas = FindObjectOfType<Canvas>();
+        }
+    }
+
 
     private void Start()
     {
+
         if (target != null && target.SlotTransform != null)
         {
             StartCoroutine(MoveToTarget(target.SlotTransform.position));
         }
         else
         {
-            Destroy(gameObject); // 沒有目標直接刪除
+            Destroy(gameObject);
         }
     }
 
@@ -34,28 +48,48 @@ public class FireBallSkill : MonoBehaviour
             yield return null;
         }
 
-        // 抵達目標後生成爆炸
-        if (explosionPrefab != null)
-        {
-            Instantiate(explosionPrefab, targetPos, Quaternion.identity);
-        }
-
-        // 回傳傷害
         if (attacker != null && target != null)
         {
-            //BattleEffectManager.Instance.OnHit(attacker, target);
             if (isPerfect)
             {
-                // Perfect 傷害加成
+                // Perfect：爆炸特效 + 傷害
+                if (explosionPrefab != null)
+                {
+                    Instantiate(explosionPrefab, targetPos, Quaternion.identity);
+                }
                 BattleEffectManager.Instance.OnHit(attacker, target, true);
             }
             else
             {
-                // 普通傷害
+                // Miss：UI 提示
+                if (missTextPrefab != null && uiCanvas != null)
+                {
+                    ShowMissTextAtTarget(target.Actor.transform.position);
+                }
                 BattleEffectManager.Instance.OnHit(attacker, target, false);
             }
         }
 
         Destroy(gameObject);
+    }
+
+    private void ShowMissTextAtTarget(Vector3 worldPos)
+    {
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        // 世界轉螢幕座標
+        Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
+
+        // 螢幕轉 Canvas 座標
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            uiCanvas.transform as RectTransform,
+            screenPos,
+            uiCanvas.worldCamera,
+            out Vector2 localPos);
+
+        // 生成 UI
+        GameObject missText = Instantiate(missTextPrefab, uiCanvas.transform);
+        missText.GetComponent<RectTransform>().anchoredPosition = localPos;
     }
 }

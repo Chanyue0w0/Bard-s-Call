@@ -74,6 +74,9 @@ MonoBehaviour:
     AssignedKeyIndex: 0
   explosionPrefab: {fileID: 893806690187975615, guid: da0691a27937e9443a41483ab99209fb, type: 3}
   travelTime: 0.05
+  isPerfect: 0
+  missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
+  uiCanvas: {fileID: 0}
 --- !u!58 &6222711399343778694
 CircleCollider2D:
   m_ObjectHideFlags: 0
