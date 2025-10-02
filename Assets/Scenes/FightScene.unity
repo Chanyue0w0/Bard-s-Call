@@ -920,7 +920,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 981862c8f89c9ab42b06c97d0bc73636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perfectRange: 0.05
+  perfectRange: 0.1
+  beatHitLightUIPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}
+  beatHitPointUI: {fileID: 381415587}
 --- !u!1 &830531823
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,7 +957,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 70, y: -455}
+  m_AnchoredPosition: {x: 28, y: -455}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &830531825
