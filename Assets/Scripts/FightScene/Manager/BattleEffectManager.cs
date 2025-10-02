@@ -57,9 +57,11 @@ public class BattleEffectManager : MonoBehaviour
     {
         if (attacker == null || target == null) return;
 
-        // ★ 判斷是否在格檔狀態，且目標必須是玩家隊伍 (CTeamInfo)
-        bool targetIsPlayer = System.Array.Exists(BattleManager.Instance.CTeamInfo, t => t == target);
-
+        // ★ 判斷是否在格檔狀態，且目標必須是玩家隊伍 (比對 Actor)
+        bool targetIsPlayer = System.Array.Exists(
+            BattleManager.Instance.CTeamInfo,
+            t => t != null && t.Actor == target.Actor
+        );
         if (isShielding && targetIsPlayer)
         {
             Debug.Log($"{attacker.UnitName} 命中 {target.UnitName}，但玩家隊伍格檔免傷！");

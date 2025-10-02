@@ -148,8 +148,18 @@ public class DebugTestSlime : MonoBehaviour
             if (vfxLifetime > 0f) Destroy(vfx, vfxLifetime);
         }
 
-        targetSlot.HP -= attackDamage;
-        if (targetSlot.HP < 0) targetSlot.HP = 0;
+        if (BattleEffectManager.Instance != null)
+        {
+            // ★ 敵人攻擊 → 統一交給 BattleEffectManager 處理 (才會吃到格檔)
+            BattleEffectManager.Instance.OnHit(selfSlot, targetSlot, true);
+        }
+        else
+        {
+            // 備用：直接扣血
+            targetSlot.HP -= attackDamage;
+            if (targetSlot.HP < 0) targetSlot.HP = 0;
+        }
+
 
         yield return new WaitForSeconds(actionLockDuration);
 

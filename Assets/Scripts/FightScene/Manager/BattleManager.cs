@@ -306,28 +306,6 @@ public class BattleManager : MonoBehaviour
     }
 
 
-    //private void ApplyShieldBlock()
-    //{
-    //    StartCoroutine(ShieldBlockCoroutine());
-    //}
-
-    //private IEnumerator ShieldBlockCoroutine()
-    //{
-    //    Debug.Log("全隊進入免傷狀態");
-    //    bool isShielding = true;
-
-    //    // 這裡你可以做 UI 特效 or 狀態標記
-    //    // e.g., BattleEffectManager.Instance.SetInvincible(CTeamInfo, true);
-
-    //    yield return new WaitForSeconds(shieldBlockDuration);
-
-    //    // 結束免傷
-    //    isShielding = false;
-    //    Debug.Log("全隊免傷狀態結束");
-    //    // e.g., BattleEffectManager.Instance.SetInvincible(CTeamInfo, false);
-    //}
-
-
     private IEnumerator Dash(Transform actor, Vector3 from, Vector3 to, float duration)
     {
         if (duration <= 0f)
