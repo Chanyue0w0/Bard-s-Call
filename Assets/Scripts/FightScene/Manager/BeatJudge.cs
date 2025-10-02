@@ -15,6 +15,11 @@ public class BeatJudge : MonoBehaviour
     public float normalSize = 1.1202f;
     public float animTime = 0.15f; // 放大縮小各自的時間
 
+
+    [Header("音效設定")]
+    public AudioClip snapClip;    // 彈指音效
+    private AudioSource audioSource;
+
     public static BeatJudge Instance { get; private set; }
 
     private Coroutine scaleCoroutine;
@@ -28,6 +33,13 @@ public class BeatJudge : MonoBehaviour
         }
         Instance = this;
     }
+
+    private void Start()
+    {
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+    }
+
 
     // 檢查是否對拍（簡單版）
     public bool IsOnBeat()
@@ -48,6 +60,10 @@ public class BeatJudge : MonoBehaviour
             // 刪掉這個 Beat
             BeatManager.Instance.RemoveBeat(targetBeat.gameObject);
 
+            if (audioSource != null && snapClip != null)
+            {
+                audioSource.PlayOneShot(snapClip);
+            }
             // ★ 呼叫戰鬥系統，處理傷害
             //BattleManager.Instance.OnBeatHit(targetBeat);
         }

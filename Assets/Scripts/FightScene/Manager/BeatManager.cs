@@ -21,6 +21,7 @@ public class BeatManager : MonoBehaviour
     public float travelTime = 2.0f;
 
 
+
     private float beatInterval;             // 每拍的間隔秒數
     private float nextBeatTime;             // 下一拍的時間點
 
@@ -43,7 +44,9 @@ public class BeatManager : MonoBehaviour
     {
         beatInterval = 60f / bpm / beatSubdivision;
         nextBeatTime = 3f;
+
     }
+
 
     private void Update()
     {
