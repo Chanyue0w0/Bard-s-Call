@@ -722,6 +722,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &510205796 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8663616510560370193, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
+  m_PrefabInstance: {fileID: 7918084402406761960}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &510205797 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9100831245632136328, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
@@ -11165,9 +11170,9 @@ MonoBehaviour:
   - {fileID: 332195311}
   CTeamInfo:
   - UnitName: 
-    Actor: {fileID: 1688186706}
+    Actor: {fileID: 510205796}
     SlotTransform: {fileID: 683276622}
-    ClassType: 2
+    ClassType: 0
     MaxHP: 100
     HP: 100
     MaxMP: 100
@@ -11398,6 +11403,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ShieldSoldier
       objectReference: {fileID: 0}
+    - target: {fileID: 2912741584857405815, guid: 9d60733341fd65c498be83ca5e5f2b14, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6212741414959072869, guid: 9d60733341fd65c498be83ca5e5f2b14, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.73
@@ -11446,11 +11455,6 @@ PrefabInstance:
 --- !u!4 &1688186705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6212741414959072869, guid: 9d60733341fd65c498be83ca5e5f2b14, type: 3}
-  m_PrefabInstance: {fileID: 1688186704}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1688186706 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2912741584857405815, guid: 9d60733341fd65c498be83ca5e5f2b14, type: 3}
   m_PrefabInstance: {fileID: 1688186704}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1710813559
@@ -12286,7 +12290,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8663616510560370193, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8663616510560370193, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
       propertyPath: m_TagString

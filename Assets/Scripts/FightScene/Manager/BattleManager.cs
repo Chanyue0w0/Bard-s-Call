@@ -192,15 +192,16 @@ public class BattleManager : MonoBehaviour
         if (_isActionLocked) return;
         if (slotIndex < 0 || slotIndex >= CTeamInfo.Length) return;
 
-        var attacker = CTeamInfo[slotIndex];
-        var target = ETeamInfo[slotIndex];
 
         // ★ 先做節奏判定
         bool perfect = BeatJudge.Instance.IsOnBeat();
 
+        var attacker = CTeamInfo[slotIndex];
+        var target = FindNextValidEnemy(slotIndex);
+
         if (target == null || target.Actor == null)
         {
-            Debug.Log($"英雄 {attacker.UnitName} 攻擊（沒有敵人） Perfect={perfect}");
+            Debug.Log($"英雄 {attacker.UnitName} 攻擊（敵方全滅 or 沒有敵人） Perfect={perfect}");
             return;
         }
 
@@ -305,6 +306,18 @@ public class BattleManager : MonoBehaviour
         _isActionLocked = false;
     }
 
+    // 從指定索引開始，往後找第一個有敵人的槽位
+    private TeamSlotInfo FindNextValidEnemy(int startIndex)
+    {
+        for (int i = startIndex; i < ETeamInfo.Length; i++)
+        {
+            if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
+            {
+                return ETeamInfo[i];
+            }
+        }
+        return null; // 找不到敵人
+    }
 
     private IEnumerator Dash(Transform actor, Vector3 from, Vector3 to, float duration)
     {
