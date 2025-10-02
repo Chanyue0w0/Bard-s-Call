@@ -146,6 +146,8 @@ MonoBehaviour:
   actionLockDuration: 0.3
   attackVfxPrefab: {fileID: 2090553158902562417, guid: 05d7012d2d4253b43998f755a68508ab, type: 3}
   vfxLifetime: 1.5
+  warningBeats: 2
+  warningColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!95 &216491200392178936
 Animator:
   serializedVersion: 5
@@ -199,6 +201,6 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.11490981, y: -3.463761}
+  m_Offset: {x: 2.0188463, y: 1.9388593}
   serializedVersion: 2
-  m_Radius: 2.7835371
+  m_Radius: 2.3441694
