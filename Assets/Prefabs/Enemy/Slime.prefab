@@ -135,6 +135,13 @@ MonoBehaviour:
   speed: 3
   useLocalSpace: 1
   randomizePhase: 1
+  baseScale: {x: 0.15, y: 0.15, z: 0.15}
+  beatScaleMultiplier: 1.3
+  scaleLerpSpeed: 6
+  attackDamage: 20
+  minAttackInterval: 0
+  maxAttackInterval: 10
+  slotIndex: 0
 --- !u!95 &216491200392178936
 Animator:
   serializedVersion: 5

@@ -44,7 +44,14 @@ public class BeatJudge : MonoBehaviour
         if (perfect)
         {
             SpawnPerfectEffect();
+
+            // 刪掉這個 Beat
+            BeatManager.Instance.RemoveBeat(targetBeat.gameObject);
+
+            // ★ 呼叫戰鬥系統，處理傷害
+            //BattleManager.Instance.OnBeatHit(targetBeat);
         }
+
 
         return perfect;
     }

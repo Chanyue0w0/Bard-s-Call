@@ -179,28 +179,27 @@ public class BattleManager : MonoBehaviour
         var attacker = CTeamInfo[slotIndex];
         var target = ETeamInfo[slotIndex];
 
-        // 節奏判定先跑
-        bool onBeat = BeatJudge.Instance.IsOnBeat();
+        // ★ 先做節奏判定
+        bool perfect = BeatJudge.Instance.IsOnBeat();
 
-        // 若 target 為空，仍觸發節奏效果
         if (target == null || target.Actor == null)
         {
-            Debug.Log($"英雄 {attacker.UnitName} 攻擊（沒有敵人） OnBeat={onBeat}");
-            return; // 不繼續打擊流程
+            Debug.Log($"英雄 {attacker.UnitName} 攻擊（沒有敵人） Perfect={perfect}");
+            return;
         }
 
         var targetPoint = target.SlotTransform != null
             ? target.SlotTransform.position
             : GetFallbackEnemyPoint(slotIndex);
 
-        StartCoroutine(AttackSequence(attacker, target, targetPoint));
+        // ★ 把判定結果傳進去
+        StartCoroutine(AttackSequence(attacker, target, targetPoint, perfect));
 
-
-        Debug.Log($"英雄 P{slotIndex + 1} 攻擊 → 敵人 E{slotIndex + 1}");
+        Debug.Log($"英雄 P{slotIndex + 1} 攻擊 → 敵人 E{slotIndex + 1} Perfect={perfect}");
     }
 
 
-    private IEnumerator AttackSequence(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, Vector3 targetPoint)
+    private IEnumerator AttackSequence(TeamSlotInfo attacker, TeamSlotInfo target, Vector3 targetPoint, bool perfect)
     {
         _isActionLocked = true;
         float startTime = Time.time;
@@ -210,46 +209,38 @@ public class BattleManager : MonoBehaviour
 
         if (attacker.ClassType == UnitClass.Melee)
         {
-            // 計算近戰接觸點（敵人位置右一點）
             Vector3 contactPoint = targetPoint + meleeContactOffset;
-
-            // Dash 往前
             yield return Dash(actor, origin, contactPoint, dashDuration);
 
-            // 在接觸點生成近戰技能
             var skill = Instantiate(meleeVfxPrefab, targetPoint, Quaternion.identity);
             var sword = skill.GetComponent<SwordHitSkill>();
             if (sword != null)
             {
                 sword.attacker = attacker;
                 sword.target = target;
+                sword.isPerfect = perfect; // ★ 新增變數，讓技能知道是否Perfect
             }
 
             yield return _endOfFrame;
-
-            // 回原位
             actor.position = origin;
         }
-
         else // Ranged
         {
-            // 遠程：生成技能Prefab在玩家位置，自己移動到敵人
             var skill = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity);
             var fireball = skill.GetComponent<FireBallSkill>();
             if (fireball != null)
             {
                 fireball.attacker = attacker;
                 fireball.target = target;
+                fireball.isPerfect = perfect; // ★ 一樣傳判定結果
             }
         }
 
-        // 鎖定動作時間
         float remain = actionLockDuration - (Time.time - startTime);
         if (remain > 0f) yield return new WaitForSeconds(remain);
 
         _isActionLocked = false;
     }
-
 
 
     private IEnumerator Dash(Transform actor, Vector3 from, Vector3 to, float duration)

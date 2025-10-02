@@ -7,6 +7,7 @@ public class FireBallSkill : MonoBehaviour
     public BattleManager.TeamSlotInfo target;
     public GameObject explosionPrefab;
     public float travelTime = 0.05f;
+    public bool isPerfect; // ★ 新增
 
     private void Start()
     {
@@ -42,7 +43,17 @@ public class FireBallSkill : MonoBehaviour
         // 回傳傷害
         if (attacker != null && target != null)
         {
-            BattleEffectManager.Instance.OnHit(attacker, target);
+            //BattleEffectManager.Instance.OnHit(attacker, target);
+            if (isPerfect)
+            {
+                // Perfect 傷害加成
+                BattleEffectManager.Instance.OnHit(attacker, target, true);
+            }
+            else
+            {
+                // 普通傷害
+                BattleEffectManager.Instance.OnHit(attacker, target, false);
+            }
         }
 
         Destroy(gameObject);

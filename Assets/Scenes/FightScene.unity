@@ -920,7 +920,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 981862c8f89c9ab42b06c97d0bc73636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perfectRange: 0.3
+  perfectRange: 0.2
   beatHitLightUIPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}
   beatHitPointUI: {fileID: 381415587}
   scaleUpSize: 1.6
@@ -960,7 +960,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 28, y: -455}
+  m_AnchoredPosition: {x: 112, y: -455}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &830531825
@@ -1332,7 +1332,7 @@ MonoBehaviour:
     Actor: {fileID: 716000474}
     SlotTransform: {fileID: 871193936}
     ClassType: 0
-    MaxHP: 100
+    MaxHP: 1000
     HP: 100
     MaxMP: 100
     MP: 0
@@ -1470,6 +1470,10 @@ PrefabInstance:
     - target: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
       propertyPath: m_TagString
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204730356763185274, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
+      propertyPath: beatScaleMultiplier
+      value: 1.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1741,6 +1745,10 @@ PrefabInstance:
     - target: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
       propertyPath: m_Name
       value: Slime
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204730356763185274, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
+      propertyPath: beatScaleMultiplier
+      value: 1.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2242,6 +2250,10 @@ PrefabInstance:
     - target: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
       propertyPath: m_TagString
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204730356763185274, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
+      propertyPath: beatScaleMultiplier
+      value: 1.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

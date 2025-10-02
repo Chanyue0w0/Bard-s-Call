@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class DebugTestSlime : MonoBehaviour
@@ -18,6 +19,8 @@ public class DebugTestSlime : MonoBehaviour
     public float minAttackInterval = 0f;    // 最小冷卻秒數
     public float maxAttackInterval = 10f;   // 最大冷卻秒數
     public int slotIndex = 0;               // 這個史萊姆屬於敵方的第幾格 (0,1,2)
+    public float dashDuration = 0.1f;       // 衝刺時間
+    public float actionLockDuration = 0.3f; // 攻擊鎖定時間
 
     private float phase = 0f;
     private Vector3 basePosLocal;
@@ -26,6 +29,7 @@ public class DebugTestSlime : MonoBehaviour
 
     private float nextAttackTime;
     private bool readyToAttack = false;
+    private bool isAttacking = false;
 
     private BattleManager.TeamSlotInfo selfSlot => BattleManager.Instance.ETeamInfo[slotIndex];
     private BattleManager.TeamSlotInfo targetSlot => BattleManager.Instance.CTeamInfo[slotIndex];
@@ -51,6 +55,8 @@ public class DebugTestSlime : MonoBehaviour
 
     void Update()
     {
+        if (isAttacking) return; // 攻擊時暫停擺動
+
         // 左右擺動
         float offsetX = Mathf.Sin((Time.unscaledTime + phase) * speed) * amplitude;
 
@@ -86,22 +92,55 @@ public class DebugTestSlime : MonoBehaviour
         // 如果冷卻結束，就攻擊
         if (readyToAttack && targetSlot != null && targetSlot.Actor != null)
         {
-            AttackTarget();
+            StartCoroutine(AttackSequence());
         }
     }
 
-    private void AttackTarget()
+    private IEnumerator AttackSequence()
     {
-        // 使用 BattleManager 的流程進行攻擊
+        isAttacking = true;
+        readyToAttack = false;
+
         Debug.Log($"史萊姆(slot {slotIndex}) 在Beat上發動攻擊 → {targetSlot.UnitName}");
 
-        // 直接扣血（這裡是最簡單的作法）
+        // 起點 / 終點
+        Vector3 origin = transform.position;
+        Vector3 contactPoint = targetSlot.Actor.transform.position
+                             - BattleManager.Instance.meleeContactOffset; // 在玩家前方
+
+        // 衝刺
+        yield return Dash(origin, contactPoint, dashDuration);
+
+        // 造成傷害
         targetSlot.HP -= attackDamage;
         if (targetSlot.HP < 0) targetSlot.HP = 0;
 
-        // 重新排程
-        readyToAttack = false;
+        // 等待鎖定時間後回到原位
+        yield return new WaitForSeconds(actionLockDuration);
+
+        transform.position = origin;
+
+        // 再次排程攻擊
         ScheduleNextAttack();
+        isAttacking = false;
+    }
+
+    private IEnumerator Dash(Vector3 from, Vector3 to, float duration)
+    {
+        if (duration <= 0f)
+        {
+            transform.position = to;
+            yield break;
+        }
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            if (t > 1f) t = 1f;
+            transform.position = Vector3.Lerp(from, to, t);
+            yield return null;
+        }
     }
 
     private void ScheduleNextAttack()

@@ -14,20 +14,29 @@ public class BattleEffectManager : MonoBehaviour
         Instance = this;
     }
 
-    // 技能命中回傳
-    public void OnHit(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target)
+    // 技能命中回傳，直接吃判定結果
+    public void OnHit(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, bool isPerfect)
     {
         if (attacker == null || target == null) return;
 
-        // ★ 改為用 BeatJudge 判斷是否對拍
-        bool onBeat = BeatJudge.Instance.IsOnBeat();
-        float multiplier = onBeat ? 1.0f : 0.0f; // 對拍 = 100% 傷害, Miss = 0%
+        float multiplier = 0f;
+
+        if (isPerfect)
+        {
+            multiplier = 1f; // Perfect → 傷害加成
+            attacker.MP = Mathf.Min(attacker.MaxMP, attacker.MP + 10); // Perfect → 回魔
+        }
+        else
+        {
+            multiplier = 0f; // 普通 Hit → 基本傷害
+        }
+
         int finalDamage = Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * multiplier));
 
         target.HP -= finalDamage;
         if (target.HP < 0) target.HP = 0;
 
-        Debug.Log($"{attacker.UnitName} 命中 {target.UnitName}，傷害={finalDamage} 剩餘HP={target.HP} (OnBeat={onBeat})");
+        Debug.Log($"{attacker.UnitName} 命中 {target.UnitName}，傷害={finalDamage} 剩餘HP={target.HP} (Perfect={isPerfect})");
 
         // 通知血條 UI 更新
         var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
