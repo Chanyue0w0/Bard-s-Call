@@ -177,21 +177,27 @@ public class BattleManager : MonoBehaviour
         if (slotIndex < 0 || slotIndex >= CTeamInfo.Length) return;
 
         var attacker = CTeamInfo[slotIndex];
-
-        // 改為直接相同 index 對應
         var target = ETeamInfo[slotIndex];
 
-        if (attacker == null || attacker.Actor == null || attacker.SlotTransform == null) return;
+        // 節奏判定先跑
+        bool onBeat = BeatJudge.Instance.IsOnBeat();
 
-        var targetPoint = (target != null && target.SlotTransform != null)
+        // 若 target 為空，仍觸發節奏效果
+        if (target == null || target.Actor == null)
+        {
+            Debug.Log($"英雄 {attacker.UnitName} 攻擊（沒有敵人） OnBeat={onBeat}");
+            return; // 不繼續打擊流程
+        }
+
+        var targetPoint = target.SlotTransform != null
             ? target.SlotTransform.position
             : GetFallbackEnemyPoint(slotIndex);
 
         StartCoroutine(AttackSequence(attacker, target, targetPoint));
 
+
         Debug.Log($"英雄 P{slotIndex + 1} 攻擊 → 敵人 E{slotIndex + 1}");
     }
-
 
 
     private IEnumerator AttackSequence(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, Vector3 targetPoint)
