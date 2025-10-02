@@ -11,6 +11,8 @@ public class MusicManager : MonoBehaviour
     public AudioClip defaultClip;   // 預設音樂
     [Range(0f, 2f)]
     public float pitch = 1.0f;      // 音高（變速用）
+    [Range(0f, 1f)]
+    public float volume = 1.0f;     // 音量大小
 
     private void Awake()
     {
@@ -22,9 +24,6 @@ public class MusicManager : MonoBehaviour
         }
         Instance = this;
 
-        // 確保不會被銷毀
-        //DontDestroyOnLoad(gameObject);
-
         // 初始化 AudioSource
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
@@ -33,15 +32,15 @@ public class MusicManager : MonoBehaviour
     private void Start()
     {
         MusicManager.Instance.PlayMusic();
-
     }
 
     private void Update()
     {
-        // 動態調整 pitch（可以在 Inspector 上改變）
+        // 動態調整 pitch & volume
         if (audioSource != null)
         {
             audioSource.pitch = pitch;
+            audioSource.volume = volume;
         }
     }
 
@@ -96,5 +95,18 @@ public class MusicManager : MonoBehaviour
     public bool IsPlaying()
     {
         return audioSource.isPlaying;
+    }
+
+    // 提供程式呼叫接口來改音量
+    public void SetVolume(float newVolume)
+    {
+        volume = Mathf.Clamp01(newVolume); // 限制在 0~1
+        if (audioSource != null)
+            audioSource.volume = volume;
+    }
+
+    public float GetVolume()
+    {
+        return volume;
     }
 }
