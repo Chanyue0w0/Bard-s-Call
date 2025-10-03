@@ -337,6 +337,35 @@ public class BattleManager : MonoBehaviour
                 }
             }
         }
+        else if (attacker.ClassType == UnitClass.Priest)
+        {
+            if (perfect)
+            {
+                // 呼叫 BattleEffectManager → 全隊回復 10
+                BattleEffectManager.Instance.HealTeam(10);
+
+                // 在三個固定 PlayerPosition 生成回復特效
+                for (int i = 0; i < playerPositions.Length; i++)
+                {
+                    var pos = playerPositions[i].position;
+                    if (BattleEffectManager.Instance.healVfxPrefab != null)
+                    {
+                        var heal = GameObject.Instantiate(BattleEffectManager.Instance.healVfxPrefab, pos, Quaternion.identity);
+                        if (vfxLifetime > 0f) Destroy(heal, vfxLifetime);
+                    }
+                }
+            }
+            else
+            {
+                // Miss → 生成 Miss VFX
+                if (missVfxPrefab != null)
+                {
+                    Instantiate(missVfxPrefab, actor.position, Quaternion.identity);
+                }
+            }
+        }
+
+
 
         float remain = actionLockDuration - (Time.time - startTime);
         if (remain > 0f) yield return new WaitForSeconds(remain);

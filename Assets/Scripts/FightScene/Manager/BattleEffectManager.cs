@@ -21,6 +21,10 @@ public class BattleEffectManager : MonoBehaviour
     public GameObject shieldVfxPrefab;   // 指定 Shield 特效 Prefab
     private GameObject activeShieldVfx;  // 當前存在的 Shield 特效
 
+    [Header("Priest 回復特效")]
+    public GameObject healVfxPrefab;
+
+
     public void ActivateShield(float duration)
     {
         if (!isShielding)
@@ -106,4 +110,23 @@ public class BattleEffectManager : MonoBehaviour
             GameObject.Destroy(target.Actor);
         }
     }
+
+    public void HealTeam(int healAmount)
+    {
+        var team = BattleManager.Instance.CTeamInfo;
+        foreach (var ally in team)
+        {
+            if (ally != null && ally.Actor != null)
+            {
+                ally.HP = Mathf.Min(ally.MaxHP, ally.HP + healAmount);
+
+                // 通知血條 UI 更新
+                var hb = ally.Actor.GetComponentInChildren<HealthBarUI>();
+                if (hb != null) hb.ForceUpdate();
+
+                Debug.Log($"{ally.UnitName} 回復 {healAmount} → 現在 HP={ally.HP}");
+            }
+        }
+    }
+
 }
