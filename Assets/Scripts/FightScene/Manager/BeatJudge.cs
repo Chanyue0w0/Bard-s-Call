@@ -7,21 +7,22 @@ public class BeatJudge : MonoBehaviour
     public float perfectRange = 0.05f;
 
     [Header("特效 UI Prefab")]
-    public GameObject beatHitLightUIPrefab; // Perfect 命中特效
-    public RectTransform beatHitPointUI;    // 打擊點 UI 的位置 (Canvas 下)
+    public GameObject beatHitLightUIPrefab;
+    public RectTransform beatHitPointUI;
+
+    [Header("Miss UI Prefab")]
+    public GameObject missTextPrefab; // ★ 新增：Miss 文字的 UI Prefab
 
     [Header("縮放動畫設定")]
     public float scaleUpSize = 2f;
     public float normalSize = 1.1202f;
-    public float animTime = 0.15f; // 放大縮小各自的時間
-
+    public float animTime = 0.15f;
 
     [Header("音效設定")]
-    public AudioClip snapClip;    // 彈指音效
+    public AudioClip snapClip;
     private AudioSource audioSource;
 
     public static BeatJudge Instance { get; private set; }
-
     private Coroutine scaleCoroutine;
 
     private void Awake()
@@ -36,40 +37,40 @@ public class BeatJudge : MonoBehaviour
 
     private void Start()
     {
-
         audioSource = gameObject.AddComponent<AudioSource>();
     }
 
-
-    // 檢查是否對拍（簡單版）
     public bool IsOnBeat()
     {
         float musicTime = MusicManager.Instance.GetMusicTime();
-        BeatUI targetBeat = BeatManager.Instance.FindClosestBeat(musicTime);
+        BeatUI targetBeat = BeatManager.Instance.GetPersistentBeat();
         if (targetBeat == null) return false;
 
         PlayScaleAnim();
 
-        float delta = Mathf.Abs(musicTime - targetBeat.GetNoteTime());
+        float delta = Mathf.Abs(musicTime - GetClosestNoteTime(musicTime));
         bool perfect = delta <= perfectRange;
 
         if (perfect)
         {
             SpawnPerfectEffect();
 
-            // 刪掉這個 Beat
-            BeatManager.Instance.RemoveBeat(targetBeat.gameObject);
-
             if (audioSource != null && snapClip != null)
-            {
                 audioSource.PlayOneShot(snapClip);
-            }
-            // ★ 呼叫戰鬥系統，處理傷害
-            //BattleManager.Instance.OnBeatHit(targetBeat);
+        }
+        else
+        {
+            SpawnMissText(); // ★ 非 Perfect 時顯示 Miss
         }
 
-
         return perfect;
+    }
+
+    // ★ 計算最近的理論節拍時間
+    private float GetClosestNoteTime(float currentTime)
+    {
+        float interval = 60f / BeatManager.Instance.bpm / BeatManager.Instance.beatSubdivision;
+        return Mathf.Round(currentTime / interval) * interval;
     }
 
     private void SpawnPerfectEffect()
@@ -79,22 +80,32 @@ public class BeatJudge : MonoBehaviour
         GameObject effect = Instantiate(beatHitLightUIPrefab, beatHitPointUI.parent);
         RectTransform effectRect = effect.GetComponent<RectTransform>();
         if (effectRect != null)
-        {
             effectRect.anchoredPosition = beatHitPointUI.anchoredPosition;
-        }
 
         Destroy(effect, 0.5f);
+    }
+
+    private void SpawnMissText()
+    {
+        if (missTextPrefab == null || beatHitPointUI == null) return;
+
+        GameObject missObj = Instantiate(missTextPrefab, beatHitPointUI.parent);
+        RectTransform missRect = missObj.GetComponent<RectTransform>();
+        if (missRect != null)
+        {
+            // 生成在 HitPoint 上方一點
+            missRect.anchoredPosition = beatHitPointUI.anchoredPosition + new Vector2(0, 50f);
+        }
+
+        Destroy(missObj, 0.5f); // 0.5 秒後自動清掉
     }
 
     private void PlayScaleAnim()
     {
         if (beatHitPointUI == null) return;
 
-        // 如果正在跑舊的動畫，先停掉
         if (scaleCoroutine != null)
-        {
             StopCoroutine(scaleCoroutine);
-        }
         scaleCoroutine = StartCoroutine(ScaleAnim());
     }
 
@@ -103,16 +114,14 @@ public class BeatJudge : MonoBehaviour
         Vector3 start = Vector3.one * normalSize;
         Vector3 up = Vector3.one * scaleUpSize;
 
-        // 先放大
         float t = 0;
         while (t < 1)
         {
-            t += Time.unscaledDeltaTime / animTime; // 用 unscaled，避免 TimeScale=0
+            t += Time.unscaledDeltaTime / animTime;
             beatHitPointUI.localScale = Vector3.Lerp(start, up, t);
             yield return null;
         }
 
-        // 再縮回去
         t = 0;
         while (t < 1)
         {

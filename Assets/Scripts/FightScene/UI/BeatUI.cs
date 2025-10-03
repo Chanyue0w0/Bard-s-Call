@@ -1,46 +1,56 @@
 using UnityEngine;
+using System.Collections;
 
 public class BeatUI : MonoBehaviour
 {
-    private float noteTime;
-    private Vector2 startPos;
-    private Vector2 endPos;
-    private float travelTime;
-
     private RectTransform rect;
 
-    public void Init(float noteTime, Vector3 startPos, Vector3 endPos, float travelTime)
-    {
-        this.noteTime = noteTime;
-        this.startPos = startPos;   // 注意：這裡的 startPos, endPos 會被轉成 Vector2
-        this.endPos = endPos;
-        this.travelTime = Mathf.Max(0.0001f, travelTime);
+    [Header("縮放參數")]
+    public float startScale = 3f;       // 初始放大值
+    public float targetScale = 1.3f;    // 停留大小
+    public float shrinkTime = 0.15f;    // 從3縮到1.3所需時間
+    public float holdTime = 0.05f;      // 停留時間
 
+    private Coroutine flashCoroutine;
+
+    private void Awake()
+    {
         rect = GetComponent<RectTransform>();
-        if (rect != null)
+    }
+
+    public void Init()
+    {
+        rect.localScale = Vector3.zero; // 初始隱藏
+    }
+
+    public void OnBeat()
+    {
+        if (flashCoroutine != null)
+            StopCoroutine(flashCoroutine);
+        flashCoroutine = StartCoroutine(FlashAnim());
+    }
+
+    private IEnumerator FlashAnim()
+    {
+        // ★ 先設為起始大小 3
+        rect.localScale = Vector3.one * startScale;
+
+        // 3 → 1.3
+        float t = 0;
+        while (t < 1f)
         {
-            rect.anchoredPosition = this.startPos;
+            t += Time.unscaledDeltaTime / shrinkTime;
+            rect.localScale = Vector3.Lerp(Vector3.one * startScale, Vector3.one * targetScale, t);
+            yield return null;
         }
-    }
 
-    public bool UpdatePosition(float musicTime)
-    {
-        //Debug.Log($"BeatUI Update → musicTime={musicTime}, noteTime={noteTime}, travelTime={travelTime}, t={(musicTime - noteTime + travelTime) / travelTime}");
+        // ★ 停留在 1.3
+        rect.localScale = Vector3.one * targetScale;
+        yield return new WaitForSecondsRealtime(holdTime);
 
-        if (rect == null) return true;
+        // ★ 瞬間消失
+        rect.localScale = Vector3.zero;
 
-        float t = (musicTime - noteTime + travelTime) / travelTime;
-
-
-        if (t < 0f) t = 0f;
-        if (t > 1f) return true;
-
-        rect.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
-        return false;
-    }
-
-    public float GetNoteTime()
-    {
-        return noteTime;
+        flashCoroutine = null;
     }
 }
