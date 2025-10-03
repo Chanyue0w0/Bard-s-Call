@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 752044838295580105}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.6, z: 0}
+  m_LocalPosition: {x: 0, y: 17.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9100831245632136328}
   - component: {fileID: 1620973246556366396}
+  - component: {fileID: 4593815306776766115}
   m_Layer: 0
   m_Name: Warrior
   m_TagString: Hero
@@ -116,3 +117,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4593815306776766115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8663616510560370193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseScale: {x: 0.15, y: 0.15, z: 0.15}
+  beatScaleMultiplier: 1.2
+  scaleLerpSpeed: 6
