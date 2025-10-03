@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class DebugTestSlime : MonoBehaviour
 {
+    [Header("基本數值")]
+    public int maxHP = 50;
+    public int hp = 50;
+    public float respawnDelay = 10f;   // 死亡後多久復活
+
     [Header("左右微動參數")]
     public float amplitude = 0.05f;
     public float speed = 1.5f;
@@ -27,7 +32,7 @@ public class DebugTestSlime : MonoBehaviour
     public float vfxLifetime = 1.5f;
 
     [Header("警示設定")]
-    public int warningBeats = 2; // 提前幾個 Beat 警示
+    public int warningBeats = 2;
     public Color warningColor = Color.red;
 
     private float phase = 0f;
@@ -36,13 +41,16 @@ public class DebugTestSlime : MonoBehaviour
     private Vector3 targetScale;
 
     private float nextAttackTime;
-    private float warningTime; // 何時開始變紅
+    private float warningTime;
     private bool readyToAttack = false;
     private bool isAttacking = false;
     private bool isWarning = false;
+    private bool isDead = false;
 
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
+    private Vector3 spawnPoint;
+    private Collider2D col;   // ★ 碰撞器引用
 
     private BattleManager.TeamSlotInfo selfSlot => BattleManager.Instance.ETeamInfo[slotIndex];
     private BattleManager.TeamSlotInfo targetSlot => BattleManager.Instance.CTeamInfo[slotIndex];
@@ -51,6 +59,7 @@ public class DebugTestSlime : MonoBehaviour
     {
         basePosLocal = transform.localPosition;
         basePosWorld = transform.position;
+        spawnPoint = transform.position;
         phase = randomizePhase ? Random.Range(0f, Mathf.PI * 2f) : 0f;
 
         transform.localScale = baseScale;
@@ -60,8 +69,11 @@ public class DebugTestSlime : MonoBehaviour
         if (spriteRenderer != null)
             originalColor = spriteRenderer.color;
 
+        col = GetComponent<Collider2D>(); // ★ 初始化 Collider
+
         BeatManager.OnBeat += OnBeat;
     }
+
     void OnDisable()
     {
         BeatManager.OnBeat -= OnBeat;
@@ -69,15 +81,12 @@ public class DebugTestSlime : MonoBehaviour
 
     void Start()
     {
-        // BeatManager 已經完成 Start()，Instance 保證存在
         ScheduleNextAttack();
     }
 
-
-
     void Update()
     {
-        if (isAttacking) return;
+        if (isDead || isAttacking) return;
 
         // 左右擺動
         float offsetX = Mathf.Sin((Time.unscaledTime + phase) * speed) * amplitude;
@@ -114,11 +123,12 @@ public class DebugTestSlime : MonoBehaviour
 
     private void OnBeat()
     {
+        if (isDead) return;
+
         // Beat 縮放動畫
         targetScale = baseScale * beatScaleMultiplier;
         transform.localScale = baseScale;
 
-        // ★ 攻擊的前一拍 → Y 縮放到 1.5 倍
         float beatInterval = 60f / BeatManager.Instance.bpm;
         if (!readyToAttack && Time.time + beatInterval >= nextAttackTime)
         {
@@ -127,20 +137,57 @@ public class DebugTestSlime : MonoBehaviour
             transform.localScale = s;
         }
 
-        // 如果冷卻結束，就攻擊
         if (readyToAttack && targetSlot != null && targetSlot.Actor != null)
         {
             StartCoroutine(AttackSequence());
         }
     }
 
+    // ★ 呼叫這個來扣血
+    public void TakeDamage(int dmg)
+    {
+        if (isDead) return;
+
+        hp -= dmg;
+        if (hp <= 0)
+        {
+            StartCoroutine(DieAndRespawn());
+        }
+    }
+
+    private IEnumerator DieAndRespawn()
+    {
+        isDead = true;
+        hp = 0;
+
+        Debug.Log($"史萊姆(slot {slotIndex}) 死亡，{respawnDelay} 秒後復活");
+
+        // ★ 隱藏 SpriteRenderer + 停用 Collider，而不是 SetActive(false)
+        if (spriteRenderer != null) spriteRenderer.enabled = false;
+        if (col != null) col.enabled = false;
+
+        yield return new WaitForSeconds(respawnDelay);
+
+        // 復活
+        hp = maxHP;
+        transform.position = spawnPoint;
+        transform.localScale = baseScale;
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = true;
+            spriteRenderer.color = originalColor;
+        }
+        if (col != null) col.enabled = true;
+
+        isDead = false;
+        ScheduleNextAttack();
+    }
 
     private IEnumerator AttackSequence()
     {
         isAttacking = true;
         readyToAttack = false;
-
-        Debug.Log($"史萊姆(slot {slotIndex}) 在Beat上發動攻擊 → {targetSlot.UnitName}");
 
         Vector3 origin = transform.position;
         Vector3 contactPoint = targetSlot.Actor.transform.position - BattleManager.Instance.meleeContactOffset;
@@ -155,22 +202,18 @@ public class DebugTestSlime : MonoBehaviour
 
         if (BattleEffectManager.Instance != null)
         {
-            // ★ 敵人攻擊 → 統一交給 BattleEffectManager 處理 (才會吃到格檔)
             BattleEffectManager.Instance.OnHit(selfSlot, targetSlot, true);
         }
         else
         {
-            // 備用：直接扣血
             targetSlot.HP -= attackDamage;
             if (targetSlot.HP < 0) targetSlot.HP = 0;
         }
-
 
         yield return new WaitForSeconds(actionLockDuration);
 
         transform.position = origin;
 
-        // 恢復顏色
         if (spriteRenderer != null)
             spriteRenderer.color = originalColor;
         isWarning = false;
@@ -202,17 +245,8 @@ public class DebugTestSlime : MonoBehaviour
         float wait = Random.Range(minAttackInterval, maxAttackInterval);
         nextAttackTime = Time.time + wait;
 
-        // 換算提前警示時間 (用 BeatManager 的間隔)
         float beatInterval = 60f / BeatManager.Instance.bpm;
         warningTime = nextAttackTime - warningBeats * beatInterval;
-        if (warningTime < Time.time) warningTime = Time.time; // 不要比現在早
-    }
-
-    void OnValidate()
-    {
-        amplitude = Mathf.Max(0f, amplitude);
-        speed = Mathf.Max(0f, speed);
-        minAttackInterval = Mathf.Max(0f, minAttackInterval);
-        maxAttackInterval = Mathf.Max(minAttackInterval, maxAttackInterval);
+        if (warningTime < Time.time) warningTime = Time.time;
     }
 }
