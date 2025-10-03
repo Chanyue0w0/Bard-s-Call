@@ -43,11 +43,16 @@ public class SwordHitSkill : MonoBehaviour
             else
             {
                 // Miss：生成 UI 文字
-                if (missTextPrefab != null && uiCanvas != null)
-                {
-                    ShowMissTextAtTarget(target.Actor.transform.position);
-                }
+                //if (missTextPrefab != null && uiCanvas != null)
+                //{
+                //    ShowMissTextAtTarget(target.Actor.transform.position);
+                //}
 
+                //生成爆炸特效
+                if (explosionPrefab != null)
+                {
+                    Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+                }
                 BattleEffectManager.Instance.OnHit(attacker, target, false);
             }
 

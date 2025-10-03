@@ -77,7 +77,8 @@ public class BattleEffectManager : MonoBehaviour
         }
         else
         {
-            multiplier = 0f; // Miss ¡÷ µL¶Ë®`
+            //multiplier = 0f; // Miss ¡÷ µL¶Ë®`
+            multiplier = 1f; // Miss ¡÷ µL¶Ë®`
         }
 
         int finalDamage = Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * multiplier));

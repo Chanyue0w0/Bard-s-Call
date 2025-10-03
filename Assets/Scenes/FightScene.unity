@@ -1496,8 +1496,8 @@ MonoBehaviour:
     Actor: {fileID: 716000474}
     SlotTransform: {fileID: 871193936}
     ClassType: 0
-    MaxHP: 200
-    HP: 200
+    MaxHP: 400
+    HP: 400
     MaxMP: 100
     MP: 0
     OriginAtk: 10
@@ -1508,8 +1508,8 @@ MonoBehaviour:
     Actor: {fileID: 1168006946}
     SlotTransform: {fileID: 424177698}
     ClassType: 0
-    MaxHP: 200
-    HP: 200
+    MaxHP: 400
+    HP: 400
     MaxMP: 100
     MP: 0
     OriginAtk: 10
@@ -1520,8 +1520,8 @@ MonoBehaviour:
     Actor: {fileID: 1144731205}
     SlotTransform: {fileID: 332195311}
     ClassType: 0
-    MaxHP: 200
-    HP: 200
+    MaxHP: 400
+    HP: 400
     MaxMP: 100
     MP: 0
     OriginAtk: 10
@@ -1538,6 +1538,7 @@ MonoBehaviour:
   rangedVfxPrefab: {fileID: 2864930942258562462, guid: 4ca34a493ab195648a5f9c57a9b3266b, type: 3}
   shieldStrikeVfxPrefab: {fileID: 5684739179546280131, guid: 7fb6ef785f7132847a0fe102d380d15b, type: 3}
   missVfxPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
+  magicUseAuraPrefab: {fileID: 8828695936499423838, guid: affdca704bc55b647a179b56752721f6, type: 3}
   vfxLifetime: 1.5
   shieldBlockDuration: 2
   shieldDamage: 10

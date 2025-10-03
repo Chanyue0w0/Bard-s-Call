@@ -67,6 +67,7 @@ public class BattleManager : MonoBehaviour
     public GameObject rangedVfxPrefab;
     public GameObject shieldStrikeVfxPrefab;
     public GameObject missVfxPrefab;
+    public GameObject magicUseAuraPrefab;  // 新增：法師施法光圈
     public float vfxLifetime = 1.5f;
 
     [Header("Shield 設定")]
@@ -298,6 +299,13 @@ public class BattleManager : MonoBehaviour
         }
         else if (attacker.ClassType == UnitClass.Mage)
         {
+            // 在自身位置生成 Aura
+            if (magicUseAuraPrefab != null)
+            {
+                var aura = Instantiate(magicUseAuraPrefab, actor.position, Quaternion.identity);
+                if (vfxLifetime > 0f) Destroy(aura, vfxLifetime);
+            }
+
             var skill = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity);
             var fireball = skill.GetComponent<FireBallSkill>();
             if (fireball != null)

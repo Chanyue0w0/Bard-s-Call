@@ -63,9 +63,15 @@ public class FireBallSkill : MonoBehaviour
             else
             {
                 // Miss：UI 提示
-                if (missTextPrefab != null && uiCanvas != null)
+                //if (missTextPrefab != null && uiCanvas != null)
+                //{
+                //    ShowMissTextAtTarget(target.Actor.transform.position);
+                //}
+
+                // Not Perfect：爆炸特效 + 傷害
+                if (explosionPrefab != null)
                 {
-                    ShowMissTextAtTarget(target.Actor.transform.position);
+                    Instantiate(explosionPrefab, targetPos, Quaternion.identity);
                 }
                 BattleEffectManager.Instance.OnHit(attacker, target, false);
             }
