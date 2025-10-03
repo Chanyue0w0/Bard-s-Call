@@ -15,27 +15,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Character2Attack",
-                    "type": "Button",
-                    "id": "d8166193-ddd3-45d1-9630-d77948bacf7c",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Character1Attack",
-                    "type": "Button",
-                    "id": "cc89f355-f19d-4f9f-99e8-a2aeca36be48",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "TeamRotate",
+                    "name": "TeamRotateClockWise",
                     "type": "Button",
                     "id": "5dda9972-4dd7-4b21-8f69-c60d34c8e16a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TeamRotateCounterClockWise",
+                    "type": "Button",
+                    "id": "6780509b-d4d2-49e1-a9d2-d027a71499a5",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -67,67 +58,45 @@
                 },
                 {
                     "name": "",
-                    "id": "15d7677d-7820-4e8f-8435-946d3e78f16a",
-                    "path": "<Keyboard>/w",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "FightControlScheme",
-                    "action": "Character2Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ca7cf92b-ccb5-4e03-b0be-bd724e84476c",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "FightControlScheme",
-                    "action": "Character2Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3b234d7e-a1aa-479a-a530-c54abfcfeacd",
-                    "path": "<Keyboard>/e",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "FightControlScheme",
-                    "action": "Character1Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8696b5fc-278f-42c2-954e-80dd8f2bd876",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "FightControlScheme",
-                    "action": "Character1Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "0da63cef-0537-4e1f-b30e-2a720e1e6e8b",
-                    "path": "<Keyboard>/r",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
-                    "action": "TeamRotate",
+                    "action": "TeamRotateClockWise",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "ec1b2af6-853a-4005-bf27-65d07cd07601",
-                    "path": "<Gamepad>/buttonSouth",
+                    "path": "<Gamepad>/rightTrigger ",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
-                    "action": "TeamRotate",
+                    "action": "TeamRotateClockWise",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "afcae007-e1e0-4563-b284-dd36675634e4",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "TeamRotateCounterClockWise",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8386b8ea-9ca8-4c0c-80bb-666480081cde",
+                    "path": "<Gamepad>/leftTrigger ",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "TeamRotateCounterClockWise",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

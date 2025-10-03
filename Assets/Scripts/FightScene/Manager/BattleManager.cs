@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem; // 新 Input System
+using System.Linq;
 
 public class BattleManager : MonoBehaviour
 {
@@ -36,9 +37,8 @@ public class BattleManager : MonoBehaviour
         public string SkillName = "Basic";
 
         [Header("輸入綁定")]
-        public int AssignedKeyIndex; // 0=E, 1=W, 2=Q
+        public int AssignedKeyIndex; // 保留，但攻擊改由 P1 控制
     }
-
 
     [Header("我方固定座標（自動在 Start 記錄）")]
     [SerializeField] private Transform[] playerPositions = new Transform[3];
@@ -53,35 +53,35 @@ public class BattleManager : MonoBehaviour
     public TeamSlotInfo[] ETeamInfo = new TeamSlotInfo[3];
 
     [Header("輸入（用 InputActionReference 綁定）")]
-    public InputActionReference actionAttackPos1; // Pos1
-    public InputActionReference actionAttackPos2; // Pos2
-    public InputActionReference actionAttackPos3; // Pos3
-    public InputActionReference actionRotateTeam; // RotateTeam
+    public InputActionReference actionAttackP1;   // Q / X
+    public InputActionReference actionRotateLeft; // LeftArrow / LT
+    public InputActionReference actionRotateRight; // RightArrow / RT
 
     [Header("時序與運動參數")]
     public float actionLockDuration = 0.5f;
     public float dashDuration = 0.05f;
     public Vector3 meleeContactOffset = new Vector3(-1f, 0f, 0f);
 
-    [Header("特效 Prefab（今日只做生成）")]
+    [Header("特效 Prefab")]
     public GameObject meleeVfxPrefab;
     public GameObject rangedVfxPrefab;
     public GameObject shieldStrikeVfxPrefab;
-    public GameObject missVfxPrefab;   // ★ 新增：Miss 特效
+    public GameObject missVfxPrefab;
     public float vfxLifetime = 1.5f;
 
     [Header("Shield 設定")]
-    public float shieldBlockDuration = 2.0f;  // ★ Shield 格檔持續時間（秒數，可依 2 拍調整）
-    public int shieldDamage = 10;             // ★ Shield 格檔時造成的傷害
-
+    public float shieldBlockDuration = 2.0f;
+    public int shieldDamage = 10;
 
     private bool _isActionLocked;
     private readonly WaitForEndOfFrame _endOfFrame = new WaitForEndOfFrame();
 
     [Header("血條 UI")]
-    public GameObject healthBarPrefab;   // 指定血條 Prefab
-    public Canvas uiCanvas;              // UI Canvas (Screen Space - Camera)
+    public GameObject healthBarPrefab;
+    public Canvas uiCanvas;
 
+    [Header("旋轉移動設定")]
+    public float rotateMoveDuration = 0.2f; // 旋轉時移動過去的時間
 
 
     // ---------------- Singleton 設定 ----------------
@@ -89,51 +89,45 @@ public class BattleManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject); // 保證只有一個存在
+            Destroy(gameObject);
             return;
         }
         Instance = this;
-        //DontDestroyOnLoad(gameObject); // 切場景也不會被刪除
     }
 
     void OnEnable()
     {
-        if (actionAttackPos1 != null)
+        if (actionAttackP1 != null)
         {
-            actionAttackPos1.action.started -= OnAttackPos1;
-            actionAttackPos1.action.started += OnAttackPos1;
-            actionAttackPos1.action.Enable();
+            actionAttackP1.action.started += OnAttackP1;
+            actionAttackP1.action.Enable();
         }
-        if (actionAttackPos2 != null)
+        if (actionRotateLeft != null)
         {
-            actionAttackPos2.action.started -= OnAttackPos2;
-            actionAttackPos2.action.started += OnAttackPos2;
-            actionAttackPos2.action.Enable();
+            actionRotateLeft.action.started += OnRotateLeft;
+            actionRotateLeft.action.Enable();
         }
-        if (actionAttackPos3 != null)
+        if (actionRotateRight != null)
         {
-            actionAttackPos3.action.started -= OnAttackPos3;
-            actionAttackPos3.action.started += OnAttackPos3;
-            actionAttackPos3.action.Enable();
+            actionRotateRight.action.started += OnRotateRight;
+            actionRotateRight.action.Enable();
         }
     }
 
     void OnDisable()
     {
-        if (actionAttackPos1 != null)
-            actionAttackPos1.action.started -= OnAttackPos1;
-        if (actionAttackPos2 != null)
-            actionAttackPos2.action.started -= OnAttackPos2;
-        if (actionAttackPos3 != null)
-            actionAttackPos3.action.started -= OnAttackPos3;
+        if (actionAttackP1 != null)
+            actionAttackP1.action.started -= OnAttackP1;
+        if (actionRotateLeft != null)
+            actionRotateLeft.action.started -= OnRotateLeft;
+        if (actionRotateRight != null)
+            actionRotateRight.action.started -= OnRotateRight;
     }
-
 
     void Start()
     {
-        // 建立我方血條
+        // 建立血條
         CreateHealthBars(CTeamInfo);
-        // 建立敵方血條
         CreateHealthBars(ETeamInfo);
     }
 
@@ -148,74 +142,135 @@ public class BattleManager : MonoBehaviour
                 {
                     GameObject hb = Instantiate(healthBarPrefab, uiCanvas.transform);
                     hb.GetComponent<HealthBarUI>().Init(slot, headPoint, uiCanvas.worldCamera);
-
                 }
             }
         }
     }
 
-    private void OnAttackPos1(InputAction.CallbackContext ctx)
+    // ================= 攻擊邏輯 =================
+    private void OnAttackP1(InputAction.CallbackContext ctx)
     {
-        // Q → P1
-        TryStartAttack(2);
-    }
+        if (CTeamInfo[0] == null) return;
 
-    private void OnAttackPos2(InputAction.CallbackContext ctx)
-    {
-        // W → P2
-        TryStartAttack(1);
-    }
+        bool perfect = BeatJudge.Instance.IsOnBeat();
+        var attacker = CTeamInfo[0];
+        var target = FindEnemyByClass(attacker.ClassType);
 
-    private void OnAttackPos3(InputAction.CallbackContext ctx)
-    {
-        // E → P3
-        TryStartAttack(0);
-    }
+        if (target == null) return;
 
+        // P1 攻擊
+        StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
 
-
-    private void HandleAttackKey(int keyIndex)
-    {
-        for (int i = 0; i < CTeamInfo.Length; i++)
+        // 如果 perfect → 後排也攻擊同一目標
+        if (perfect)
         {
-            if (CTeamInfo[i].AssignedKeyIndex == keyIndex)
+            for (int i = 1; i < CTeamInfo.Length; i++)
             {
-                TryStartAttack(i);
-                return;
+                var ally = CTeamInfo[i];
+                if (ally != null && ally.Actor != null)
+                {
+                    StartCoroutine(AttackSequence(ally, target, target.SlotTransform.position, true));
+                }
             }
         }
     }
 
-    // 嘗試從指定我方槽位發動攻擊（對位攻擊）
-    private void TryStartAttack(int slotIndex)
+
+    // 根據職業選擇攻擊目標
+    private TeamSlotInfo FindEnemyByClass(UnitClass cls)
     {
-        if (_isActionLocked) return;
-        if (slotIndex < 0 || slotIndex >= CTeamInfo.Length) return;
-
-
-        // ★ 先做節奏判定
-        bool perfect = BeatJudge.Instance.IsOnBeat();
-
-        var attacker = CTeamInfo[slotIndex];
-        var target = FindNextValidEnemy(slotIndex);
-
-        if (target == null || target.Actor == null)
+        if (cls == UnitClass.Warrior)
         {
-            Debug.Log($"英雄 {attacker.UnitName} 攻擊（敵方全滅 or 沒有敵人） Perfect={perfect}");
-            return;
+            // 從前往後找第一個活著的
+            for (int i = 0; i < ETeamInfo.Length; i++)
+            {
+                if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
+                    return ETeamInfo[i];
+            }
         }
-
-        var targetPoint = target.SlotTransform != null
-            ? target.SlotTransform.position
-            : GetFallbackEnemyPoint(slotIndex);
-
-        // ★ 把判定結果傳進去
-        StartCoroutine(AttackSequence(attacker, target, targetPoint, perfect));
-
-        Debug.Log($"英雄 P{slotIndex + 1} 攻擊 → 敵人 E{slotIndex + 1} Perfect={perfect}");
+        else if (cls == UnitClass.Mage)
+        {
+            // 從後往前找第一個活著的
+            for (int i = ETeamInfo.Length - 1; i >= 0; i--)
+            {
+                if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
+                    return ETeamInfo[i];
+            }
+        }
+        else
+        {
+            // 預設：找第一個活著的
+            return FindNextValidEnemy(0);
+        }
+        return null;
     }
 
+    // ================= 旋轉邏輯 =================
+    private void OnRotateLeft(InputAction.CallbackContext ctx)
+    {
+        RotateTeamCounterClockwise();
+    }
 
+    private void OnRotateRight(InputAction.CallbackContext ctx)
+    {
+        RotateTeamClockwise();
+    }
+
+    private void RotateTeamClockwise()
+    {
+        // P1->P2, P2->P3, P3->P1
+        var temp = CTeamInfo[2];
+        CTeamInfo[2] = CTeamInfo[1];
+        CTeamInfo[1] = CTeamInfo[0];
+        CTeamInfo[0] = temp;
+        UpdatePositions();
+        Debug.Log("隊伍順時針旋轉");
+    }
+
+    private void RotateTeamCounterClockwise()
+    {
+        // P1->P3, P3->P2, P2->P1
+        var temp = CTeamInfo[0];
+        CTeamInfo[0] = CTeamInfo[1];
+        CTeamInfo[1] = CTeamInfo[2];
+        CTeamInfo[2] = temp;
+        UpdatePositions();
+        Debug.Log("隊伍逆時針旋轉");
+    }
+
+    private void UpdatePositions()
+    {
+        for (int i = 0; i < CTeamInfo.Length; i++)
+        {
+            if (CTeamInfo[i] != null && CTeamInfo[i].Actor != null)
+            {
+                // 不再瞬移，而是用協程滑動過去
+                StartCoroutine(MoveToPosition(CTeamInfo[i].Actor.transform, playerPositions[i].position, rotateMoveDuration));
+                CTeamInfo[i].SlotTransform = playerPositions[i];
+            }
+        }
+    }
+
+    private IEnumerator MoveToPosition(Transform actor, Vector3 targetPos, float duration)
+    {
+        if (duration <= 0f)
+        {
+            actor.position = targetPos;
+            yield break;
+        }
+
+        Vector3 start = actor.position;
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            if (t > 1f) t = 1f;
+            actor.position = Vector3.Lerp(start, targetPos, t);
+            yield return null;
+        }
+    }
+
+    // ================= 保留原始攻擊流程 =================
     private IEnumerator AttackSequence(TeamSlotInfo attacker, TeamSlotInfo target, Vector3 targetPoint, bool perfect)
     {
         _isActionLocked = true;
@@ -226,7 +281,6 @@ public class BattleManager : MonoBehaviour
 
         if (attacker.ClassType == UnitClass.Warrior)
         {
-            // Warrior → 近戰邏輯
             Vector3 contactPoint = targetPoint + meleeContactOffset;
             yield return Dash(actor, origin, contactPoint, dashDuration);
 
@@ -244,7 +298,6 @@ public class BattleManager : MonoBehaviour
         }
         else if (attacker.ClassType == UnitClass.Mage)
         {
-            // Mage → 遠程邏輯
             var skill = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity);
             var fireball = skill.GetComponent<FireBallSkill>();
             if (fireball != null)
@@ -256,42 +309,20 @@ public class BattleManager : MonoBehaviour
         }
         else if (attacker.ClassType == UnitClass.Shield)
         {
-            // Shield → 格檔邏輯
             if (perfect)
             {
-                Debug.Log("Shield Perfect 格檔：全隊獲得免傷狀態 + 生成反擊 Fireball");
-
-                // ★ 給予全隊格檔 Buff
                 BattleEffectManager.Instance.ActivateShield(shieldBlockDuration);
-
-                // ★ 找到第一個可攻擊的敵人（優先 slotIndex，若空則往後找）
-                TeamSlotInfo shieldTarget = null;
-                for (int i = target.AssignedKeyIndex; i < ETeamInfo.Length; i++)
+                var strikeObj = Instantiate(shieldStrikeVfxPrefab, actor.position, Quaternion.identity);
+                var strike = strikeObj.GetComponent<ShieldStrike>();
+                if (strike != null)
                 {
-                    if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
-                    {
-                        shieldTarget = ETeamInfo[i];
-                        break;
-                    }
-                }
-
-                if (shieldTarget != null)
-                {
-                    var strikeObj = Instantiate(shieldStrikeVfxPrefab, actor.position, Quaternion.identity);
-                    var strike = strikeObj.GetComponent<ShieldStrike>();
-                    if (strike != null)
-                    {
-                        strike.attacker = attacker;
-                        strike.target = shieldTarget;
-                        strike.overrideDamage = shieldDamage; // 固定 10 點傷害
-                    }
-
-                    Debug.Log($"Shield 反擊 Fireball → {shieldTarget.UnitName}，固定 {shieldDamage} 傷害");
+                    strike.attacker = attacker;
+                    strike.target = target;
+                    strike.overrideDamage = shieldDamage;
                 }
             }
             else
             {
-                Debug.Log("Shield Miss，生成 Miss 特效");
                 if (missVfxPrefab != null)
                 {
                     Instantiate(missVfxPrefab, actor.position, Quaternion.identity);
@@ -299,14 +330,12 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-
         float remain = actionLockDuration - (Time.time - startTime);
         if (remain > 0f) yield return new WaitForSeconds(remain);
 
         _isActionLocked = false;
     }
 
-    // 從指定索引開始，往後找第一個有敵人的槽位
     private TeamSlotInfo FindNextValidEnemy(int startIndex)
     {
         for (int i = startIndex; i < ETeamInfo.Length; i++)
@@ -316,7 +345,7 @@ public class BattleManager : MonoBehaviour
                 return ETeamInfo[i];
             }
         }
-        return null; // 找不到敵人
+        return null;
     }
 
     private IEnumerator Dash(Transform actor, Vector3 from, Vector3 to, float duration)
@@ -335,20 +364,5 @@ public class BattleManager : MonoBehaviour
             actor.position = Vector3.Lerp(from, to, t);
             yield return null;
         }
-    }
-
-    //private void SpawnVfx(GameObject prefab, Vector3 atWorldPos)
-    //{
-    //    if (prefab == null) return;
-    //    var go = Instantiate(prefab, atWorldPos, prefab.transform.rotation);
-    //    if (vfxLifetime > 0f) Destroy(go, vfxLifetime);
-    //}
-
-    private Vector3 GetFallbackEnemyPoint(int slotIndex)
-    {
-        var self = CTeamInfo[slotIndex];
-        if (self != null && self.SlotTransform != null)
-            return self.SlotTransform.position + new Vector3(3f, 0f, 0f);
-        return transform.position;
     }
 }

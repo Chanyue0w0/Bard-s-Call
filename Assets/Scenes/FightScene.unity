@@ -1527,10 +1527,9 @@ MonoBehaviour:
     Atk: 10
     SkillName: Basic
     AssignedKeyIndex: 2
-  actionAttackPos1: {fileID: 4198487206292861765, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
-  actionAttackPos2: {fileID: -8368829135244921414, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
-  actionAttackPos3: {fileID: 2043867421210978648, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
-  actionRotateTeam: {fileID: -5368929452861908880, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionAttackP1: {fileID: 2043867421210978648, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionRotateLeft: {fileID: 677001074062244605, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionRotateRight: {fileID: -5368929452861908880, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionLockDuration: 0.1
   dashDuration: 0.05
   meleeContactOffset: {x: 0.5, y: 0, z: 0}
