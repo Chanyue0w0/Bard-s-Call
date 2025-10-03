@@ -70,7 +70,7 @@
                 {
                     "name": "",
                     "id": "ec1b2af6-853a-4005-bf27-65d07cd07601",
-                    "path": "<Gamepad>/rightTrigger ",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
@@ -92,7 +92,7 @@
                 {
                     "name": "",
                     "id": "8386b8ea-9ca8-4c0c-80bb-666480081cde",
-                    "path": "<Gamepad>/leftTrigger ",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
