@@ -112,14 +112,14 @@ public class BeatJudge : MonoBehaviour
 
     private void SpawnMissText()
     {
-        //if (missTextPrefab == null || beatHitPointUI == null) return;
+        if (missTextPrefab == null || beatHitPointUI == null) return;
 
-        //GameObject missObj = Instantiate(missTextPrefab, beatHitPointUI.parent);
-        //RectTransform rect = missObj.GetComponent<RectTransform>();
-        //if (rect != null)
-        //    rect.anchoredPosition = beatHitPointUI.anchoredPosition + new Vector2(0, 50f);
+        GameObject missObj = Instantiate(missTextPrefab, beatHitPointUI.parent);
+        RectTransform rect = missObj.GetComponent<RectTransform>();
+        if (rect != null)
+            rect.anchoredPosition = beatHitPointUI.anchoredPosition + new Vector2(0, 50f);
 
-        //Destroy(missObj, 0.5f);
+        Destroy(missObj, 0.3f);
     }
 
     // ===============================================

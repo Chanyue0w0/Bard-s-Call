@@ -5,14 +5,13 @@ using System.Linq;
 
 public class BattleManager : MonoBehaviour
 {
-    // 單例
     public static BattleManager Instance { get; private set; }
 
     [System.Serializable]
     public enum UnitClass
     {
-        Warrior,  // 原本 Melee
-        Mage,     // 原本 Ranged
+        Warrior,
+        Mage,
         Shield,
         Priest,
         Ranger
@@ -37,7 +36,7 @@ public class BattleManager : MonoBehaviour
         public string SkillName = "Basic";
 
         [Header("輸入綁定")]
-        public int AssignedKeyIndex; // 保留，但攻擊改由 P1 控制
+        public int AssignedKeyIndex;
     }
 
     [Header("我方固定座標（自動在 Start 記錄）")]
@@ -53,9 +52,9 @@ public class BattleManager : MonoBehaviour
     public TeamSlotInfo[] ETeamInfo = new TeamSlotInfo[3];
 
     [Header("輸入（用 InputActionReference 綁定）")]
-    public InputActionReference actionAttackP1;   // Q / X
-    public InputActionReference actionRotateLeft; // LeftArrow / LT
-    public InputActionReference actionRotateRight; // RightArrow / RT
+    public InputActionReference actionAttackP1;
+    public InputActionReference actionRotateLeft;
+    public InputActionReference actionRotateRight;
 
     [Header("時序與運動參數")]
     public float actionLockDuration = 0.5f;
@@ -67,7 +66,7 @@ public class BattleManager : MonoBehaviour
     public GameObject rangedVfxPrefab;
     public GameObject shieldStrikeVfxPrefab;
     public GameObject missVfxPrefab;
-    public GameObject magicUseAuraPrefab;  // 新增：法師施法光圈
+    public GameObject magicUseAuraPrefab;
     public float vfxLifetime = 1.5f;
 
     [Header("Shield 設定")]
@@ -75,20 +74,18 @@ public class BattleManager : MonoBehaviour
     public int shieldDamage = 10;
 
     private bool _isActionLocked;
-    private readonly WaitForEndOfFrame _endOfFrame = new WaitForEndOfFrame();
 
     [Header("血條 UI")]
     public GameObject healthBarPrefab;
     public Canvas uiCanvas;
 
     [Header("旋轉移動設定")]
-    public float rotateMoveDuration = 0.2f; // 旋轉時移動過去的時間
+    public float rotateMoveDuration = 0.2f;
 
     [Header("近戰攻擊設定")]
-    public float dashStayDuration = 0.15f;  // 攻擊後停留在目標前的時間
+    public float dashStayDuration = 0.15f;
 
 
-    // ---------------- Singleton 設定 ----------------
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -130,7 +127,6 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
-        // 建立血條
         CreateHealthBars(CTeamInfo);
         CreateHealthBars(ETeamInfo);
     }
@@ -154,18 +150,18 @@ public class BattleManager : MonoBehaviour
     // ================= 攻擊邏輯 =================
     private void OnAttackP1(InputAction.CallbackContext ctx)
     {
+        if (_isActionLocked) return;
         if (CTeamInfo[0] == null) return;
 
         bool perfect = BeatJudge.Instance.IsOnBeat();
         var attacker = CTeamInfo[0];
         var target = FindEnemyByClass(attacker.ClassType);
-
         if (target == null) return;
 
-        // P1 攻擊
+        StartCoroutine(LockAction(actionLockDuration));
+
         StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
 
-        // 如果 perfect → 後排也攻擊同一目標
         if (perfect)
         {
             for (int i = 1; i < CTeamInfo.Length; i++)
@@ -179,67 +175,44 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-
-    // 根據職業選擇攻擊目標
-    private TeamSlotInfo FindEnemyByClass(UnitClass cls)
-    {
-        if (cls == UnitClass.Warrior)
-        {
-            // 從前往後找第一個活著的
-            for (int i = 0; i < ETeamInfo.Length; i++)
-            {
-                if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
-                    return ETeamInfo[i];
-            }
-        }
-        else if (cls == UnitClass.Mage)
-        {
-            // 從後往前找第一個活著的
-            for (int i = ETeamInfo.Length - 1; i >= 0; i--)
-            {
-                if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
-                    return ETeamInfo[i];
-            }
-        }
-        else
-        {
-            // 預設：找第一個活著的
-            return FindNextValidEnemy(0);
-        }
-        return null;
-    }
-
     // ================= 旋轉邏輯 =================
     private void OnRotateLeft(InputAction.CallbackContext ctx)
     {
+        if (_isActionLocked) return;
+        StartCoroutine(LockAction(actionLockDuration));
         RotateTeamCounterClockwise();
     }
 
     private void OnRotateRight(InputAction.CallbackContext ctx)
     {
+        if (_isActionLocked) return;
+        StartCoroutine(LockAction(actionLockDuration));
         RotateTeamClockwise();
+    }
+
+    private IEnumerator LockAction(float duration)
+    {
+        _isActionLocked = true;
+        yield return new WaitForSeconds(duration);
+        _isActionLocked = false;
     }
 
     private void RotateTeamClockwise()
     {
-        // P1->P2, P2->P3, P3->P1
         var temp = CTeamInfo[2];
         CTeamInfo[2] = CTeamInfo[1];
         CTeamInfo[1] = CTeamInfo[0];
         CTeamInfo[0] = temp;
         UpdatePositions();
-        Debug.Log("隊伍順時針旋轉");
     }
 
     private void RotateTeamCounterClockwise()
     {
-        // P1->P3, P3->P2, P2->P1
         var temp = CTeamInfo[0];
         CTeamInfo[0] = CTeamInfo[1];
         CTeamInfo[1] = CTeamInfo[2];
         CTeamInfo[2] = temp;
         UpdatePositions();
-        Debug.Log("隊伍逆時針旋轉");
     }
 
     private void UpdatePositions()
@@ -248,7 +221,6 @@ public class BattleManager : MonoBehaviour
         {
             if (CTeamInfo[i] != null && CTeamInfo[i].Actor != null)
             {
-                // 不再瞬移，而是用協程滑動過去
                 StartCoroutine(MoveToPosition(CTeamInfo[i].Actor.transform, playerPositions[i].position, rotateMoveDuration));
                 CTeamInfo[i].SlotTransform = playerPositions[i];
             }
@@ -268,29 +240,25 @@ public class BattleManager : MonoBehaviour
         while (t < 1f)
         {
             t += Time.deltaTime / duration;
-            if (t > 1f) t = 1f;
             actor.position = Vector3.Lerp(start, targetPos, t);
             yield return null;
         }
     }
 
-    // ================= 保留原始攻擊流程 =================
+    // ================= 攻擊序列 =================
     private IEnumerator AttackSequence(TeamSlotInfo attacker, TeamSlotInfo target, Vector3 targetPoint, bool perfect)
     {
-        _isActionLocked = true;
-        float startTime = Time.time;
-
         var actor = attacker.Actor.transform;
         Vector3 origin = actor.position;
 
-        if (attacker.ClassType == UnitClass.Warrior)
-        {
-            Vector3 contactPoint = targetPoint + meleeContactOffset;
+        bool isFront = (CTeamInfo.Length > 0 && CTeamInfo[0] == attacker);
 
-            // 衝向敵人
+        if (!isFront)
+        {
+            // ★ 後排 → 統一使用 Dash 攻擊
+            Vector3 contactPoint = targetPoint + meleeContactOffset;
             yield return Dash(actor, origin, contactPoint, dashDuration);
 
-            // 生成攻擊特效
             var skill = Instantiate(meleeVfxPrefab, targetPoint, Quaternion.identity);
             var sword = skill.GetComponent<SwordHitSkill>();
             if (sword != null)
@@ -300,87 +268,121 @@ public class BattleManager : MonoBehaviour
                 sword.isPerfect = perfect;
             }
 
-            // ★ 在攻擊位置停留 dashStayDuration 秒
             yield return new WaitForSeconds(dashStayDuration);
-
-            // ★ 回到原位
             yield return Dash(actor, contactPoint, origin, dashDuration);
+            yield break;
         }
 
-        else if (attacker.ClassType == UnitClass.Mage)
+        // ★ 前排角色使用其專屬技能
+        switch (attacker.ClassType)
         {
-            // 在自身位置生成 Aura
-            if (magicUseAuraPrefab != null)
-            {
-                var aura = Instantiate(magicUseAuraPrefab, actor.position, Quaternion.identity);
-                if (vfxLifetime > 0f) Destroy(aura, vfxLifetime);
-            }
+            case UnitClass.Warrior:
+                {
+                    Vector3 contactPoint = targetPoint + meleeContactOffset;
+                    yield return Dash(actor, origin, contactPoint, dashDuration);
 
-            var skill = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity);
-            var fireball = skill.GetComponent<FireBallSkill>();
-            if (fireball != null)
-            {
-                fireball.attacker = attacker;
-                fireball.target = target;
-                fireball.isPerfect = perfect;
-            }
-        }
-        else if (attacker.ClassType == UnitClass.Shield)
-        {
-            if (perfect)
-            {
-                BattleEffectManager.Instance.ActivateShield(shieldBlockDuration);
-                var strikeObj = Instantiate(shieldStrikeVfxPrefab, actor.position, Quaternion.identity);
-                var strike = strikeObj.GetComponent<ShieldStrike>();
-                if (strike != null)
-                {
-                    strike.attacker = attacker;
-                    strike.target = target;
-                    strike.overrideDamage = shieldDamage;
-                }
-            }
-            else
-            {
-                if (missVfxPrefab != null)
-                {
-                    Instantiate(missVfxPrefab, actor.position, Quaternion.identity);
-                }
-            }
-        }
-        else if (attacker.ClassType == UnitClass.Priest)
-        {
-            if (perfect)
-            {
-                // 呼叫 BattleEffectManager → 全隊回復 10
-                BattleEffectManager.Instance.HealTeam(10);
-
-                // 在三個固定 PlayerPosition 生成回復特效
-                for (int i = 0; i < playerPositions.Length; i++)
-                {
-                    var pos = playerPositions[i].position;
-                    if (BattleEffectManager.Instance.healVfxPrefab != null)
+                    var skill = Instantiate(meleeVfxPrefab, targetPoint, Quaternion.identity);
+                    var sword = skill.GetComponent<SwordHitSkill>();
+                    if (sword != null)
                     {
-                        var heal = GameObject.Instantiate(BattleEffectManager.Instance.healVfxPrefab, pos, Quaternion.identity);
-                        if (vfxLifetime > 0f) Destroy(heal, vfxLifetime);
+                        sword.attacker = attacker;
+                        sword.target = target;
+                        sword.isPerfect = perfect;
                     }
+
+                    yield return new WaitForSeconds(dashStayDuration);
+                    yield return Dash(actor, contactPoint, origin, dashDuration);
+                    break;
                 }
-            }
-            else
-            {
-                // Miss → 生成 Miss VFX
-                if (missVfxPrefab != null)
+            case UnitClass.Mage:
                 {
-                    Instantiate(missVfxPrefab, actor.position, Quaternion.identity);
+                    if (magicUseAuraPrefab != null)
+                    {
+                        var aura = Instantiate(magicUseAuraPrefab, actor.position, Quaternion.identity);
+                        if (vfxLifetime > 0f) Destroy(aura, vfxLifetime);
+                    }
+
+                    var skill = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity);
+                    var fireball = skill.GetComponent<FireBallSkill>();
+                    if (fireball != null)
+                    {
+                        fireball.attacker = attacker;
+                        fireball.target = target;
+                        fireball.isPerfect = perfect;
+                    }
+                    break;
                 }
-            }
+            case UnitClass.Shield:
+                {
+                    if (perfect)
+                    {
+                        BattleEffectManager.Instance.ActivateShield(shieldBlockDuration);
+                        var strikeObj = Instantiate(shieldStrikeVfxPrefab, actor.position, Quaternion.identity);
+                        var strike = strikeObj.GetComponent<ShieldStrike>();
+                        if (strike != null)
+                        {
+                            strike.attacker = attacker;
+                            strike.target = target;
+                            strike.overrideDamage = shieldDamage;
+                        }
+                    }
+                    else if (missVfxPrefab != null)
+                    {
+                        Instantiate(missVfxPrefab, actor.position, Quaternion.identity);
+                    }
+                    break;
+                }
+            case UnitClass.Priest:
+                {
+                    if (perfect)
+                    {
+                        BattleEffectManager.Instance.HealTeam(10);
+                        for (int i = 0; i < playerPositions.Length; i++)
+                        {
+                            var pos = playerPositions[i].position;
+                            if (BattleEffectManager.Instance.healVfxPrefab != null)
+                            {
+                                var heal = Instantiate(BattleEffectManager.Instance.healVfxPrefab, pos, Quaternion.identity);
+                                if (vfxLifetime > 0f) Destroy(heal, vfxLifetime);
+                            }
+                        }
+                    }
+                    else if (missVfxPrefab != null)
+                    {
+                        Instantiate(missVfxPrefab, actor.position, Quaternion.identity);
+                    }
+                    break;
+                }
+            case UnitClass.Ranger:
+                {
+                    var skill = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity);
+                    var arrow = skill.GetComponent<FireBallSkill>();
+                    if (arrow != null)
+                    {
+                        arrow.attacker = attacker;
+                        arrow.target = target;
+                        arrow.isPerfect = perfect;
+                    }
+                    break;
+                }
         }
+    }
 
-
-
-        float remain = actionLockDuration - (Time.time - startTime);
-        if (remain > 0f) yield return new WaitForSeconds(remain);
-
-        _isActionLocked = false;
+    private TeamSlotInfo FindEnemyByClass(UnitClass cls)
+    {
+        if (cls == UnitClass.Warrior)
+        {
+            for (int i = 0; i < ETeamInfo.Length; i++)
+                if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
+                    return ETeamInfo[i];
+        }
+        else if (cls == UnitClass.Mage)
+        {
+            for (int i = ETeamInfo.Length - 1; i >= 0; i--)
+                if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
+                    return ETeamInfo[i];
+        }
+        return FindNextValidEnemy(0);
     }
 
     private TeamSlotInfo FindNextValidEnemy(int startIndex)
@@ -388,9 +390,7 @@ public class BattleManager : MonoBehaviour
         for (int i = startIndex; i < ETeamInfo.Length; i++)
         {
             if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
-            {
                 return ETeamInfo[i];
-            }
         }
         return null;
     }
@@ -407,7 +407,6 @@ public class BattleManager : MonoBehaviour
         while (t < 1f)
         {
             t += Time.deltaTime / duration;
-            if (t > 1f) t = 1f;
             actor.position = Vector3.Lerp(from, to, t);
             yield return null;
         }
