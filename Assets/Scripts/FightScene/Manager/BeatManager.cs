@@ -6,16 +6,22 @@ public class BeatManager : MonoBehaviour
     public static BeatManager Instance { get; private set; }
 
     [Header("BPM 設定")]
+    [Tooltip("每分鐘拍數")]
     public float bpm = 145f;
+
+    [Tooltip("每拍細分數，例如 2=八分音符、4=十六分音符")]
     public int beatSubdivision = 1;
+
+    [Tooltip("音樂播放後幾秒開始第一拍")]
+    public float startDelay = 0f;
 
     [Header("UI 設定")]
     public GameObject beatPrefab;
     public Transform hitPoint;
 
-    private float beatInterval;
-    private float nextBeatTime;
-    private BeatUI persistentBeat; // ★ 永遠只有這一個
+    private double beatInterval;       // 每拍間隔（秒）
+    private int beatCount = 0;         // 拍數計數（從 0 開始）
+    private BeatUI persistentBeat;
 
     public static event Action OnBeat;
 
@@ -31,10 +37,9 @@ public class BeatManager : MonoBehaviour
 
     private void Start()
     {
-        beatInterval = 60f / bpm / beatSubdivision;
-        nextBeatTime = 3f;
+        beatInterval = 60.0 / bpm / beatSubdivision;
 
-        // 開場生成一個常駐 BeatUI
+        // 初始化 Persistent Beat UI
         if (beatPrefab != null && hitPoint != null)
         {
             GameObject beatObj = Instantiate(beatPrefab, hitPoint.parent);
@@ -45,28 +50,60 @@ public class BeatManager : MonoBehaviour
             beatRect.anchoredPosition = hitRect.anchoredPosition;
 
             persistentBeat = beatObj.GetComponent<BeatUI>();
-            if (persistentBeat == null) persistentBeat = beatObj.AddComponent<BeatUI>();
+            if (persistentBeat == null)
+                persistentBeat = beatObj.AddComponent<BeatUI>();
+
             persistentBeat.Init();
         }
     }
 
     private void Update()
     {
-        float musicTime = MusicManager.Instance.GetMusicTime();
+        if (MusicManager.Instance == null || !MusicManager.Instance.IsPlaying())
+            return;
 
-        if (musicTime >= nextBeatTime)
+        double musicTime = MusicManager.Instance.GetMusicTime();
+
+        // 當前理論拍點時間
+        double currentBeatTime = beatCount * beatInterval + startDelay;
+
+        // 若時間已達該拍點 → 觸發
+        while (musicTime >= currentBeatTime)
         {
-            // 每到節拍 → 讓 BeatUI 閃動
-            persistentBeat?.OnBeat();
+            TriggerBeat();
 
-            OnBeat?.Invoke();
-            nextBeatTime += beatInterval;
+            beatCount++;
+            currentBeatTime = beatCount * beatInterval + startDelay;
         }
     }
 
-    // ★ 新增：直接回傳唯一的 BeatUI
+    private void TriggerBeat()
+    {
+        persistentBeat?.OnBeat();
+        OnBeat?.Invoke();
+    }
+
+    // ==============================
+    // 對外介面
+    // ==============================
+
     public BeatUI GetPersistentBeat()
     {
         return persistentBeat;
+    }
+
+    public float GetInterval()
+    {
+        return (float)beatInterval;
+    }
+
+    public float GetNextBeatTime()
+    {
+        return (float)(beatCount * beatInterval + startDelay);
+    }
+
+    public float GetPreviousBeatTime()
+    {
+        return (float)((beatCount - 1) * beatInterval + startDelay);
     }
 }

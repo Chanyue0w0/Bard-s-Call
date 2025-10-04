@@ -921,6 +921,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bpm: 145
   beatSubdivision: 1
+  startDelay: 0
   beatPrefab: {fileID: 3071351389764054346, guid: 78eb6fa3fc262f84ca2b2f5082d55880, type: 3}
   hitPoint: {fileID: 381415587}
 --- !u!114 &806207503
@@ -935,10 +936,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 981862c8f89c9ab42b06c97d0bc73636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perfectRange: 0.12
+  earlyRange: 0.03
+  lateRange: 0.2
+  judgeOffset: 0.05
   beatHitLightUIPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}
-  beatHitPointUI: {fileID: 381415587}
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
+  beatHitPointUI: {fileID: 381415587}
   scaleUpSize: 1.6
   normalSize: 1.1202
   animTime: 0.15
@@ -1418,6 +1421,9 @@ MonoBehaviour:
   defaultClip: {fileID: 8300000, guid: 2a77d181bbb7d374b923f665233ff04b, type: 3}
   pitch: 1
   volume: 1
+  loop: 1
+  autoPlayOnStart: 1
+  globalOffset: 0
 --- !u!1 &1168006946 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}

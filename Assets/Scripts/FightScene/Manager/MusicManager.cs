@@ -1,22 +1,33 @@
 using UnityEngine;
+using System;
 
 public class MusicManager : MonoBehaviour
 {
-    // 單例
     public static MusicManager Instance { get; private set; }
 
     private AudioSource audioSource;
 
     [Header("音樂設定")]
-    public AudioClip defaultClip;   // 預設音樂
-    [Range(0f, 2f)]
-    public float pitch = 1.0f;      // 音高（變速用）
-    [Range(0f, 1f)]
-    public float volume = 1.0f;     // 音量大小
+    public AudioClip defaultClip;
+    [Range(0f, 2f)] public float pitch = 1.0f;
+    [Range(0f, 1f)] public float volume = 1.0f;
+    public bool loop = true;
+    public bool autoPlayOnStart = true; // ★ 新增：是否開場自動播放
+
+    [Header("時間同步設定")]
+    [Tooltip("修正播放延遲 (秒)。正值：延後節拍；負值：提前節拍。")]
+    public float globalOffset = 0f;
+
+    private double dspStartTime = 0;
+    private bool isPlaying = false;
+
+    // 事件
+    public event Action OnMusicStart;
+    public event Action OnMusicStop;
+    public event Action OnMusicChange;
 
     private void Awake()
     {
-        // 建立 Singleton
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -24,83 +35,94 @@ public class MusicManager : MonoBehaviour
         }
         Instance = this;
 
-        // 初始化 AudioSource
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
+        audioSource.loop = loop;
     }
 
     private void Start()
     {
-        MusicManager.Instance.PlayMusic();
+        // ★ 開場自動播放
+        if (autoPlayOnStart && defaultClip != null)
+        {
+            PlayMusic(defaultClip, loop);
+        }
     }
 
     private void Update()
     {
-        // 動態調整 pitch & volume
-        if (audioSource != null)
-        {
-            audioSource.pitch = pitch;
-            audioSource.volume = volume;
-        }
+        if (audioSource == null) return;
+        audioSource.pitch = pitch;
+        audioSource.volume = volume;
     }
 
-    // 播放音樂
-    public void PlayMusic(AudioClip clip = null, bool loop = true)
+    // ==============================
+    // 播放控制
+    // ==============================
+    public void PlayMusic(AudioClip clip = null, bool shouldLoop = true)
     {
         if (clip == null) clip = defaultClip;
         if (clip == null) return;
 
+        loop = shouldLoop;
         audioSource.clip = clip;
-        audioSource.loop = loop;
-        audioSource.Play();
+        audioSource.loop = shouldLoop;
+
+        // 等待下一個音訊更新幀開始播放，確保無排程延遲
+        dspStartTime = AudioSettings.dspTime + 0.05;  // 提前預排 50ms 播放
+        audioSource.PlayScheduled(dspStartTime);
+
+
+        isPlaying = true;
+        OnMusicStart?.Invoke();
     }
 
-    // 暫停音樂
     public void PauseMusic()
     {
-        if (audioSource.isPlaying)
-        {
-            audioSource.Pause();
-        }
+        if (!isPlaying) return;
+        audioSource.Pause();
+        isPlaying = false;
     }
 
-    // 繼續播放
     public void ResumeMusic()
     {
-        if (!audioSource.isPlaying)
-        {
-            audioSource.UnPause();
-        }
+        if (isPlaying) return;
+        audioSource.UnPause();
+        isPlaying = true;
     }
 
-    // 停止音樂
     public void StopMusic()
     {
+        if (!isPlaying) return;
         audioSource.Stop();
+        isPlaying = false;
+        OnMusicStop?.Invoke();
     }
 
-    // 換曲
-    public void ChangeMusic(AudioClip newClip, bool loop = true)
+    public void ChangeMusic(AudioClip newClip, bool shouldLoop = true)
     {
-        PlayMusic(newClip, loop);
+        StopMusic();
+        PlayMusic(newClip, shouldLoop);
+        OnMusicChange?.Invoke();
     }
 
-    // 取得當前播放時間（秒）
+    // ==============================
+    // 時間與音量接口
+    // ==============================
     public float GetMusicTime()
     {
-        return audioSource.time;
+        if (!isPlaying) return 0f;
+        return (float)((AudioSettings.dspTime - dspStartTime) * pitch) + globalOffset;
     }
 
-    // 是否正在播放
     public bool IsPlaying()
     {
-        return audioSource.isPlaying;
+        return isPlaying;
     }
 
-    // 提供程式呼叫接口來改音量
     public void SetVolume(float newVolume)
     {
-        volume = Mathf.Clamp01(newVolume); // 限制在 0~1
+        volume = Mathf.Clamp01(newVolume);
         if (audioSource != null)
             audioSource.volume = volume;
     }
@@ -108,5 +130,12 @@ public class MusicManager : MonoBehaviour
     public float GetVolume()
     {
         return volume;
+    }
+
+    public void SetPitch(float newPitch)
+    {
+        pitch = Mathf.Clamp(newPitch, 0.1f, 2f);
+        if (audioSource != null)
+            audioSource.pitch = pitch;
     }
 }
