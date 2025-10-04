@@ -938,7 +938,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   earlyRange: 0.03
   lateRange: 0.2
-  judgeOffset: 0.05
+  judgeOffset: 0.03
   beatHitLightUIPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
   beatHitPointUI: {fileID: 381415587}
@@ -1572,6 +1572,7 @@ MonoBehaviour:
   healthBarPrefab: {fileID: 4455289404318607837, guid: 61154c866d0c3ed4187b80832d7c6ec3, type: 3}
   uiCanvas: {fileID: 1719361669}
   rotateMoveDuration: 0.2
+  dashStayDuration: 0.01
 --- !u!1 &1343110491
 GameObject:
   m_ObjectHideFlags: 0

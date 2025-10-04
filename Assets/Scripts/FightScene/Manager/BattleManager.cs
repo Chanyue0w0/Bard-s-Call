@@ -84,6 +84,9 @@ public class BattleManager : MonoBehaviour
     [Header("旋轉移動設定")]
     public float rotateMoveDuration = 0.2f; // 旋轉時移動過去的時間
 
+    [Header("近戰攻擊設定")]
+    public float dashStayDuration = 0.15f;  // 攻擊後停留在目標前的時間
+
 
     // ---------------- Singleton 設定 ----------------
     private void Awake()
@@ -283,8 +286,11 @@ public class BattleManager : MonoBehaviour
         if (attacker.ClassType == UnitClass.Warrior)
         {
             Vector3 contactPoint = targetPoint + meleeContactOffset;
+
+            // 衝向敵人
             yield return Dash(actor, origin, contactPoint, dashDuration);
 
+            // 生成攻擊特效
             var skill = Instantiate(meleeVfxPrefab, targetPoint, Quaternion.identity);
             var sword = skill.GetComponent<SwordHitSkill>();
             if (sword != null)
@@ -294,9 +300,13 @@ public class BattleManager : MonoBehaviour
                 sword.isPerfect = perfect;
             }
 
-            yield return _endOfFrame;
-            actor.position = origin;
+            // ★ 在攻擊位置停留 dashStayDuration 秒
+            yield return new WaitForSeconds(dashStayDuration);
+
+            // ★ 回到原位
+            yield return Dash(actor, contactPoint, origin, dashDuration);
         }
+
         else if (attacker.ClassType == UnitClass.Mage)
         {
             // 在自身位置生成 Aura

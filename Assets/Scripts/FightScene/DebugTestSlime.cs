@@ -6,7 +6,7 @@ public class DebugTestSlime : MonoBehaviour
     [Header("基本數值")]
     public int maxHP = 50;
     public int hp = 50;
-    public float respawnDelay = 10f;   // 死亡後多久復活
+    public float respawnDelay = 10f;
 
     [Header("左右微動參數")]
     public float amplitude = 0.05f;
@@ -14,10 +14,11 @@ public class DebugTestSlime : MonoBehaviour
     public bool useLocalSpace = true;
     public bool randomizePhase = true;
 
-    [Header("節拍縮放參數")]
+    [Header("節拍縮放參數 (優化版)")]
     public Vector3 baseScale = new Vector3(0.15f, 0.15f, 0.15f);
-    public float beatScaleMultiplier = 1.2f;
-    public float scaleLerpSpeed = 6f;
+    public float peakMultiplier = 1.3f;       // 節拍瞬間放大倍數
+    public float holdDuration = 0.05f;        // 放大後停留時間
+    public float returnSpeed = 8f;            // 回復速度
 
     [Header("攻擊設定")]
     public int attackDamage = 20;
@@ -38,7 +39,9 @@ public class DebugTestSlime : MonoBehaviour
     private float phase = 0f;
     private Vector3 basePosLocal;
     private Vector3 basePosWorld;
-    private Vector3 targetScale;
+
+    private bool isHolding = false;
+    private float holdTimer = 0f;
 
     private float nextAttackTime;
     private float warningTime;
@@ -50,7 +53,7 @@ public class DebugTestSlime : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private Vector3 spawnPoint;
-    private Collider2D col;   // ★ 碰撞器引用
+    private Collider2D col;
 
     private BattleManager.TeamSlotInfo selfSlot => BattleManager.Instance.ETeamInfo[slotIndex];
     private BattleManager.TeamSlotInfo targetSlot => BattleManager.Instance.CTeamInfo[slotIndex];
@@ -63,13 +66,12 @@ public class DebugTestSlime : MonoBehaviour
         phase = randomizePhase ? Random.Range(0f, Mathf.PI * 2f) : 0f;
 
         transform.localScale = baseScale;
-        targetScale = baseScale;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
             originalColor = spriteRenderer.color;
 
-        col = GetComponent<Collider2D>(); // ★ 初始化 Collider
+        col = GetComponent<Collider2D>();
 
         BeatManager.OnBeat += OnBeat;
     }
@@ -103,8 +105,23 @@ public class DebugTestSlime : MonoBehaviour
             transform.position = p;
         }
 
-        // 平滑縮放
-        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.unscaledDeltaTime * scaleLerpSpeed);
+        // 優化後的縮放節奏：保持 → 回復
+        if (isHolding)
+        {
+            holdTimer -= Time.unscaledDeltaTime;
+            if (holdTimer <= 0f)
+            {
+                isHolding = false;
+            }
+        }
+        else
+        {
+            transform.localScale = Vector3.Lerp(
+                transform.localScale,
+                baseScale,
+                Mathf.SmoothStep(0f, 1f, Time.unscaledDeltaTime * returnSpeed)
+            );
+        }
 
         // 到達警示時間 → 變紅
         if (!isWarning && Time.time >= warningTime)
@@ -125,9 +142,10 @@ public class DebugTestSlime : MonoBehaviour
     {
         if (isDead) return;
 
-        // Beat 縮放動畫
-        targetScale = baseScale * beatScaleMultiplier;
-        transform.localScale = baseScale;
+        // Beat瞬間「彈起」→ 停留 → 回復
+        transform.localScale = baseScale * peakMultiplier;
+        isHolding = true;
+        holdTimer = holdDuration;
 
         float beatInterval = 60f / BeatManager.Instance.bpm;
         if (!readyToAttack && Time.time + beatInterval >= nextAttackTime)
@@ -143,7 +161,7 @@ public class DebugTestSlime : MonoBehaviour
         }
     }
 
-    // ★ 呼叫這個來扣血
+    // 扣血
     public void TakeDamage(int dmg)
     {
         if (isDead) return;
@@ -162,13 +180,11 @@ public class DebugTestSlime : MonoBehaviour
 
         Debug.Log($"史萊姆(slot {slotIndex}) 死亡，{respawnDelay} 秒後復活");
 
-        // ★ 隱藏 SpriteRenderer + 停用 Collider，而不是 SetActive(false)
         if (spriteRenderer != null) spriteRenderer.enabled = false;
         if (col != null) col.enabled = false;
 
         yield return new WaitForSeconds(respawnDelay);
 
-        // 復活
         hp = maxHP;
         transform.position = spawnPoint;
         transform.localScale = baseScale;
