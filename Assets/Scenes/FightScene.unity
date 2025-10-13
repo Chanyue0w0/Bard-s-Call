@@ -920,7 +920,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d8ebbfa2182c394d8d555524e6cd7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bpm: 145
+  bpm: 72.5
   beatSubdivision: 1
   startDelay: 0
   beatPrefab: {fileID: 3071351389764054346, guid: 78eb6fa3fc262f84ca2b2f5082d55880, type: 3}
@@ -1528,8 +1528,8 @@ MonoBehaviour:
     HP: 600
     MaxMP: 100
     MP: 0
-    OriginAtk: 10
-    Atk: 10
+    OriginAtk: 30
+    Atk: 30
     SkillName: Basic
     AssignedKeyIndex: 0
   - UnitName: 
@@ -1540,8 +1540,8 @@ MonoBehaviour:
     HP: 400
     MaxMP: 100
     MP: 0
-    OriginAtk: 10
-    Atk: 10
+    OriginAtk: 30
+    Atk: 30
     SkillName: Basic
     AssignedKeyIndex: 1
   - UnitName: 
@@ -1552,8 +1552,8 @@ MonoBehaviour:
     HP: 400
     MaxMP: 100
     MP: 0
-    OriginAtk: 10
-    Atk: 10
+    OriginAtk: 30
+    Atk: 30
     SkillName: Basic
     AssignedKeyIndex: 2
   actionAttackP1: {fileID: 2043867421210978648, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}

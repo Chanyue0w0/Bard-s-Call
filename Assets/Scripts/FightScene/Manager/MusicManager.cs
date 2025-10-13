@@ -72,7 +72,6 @@ public class MusicManager : MonoBehaviour
         dspStartTime = AudioSettings.dspTime + 0.05;  // 提前預排 50ms 播放
         audioSource.PlayScheduled(dspStartTime);
 
-
         isPlaying = true;
         OnMusicStart?.Invoke();
     }
