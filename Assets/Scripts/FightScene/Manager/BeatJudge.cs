@@ -6,12 +6,13 @@ public class BeatJudge : MonoBehaviour
     [Header("判定範圍設定 (秒)")]
     [Tooltip("允許提早多少秒內仍算完美")]
     public float earlyRange = 0.03f;
+
     [Tooltip("允許延遲多少秒內仍算完美")]
     public float lateRange = 0.07f;
+
     [Header("判定時間補償 (秒)")]
     [Tooltip("正值會讓判定提前，建議 0.03~0.12 秒之間")]
     public float judgeOffset = 0.08f;
-
 
     [Header("特效與 UI")]
     public GameObject beatHitLightUIPrefab;
@@ -46,33 +47,42 @@ public class BeatJudge : MonoBehaviour
         audioSource.playOnAwake = false;
     }
 
-    // ===============================================
-    // 判定核心
-    // ===============================================
+    // ============================================================
+    // 判定核心（使用 MusicManager 的 AudioSource）
+    // ============================================================
     public bool IsOnBeat()
     {
-        if (BeatManager.Instance == null || MusicManager.Instance == null)
+        var bm = BeatManager.Instance;
+        var mm = MusicManager.Instance;
+
+        if (bm == null || mm == null)
             return false;
 
-        // 從 MusicManager 取時間，並提前一點以補償播放延遲
-        float musicTime = MusicManager.Instance.GetMusicTime() - judgeOffset;
+        AudioSource source = mm.GetComponent<AudioSource>();
+        if (source == null || source.clip == null || !source.isPlaying)
+            return false;
 
+        float frequency = source.clip.frequency;
+        float beatInterval = bm.GetInterval();
+        double offsetSamples = frequency * bm.startDelay;
 
-        // 取當前最近的拍點時間
-        float prevBeat = BeatManager.Instance.GetPreviousBeatTime();
-        float nextBeat = BeatManager.Instance.GetNextBeatTime();
+        // 當前取樣時間（含判定補償）
+        double currentSamples = source.timeSamples - offsetSamples - (judgeOffset * frequency);
+        if (currentSamples < 0)
+            return false;
 
-        // 計算距離哪個拍點更近
-        float targetTime = (Mathf.Abs(musicTime - prevBeat) < Mathf.Abs(musicTime - nextBeat))
-            ? prevBeat
-            : nextBeat;
+        // 計算目前應在第幾拍
+        double sampledBeat = currentSamples / (frequency * beatInterval);
+        double nearestBeatIndex = System.Math.Round(sampledBeat);
+        double nearestBeatTime = nearestBeatIndex * beatInterval;
 
-        float delta = musicTime - targetTime; // 正：延遲，負：提前
+        // 計算與拍點的時間差（秒）
+        double actualTime = currentSamples / frequency;
+        double delta = actualTime - nearestBeatTime; // 正：延遲，負：提前
 
-        // 容許誤差範圍
         bool perfect = (delta >= -earlyRange && delta <= lateRange);
 
-        // 播放縮放動畫
+        // UI 動畫
         PlayScaleAnim();
 
         if (perfect)
@@ -81,23 +91,25 @@ public class BeatJudge : MonoBehaviour
 
             if (audioSource != null && snapClip != null)
             {
-                double playTime = AudioSettings.dspTime + 0.05; // 提前排程 10ms
+                double playTime = AudioSettings.dspTime + 0.05; // 提前排程 50ms
                 audioSource.clip = snapClip;
                 audioSource.PlayScheduled(playTime);
             }
 
+            Debug.Log($"[Perfect] Δt = {delta:F4}s  Beat = {nearestBeatIndex}");
         }
         else
         {
             SpawnMissText();
+            Debug.Log($"[Miss] Δt = {delta:F4}s");
         }
 
         return perfect;
     }
 
-    // ===============================================
+    // ============================================================
     // 特效顯示
-    // ===============================================
+    // ============================================================
     private void SpawnPerfectEffect()
     {
         if (beatHitLightUIPrefab == null || beatHitPointUI == null) return;
@@ -122,9 +134,9 @@ public class BeatJudge : MonoBehaviour
         Destroy(missObj, 0.3f);
     }
 
-    // ===============================================
+    // ============================================================
     // UI 動畫
-    // ===============================================
+    // ============================================================
     private void PlayScaleAnim()
     {
         if (beatHitPointUI == null) return;

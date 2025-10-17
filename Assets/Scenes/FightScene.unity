@@ -278,6 +278,7 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!1 &332195310
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,8 +669,8 @@ Transform:
   m_GameObject: {fileID: 486259256}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.31, z: 0}
-  m_LocalScale: {x: 2.2671564, y: 2.2671564, z: 2.2671564}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.2573388, y: 1.2573388, z: 1.2573388}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 128722963}
@@ -715,7 +716,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: 1f71d2032feae73419091dac19c4f21b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 34b41d254d912cc4284bb1bbabc29007, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -920,9 +921,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d8ebbfa2182c394d8d555524e6cd7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bpm: 72.5
-  beatSubdivision: 1
-  startDelay: 0
+  bpm: 145
+  startDelay: 3
+  intervals:
+  - step: 1
+    trigger:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 806207502}
+          m_TargetAssemblyTypeName: BeatManager, Assembly-CSharp
+          m_MethodName: MainBeatTrigger
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   beatPrefab: {fileID: 3071351389764054346, guid: 78eb6fa3fc262f84ca2b2f5082d55880, type: 3}
   hitPoint: {fileID: 381415587}
 --- !u!114 &806207503
@@ -937,9 +954,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 981862c8f89c9ab42b06c97d0bc73636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  earlyRange: 0.1
-  lateRange: 0.2
-  judgeOffset: 0.03
+  earlyRange: 0.04
+  lateRange: 0.06
+  judgeOffset: 0.1
   beatHitLightUIPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
   beatHitPointUI: {fileID: 381415587}
