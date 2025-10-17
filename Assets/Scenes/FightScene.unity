@@ -921,7 +921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d8ebbfa2182c394d8d555524e6cd7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bpm: 145
+  bpm: 72.5
   startDelay: 3
   intervals:
   - step: 1
@@ -942,6 +942,9 @@ MonoBehaviour:
           m_CallState: 2
   beatPrefab: {fileID: 3071351389764054346, guid: 78eb6fa3fc262f84ca2b2f5082d55880, type: 3}
   hitPoint: {fileID: 381415587}
+  beatTravelTime: 0.8
+  leftSpawnPoint: {fileID: 1343110492}
+  rightSpawnPoint: {fileID: 1932035420}
 --- !u!114 &806207503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -954,9 +957,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 981862c8f89c9ab42b06c97d0bc73636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  earlyRange: 0.04
+  earlyRange: 0.1
   lateRange: 0.06
-  judgeOffset: 0.1
+  judgeOffset: 0.03
   beatHitLightUIPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
   beatHitPointUI: {fileID: 381415587}
@@ -1601,7 +1604,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1343110492}
   m_Layer: 5
-  m_Name: BeatSpawnPoint
+  m_Name: BeatSpawnPointLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1623,7 +1626,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -913, y: -455}
+  m_AnchoredPosition: {x: -588, y: -455}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &1405612477 stripped
@@ -1983,6 +1986,7 @@ RectTransform:
   m_Children:
   - {fileID: 2133190112}
   - {fileID: 1343110492}
+  - {fileID: 1932035420}
   - {fileID: 381415587}
   - {fileID: 830531824}
   - {fileID: 1405612477}
@@ -2099,6 +2103,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2397801311962783639, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
   m_PrefabInstance: {fileID: 1749144999}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1932035419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1932035420}
+  m_Layer: 5
+  m_Name: BeatSpawnPointRight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1932035420
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932035419}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1719361670}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 588, y: -455}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2026558224
 GameObject:
   m_ObjectHideFlags: 0

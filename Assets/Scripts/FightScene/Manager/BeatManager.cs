@@ -20,7 +20,7 @@ public class BeatManager : MonoBehaviour
 
     [Header("UI 設定")]
     public GameObject beatPrefab;
-    public Transform hitPoint;
+    public RectTransform hitPoint;
 
     private AudioSource musicSource;
     private double offsetSamples;
@@ -29,6 +29,12 @@ public class BeatManager : MonoBehaviour
 
     // ★ 全域主拍事件（供 BeatScale、BeatJudge 等使用）
     public static event Action OnBeat;
+
+    [Header("Beat UI 移動設定")]
+    public float beatTravelTime = 0.8f; // BeatUI 從邊緣飛到中心所需時間
+    public RectTransform leftSpawnPoint;
+    public RectTransform rightSpawnPoint;
+
 
     private void Awake()
     {
@@ -97,7 +103,39 @@ public class BeatManager : MonoBehaviour
     }
 
     public float GetInterval() => 60f / bpm;
+
+
+    public void TriggerBeat()
+    {
+        // 中心閃光（原本的 persistentBeat）
+        persistentBeat?.OnBeat();
+
+        // 從左右兩邊各生成一個飛行中的 BeatUI
+        SpawnBeatUI(leftSpawnPoint);
+        SpawnBeatUI(rightSpawnPoint);
+
+        OnBeat?.Invoke();
+    }
+
+    private void SpawnBeatUI(RectTransform spawnPoint)
+    {
+        if (beatPrefab == null || hitPoint == null || spawnPoint == null)
+            return;
+
+        // 生成在同一 Canvas 下
+        GameObject beatObj = Instantiate(beatPrefab, hitPoint.parent);
+        beatObj.name = "BeatUI(Flying)";
+        RectTransform rect = beatObj.GetComponent<RectTransform>();
+
+        // 初始化飛行設定
+        BeatUI beatUI = beatObj.GetComponent<BeatUI>() ?? beatObj.AddComponent<BeatUI>();
+        beatUI.InitFly(spawnPoint, hitPoint, beatTravelTime);
+    }
+
+
 }
+
+
 
 [System.Serializable]
 public class IntervalFix
@@ -126,8 +164,9 @@ public class IntervalFix
             // ★ 若是主拍（step == 1）則透過 BeatManager 的 InvokeBeat() 通知全域事件
             if (Mathf.Approximately(step, 1f))
             {
-                BeatManager.InvokeBeat();
+                BeatManager.Instance?.TriggerBeat();   // ← 改這裡！
             }
+
         }
     }
 }

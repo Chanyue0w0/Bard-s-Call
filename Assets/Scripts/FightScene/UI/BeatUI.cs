@@ -6,12 +6,11 @@ public class BeatUI : MonoBehaviour
     private RectTransform rect;
 
     [Header("縮放參數")]
-    public float startScale = 3f;       // 初始放大值
-    public float targetScale = 1.3f;    // 停留大小
-    public float shrinkTime = 0.15f;    // 從3縮到1.3所需時間
-    public float holdTime = 0.05f;      // 停留時間
+    public float startScale = 0.8f;     // 起始縮放
+    public float endScale = 1.3f;       // 到中心時縮放
+    public float fadeOutTime = 0.05f;   // 抵達後停留再消失
 
-    private Coroutine flashCoroutine;
+    private Coroutine moveCoroutine;
 
     private void Awake()
     {
@@ -20,37 +19,43 @@ public class BeatUI : MonoBehaviour
 
     public void Init()
     {
-        rect.localScale = Vector3.zero; // 初始隱藏
+        rect.localScale = Vector3.zero;
+    }
+
+    // ★ 新增：設定從起點飛向中心點
+    public void InitFly(RectTransform startPoint, RectTransform targetPoint, float travelTime)
+    {
+        rect.anchoredPosition = startPoint.anchoredPosition;
+        rect.localScale = Vector3.one * startScale;
+
+        if (moveCoroutine != null)
+            StopCoroutine(moveCoroutine);
+        moveCoroutine = StartCoroutine(FlyToTarget(startPoint, targetPoint, travelTime));
+    }
+
+    private IEnumerator FlyToTarget(RectTransform start, RectTransform target, float travelTime)
+    {
+        Vector2 startPos = start.anchoredPosition;
+        Vector2 endPos = target.anchoredPosition;
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.unscaledDeltaTime / travelTime;
+            rect.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
+            rect.localScale = Vector3.Lerp(Vector3.one * startScale, Vector3.one * endScale, t);
+            yield return null;
+        }
+
+        rect.anchoredPosition = endPos;
+        rect.localScale = Vector3.one * endScale;
+
+        yield return new WaitForSecondsRealtime(fadeOutTime);
+        Destroy(gameObject);
     }
 
     public void OnBeat()
     {
-        if (flashCoroutine != null)
-            StopCoroutine(flashCoroutine);
-        flashCoroutine = StartCoroutine(FlashAnim());
-    }
-
-    private IEnumerator FlashAnim()
-    {
-        // ★ 先設為起始大小 3
-        rect.localScale = Vector3.one * startScale;
-
-        // 3 → 1.3
-        float t = 0;
-        while (t < 1f)
-        {
-            t += Time.unscaledDeltaTime / shrinkTime;
-            rect.localScale = Vector3.Lerp(Vector3.one * startScale, Vector3.one * targetScale, t);
-            yield return null;
-        }
-
-        // ★ 停留在 1.3
-        rect.localScale = Vector3.one * targetScale;
-        yield return new WaitForSecondsRealtime(holdTime);
-
-        // ★ 瞬間消失
-        rect.localScale = Vector3.zero;
-
-        flashCoroutine = null;
+        // 若想保留中心閃爍效果可留空或加動畫
     }
 }
