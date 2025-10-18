@@ -32,9 +32,13 @@ public class BeatManager : MonoBehaviour
 
     [Header("Beat UI 移動設定")]
     public float beatTravelTime = 0.8f; // BeatUI 從邊緣飛到中心所需時間
+    [Tooltip("畫面提早補償秒數，用來修正反拍現象 (建議 0.05~0.12)")]
+    public float visualLeadTime = 0.08f;
     public RectTransform leftSpawnPoint;
     public RectTransform rightSpawnPoint;
 
+    // ★ 新增：預捲所需的狀態
+    private int lastSpawnBeatIndex = -1;
 
     private void Awake()
     {
@@ -55,7 +59,7 @@ public class BeatManager : MonoBehaviour
         musicSource = MusicManager.Instance.GetComponent<AudioSource>();
         offsetSamples = musicSource.clip.frequency * startDelay;
 
-        // 生成 BeatUI
+        // 生成中心的 Persistent BeatUI（只負責中心閃光）
         if (beatPrefab && hitPoint)
         {
             GameObject beatObj = Instantiate(beatPrefab, hitPoint.parent);
@@ -80,23 +84,62 @@ public class BeatManager : MonoBehaviour
         if (musicSource.timeSamples < offsetSamples)
             return;
 
-        // 用樣本為基準的節拍偵測
+        // 1) 節拍偵測（維持你原先的完美對拍）
         foreach (IntervalFix interval in intervals)
         {
             double sampledTime = (musicSource.timeSamples - offsetSamples) /
                                  (musicSource.clip.frequency * interval.GetIntervalLength(bpm));
             interval.CheckForNewInterval(sampledTime);
         }
+
+        // 2) ★ 預捲生成 BeatUI（在下一拍前 beatTravelTime 秒生成）
+        PreRollSpawnForNextBeat();
     }
 
-    // 對外主拍觸發（給 UI 用）
+    // ★ 預捲：當距離「下一拍」的時間 <= beatTravelTime，就先生成一次飛行節拍球
+    private void PreRollSpawnForNextBeat()
+    {
+        if (beatPrefab == null || hitPoint == null || (leftSpawnPoint == null && rightSpawnPoint == null))
+            return;
+
+        var clip = musicSource.clip;
+        int freq = clip.frequency;
+
+        // 每拍的樣本數
+        double samplesPerBeat = freq * GetInterval();
+
+        // 目前已經過的「拍數（含小數）」
+        double beatFloat = (musicSource.timeSamples - offsetSamples) / samplesPerBeat;
+
+        // 下一拍的 index 與樣本位置
+        int nextBeatIndex = Mathf.FloorToInt((float)beatFloat) + 1;
+        double nextBeatSample = offsetSamples + nextBeatIndex * samplesPerBeat;
+
+        // 距下一拍的秒數
+        double timeToNextBeat = (nextBeatSample - musicSource.timeSamples) / freq;
+
+        // ★ 提前補償：讓生成比預期再早一點
+        double adjustedTravelTime = Mathf.Max(0f, beatTravelTime - visualLeadTime);
+
+        // 尚未為這個 nextBeatIndex 生成過，且時間已進入預捲窗
+        if (timeToNextBeat <= adjustedTravelTime && nextBeatIndex != lastSpawnBeatIndex)
+        {
+            // 這裡你可改成只生一邊，或交替；預設兩邊各一顆
+            if (leftSpawnPoint) SpawnBeatUI(leftSpawnPoint);
+            if (rightSpawnPoint) SpawnBeatUI(rightSpawnPoint);
+
+            lastSpawnBeatIndex = nextBeatIndex; // 記錄避免重複生成
+        }
+    }
+
+    // 對外主拍觸發（給 UI / 判定 用）— 保持「當下正拍」立即觸發，不再生成飛行球
     public void MainBeatTrigger()
     {
-        persistentBeat?.OnBeat();
-        InvokeBeat();
+        persistentBeat?.OnBeat(); // 中心閃光
+        InvokeBeat();             // 其他系統（判定/數值）
     }
 
-    // ★ 新增這個方法供外部呼叫，安全觸發全域 OnBeat 事件
+    // 安全觸發全域 OnBeat 事件
     public static void InvokeBeat()
     {
         OnBeat?.Invoke();
@@ -104,16 +147,10 @@ public class BeatManager : MonoBehaviour
 
     public float GetInterval() => 60f / bpm;
 
-
+    // ★ 不再生成飛行球，避免同拍雙重生成
     public void TriggerBeat()
     {
-        // 中心閃光（原本的 persistentBeat）
         persistentBeat?.OnBeat();
-
-        // 從左右兩邊各生成一個飛行中的 BeatUI
-        SpawnBeatUI(leftSpawnPoint);
-        SpawnBeatUI(rightSpawnPoint);
-
         OnBeat?.Invoke();
     }
 
@@ -122,53 +159,12 @@ public class BeatManager : MonoBehaviour
         if (beatPrefab == null || hitPoint == null || spawnPoint == null)
             return;
 
-        // 生成在同一 Canvas 下
         GameObject beatObj = Instantiate(beatPrefab, hitPoint.parent);
         beatObj.name = "BeatUI(Flying)";
-        RectTransform rect = beatObj.GetComponent<RectTransform>();
-
-        // 初始化飛行設定
         BeatUI beatUI = beatObj.GetComponent<BeatUI>() ?? beatObj.AddComponent<BeatUI>();
         beatUI.InitFly(spawnPoint, hitPoint, beatTravelTime);
     }
-
-    private Coroutine scheduleCoroutine;  // ★ 新增：紀錄正在運作的協程
-
-    public void ScheduleNextBeat()
-    {
-        // ★ 若已有一個預排節拍，則略過（防止重複）
-        if (scheduleCoroutine != null)
-            return;
-
-        scheduleCoroutine = StartCoroutine(ScheduleBeatCoroutine());
-    }
-
-    private IEnumerator ScheduleBeatCoroutine()
-    {
-        float interval = GetInterval(); // 一拍長度（秒）
-        float delay = interval - beatTravelTime;
-        delay = Mathf.Max(0f, delay);
-
-        yield return new WaitForSecondsRealtime(delay);
-
-        // 提前生成 BeatUI
-        SpawnBeatUI(leftSpawnPoint);
-        SpawnBeatUI(rightSpawnPoint);
-
-        yield return new WaitForSecondsRealtime(beatTravelTime);
-
-        // 到正拍時觸發 OnBeat
-        TriggerBeat();
-
-        // ★ 拍結束，允許下一個節拍重新排程
-        scheduleCoroutine = null;
-    }
-
-
-
 }
-
-
 
 [System.Serializable]
 public class IntervalFix
@@ -193,19 +189,6 @@ public class IntervalFix
         {
             lastInterval = currentInterval;
             trigger.Invoke();
-
-            // ★ 若是主拍（step == 1）則透過 BeatManager 的 InvokeBeat() 通知全域事件
-            if (Mathf.Approximately(step, 1f))
-            {
-                BeatManager.Instance?.TriggerBeat();   // ← 改這裡！
-            }
-            //if (Mathf.Approximately(step, 1f))
-            //{
-            //    BeatManager.Instance?.ScheduleNextBeat();  // 改這裡！
-            //}
-
-
         }
     }
-
 }

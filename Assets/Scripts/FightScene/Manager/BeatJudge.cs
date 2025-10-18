@@ -78,7 +78,8 @@ public class BeatJudge : MonoBehaviour
         float beatInterval = bm.GetInterval();
         double offsetSamples = frequency * bm.startDelay;
 
-        double currentSamples = source.timeSamples - offsetSamples - (judgeOffset * frequency);
+        // ★ 改這裡：補償應該往前加，而不是往後扣
+        double currentSamples = source.timeSamples - offsetSamples + (judgeOffset * frequency);
         if (currentSamples < 0)
             return false;
 
@@ -88,6 +89,7 @@ public class BeatJudge : MonoBehaviour
 
         double actualTime = currentSamples / frequency;
         double delta = actualTime - nearestBeatTime;
+
 
         bool perfect = (delta >= -earlyRange && delta <= lateRange);
 
