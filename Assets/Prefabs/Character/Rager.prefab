@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 1649849504560898874}
   - component: {fileID: 6535657924258066963}
   - component: {fileID: 149268439693906750}
+  - component: {fileID: 6341345867789474762}
   m_Layer: 0
   m_Name: Rager
   m_TagString: Hero
@@ -58,7 +59,7 @@ Transform:
   m_GameObject: {fileID: 2656352504891197484}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.43, y: -2.5, z: 0}
+  m_LocalPosition: {x: 4.79, y: -2.7199998, z: 0}
   m_LocalScale: {x: 0.22, y: 0.22, z: 0.22}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -133,3 +134,28 @@ MonoBehaviour:
   peakMultiplier: 1.3
   holdDuration: 0.05
   returnSpeed: 8
+--- !u!114 &6341345867789474762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2656352504891197484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83aebeb4487f9af4587e28f850d85599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CharacterName: Aria
+  ClassType: 4
+  MaxHP: 90
+  HP: 90
+  MaxMP: 6
+  MP: 0
+  OriginAtk: 20
+  Atk: 20
+  NormalAttacks:
+  - SkillName: ArrowShoot
+    SkillPrefab: {fileID: 2864930942258562462, guid: 4ca34a493ab195648a5f9c57a9b3266b, type: 3}
+    MPCost: 0
+  Skills: []

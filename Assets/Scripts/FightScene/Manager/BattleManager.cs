@@ -14,12 +14,17 @@ public class BattleManager : MonoBehaviour
         Mage,
         Shield,
         Priest,
-        Ranger
+        Ranger,
+        Enemy
     }
 
     [System.Serializable]
     public class TeamSlotInfo
     {
+
+        [Header("Prefab 設定")]
+        public GameObject PrefabToSpawn; // 若未指定 Actor，將自動生成此 Prefab
+
         [Header("場上關聯")]
         public string UnitName;
         public GameObject Actor;
@@ -33,10 +38,18 @@ public class BattleManager : MonoBehaviour
         public int MP = 0;
         public int OriginAtk = 10;
         public int Atk = 10;
-        public string SkillName = "Basic";
 
+        [Header("技能")]
+        public string[] SkillNames;
+        public GameObject[] SkillPrefabs;
+
+        [Header("普通攻擊")]
+        public string[] NormalAttackNames;
+        public GameObject[] NormalAttackPrefabs;
+        
         [Header("輸入綁定")]
         public int AssignedKeyIndex;
+
     }
 
     [Header("我方固定座標（自動在 Start 記錄）")]
@@ -127,25 +140,38 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
-        CreateHealthBars(CTeamInfo);
-        CreateHealthBars(ETeamInfo);
+        //CreateHealthBars(CTeamInfo);
+        //CreateHealthBars(ETeamInfo);
     }
 
-    private void CreateHealthBars(TeamSlotInfo[] team)
+    public void LoadTeamData(BattleTeamManager teamMgr)
     {
-        foreach (var slot in team)
-        {
-            if (slot != null && slot.Actor != null)
-            {
-                Transform headPoint = slot.Actor.transform.Find("HeadPoint");
-                if (headPoint != null)
-                {
-                    GameObject hb = Instantiate(healthBarPrefab, uiCanvas.transform);
-                    hb.GetComponent<HealthBarUI>().Init(slot, headPoint, uiCanvas.worldCamera);
-                }
-            }
-        }
+        if (teamMgr == null) return;
+
+        // 複製隊伍資料
+        this.CTeamInfo = teamMgr.CTeamInfo;
+        this.ETeamInfo = teamMgr.ETeamInfo;
+
+        Debug.Log("載入隊伍成功，玩家角色：" +
+        string.Join(", ", CTeamInfo.Where(x => x != null).Select(x => x.UnitName)));
     }
+
+
+    //private void CreateHealthBars(TeamSlotInfo[] team)
+    //{
+    //    foreach (var slot in team)
+    //    {
+    //        if (slot != null && slot.Actor != null)
+    //        {
+    //            Transform headPoint = slot.Actor.transform.Find("HeadPoint");
+    //            if (headPoint != null)
+    //            {
+    //                GameObject hb = Instantiate(healthBarPrefab, uiCanvas.transform);
+    //                hb.GetComponent<HealthBarUI>().Init(slot, headPoint, uiCanvas.worldCamera);
+    //            }
+    //        }
+    //    }
+    //}
 
     // ================= 攻擊邏輯 =================
     private void OnAttackP1(InputAction.CallbackContext ctx)

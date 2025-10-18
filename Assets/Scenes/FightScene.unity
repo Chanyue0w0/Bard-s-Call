@@ -508,6 +508,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1331803164}
+  - {fileID: 589954059}
   - {fileID: 124146093}
   - {fileID: 1160555323}
   - {fileID: 806207501}
@@ -748,6 +749,158 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9100831245632136328, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
   m_PrefabInstance: {fileID: 7918084402406761960}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &589954058
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 589954059}
+  - component: {fileID: 589954060}
+  m_Layer: 0
+  m_Name: BattleTeamManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &589954059
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 589954058}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 398088045}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &589954060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 589954058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07d14edcda819b640803a2912b56a106, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPositions:
+  - {fileID: 683276622}
+  - {fileID: 1710813560}
+  - {fileID: 2026558225}
+  enemyPositions:
+  - {fileID: 871193936}
+  - {fileID: 424177698}
+  - {fileID: 332195311}
+  CTeamInfo:
+  - PrefabToSpawn: {fileID: 8663616510560370193, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
+  - PrefabToSpawn: {fileID: 2656352504891197484, guid: 9bd3d2ef55bff244792cce1e6eb577b7, type: 3}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
+  - PrefabToSpawn: {fileID: 8859153221285552973, guid: 0fb6f7bd42f6e484d961b4dfa2531c7e, type: 3}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
+  ETeamInfo:
+  - PrefabToSpawn: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
+  - PrefabToSpawn: {fileID: 0}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
+  - PrefabToSpawn: {fileID: 0}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
+  healthBarPrefab: {fileID: 4455289404318607837, guid: 61154c866d0c3ed4187b80832d7c6ec3, type: 3}
+  uiCanvas: {fileID: 1719361669}
 --- !u!1 &683276621
 GameObject:
   m_ObjectHideFlags: 0
@@ -1235,7 +1388,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6258503229764174105, guid: 0e7866db267fe3e43bb196883871027c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8158479552114564748, guid: 0e7866db267fe3e43bb196883871027c, type: 3}
       propertyPath: m_LocalScale.x
@@ -1292,7 +1445,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6258503229764174105, guid: 0e7866db267fe3e43bb196883871027c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 911888958}
   m_SourcePrefab: {fileID: 100100000, guid: 0e7866db267fe3e43bb196883871027c, type: 3}
 --- !u!4 &873074067 stripped
 Transform:
@@ -1304,6 +1460,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6258503229764174105, guid: 0e7866db267fe3e43bb196883871027c, type: 3}
   m_PrefabInstance: {fileID: 873074066}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &911888958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 911888955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83aebeb4487f9af4587e28f850d85599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CharacterName: Iroland
+  ClassType: 3
+  MaxHP: 70
+  HP: 70
+  MaxMP: 7
+  MP: 0
+  OriginAtk: 0
+  Atk: 0
+  NormalAttacks: []
+  Skills: []
 --- !u!1 &1054858922
 GameObject:
   m_ObjectHideFlags: 0
@@ -1509,7 +1687,8 @@ MonoBehaviour:
   - {fileID: 424177698}
   - {fileID: 332195311}
   CTeamInfo:
-  - UnitName: 
+  - PrefabToSpawn: {fileID: 0}
+    UnitName: 
     Actor: {fileID: 1716390023}
     SlotTransform: {fileID: 683276622}
     ClassType: 0
@@ -1519,9 +1698,13 @@ MonoBehaviour:
     MP: 0
     OriginAtk: 10
     Atk: 20
-    SkillName: Basic
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
     AssignedKeyIndex: 0
-  - UnitName: 
+  - PrefabToSpawn: {fileID: 0}
+    UnitName: 
     Actor: {fileID: 1547364577}
     SlotTransform: {fileID: 1710813560}
     ClassType: 1
@@ -1531,9 +1714,13 @@ MonoBehaviour:
     MP: 0
     OriginAtk: 10
     Atk: 20
-    SkillName: Basic
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
     AssignedKeyIndex: 1
-  - UnitName: 
+  - PrefabToSpawn: {fileID: 0}
+    UnitName: 
     Actor: {fileID: 911888955}
     SlotTransform: {fileID: 2026558225}
     ClassType: 3
@@ -1543,10 +1730,14 @@ MonoBehaviour:
     MP: 0
     OriginAtk: 10
     Atk: 20
-    SkillName: Basic
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
     AssignedKeyIndex: 2
   ETeamInfo:
-  - UnitName: 
+  - PrefabToSpawn: {fileID: 0}
+    UnitName: 
     Actor: {fileID: 716000474}
     SlotTransform: {fileID: 871193936}
     ClassType: 0
@@ -1556,9 +1747,13 @@ MonoBehaviour:
     MP: 0
     OriginAtk: 30
     Atk: 30
-    SkillName: Basic
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
     AssignedKeyIndex: 0
-  - UnitName: 
+  - PrefabToSpawn: {fileID: 0}
+    UnitName: 
     Actor: {fileID: 1144731205}
     SlotTransform: {fileID: 332195311}
     ClassType: 0
@@ -1568,7 +1763,10 @@ MonoBehaviour:
     MP: 0
     OriginAtk: 30
     Atk: 30
-    SkillName: Basic
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
     AssignedKeyIndex: 2
   actionAttackP1: {fileID: 2043867421210978648, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionRotateLeft: {fileID: 677001074062244605, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
@@ -1997,6 +2195,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slime
       objectReference: {fileID: 0}
+    - target: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9204730356763185274, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
       propertyPath: hp
       value: 400
@@ -2331,29 +2533,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 357244787}
     m_Modifications:
-    - target: {fileID: 607836092422809888, guid: 0fb6f7bd42f6e484d961b4dfa2531c7e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 18.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6865955657323845612, guid: 0fb6f7bd42f6e484d961b4dfa2531c7e, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 6865955657323845612, guid: 0fb6f7bd42f6e484d961b4dfa2531c7e, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 6865955657323845612, guid: 0fb6f7bd42f6e484d961b4dfa2531c7e, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.22
-      objectReference: {fileID: 0}
     - target: {fileID: 6865955657323845612, guid: 0fb6f7bd42f6e484d961b4dfa2531c7e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.43
+      value: 6.42
       objectReference: {fileID: 0}
     - target: {fileID: 6865955657323845612, guid: 0fb6f7bd42f6e484d961b4dfa2531c7e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.83
+      value: -3.68
       objectReference: {fileID: 0}
     - target: {fileID: 6865955657323845612, guid: 0fb6f7bd42f6e484d961b4dfa2531c7e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2411,6 +2597,10 @@ PrefabInstance:
     - target: {fileID: 1084632303058564081, guid: 8b3cfa4ff9bd539459cce5ab92e60a73, type: 3}
       propertyPath: m_Name
       value: CaptainAura
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084632303058564081, guid: 8b3cfa4ff9bd539459cce5ab92e60a73, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1917390664216303705, guid: 8b3cfa4ff9bd539459cce5ab92e60a73, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2564,18 +2754,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 357244787}
     m_Modifications:
     - target: {fileID: 1649849504560898874, guid: 9bd3d2ef55bff244792cce1e6eb577b7, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 1649849504560898874, guid: 9bd3d2ef55bff244792cce1e6eb577b7, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 1649849504560898874, guid: 9bd3d2ef55bff244792cce1e6eb577b7, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 1649849504560898874, guid: 9bd3d2ef55bff244792cce1e6eb577b7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.79
       objectReference: {fileID: 0}
@@ -2621,11 +2799,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2656352504891197484, guid: 9bd3d2ef55bff244792cce1e6eb577b7, type: 3}
       propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4119981438366044015, guid: 9bd3d2ef55bff244792cce1e6eb577b7, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 17.2
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2703,6 +2877,10 @@ PrefabInstance:
     - target: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
       propertyPath: m_Name
       value: Slime
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
       propertyPath: m_TagString
@@ -2923,41 +3101,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 357244787}
     m_Modifications:
-    - target: {fileID: 3578934898515900556, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 17.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4593815306776766115, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
-      propertyPath: baseScale.x
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 4593815306776766115, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
-      propertyPath: baseScale.y
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 4593815306776766115, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
-      propertyPath: baseScale.z
-      value: 0.22
-      objectReference: {fileID: 0}
     - target: {fileID: 8663616510560370193, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
       propertyPath: m_Name
       value: Warrior
       objectReference: {fileID: 0}
     - target: {fileID: 8663616510560370193, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
       propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9100831245632136328, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 9100831245632136328, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 9100831245632136328, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.22
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9100831245632136328, guid: b405bcd742eee81469afae97e0dc0caa, type: 3}
       propertyPath: m_LocalPosition.x
