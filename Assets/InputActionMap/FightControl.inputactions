@@ -6,10 +6,28 @@
             "id": "c8285dd0-5d3f-44c6-af41-fd5e048db76b",
             "actions": [
                 {
-                    "name": "Character3Attack",
+                    "name": "Character1Attack",
                     "type": "Button",
                     "id": "2f1aa704-b803-46ca-b9ab-f8fc2fd190b4",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Character2Attack",
+                    "type": "Button",
+                    "id": "41dafe78-8860-485e-b111-6f17d069eda7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Character3Attack",
+                    "type": "Button",
+                    "id": "c153ea0f-6137-4463-b852-98a49f1e337d",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -18,7 +36,7 @@
                     "name": "TeamRotateClockWise",
                     "type": "Button",
                     "id": "5dda9972-4dd7-4b21-8f69-c60d34c8e16a",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -41,7 +59,7 @@
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
-                    "action": "Character3Attack",
+                    "action": "Character1Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -49,6 +67,50 @@
                     "name": "",
                     "id": "ec7a88a4-29e0-4c12-89dc-3c20304c7388",
                     "path": "<Gamepad>/buttonWest",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "Character1Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9a5bc469-3501-49f4-ac20-2883a31b5fad",
+                    "path": "<Keyboard>/w",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "Character2Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "202c5c23-f1c9-485f-823a-fa1c5ea4f4f4",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "Character2Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "981707d6-e529-4ee8-8bc4-9904be2486c2",
+                    "path": "<Keyboard>/e",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "Character3Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a4529fff-11f8-41a4-8a8a-762bc243e8cf",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",

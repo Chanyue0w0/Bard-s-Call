@@ -61,7 +61,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.51, y: -2.4699998, z: 0}
-  m_LocalScale: {x: 0.14999999, y: 0.14999999, z: 0.14999999}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3498454065149970787}
@@ -131,13 +131,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e3753b65805b1b40807b6441690ccd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHP: 50
+  hp: 50
+  respawnDelay: 10
   amplitude: 0.1
   speed: 3
   useLocalSpace: 1
   randomizePhase: 1
-  baseScale: {x: 0.15, y: 0.15, z: 0.15}
-  beatScaleMultiplier: 1.3
-  scaleLerpSpeed: 6
+  baseScale: {x: 0.3, y: 0.3, z: 0.3}
+  peakMultiplier: 1.3
+  holdDuration: 0.05
+  returnSpeed: 8
   attackDamage: 20
   minAttackInterval: 10
   maxAttackInterval: 20
