@@ -1232,7 +1232,7 @@ MonoBehaviour:
           m_CallState: 2
   beatPrefab: {fileID: 3071351389764054346, guid: 78eb6fa3fc262f84ca2b2f5082d55880, type: 3}
   hitPoint: {fileID: 381415587}
-  beatTravelTime: 0.8
+  beatTravelTime: 0.85
   visualLeadTime: 0.08
   leftSpawnPoint: {fileID: 1343110492}
   rightSpawnPoint: {fileID: 1932035420}
@@ -1248,7 +1248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 981862c8f89c9ab42b06c97d0bc73636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  earlyRange: 0.06
+  earlyRange: 0.15
   lateRange: 0.15
   judgeOffset: 0.8
   beatHitLightUIPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}
