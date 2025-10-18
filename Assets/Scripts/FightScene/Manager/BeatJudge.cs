@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI; // ★ 使用舊版 UI Text
 using System.Collections;
 
 public class BeatJudge : MonoBehaviour
@@ -31,6 +32,17 @@ public class BeatJudge : MonoBehaviour
     public static BeatJudge Instance { get; private set; }
     private Coroutine scaleCoroutine;
 
+    // ============================================================
+    // ★ Combo 系統變數
+    // ============================================================
+    [Header("Combo 顯示設定")]
+    public Text comboText;              // 舊版 UI Text
+    public float comboResetTime = 3f;   // 超過多久沒打擊則歸零
+
+    private int comboCount = 0;         // 當前 Combo 數
+    private float lastHitTime = 0f;     // 上次 Perfect 時間
+    private Coroutine comboTimerCoroutine; // 控制歸零倒數的 Coroutine
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -48,7 +60,7 @@ public class BeatJudge : MonoBehaviour
     }
 
     // ============================================================
-    // 判定核心（使用 MusicManager 的 AudioSource）
+    // 判定核心
     // ============================================================
     public bool IsOnBeat()
     {
@@ -66,23 +78,20 @@ public class BeatJudge : MonoBehaviour
         float beatInterval = bm.GetInterval();
         double offsetSamples = frequency * bm.startDelay;
 
-        // 當前取樣時間（含判定補償）
         double currentSamples = source.timeSamples - offsetSamples - (judgeOffset * frequency);
         if (currentSamples < 0)
             return false;
 
-        // 計算目前應在第幾拍
         double sampledBeat = currentSamples / (frequency * beatInterval);
         double nearestBeatIndex = System.Math.Round(sampledBeat);
         double nearestBeatTime = nearestBeatIndex * beatInterval;
 
-        // 計算與拍點的時間差（秒）
         double actualTime = currentSamples / frequency;
-        double delta = actualTime - nearestBeatTime; // 正：延遲，負：提前
+        double delta = actualTime - nearestBeatTime;
 
         bool perfect = (delta >= -earlyRange && delta <= lateRange);
 
-        // UI 動畫
+        // 節拍動畫
         PlayScaleAnim();
 
         if (perfect)
@@ -91,20 +100,63 @@ public class BeatJudge : MonoBehaviour
 
             if (audioSource != null && snapClip != null)
             {
-                double playTime = AudioSettings.dspTime + 0.05; // 提前排程 50ms
+                double playTime = AudioSettings.dspTime + 0.05;
                 audioSource.clip = snapClip;
                 audioSource.PlayScheduled(playTime);
             }
 
             Debug.Log($"[Perfect] Δt = {delta:F4}s  Beat = {nearestBeatIndex}");
+            RegisterBeatResult(true);
         }
         else
         {
             SpawnMissText();
             Debug.Log($"[Miss] Δt = {delta:F4}s");
+            RegisterBeatResult(false);
         }
 
         return perfect;
+    }
+
+    // ============================================================
+    // Combo 系統邏輯
+    // ============================================================
+    public void RegisterBeatResult(bool isPerfect)
+    {
+        if (isPerfect)
+        {
+            comboCount++;
+            lastHitTime = Time.time;
+            UpdateComboUI();
+
+            // 每次 Perfect 都重啟倒數計時
+            if (comboTimerCoroutine != null)
+                StopCoroutine(comboTimerCoroutine);
+            comboTimerCoroutine = StartCoroutine(ComboTimeout());
+        }
+        else
+        {
+            ResetCombo();
+        }
+    }
+
+    private IEnumerator ComboTimeout()
+    {
+        yield return new WaitForSeconds(comboResetTime);
+        if (Time.time - lastHitTime >= comboResetTime)
+            ResetCombo();
+    }
+
+    private void ResetCombo()
+    {
+        comboCount = 0;
+        UpdateComboUI();
+    }
+
+    private void UpdateComboUI()
+    {
+        if (comboText == null) return;
+        comboText.text = comboCount > 0 ? "x " + comboCount.ToString() : "";
     }
 
     // ============================================================
