@@ -66,6 +66,8 @@ public class BattleManager : MonoBehaviour
 
     [Header("輸入（用 InputActionReference 綁定）")]
     public InputActionReference actionAttackP1;
+    public InputActionReference actionAttackP2;
+    public InputActionReference actionAttackP3;
     public InputActionReference actionRotateLeft;
     public InputActionReference actionRotateRight;
 
@@ -113,30 +115,29 @@ public class BattleManager : MonoBehaviour
     {
         if (actionAttackP1 != null)
         {
-            actionAttackP1.action.started += OnAttackP1;
+            actionAttackP1.action.started += ctx => OnAttackKey(0);
             actionAttackP1.action.Enable();
         }
-        if (actionRotateLeft != null)
+        if (actionAttackP2 != null)
         {
-            actionRotateLeft.action.started += OnRotateLeft;
-            actionRotateLeft.action.Enable();
+            actionAttackP2.action.started += ctx => OnAttackKey(1);
+            actionAttackP2.action.Enable();
         }
-        if (actionRotateRight != null)
+        if (actionAttackP3 != null)
         {
-            actionRotateRight.action.started += OnRotateRight;
-            actionRotateRight.action.Enable();
+            actionAttackP3.action.started += ctx => OnAttackKey(2);
+            actionAttackP3.action.Enable();
         }
+        // 其他旋轉輸入照舊
     }
 
     void OnDisable()
     {
-        if (actionAttackP1 != null)
-            actionAttackP1.action.started -= OnAttackP1;
-        if (actionRotateLeft != null)
-            actionRotateLeft.action.started -= OnRotateLeft;
-        if (actionRotateRight != null)
-            actionRotateRight.action.started -= OnRotateRight;
+        if (actionAttackP1 != null) actionAttackP1.action.started -= ctx => OnAttackKey(0);
+        if (actionAttackP2 != null) actionAttackP2.action.started -= ctx => OnAttackKey(1);
+        if (actionAttackP3 != null) actionAttackP3.action.started -= ctx => OnAttackKey(2);
     }
+
 
     void Start()
     {
@@ -156,50 +157,55 @@ public class BattleManager : MonoBehaviour
         string.Join(", ", CTeamInfo.Where(x => x != null).Select(x => x.UnitName)));
     }
 
-
-    //private void CreateHealthBars(TeamSlotInfo[] team)
-    //{
-    //    foreach (var slot in team)
-    //    {
-    //        if (slot != null && slot.Actor != null)
-    //        {
-    //            Transform headPoint = slot.Actor.transform.Find("HeadPoint");
-    //            if (headPoint != null)
-    //            {
-    //                GameObject hb = Instantiate(healthBarPrefab, uiCanvas.transform);
-    //                hb.GetComponent<HealthBarUI>().Init(slot, headPoint, uiCanvas.worldCamera);
-    //            }
-    //        }
-    //    }
-    //}
-
     // ================= 攻擊邏輯 =================
-    private void OnAttackP1(InputAction.CallbackContext ctx)
+    private void OnAttackKey(int index)
     {
         if (_isActionLocked) return;
-        if (CTeamInfo[0] == null) return;
+        if (index < 0 || index >= CTeamInfo.Length) return;
+        if (CTeamInfo[index] == null) return;
 
         bool perfect = BeatJudge.Instance.IsOnBeat();
-        var attacker = CTeamInfo[0];
+        if (!perfect)
+        {
+            Debug.Log("Miss！未在節拍上，不觸發攻擊。");
+            return;
+        }
+
+        var attacker = CTeamInfo[index];
         var target = FindEnemyByClass(attacker.ClassType);
         if (target == null) return;
 
         StartCoroutine(LockAction(actionLockDuration));
-
-        StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
-
-        if (perfect)
-        {
-            for (int i = 1; i < CTeamInfo.Length; i++)
-            {
-                var ally = CTeamInfo[i];
-                if (ally != null && ally.Actor != null)
-                {
-                    StartCoroutine(AttackSequence(ally, target, target.SlotTransform.position, true));
-                }
-            }
-        }
+        StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, true)); // 確保 isPerfect = true
     }
+
+
+    //private void OnAttackP1(InputAction.CallbackContext ctx)
+    //{
+    //    if (_isActionLocked) return;
+    //    if (CTeamInfo[0] == null) return;
+
+    //    bool perfect = BeatJudge.Instance.IsOnBeat();
+    //    var attacker = CTeamInfo[0];
+    //    var target = FindEnemyByClass(attacker.ClassType);
+    //    if (target == null) return;
+
+    //    StartCoroutine(LockAction(actionLockDuration));
+
+    //    StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
+
+    //    if (perfect)
+    //    {
+    //        for (int i = 1; i < CTeamInfo.Length; i++)
+    //        {
+    //            var ally = CTeamInfo[i];
+    //            if (ally != null && ally.Actor != null)
+    //            {
+    //                StartCoroutine(AttackSequence(ally, target, target.SlotTransform.position, true));
+    //            }
+    //        }
+    //    }
+    //}
 
     // ================= 旋轉邏輯 =================
     private void OnRotateLeft(InputAction.CallbackContext ctx)
@@ -277,27 +283,27 @@ public class BattleManager : MonoBehaviour
         var actor = attacker.Actor.transform;
         Vector3 origin = actor.position;
 
-        bool isFront = (CTeamInfo.Length > 0 && CTeamInfo[0] == attacker);
+        //bool isFront = (CTeamInfo.Length > 0 && CTeamInfo[0] == attacker);
 
-        if (!isFront)
-        {
-            // ★ 後排 → 統一使用 Dash 攻擊
-            Vector3 contactPoint = targetPoint + meleeContactOffset;
-            yield return Dash(actor, origin, contactPoint, dashDuration);
+        //if (!isFront)
+        //{
+        //    // ★ 後排 → 統一使用 Dash 攻擊
+        //    Vector3 contactPoint = targetPoint + meleeContactOffset;
+        //    yield return Dash(actor, origin, contactPoint, dashDuration);
 
-            var skill = Instantiate(meleeVfxPrefab, targetPoint, Quaternion.identity);
-            var sword = skill.GetComponent<SwordHitSkill>();
-            if (sword != null)
-            {
-                sword.attacker = attacker;
-                sword.target = target;
-                sword.isPerfect = perfect;
-            }
+        //    var skill = Instantiate(meleeVfxPrefab, targetPoint, Quaternion.identity);
+        //    var sword = skill.GetComponent<SwordHitSkill>();
+        //    if (sword != null)
+        //    {
+        //        sword.attacker = attacker;
+        //        sword.target = target;
+        //        sword.isPerfect = perfect;
+        //    }
 
-            yield return new WaitForSeconds(dashStayDuration);
-            yield return Dash(actor, contactPoint, origin, dashDuration);
-            yield break;
-        }
+        //    yield return new WaitForSeconds(dashStayDuration);
+        //    yield return Dash(actor, contactPoint, origin, dashDuration);
+        //    yield break;
+        //}
 
         // ★ 前排角色使用其專屬技能
         switch (attacker.ClassType)

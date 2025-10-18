@@ -1769,6 +1769,8 @@ MonoBehaviour:
     NormalAttackPrefabs: []
     AssignedKeyIndex: 2
   actionAttackP1: {fileID: 2043867421210978648, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionAttackP2: {fileID: -8060893466954798792, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionAttackP3: {fileID: 8643363546054971998, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionRotateLeft: {fileID: 677001074062244605, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionRotateRight: {fileID: -5368929452861908880, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionLockDuration: 0.3
