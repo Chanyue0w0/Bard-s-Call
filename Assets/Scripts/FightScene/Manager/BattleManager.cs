@@ -278,34 +278,12 @@ public class BattleManager : MonoBehaviour
     }
 
     // ================= 攻擊序列 =================
+    // ================= 攻擊序列 =================
     private IEnumerator AttackSequence(TeamSlotInfo attacker, TeamSlotInfo target, Vector3 targetPoint, bool perfect)
     {
         var actor = attacker.Actor.transform;
         Vector3 origin = actor.position;
 
-        //bool isFront = (CTeamInfo.Length > 0 && CTeamInfo[0] == attacker);
-
-        //if (!isFront)
-        //{
-        //    // ★ 後排 → 統一使用 Dash 攻擊
-        //    Vector3 contactPoint = targetPoint + meleeContactOffset;
-        //    yield return Dash(actor, origin, contactPoint, dashDuration);
-
-        //    var skill = Instantiate(meleeVfxPrefab, targetPoint, Quaternion.identity);
-        //    var sword = skill.GetComponent<SwordHitSkill>();
-        //    if (sword != null)
-        //    {
-        //        sword.attacker = attacker;
-        //        sword.target = target;
-        //        sword.isPerfect = perfect;
-        //    }
-
-        //    yield return new WaitForSeconds(dashStayDuration);
-        //    yield return Dash(actor, contactPoint, origin, dashDuration);
-        //    yield break;
-        //}
-
-        // ★ 前排角色使用其專屬技能
         switch (attacker.ClassType)
         {
             case UnitClass.Warrior:
@@ -326,6 +304,7 @@ public class BattleManager : MonoBehaviour
                     yield return Dash(actor, contactPoint, origin, dashDuration);
                     break;
                 }
+
             case UnitClass.Mage:
                 {
                     if (magicUseAuraPrefab != null)
@@ -334,16 +313,24 @@ public class BattleManager : MonoBehaviour
                         if (vfxLifetime > 0f) Destroy(aura, vfxLifetime);
                     }
 
-                    var skill = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity);
-                    var fireball = skill.GetComponent<FireBallSkill>();
-                    if (fireball != null)
+                    // 全體攻擊：每個敵人都生成 FireBall
+                    foreach (var enemy in ETeamInfo)
                     {
-                        fireball.attacker = attacker;
-                        fireball.target = target;
-                        fireball.isPerfect = perfect;
+                        if (enemy != null && enemy.Actor != null)
+                        {
+                            var fireball = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity)
+                                .GetComponent<FireBallSkill>();
+                            if (fireball != null)
+                            {
+                                fireball.attacker = attacker;
+                                fireball.target = enemy;
+                                fireball.isPerfect = perfect;
+                            }
+                        }
                     }
                     break;
                 }
+
             case UnitClass.Shield:
                 {
                     if (perfect)
@@ -364,6 +351,7 @@ public class BattleManager : MonoBehaviour
                     }
                     break;
                 }
+
             case UnitClass.Priest:
                 {
                     if (perfect)
@@ -385,37 +373,68 @@ public class BattleManager : MonoBehaviour
                     }
                     break;
                 }
+
             case UnitClass.Ranger:
                 {
-                    var skill = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity);
-                    var arrow = skill.GetComponent<FireBallSkill>();
-                    if (arrow != null)
+                    // 尋找最後一位有效敵人（若空位則往前找）
+                    TeamSlotInfo lastEnemy = FindLastValidEnemy();
+                    if (lastEnemy != null)
                     {
-                        arrow.attacker = attacker;
-                        arrow.target = target;
-                        arrow.isPerfect = perfect;
+                        var arrow = Instantiate(rangedVfxPrefab, actor.position, Quaternion.identity)
+                            .GetComponent<FireBallSkill>();
+                        if (arrow != null)
+                        {
+                            arrow.attacker = attacker;
+                            arrow.target = lastEnemy;
+                            arrow.isPerfect = perfect;
+                        }
+                    }
+                    else if (missVfxPrefab != null)
+                    {
+                        Instantiate(missVfxPrefab, actor.position, Quaternion.identity);
                     }
                     break;
                 }
         }
     }
 
+    // ================= 攻擊目標搜尋 =================
     private TeamSlotInfo FindEnemyByClass(UnitClass cls)
     {
+        // Warrior：攻擊前方第一位敵人
         if (cls == UnitClass.Warrior)
         {
             for (int i = 0; i < ETeamInfo.Length; i++)
                 if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
                     return ETeamInfo[i];
         }
-        else if (cls == UnitClass.Mage)
+
+        // Mage：不需要特定目標，全體攻擊時會用 ETeamInfo 迭代
+        if (cls == UnitClass.Mage)
         {
-            for (int i = ETeamInfo.Length - 1; i >= 0; i--)
-                if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
-                    return ETeamInfo[i];
+            return ETeamInfo.FirstOrDefault(e => e != null && e.Actor != null);
         }
+
+        // Ranger：攻擊最後一位有效敵人
+        if (cls == UnitClass.Ranger)
+        {
+            return FindLastValidEnemy();
+        }
+
         return FindNextValidEnemy(0);
     }
+
+    // 尋找最後一位仍存在的敵人（由後往前找）
+    private TeamSlotInfo FindLastValidEnemy()
+    {
+        for (int i = ETeamInfo.Length - 1; i >= 0; i--)
+        {
+            if (ETeamInfo[i] != null && ETeamInfo[i].Actor != null)
+                return ETeamInfo[i];
+        }
+        return null;
+    }
+
 
     private TeamSlotInfo FindNextValidEnemy(int startIndex)
     {

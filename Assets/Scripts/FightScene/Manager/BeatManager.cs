@@ -132,6 +132,39 @@ public class BeatManager : MonoBehaviour
         beatUI.InitFly(spawnPoint, hitPoint, beatTravelTime);
     }
 
+    private Coroutine scheduleCoroutine;  // ★ 新增：紀錄正在運作的協程
+
+    public void ScheduleNextBeat()
+    {
+        // ★ 若已有一個預排節拍，則略過（防止重複）
+        if (scheduleCoroutine != null)
+            return;
+
+        scheduleCoroutine = StartCoroutine(ScheduleBeatCoroutine());
+    }
+
+    private IEnumerator ScheduleBeatCoroutine()
+    {
+        float interval = GetInterval(); // 一拍長度（秒）
+        float delay = interval - beatTravelTime;
+        delay = Mathf.Max(0f, delay);
+
+        yield return new WaitForSecondsRealtime(delay);
+
+        // 提前生成 BeatUI
+        SpawnBeatUI(leftSpawnPoint);
+        SpawnBeatUI(rightSpawnPoint);
+
+        yield return new WaitForSecondsRealtime(beatTravelTime);
+
+        // 到正拍時觸發 OnBeat
+        TriggerBeat();
+
+        // ★ 拍結束，允許下一個節拍重新排程
+        scheduleCoroutine = null;
+    }
+
+
 
 }
 
@@ -166,7 +199,13 @@ public class IntervalFix
             {
                 BeatManager.Instance?.TriggerBeat();   // ← 改這裡！
             }
+            //if (Mathf.Approximately(step, 1f))
+            //{
+            //    BeatManager.Instance?.ScheduleNextBeat();  // 改這裡！
+            //}
+
 
         }
     }
+
 }
