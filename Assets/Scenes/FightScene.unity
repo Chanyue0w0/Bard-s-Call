@@ -1211,8 +1211,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d8ebbfa2182c394d8d555524e6cd7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bpm: 72.5
-  startDelay: 3
+  bpm: 105
+  startDelay: 0
   intervals:
   - step: 1
     trigger:
@@ -1247,7 +1247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 981862c8f89c9ab42b06c97d0bc73636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  earlyRange: 0.1
+  earlyRange: 0.06
   lateRange: 0.06
   judgeOffset: 0.03
   beatHitLightUIPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}
@@ -1768,7 +1768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a80be3587923374497eb2c6719c1f5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultClip: {fileID: 8300000, guid: 2a77d181bbb7d374b923f665233ff04b, type: 3}
+  defaultClip: {fileID: 8300000, guid: 3f3ccd2cd53bb554aa555da4f2d366bc, type: 3}
   pitch: 1
   volume: 1
   loop: 1
