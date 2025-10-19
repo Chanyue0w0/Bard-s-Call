@@ -62,6 +62,8 @@ public class BeatJudge : MonoBehaviour
     // ============================================================
     // 判定核心
     // ============================================================
+    private int lastPerfectBeatIndex = -1; // ★ 新增：記錄上次成功拍點
+
     public bool IsOnBeat()
     {
         var bm = BeatManager.Instance;
@@ -78,7 +80,6 @@ public class BeatJudge : MonoBehaviour
         float beatInterval = bm.GetInterval();
         double offsetSamples = frequency * bm.startDelay;
 
-        // ★ 改這裡：補償應該往前加，而不是往後扣
         double currentSamples = source.timeSamples - offsetSamples + (judgeOffset * frequency);
         if (currentSamples < 0)
             return false;
@@ -86,18 +87,24 @@ public class BeatJudge : MonoBehaviour
         double sampledBeat = currentSamples / (frequency * beatInterval);
         double nearestBeatIndex = System.Math.Round(sampledBeat);
         double nearestBeatTime = nearestBeatIndex * beatInterval;
-
         double actualTime = currentSamples / frequency;
         double delta = actualTime - nearestBeatTime;
 
-
         bool perfect = (delta >= -earlyRange && delta <= lateRange);
 
-        // 節拍動畫
+        // ★ 新增：同一拍防重判
+        int beatIndexInt = (int)nearestBeatIndex;
+        if (beatIndexInt == lastPerfectBeatIndex)
+        {
+            // 已經在這一拍判定過了，不再觸發
+            return false;
+        }
+
         PlayScaleAnim();
 
         if (perfect)
         {
+            lastPerfectBeatIndex = beatIndexInt; // 記錄成功拍
             SpawnPerfectEffect();
 
             if (audioSource != null && snapClip != null)
@@ -119,6 +126,7 @@ public class BeatJudge : MonoBehaviour
 
         return perfect;
     }
+
 
     // ============================================================
     // Combo 系統邏輯
