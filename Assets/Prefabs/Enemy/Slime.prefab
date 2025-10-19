@@ -144,8 +144,8 @@ MonoBehaviour:
   holdDuration: 0.05
   returnSpeed: 8
   attackDamage: 20
-  minAttackInterval: 10
-  maxAttackInterval: 20
+  minAttackInterval: 5
+  maxAttackInterval: 5
   slotIndex: 0
   dashDuration: 0.1
   actionLockDuration: 0.3
