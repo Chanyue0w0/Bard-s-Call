@@ -19,7 +19,12 @@ public class BeatManager : MonoBehaviour
     [SerializeField] private IntervalFix[] intervals;
 
     [Header("UI 設定")]
-    public GameObject beatPrefab;
+    [Tooltip("左邊節拍 Prefab")]
+    public GameObject beatPrefabLeft;    // ★ 新增
+    [Tooltip("右邊節拍 Prefab")]
+    public GameObject beatPrefabRight;   // ★ 新增
+    [Tooltip("中心閃光用（Persistent Beat）Prefab")]
+    public GameObject beatCenterPrefab;  // ★ 原 beatPrefab 改名
     public RectTransform hitPoint;
 
     private AudioSource musicSource;
@@ -37,7 +42,6 @@ public class BeatManager : MonoBehaviour
     public RectTransform leftSpawnPoint;
     public RectTransform rightSpawnPoint;
 
-    // ★ 新增：預捲所需的狀態
     private int lastSpawnBeatIndex = -1;
 
     private void Awake()
@@ -52,21 +56,19 @@ public class BeatManager : MonoBehaviour
 
     private IEnumerator Start()
     {
-        // 等待 MusicManager 準備完成
         yield return new WaitUntil(() => MusicManager.Instance != null);
         yield return new WaitUntil(() => MusicManager.Instance.GetComponent<AudioSource>()?.clip != null);
 
         musicSource = MusicManager.Instance.GetComponent<AudioSource>();
         offsetSamples = musicSource.clip.frequency * startDelay;
 
-        // 生成中心的 Persistent BeatUI（只負責中心閃光）
-        if (beatPrefab && hitPoint)
+        // 生成中心閃光 Persistent BeatUI
+        if (beatCenterPrefab && hitPoint)
         {
-            GameObject beatObj = Instantiate(beatPrefab, hitPoint.parent);
+            GameObject beatObj = Instantiate(beatCenterPrefab, hitPoint.parent);
             beatObj.name = "BeatUI(Persistent)";
             RectTransform beatRect = beatObj.GetComponent<RectTransform>();
-            RectTransform hitRect = hitPoint.GetComponent<RectTransform>();
-            beatRect.anchoredPosition = hitRect.anchoredPosition;
+            beatRect.anchoredPosition = hitPoint.anchoredPosition;
 
             persistentBeat = beatObj.GetComponent<BeatUI>() ?? beatObj.AddComponent<BeatUI>();
             persistentBeat.Init();
@@ -84,7 +86,6 @@ public class BeatManager : MonoBehaviour
         if (musicSource.timeSamples < offsetSamples)
             return;
 
-        // 1) 節拍偵測（維持你原先的完美對拍）
         foreach (IntervalFix interval in intervals)
         {
             double sampledTime = (musicSource.timeSamples - offsetSamples) /
@@ -92,54 +93,43 @@ public class BeatManager : MonoBehaviour
             interval.CheckForNewInterval(sampledTime);
         }
 
-        // 2) ★ 預捲生成 BeatUI（在下一拍前 beatTravelTime 秒生成）
         PreRollSpawnForNextBeat();
     }
 
-    // ★ 預捲：當距離「下一拍」的時間 <= beatTravelTime，就先生成一次飛行節拍球
     private void PreRollSpawnForNextBeat()
     {
-        if (beatPrefab == null || hitPoint == null || (leftSpawnPoint == null && rightSpawnPoint == null))
+        if ((beatPrefabLeft == null && beatPrefabRight == null) || hitPoint == null ||
+            (leftSpawnPoint == null && rightSpawnPoint == null))
             return;
 
         var clip = musicSource.clip;
         int freq = clip.frequency;
-
-        // 每拍的樣本數
         double samplesPerBeat = freq * GetInterval();
-
-        // 目前已經過的「拍數（含小數）」
         double beatFloat = (musicSource.timeSamples - offsetSamples) / samplesPerBeat;
-
-        // 下一拍的 index 與樣本位置
         int nextBeatIndex = Mathf.FloorToInt((float)beatFloat) + 1;
         double nextBeatSample = offsetSamples + nextBeatIndex * samplesPerBeat;
-
-        // 距下一拍的秒數
         double timeToNextBeat = (nextBeatSample - musicSource.timeSamples) / freq;
 
-        // ★ 提前補償：讓生成比預期再早一點
         double adjustedTravelTime = Mathf.Max(0f, beatTravelTime - visualLeadTime);
 
-        // 尚未為這個 nextBeatIndex 生成過，且時間已進入預捲窗
         if (timeToNextBeat <= adjustedTravelTime && nextBeatIndex != lastSpawnBeatIndex)
         {
-            // 這裡你可改成只生一邊，或交替；預設兩邊各一顆
-            if (leftSpawnPoint) SpawnBeatUI(leftSpawnPoint);
-            if (rightSpawnPoint) SpawnBeatUI(rightSpawnPoint);
+            if (leftSpawnPoint && beatPrefabLeft)
+                SpawnBeatUI(beatPrefabLeft, leftSpawnPoint);
 
-            lastSpawnBeatIndex = nextBeatIndex; // 記錄避免重複生成
+            if (rightSpawnPoint && beatPrefabRight)
+                SpawnBeatUI(beatPrefabRight, rightSpawnPoint);
+
+            lastSpawnBeatIndex = nextBeatIndex;
         }
     }
 
-    // 對外主拍觸發（給 UI / 判定 用）— 保持「當下正拍」立即觸發，不再生成飛行球
     public void MainBeatTrigger()
     {
-        persistentBeat?.OnBeat(); // 中心閃光
-        InvokeBeat();             // 其他系統（判定/數值）
+        persistentBeat?.OnBeat();
+        InvokeBeat();
     }
 
-    // 安全觸發全域 OnBeat 事件
     public static void InvokeBeat()
     {
         OnBeat?.Invoke();
@@ -147,23 +137,35 @@ public class BeatManager : MonoBehaviour
 
     public float GetInterval() => 60f / bpm;
 
-    // ★ 不再生成飛行球，避免同拍雙重生成
     public void TriggerBeat()
     {
         persistentBeat?.OnBeat();
         OnBeat?.Invoke();
     }
 
-    private void SpawnBeatUI(RectTransform spawnPoint)
+    // ★ 修改：傳入 prefab 參數
+    private void SpawnBeatUI(GameObject prefab, RectTransform spawnPoint)
     {
-        if (beatPrefab == null || hitPoint == null || spawnPoint == null)
+        if (prefab == null || hitPoint == null || spawnPoint == null)
             return;
 
-        GameObject beatObj = Instantiate(beatPrefab, hitPoint.parent);
-        beatObj.name = "BeatUI(Flying)";
+        // 先生成，不指定父物件
+        GameObject beatObj = Instantiate(prefab);
+        beatObj.name = "BeatUI(Flying_" + prefab.name + ")";
+
+        // ★ 關鍵：重新設為子物件時，不保留世界座標
+        beatObj.transform.SetParent(hitPoint.parent, false);
+
+        // ★ 強制重設縮放與位置
+        RectTransform rect = beatObj.GetComponent<RectTransform>();
+        rect.localScale = Vector3.one; // 這樣就不會被放大
+        rect.anchoredPosition = spawnPoint.anchoredPosition;
+
         BeatUI beatUI = beatObj.GetComponent<BeatUI>() ?? beatObj.AddComponent<BeatUI>();
         beatUI.InitFly(spawnPoint, hitPoint, beatTravelTime);
     }
+
+
 }
 
 [System.Serializable]
