@@ -131,21 +131,32 @@ public class BeatManager : MonoBehaviour
     // ============================================================
     // 每拍觸發邏輯（由 IntervalFix 事件呼叫）
     // ============================================================
+    private bool isBeatLocked = false;
+
     public void MainBeatTrigger()
     {
+        if (isBeatLocked) return;
+        StartCoroutine(BeatLock());
+
         persistentBeat?.OnBeat();
         InvokeBeat();
 
-        // 拍數遞增
         currentBeatIndex++;
         currentBeatInCycle = ((currentBeatIndex - 1) % beatsPerMeasure) + 1;
 
-        // 更新拍數顯示
         if (beatText != null)
             beatText.text = "拍 " + currentBeatInCycle + " / " + beatsPerMeasure;
 
         Debug.Log($"第 {currentBeatInCycle} 拍 / {beatsPerMeasure}");
     }
+
+    private IEnumerator BeatLock()
+    {
+        isBeatLocked = true;
+        yield return null; // 等一幀後解除
+        isBeatLocked = false;
+    }
+
 
     public static void InvokeBeat() => OnBeat?.Invoke();
     public float GetInterval() => 60f / bpm;
@@ -183,6 +194,8 @@ public class IntervalFix
     [Tooltip("該層節拍觸發的事件（可掛 UI 動畫、音效等）")]
     [SerializeField] private UnityEvent trigger;
 
+    [SerializeField] private bool enableTrigger = false;
+
     private int lastInterval = -1;
 
     public float GetIntervalLength(float bpm)
@@ -196,7 +209,10 @@ public class IntervalFix
         if (currentInterval != lastInterval)
         {
             lastInterval = currentInterval;
-            trigger.Invoke();
+            if (enableTrigger)
+                trigger.Invoke();
         }
     }
+
+
 }

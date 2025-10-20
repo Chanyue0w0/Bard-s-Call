@@ -22,7 +22,7 @@ public class BeatUI : MonoBehaviour
         rect.localScale = Vector3.zero;
     }
 
-    // ★ 新增：設定從起點飛向中心點
+    // 設定從起點飛向中心點
     public void InitFly(RectTransform startPoint, RectTransform targetPoint, float travelTime)
     {
         rect.anchoredPosition = startPoint.anchoredPosition;
@@ -47,15 +47,21 @@ public class BeatUI : MonoBehaviour
             yield return null;
         }
 
+        // 抵達中心點
         rect.anchoredPosition = endPos;
         rect.localScale = Vector3.one * endScale;
 
+        // ★ 在此時通知 BeatManager：實際拍點抵達！
+        if (BeatManager.Instance != null)
+            BeatManager.Instance.MainBeatTrigger();
+
+        // 等待短暫時間後銷毀自己
         yield return new WaitForSecondsRealtime(fadeOutTime);
         Destroy(gameObject);
     }
 
     public void OnBeat()
     {
-        // 若想保留中心閃爍效果可留空或加動畫
+        // 中心Beat閃光效果可以在這裡加入動畫
     }
 }

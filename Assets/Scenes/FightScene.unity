@@ -1509,23 +1509,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bpm: 105
   startDelay: 3
-  intervals:
-  - step: 1
-    trigger:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 806207502}
-          m_TargetAssemblyTypeName: BeatManager, Assembly-CSharp
-          m_MethodName: MainBeatTrigger
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+  intervals: []
   beatPrefabLeft: {fileID: 8108543327173498572, guid: 681f9e5527f2a3b468bd07631e47126f, type: 3}
   beatPrefabRight: {fileID: 5441473996696962256, guid: 1d9ff83c89fcc3545a68b184dfda0461, type: 3}
   beatCenterPrefab: {fileID: 3071351389764054346, guid: 78eb6fa3fc262f84ca2b2f5082d55880, type: 3}
