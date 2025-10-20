@@ -176,8 +176,99 @@ public class BattleManager : MonoBehaviour
         if (target == null) return;
 
         StartCoroutine(LockAction(actionLockDuration));
-        StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, true)); // 確保 isPerfect = true
+
+        // ★ 根據拍數判斷攻擊種類
+        int beatInCycle = BeatManager.Instance.currentBeatInCycle;
+
+        if (attacker.ClassType == UnitClass.Warrior)
+        {
+            // 呼叫新函式處理多段攻擊
+            StartCoroutine(HandleWarriorAttack(attacker, target, beatInCycle, perfect));
+        }
+        else
+        {
+            // 其他職業（尚未擴充）
+            StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
+        }
     }
+
+    // ============================================================
+    // Warrior 3 段普攻 + 第4拍重攻
+    // ============================================================
+    // ============================================================
+    // Warrior 3 段普攻 + 第4拍重攻
+    // ============================================================
+    // ============================================================
+    // Warrior 3 段普攻 + 第4拍重攻（自動記憶段數）
+    // ============================================================
+    private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
+    {
+        var actor = attacker.Actor.transform;
+        Vector3 origin = actor.position;
+        Vector3 targetPoint = target.SlotTransform.position + meleeContactOffset;
+
+        var charData = attacker.Actor.GetComponent<CharacterData>();
+        if (charData == null)
+        {
+            Debug.LogWarning("角色沒有 CharacterData，使用預設攻擊。");
+            yield return AttackSequence(attacker, target, targetPoint, perfect);
+            yield break;
+        }
+
+        // ★ 取得該角色目前的 combo 狀態
+        var comboData = actor.GetComponent<CharacterComboState>();
+        if (comboData == null)
+            comboData = actor.gameObject.AddComponent<CharacterComboState>();
+
+        // 若長時間沒攻擊則重置 combo
+        if (Time.time - comboData.lastAttackTime > 2f)
+            comboData.currentPhase = 1;
+
+        // 第 1~3 段為普攻，第 4 段為重攻
+        int phase = comboData.currentPhase;
+        SkillInfo chosenSkill = null;
+        GameObject attackPrefab = null;
+
+        if (phase >= 1 && phase <= 3)
+        {
+            int attackIndex = Mathf.Clamp(phase - 1, 0, charData.NormalAttacks.Count - 1);
+            chosenSkill = charData.NormalAttacks[attackIndex];
+            attackPrefab = chosenSkill?.SkillPrefab;
+            Debug.Log($"Warrior 攻擊段 {phase}：{chosenSkill?.SkillName ?? "未設定"}");
+        }
+        else if (phase == 4)
+        {
+            chosenSkill = charData.HeavyAttack;
+            attackPrefab = chosenSkill?.SkillPrefab;
+            Debug.Log($"Warrior 重攻擊：{chosenSkill?.SkillName ?? "未設定"}");
+        }
+
+        if (attackPrefab == null && meleeVfxPrefab != null)
+            attackPrefab = meleeVfxPrefab;
+
+        yield return Dash(actor, origin, targetPoint, dashDuration);
+
+        if (attackPrefab != null)
+        {
+            var skillObj = Instantiate(attackPrefab, targetPoint, Quaternion.identity);
+            var sword = skillObj.GetComponent<SwordHitSkill>();
+            if (sword != null)
+            {
+                sword.attacker = attacker;
+                sword.target = target;
+                sword.isPerfect = perfect;
+                //sword.attackPhase = phase; // 傳入目前段數
+            }
+        }
+
+        // 更新 combo 狀態
+        comboData.lastAttackTime = Time.time;
+        comboData.currentPhase = (phase % 4) + 1; // 1→2→3→4→1 循環
+
+        yield return new WaitForSeconds(dashStayDuration);
+        yield return Dash(actor, targetPoint, origin, dashDuration);
+    }
+
 
 
     //private void OnAttackP1(InputAction.CallbackContext ctx)

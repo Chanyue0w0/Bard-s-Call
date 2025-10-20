@@ -158,14 +158,22 @@ MonoBehaviour:
   - SkillName: SwordSlash
     SkillPrefab: {fileID: 8153514251071552052, guid: f6e99efa5f51f4c458e60b1da308912d, type: 3}
     MPCost: 0
+    DamageMultiplier: 1
+    FixedDamage: 0
   - SkillName: SwordSlash2
     SkillPrefab: {fileID: 4937832529830717766, guid: 312a3118a24a4274c95b219e47faf59c, type: 3}
     MPCost: 0
+    DamageMultiplier: 1
+    FixedDamage: 0
   - SkillName: SwordSlash3
     SkillPrefab: {fileID: 1392333364276010594, guid: 8d5ed7ed67f6f554eb543ea7d04d761c, type: 3}
     MPCost: 0
-  Skills: []
-  HeavyAttacks:
-  - SkillName: SwordSplashStrong
+    DamageMultiplier: 1
+    FixedDamage: 0
+  HeavyAttack:
+    SkillName: SwordSplashStrong
     SkillPrefab: {fileID: 4023589613909814861, guid: a1d0e9dd03d04e74a9aabc965e881788, type: 3}
     MPCost: 0
+    DamageMultiplier: 1.5
+    FixedDamage: 0
+  Skills: []

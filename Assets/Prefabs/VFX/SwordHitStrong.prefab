@@ -14488,7 +14488,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4350035, y: 1.4350035, z: 1.4350035}
+  m_LocalScale: {x: 2.5409608, y: 2.5409608, z: 2.5409608}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 959535136111673030}
@@ -19230,7 +19230,7 @@ MonoBehaviour:
     delay: 0
     duration: 0.3
     shakeSpace: 0
-    shakeStrength: {x: 0.1, y: 0.1, z: 0.1}
+    shakeStrength: {x: 0.3, y: 0.3, z: 0.3}
     shakeCurve:
       serializedVersion: 2
       m_Curve:
