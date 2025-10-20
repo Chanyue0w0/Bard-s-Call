@@ -12,6 +12,13 @@ public class SkillInfo
 
     [Header("消耗MP（可選）")]
     public int MPCost = 0;
+
+    [Header("基礎傷害或倍率（可自訂）")]
+    [Tooltip("可作為額外攻擊力倍率（例如 1.2f = 120% 攻擊力）")]
+    public float DamageMultiplier = 1.0f;
+
+    [Tooltip("若此招為固定傷害，可直接指定值（>0 時會覆蓋倍率計算）")]
+    public int FixedDamage = 0;
 }
 
 public class CharacterData : MonoBehaviour
@@ -28,12 +35,28 @@ public class CharacterData : MonoBehaviour
     public int OriginAtk = 10;
     public int Atk = 10;
 
-    [Header("普通攻擊清單")]
+    [Header("普通攻擊清單（多段連擊）")]
     public List<SkillInfo> NormalAttacks = new List<SkillInfo>();
+
+    [Header("重攻擊（第四拍用）")]
+    public SkillInfo HeavyAttack;
 
     [Header("技能清單")]
     public List<SkillInfo> Skills = new List<SkillInfo>();
 
+    // 主攻擊取用
     public SkillInfo MainNormal => (NormalAttacks != null && NormalAttacks.Count > 0) ? NormalAttacks[0] : null;
     public SkillInfo MainSkill => (Skills != null && Skills.Count > 0) ? Skills[0] : null;
+    public SkillInfo MainHeavyAttack => HeavyAttack;
+
+    // 計算最終傷害（之後 BattleManager 可用這個統一處理）
+    public int CalculateDamage(SkillInfo skill)
+    {
+        if (skill == null) return 0;
+
+        if (skill.FixedDamage > 0)
+            return skill.FixedDamage;
+
+        return Mathf.RoundToInt(Atk * skill.DamageMultiplier);
+    }
 }
