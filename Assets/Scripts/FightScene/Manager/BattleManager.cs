@@ -178,7 +178,9 @@ public class BattleManager : MonoBehaviour
         StartCoroutine(LockAction(actionLockDuration));
 
         // ★ 根據拍數判斷攻擊種類
-        int beatInCycle = BeatManager.Instance.currentBeatInCycle;
+        //int beatInCycle = BeatManager.Instance.currentBeatInCycle;
+        int beatInCycle = BeatManager.Instance.predictedNextBeat;
+
 
         if (attacker.ClassType == UnitClass.Warrior)
         {
@@ -215,7 +217,7 @@ public class BattleManager : MonoBehaviour
             yield break;
         }
 
-        // ★ 取得該角色目前的 combo 狀態
+        // 取得 combo 狀態
         var comboData = actor.GetComponent<CharacterComboState>();
         if (comboData == null)
             comboData = actor.gameObject.AddComponent<CharacterComboState>();
@@ -224,25 +226,30 @@ public class BattleManager : MonoBehaviour
         if (Time.time - comboData.lastAttackTime > 2f)
             comboData.currentPhase = 1;
 
-        // 第 1~3 段為普攻，第 4 段為重攻
-        int phase = comboData.currentPhase;
         SkillInfo chosenSkill = null;
         GameObject attackPrefab = null;
 
-        if (phase >= 1 && phase <= 3)
-        {
-            int attackIndex = Mathf.Clamp(phase - 1, 0, charData.NormalAttacks.Count - 1);
-            chosenSkill = charData.NormalAttacks[attackIndex];
-            attackPrefab = chosenSkill?.SkillPrefab;
-            Debug.Log($"Warrior 攻擊段 {phase}：{chosenSkill?.SkillName ?? "未設定"}");
-        }
-        else if (phase == 4)
+        // ★ 第四拍固定重攻，其餘三拍為普攻
+        if (beatInCycle == 4)
         {
             chosenSkill = charData.HeavyAttack;
             attackPrefab = chosenSkill?.SkillPrefab;
-            Debug.Log($"Warrior 重攻擊：{chosenSkill?.SkillName ?? "未設定"}");
+            comboData.currentPhase = 1; // ★ 重製普攻段數
+            Debug.Log($"Warrior 第四拍重攻擊：{chosenSkill?.SkillName ?? "未設定"}");
+        }
+        else
+        {
+            int phase = comboData.currentPhase;
+            int attackIndex = Mathf.Clamp(phase - 1, 0, charData.NormalAttacks.Count - 1);
+            chosenSkill = charData.NormalAttacks[attackIndex];
+            attackPrefab = chosenSkill?.SkillPrefab;
+            Debug.Log($"Warrior 普攻段 {phase}：{chosenSkill?.SkillName ?? "未設定"}");
+
+            // 更新 combo 狀態（1→2→3 循環）
+            comboData.currentPhase = (phase % 3) + 1;
         }
 
+        // 預設特效（若找不到 prefab）
         if (attackPrefab == null && meleeVfxPrefab != null)
             attackPrefab = meleeVfxPrefab;
 
@@ -257,17 +264,15 @@ public class BattleManager : MonoBehaviour
                 sword.attacker = attacker;
                 sword.target = target;
                 sword.isPerfect = perfect;
-                //sword.attackPhase = phase; // 傳入目前段數
             }
         }
 
-        // 更新 combo 狀態
         comboData.lastAttackTime = Time.time;
-        comboData.currentPhase = (phase % 4) + 1; // 1→2→3→4→1 循環
 
         yield return new WaitForSeconds(dashStayDuration);
         yield return Dash(actor, targetPoint, origin, dashDuration);
     }
+
 
 
 

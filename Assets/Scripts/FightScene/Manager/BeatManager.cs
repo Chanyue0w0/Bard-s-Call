@@ -45,6 +45,9 @@ public class BeatManager : MonoBehaviour
     [Header("拍數顯示")]
     public Text beatText; // 顯示「拍 X / 4」
 
+    // ★ 新增：預測下一拍（供BattleManager使用）
+    [HideInInspector] public int predictedNextBeat = 1;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -125,8 +128,25 @@ public class BeatManager : MonoBehaviour
                 SpawnBeatUI(beatPrefabRight, rightSpawnPoint);
 
             lastSpawnBeatIndex = nextBeatIndex;
+
+            // ★ 改為延後設定 predictedNextBeat
+            StartCoroutine(UpdatePredictedBeatDelayed(nextBeatIndex));
+
+            // Debug.Log($"[Predicted] 下一拍將是第 {predictedNextBeat} 拍");
         }
     }
+
+    private IEnumerator UpdatePredictedBeatDelayed(int nextBeatIndex)
+    {
+        // 延遲至拍點即將抵達中心再更新，確保不提前一拍
+        float delay = Mathf.Max(0f, beatTravelTime - visualLeadTime);
+        yield return new WaitForSecondsRealtime(delay);
+
+        predictedNextBeat = ((nextBeatIndex - 1) % beatsPerMeasure) + 1;
+        // Debug.Log($"[Predicted] 真正更新為第 {predictedNextBeat} 拍 (延遲 {delay:F2}s)");
+    }
+
+
 
     // ============================================================
     // 每拍觸發邏輯（由 IntervalFix 事件呼叫）
@@ -157,7 +177,6 @@ public class BeatManager : MonoBehaviour
         isBeatLocked = false;
     }
 
-
     public static void InvokeBeat() => OnBeat?.Invoke();
     public float GetInterval() => 60f / bpm;
 
@@ -182,6 +201,15 @@ public class BeatManager : MonoBehaviour
 
         BeatUI beatUI = beatObj.GetComponent<BeatUI>() ?? beatObj.AddComponent<BeatUI>();
         beatUI.InitFly(spawnPoint, hitPoint, beatTravelTime);
+
+        // ★ 顯示第4拍為黃色
+        int nextBeatInCycle = ((lastSpawnBeatIndex) % beatsPerMeasure) + 1;
+        if (nextBeatInCycle == beatsPerMeasure)
+        {
+            var img = beatObj.GetComponent<Image>();
+            if (img != null)
+                img.color = Color.yellow;
+        }
     }
 }
 
@@ -213,6 +241,4 @@ public class IntervalFix
                 trigger.Invoke();
         }
     }
-
-
 }
