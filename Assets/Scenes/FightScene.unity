@@ -2062,7 +2062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a80be3587923374497eb2c6719c1f5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultClip: {fileID: 8300000, guid: 3f3ccd2cd53bb554aa555da4f2d366bc, type: 3}
+  defaultClip: {fileID: 8300000, guid: bb42badaab71ea34e8c3d90c7a6cb230, type: 3}
   pitch: 1
   volume: 1
   loop: 1
