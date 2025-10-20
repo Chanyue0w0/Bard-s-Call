@@ -1,18 +1,14 @@
 using UnityEngine;
-using UnityEngine.UI; // ★ 使用舊版 UI Text
+using UnityEngine.UI;
 using System.Collections;
 
 public class BeatJudge : MonoBehaviour
 {
     [Header("判定範圍設定 (秒)")]
-    [Tooltip("允許提早多少秒內仍算完美")]
     public float earlyRange = 0.03f;
-
-    [Tooltip("允許延遲多少秒內仍算完美")]
     public float lateRange = 0.07f;
 
     [Header("判定時間補償 (秒)")]
-    [Tooltip("正值會讓判定提前，建議 0.03~0.12 秒之間")]
     public float judgeOffset = 0.08f;
 
     [Header("特效與 UI")]
@@ -32,16 +28,20 @@ public class BeatJudge : MonoBehaviour
     public static BeatJudge Instance { get; private set; }
     private Coroutine scaleCoroutine;
 
-    // ============================================================
-    // ★ Combo 系統變數
-    // ============================================================
     [Header("Combo 顯示設定")]
-    public Text comboText;              // 舊版 UI Text
-    public float comboResetTime = 3f;   // 超過多久沒打擊則歸零
+    public Text comboText;
+    public float comboResetTime = 3f;
 
-    private int comboCount = 0;         // 當前 Combo 數
-    private float lastHitTime = 0f;     // 上次 Perfect 時間
-    private Coroutine comboTimerCoroutine; // 控制歸零倒數的 Coroutine
+    private int comboCount = 0;
+    private float lastHitTime = 0f;
+    private Coroutine comboTimerCoroutine;
+
+    // ============================================================
+    // ★ 新增變數
+    // ============================================================
+    private int lastPerfectBeatIndex = -1;
+    public int LastHitBeatIndex { get; private set; } = -1;  // ★ 公開玩家最後命中拍
+    public double LastHitDelta { get; private set; } = 0.0;  // ★ 命中與拍點誤差（方便調試）
 
     private void Awake()
     {
@@ -60,10 +60,8 @@ public class BeatJudge : MonoBehaviour
     }
 
     // ============================================================
-    // 判定核心
+    // 核心判定
     // ============================================================
-    private int lastPerfectBeatIndex = -1; // ★ 新增：記錄上次成功拍點
-
     public bool IsOnBeat()
     {
         var bm = BeatManager.Instance;
@@ -84,6 +82,9 @@ public class BeatJudge : MonoBehaviour
         if (currentSamples < 0)
             return false;
 
+        // ---------------------------------------------------------
+        // ★ 計算實際按下時間所對應的理論節拍索引
+        // ---------------------------------------------------------
         double sampledBeat = currentSamples / (frequency * beatInterval);
         double nearestBeatIndex = System.Math.Round(sampledBeat);
         double nearestBeatTime = nearestBeatIndex * beatInterval;
@@ -92,21 +93,25 @@ public class BeatJudge : MonoBehaviour
 
         bool perfect = (delta >= -earlyRange && delta <= lateRange);
 
-        // ★ 新增：同一拍防重判
+        // ---------------------------------------------------------
+        // ★ 同拍防重判
+        // ---------------------------------------------------------
         int beatIndexInt = (int)nearestBeatIndex;
         if (beatIndexInt == lastPerfectBeatIndex)
-        {
-            // 已經在這一拍判定過了，不再觸發
             return false;
-        }
 
         PlayScaleAnim();
 
         if (perfect)
         {
-            lastPerfectBeatIndex = beatIndexInt; // 記錄成功拍
-            SpawnPerfectEffect();
+            // ======================================================
+            // ★ 實際命中拍（玩家打下去那一刻）
+            // ======================================================
+            lastPerfectBeatIndex = beatIndexInt;
+            LastHitBeatIndex = beatIndexInt;   // ★ 公開出去
+            LastHitDelta = delta;
 
+            SpawnPerfectEffect();
             if (audioSource != null && snapClip != null)
             {
                 double playTime = AudioSettings.dspTime + 0.05;
@@ -114,7 +119,7 @@ public class BeatJudge : MonoBehaviour
                 audioSource.PlayScheduled(playTime);
             }
 
-            Debug.Log($"[Perfect] Δt = {delta:F4}s  Beat = {nearestBeatIndex}");
+            Debug.Log($"[Perfect] 打擊拍 = {LastHitBeatIndex}  Δt = {delta:F4}s");
             RegisterBeatResult(true);
         }
         else
@@ -127,9 +132,8 @@ public class BeatJudge : MonoBehaviour
         return perfect;
     }
 
-
     // ============================================================
-    // Combo 系統邏輯
+    // Combo 系統
     // ============================================================
     public void RegisterBeatResult(bool isPerfect)
     {
@@ -139,7 +143,6 @@ public class BeatJudge : MonoBehaviour
             lastHitTime = Time.time;
             UpdateComboUI();
 
-            // 每次 Perfect 都重啟倒數計時
             if (comboTimerCoroutine != null)
                 StopCoroutine(comboTimerCoroutine);
             comboTimerCoroutine = StartCoroutine(ComboTimeout());
@@ -170,7 +173,7 @@ public class BeatJudge : MonoBehaviour
     }
 
     // ============================================================
-    // 特效顯示
+    // 特效與動畫
     // ============================================================
     private void SpawnPerfectEffect()
     {
@@ -196,9 +199,6 @@ public class BeatJudge : MonoBehaviour
         Destroy(missObj, 0.3f);
     }
 
-    // ============================================================
-    // UI 動畫
-    // ============================================================
     private void PlayScaleAnim()
     {
         if (beatHitPointUI == null) return;

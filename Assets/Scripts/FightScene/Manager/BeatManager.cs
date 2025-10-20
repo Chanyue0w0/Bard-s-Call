@@ -26,6 +26,7 @@ public class BeatManager : MonoBehaviour
     private BeatUI persistentBeat;
     private bool isReady = false;
 
+    // ★ 全域拍事件（BattleManager、BeatJudge等可訂閱）
     public static event Action OnBeat;
 
     [Header("Beat UI 移動設定")]
@@ -36,26 +37,13 @@ public class BeatManager : MonoBehaviour
 
     private int lastSpawnBeatIndex = -1;
 
-    [Header("拍數顯示")]
-    public int beatsPerMeasure = 4;
-    public int currentBeatIndex = 0;
-    public int currentMeasure = 1;
+    [Header("拍數設定")]
+    public int beatsPerMeasure = 4;      // 每小節4拍
+    public int currentBeatIndex = 0;     // 總拍計數
+    public int currentBeatInCycle = 0;   // 當前小節拍（1~4）
 
-    [Header("區段顯示設定")]
-    public Text sectionText; // ★ 指定 Text (Legacy) 物件
-    private int[] sectionBeats = { 4, 4, 4, 4, 4, 4, 4, 4 }; // 每個區段的拍數 (共32拍)
-    private string[] sectionNames = {
-        "玩家回合 - 普通攻擊1",
-        "玩家回合 - 普通攻擊2",
-        "玩家回合 - 普通攻擊3",
-        "玩家回合 - Combo時間",
-        "玩家回合 - Combo技能動畫",
-        "玩家回合 - 休息轉換",
-        "敵人回合 - 攻擊A",
-        "敵人回合 - 攻擊B"
-    };
-    private int totalBeatsInCycle; // 32
-    private int currentSectionIndex = 0;
+    [Header("拍數顯示")]
+    public Text beatText; // 顯示「拍 X / 4」
 
     private void Awake()
     {
@@ -69,16 +57,14 @@ public class BeatManager : MonoBehaviour
 
     private IEnumerator Start()
     {
+        // 等待音樂來源就緒
         yield return new WaitUntil(() => MusicManager.Instance != null);
         yield return new WaitUntil(() => MusicManager.Instance.GetComponent<AudioSource>()?.clip != null);
 
         musicSource = MusicManager.Instance.GetComponent<AudioSource>();
         offsetSamples = musicSource.clip.frequency * startDelay;
 
-        // 計算整個循環總拍數
-        foreach (int b in sectionBeats)
-            totalBeatsInCycle += b;
-
+        // 生成中心Beat UI
         if (beatCenterPrefab && hitPoint)
         {
             GameObject beatObj = Instantiate(beatCenterPrefab, hitPoint.parent);
@@ -91,7 +77,7 @@ public class BeatManager : MonoBehaviour
         }
 
         isReady = true;
-        Debug.Log("BeatManager Ready (Intervals: " + intervals.Length + ")");
+        Debug.Log("BeatManager Ready (BPM: " + bpm + ")");
     }
 
     private void Update()
@@ -102,6 +88,7 @@ public class BeatManager : MonoBehaviour
         if (musicSource.timeSamples < offsetSamples)
             return;
 
+        // 節拍檢查
         foreach (IntervalFix interval in intervals)
         {
             double sampledTime = (musicSource.timeSamples - offsetSamples) /
@@ -109,6 +96,7 @@ public class BeatManager : MonoBehaviour
             interval.CheckForNewInterval(sampledTime);
         }
 
+        // 提前生成下一拍UI
         PreRollSpawnForNextBeat();
     }
 
@@ -140,47 +128,23 @@ public class BeatManager : MonoBehaviour
         }
     }
 
-    // ★ 每拍觸發
+    // ============================================================
+    // 每拍觸發邏輯（由 IntervalFix 事件呼叫）
+    // ============================================================
     public void MainBeatTrigger()
     {
         persistentBeat?.OnBeat();
         InvokeBeat();
 
-        // 更新全域拍數
+        // 拍數遞增
         currentBeatIndex++;
+        currentBeatInCycle = ((currentBeatIndex - 1) % beatsPerMeasure) + 1;
 
-        if ((currentBeatIndex - 1) % beatsPerMeasure == 0 && currentBeatIndex > 1)
-            currentMeasure++;
+        // 更新拍數顯示
+        if (beatText != null)
+            beatText.text = "拍 " + currentBeatInCycle + " / " + beatsPerMeasure;
 
-        // ★ 取得當前循環拍數（1~32）
-        int beatInCycle = ((currentBeatIndex - 1) % totalBeatsInCycle) + 1;
-
-        // ★ 找出目前在哪個區段
-        int sum = 0;
-        for (int i = 0; i < sectionBeats.Length; i++)
-        {
-            sum += sectionBeats[i];
-            if (beatInCycle <= sum)
-            {
-                currentSectionIndex = i;
-                break;
-            }
-        }
-
-        // ★ 計算該區段內第幾拍
-        int sectionStartBeat = 0;
-        for (int j = 0; j < currentSectionIndex; j++)
-            sectionStartBeat += sectionBeats[j];
-        int beatInSection = beatInCycle - sectionStartBeat;
-
-        // ★ 更新 Text (Legacy)
-        if (sectionText)
-        {
-            sectionText.text = $"{sectionNames[currentSectionIndex]} | 拍 {beatInSection} / {sectionBeats[currentSectionIndex]}";
-        }
-
-        // Console Debug (方便測試)
-        Debug.Log($"{sectionNames[currentSectionIndex]} | 拍 {beatInSection} / {sectionBeats[currentSectionIndex]}");
+        Debug.Log($"第 {currentBeatInCycle} 拍 / {beatsPerMeasure}");
     }
 
     public static void InvokeBeat() => OnBeat?.Invoke();
@@ -209,7 +173,6 @@ public class BeatManager : MonoBehaviour
         beatUI.InitFly(spawnPoint, hitPoint, beatTravelTime);
     }
 }
-
 
 [System.Serializable]
 public class IntervalFix
