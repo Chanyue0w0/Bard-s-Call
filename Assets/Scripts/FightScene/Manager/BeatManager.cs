@@ -202,14 +202,14 @@ public class BeatManager : MonoBehaviour
         BeatUI beatUI = beatObj.GetComponent<BeatUI>() ?? beatObj.AddComponent<BeatUI>();
         beatUI.InitFly(spawnPoint, hitPoint, beatTravelTime);
 
-        // ★ 顯示第4拍為黃色
-        int nextBeatInCycle = ((lastSpawnBeatIndex) % beatsPerMeasure) + 1;
-        if (nextBeatInCycle == beatsPerMeasure)
-        {
-            var img = beatObj.GetComponent<Image>();
-            if (img != null)
-                img.color = Color.red;
-        }
+        // ★ 顯示第4拍為紅色
+        //int nextBeatInCycle = ((lastSpawnBeatIndex) % beatsPerMeasure) + 1;
+        //if (nextBeatInCycle == beatsPerMeasure)
+        //{
+        //    var img = beatObj.GetComponent<Image>();
+        //    if (img != null)
+        //        img.color = Color.red;
+        //}
     }
 }
 
