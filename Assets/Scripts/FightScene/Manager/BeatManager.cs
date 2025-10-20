@@ -208,7 +208,7 @@ public class BeatManager : MonoBehaviour
         {
             var img = beatObj.GetComponent<Image>();
             if (img != null)
-                img.color = Color.yellow;
+                img.color = Color.red;
         }
     }
 }

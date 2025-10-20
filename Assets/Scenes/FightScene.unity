@@ -1522,6 +1522,7 @@ MonoBehaviour:
   currentBeatIndex: 0
   currentBeatInCycle: 0
   beatText: {fileID: 674773287}
+  predictedNextBeat: 1
 --- !u!114 &806207503
 MonoBehaviour:
   m_ObjectHideFlags: 0
