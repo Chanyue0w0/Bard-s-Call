@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3498454065149970787}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HeadPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 216491200392178936}
   - component: {fileID: 2603255283436364462}
   - component: {fileID: -647458030757879125}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Slime
   m_TagString: Enemy
   m_Icon: {fileID: 0}

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4119981438366044015}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HeadPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 6535657924258066963}
   - component: {fileID: 149268439693906750}
   - component: {fileID: 6341345867789474762}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Rager
   m_TagString: Hero
   m_Icon: {fileID: 0}

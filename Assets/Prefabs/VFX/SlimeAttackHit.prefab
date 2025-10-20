@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 113629596668235767}
   - component: {fileID: 8079843206869298261}
   - component: {fileID: 7372301370461554688}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CFXR Hit A (Red)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4955,7 +4955,7 @@ GameObject:
   - component: {fileID: 7897219157360152079}
   - component: {fileID: 847527978740097920}
   - component: {fileID: 7441217542421992956}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Lines
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9747,7 +9747,7 @@ GameObject:
   - component: {fileID: 4845830878967068879}
   - component: {fileID: 3605211764225237758}
   - component: {fileID: 3457158003353123539}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Impact 180-270
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14492,7 +14492,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7423278480010749031}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeAttackHit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14526,7 +14526,7 @@ GameObject:
   - component: {fileID: 5194284649727963089}
   - component: {fileID: 9171457622810677086}
   - component: {fileID: 8551355182526144280}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Impact spikes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19291,7 +19291,7 @@ GameObject:
   - component: {fileID: 3592413779784721407}
   - component: {fileID: 3667743342360121461}
   - component: {fileID: 5699926127751585818}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Impact 90-180
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24038,7 +24038,7 @@ GameObject:
   - component: {fileID: 2215710799800708189}
   - component: {fileID: 1285754926193267460}
   - component: {fileID: 7738227940781260965}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Impact 270-360
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28784,7 +28784,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8633128071753497357}
   - component: {fileID: 7956619027172859667}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 607836092422809888}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HeadPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 1441404310817688979}
   - component: {fileID: 4564702581680521582}
   - component: {fileID: 5761249044116123709}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Mage
   m_TagString: Hero
   m_Icon: {fileID: 0}

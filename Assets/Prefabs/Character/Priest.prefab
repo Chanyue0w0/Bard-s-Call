@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8158479552114564748}
   - component: {fileID: 6347402537250545832}
   - component: {fileID: 1976277859061991352}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Priest
   m_TagString: Hero
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6342522155131420611}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HeadPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

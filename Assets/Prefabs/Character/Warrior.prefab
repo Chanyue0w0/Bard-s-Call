@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3578934898515900556}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HeadPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 1620973246556366396}
   - component: {fileID: 4593815306776766115}
   - component: {fileID: 6226598809037858478}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Warrior
   m_TagString: Hero
   m_Icon: {fileID: 0}
