@@ -106,6 +106,9 @@ public class BattleManager : MonoBehaviour
     [Header("近戰攻擊設定")]
     public float dashStayDuration = 0.15f;
 
+    // ★ 記錄上一次成功攻擊的角色（Actor）
+    private GameObject lastSuccessfulAttacker = null;
+
 
     private void Awake()
     {
@@ -202,6 +205,14 @@ public class BattleManager : MonoBehaviour
         var target = FindEnemyByClass(attacker.ClassType);
         if (target == null) return;
 
+        // ★ 若換角色攻擊，重置所有角色 combo
+        if (lastSuccessfulAttacker != null && lastSuccessfulAttacker != attacker.Actor)
+        {
+            ResetAllComboStates();
+        }
+
+        lastSuccessfulAttacker = attacker.Actor;
+
         StartCoroutine(LockAction(actionLockDuration));
 
         // ★ 根據拍數判斷攻擊種類
@@ -244,25 +255,24 @@ public class BattleManager : MonoBehaviour
             yield break;
         }
 
-        // 取得 combo 狀態
         var comboData = actor.GetComponent<CharacterComboState>();
         if (comboData == null)
             comboData = actor.gameObject.AddComponent<CharacterComboState>();
 
         // 若長時間沒攻擊則重置 combo
         if (Time.time - comboData.lastAttackTime > 2f)
-            comboData.currentPhase = 1;
+            comboData.comboCount = 0;
 
         SkillInfo chosenSkill = null;
         GameObject attackPrefab = null;
 
-        // ★ 第四拍固定重攻，其餘三拍為普攻
-        if (beatInCycle == 4)
+        // ★ 判斷是否達到4連擊
+        if (comboData.comboCount >= 3) // 第四次攻擊
         {
             chosenSkill = charData.HeavyAttack;
             attackPrefab = chosenSkill?.SkillPrefab;
-            comboData.currentPhase = 1; // ★ 重製普攻段數
-            Debug.Log($"Warrior 第四拍重攻擊：{chosenSkill?.SkillName ?? "未設定"}");
+            comboData.comboCount = 0; // 重置計數
+            Debug.Log($"Warrior 觸發重攻擊：{chosenSkill?.SkillName ?? "未設定"}");
         }
         else
         {
@@ -272,11 +282,10 @@ public class BattleManager : MonoBehaviour
             attackPrefab = chosenSkill?.SkillPrefab;
             Debug.Log($"Warrior 普攻段 {phase}：{chosenSkill?.SkillName ?? "未設定"}");
 
-            // 更新 combo 狀態（1→2→3 循環）
             comboData.currentPhase = (phase % 3) + 1;
+            comboData.comboCount++; // ★ 累積 combo 次數
         }
 
-        // 預設特效（若找不到 prefab）
         if (attackPrefab == null && meleeVfxPrefab != null)
             attackPrefab = meleeVfxPrefab;
 
@@ -295,10 +304,10 @@ public class BattleManager : MonoBehaviour
         }
 
         comboData.lastAttackTime = Time.time;
-
         yield return new WaitForSeconds(dashStayDuration);
         yield return Dash(actor, targetPoint, origin, dashDuration);
     }
+
 
     private void OnBlockKey(int index)
     {
@@ -322,6 +331,23 @@ public class BattleManager : MonoBehaviour
         // 呼叫 BattleEffectManager 處理格檔
         BattleEffectManager.Instance.ActivateBlock(index, BeatManager.Instance.beatTravelTime, charData, slot.Actor);
     }
+
+    private void ResetAllComboStates()
+    {
+        foreach (var slot in CTeamInfo)
+        {
+            if (slot?.Actor == null) continue;
+            var combo = slot.Actor.GetComponent<CharacterComboState>();
+            if (combo != null)
+            {
+                combo.comboCount = 0;
+                combo.currentPhase = 1;
+            }
+        }
+
+        lastSuccessfulAttacker = null; // ★ 清空上次攻擊者
+    }
+
 
     // ================= 旋轉邏輯 =================
     private void OnRotateLeft(InputAction.CallbackContext ctx)
