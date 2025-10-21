@@ -177,3 +177,4 @@ MonoBehaviour:
     DamageMultiplier: 1.5
     FixedDamage: 0
   Skills: []
+  ShieldEffectPrefab: {fileID: 7125099269266668700, guid: 3797ab3f5e2aa6148869788f506a8635, type: 3}

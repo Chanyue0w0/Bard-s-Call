@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class BattleEffectManager : MonoBehaviour
 {
@@ -14,77 +15,94 @@ public class BattleEffectManager : MonoBehaviour
         Instance = this;
     }
 
-    // ★ Shield 格檔狀態（僅作用於玩家隊伍）
-    private bool isShielding = false;
-
-    [Header("Shield 特效")]
-    public GameObject shieldVfxPrefab;   // 指定 Shield 特效 Prefab
-    private GameObject activeShieldVfx;  // 當前存在的 Shield 特效
+    [Header("共用 Shield 特效（當角色未指定 ShieldEffectPrefab 時使用）")]
+    public GameObject shieldVfxPrefab;   // 預設格檔特效
+    private GameObject[] blockEffects = new GameObject[3];
 
     [Header("Priest 回復特效")]
     public GameObject healVfxPrefab;
 
+    // 每位角色的獨立格檔狀態
+    private bool[] isBlocking = new bool[3];
 
-    public void ActivateShield(float duration)
+    // =======================
+    // 由 BattleManager 呼叫：啟動格檔
+    // =======================
+    public void ActivateBlock(int index, float duration, CharacterData charData, GameObject actor)
     {
-        if (!isShielding)
-            StartCoroutine(ShieldCoroutine(duration));
-    }
+        if (index < 0 || index >= isBlocking.Length) return;
 
-    private System.Collections.IEnumerator ShieldCoroutine(float duration)
-    {
-        isShielding = true;
-        Debug.Log("【格檔生效】玩家隊伍免傷開始");
-
-        // ★ 生成 ShieldVFX
-        if (shieldVfxPrefab != null && activeShieldVfx == null)
+        // ★ 移除「return」限制，允許同一角色連拍格檔
+        // 若前一次格檔還沒結束 → 結束它，開啟新的
+        if (isBlocking[index])
         {
-            // 這裡我先給定一個位置，或可改成跟隨玩家隊伍的空物件
-            activeShieldVfx = Instantiate(shieldVfxPrefab, new Vector2(1.21f, -2.67f), Quaternion.identity);
+            StopCoroutine($"BlockRoutine_{index}");
+            isBlocking[index] = false;
+            if (blockEffects[index] != null)
+            {
+                Destroy(blockEffects[index]);
+                blockEffects[index] = null;
+            }
         }
 
+        // ★ 持續時間略短於一拍（防止格檔跨拍）
+        float beatTime = BeatManager.Instance != null ? BeatManager.Instance.beatTravelTime : 0.5f;
+        float adjustedDuration = Mathf.Min(duration, beatTime * 0.9f);
+
+        StartCoroutine(BlockRoutine(index, adjustedDuration, charData, actor));
+    }
+
+    private IEnumerator BlockRoutine(int index, float duration, CharacterData charData, GameObject actor)
+    {
+        isBlocking[index] = true;
+        Debug.Log($"【格檔啟動】角色 {actor.name} 進入無敵狀態 ({duration:F2}s)");
+
+        // ★ 取得角色位置
+        Vector3 spawnPos = BattleManager.Instance != null && index < BattleManager.Instance.CTeamInfo.Length
+            ? BattleManager.Instance.CTeamInfo[index].SlotTransform.position
+            : actor.transform.position;
+
+        // ★ 特效位置上移 1.3
+        spawnPos += Vector3.up * 1.3f;
+
+        // ★ 生成格檔特效
+        GameObject effectPrefab = (charData != null && charData.ShieldEffectPrefab != null)
+            ? charData.ShieldEffectPrefab
+            : shieldVfxPrefab;
+
+        if (effectPrefab != null)
+            blockEffects[index] = Instantiate(effectPrefab, spawnPos, Quaternion.identity);
+
+        // 等待拍數時間
         yield return new WaitForSeconds(duration);
 
-        isShielding = false;
-        Debug.Log("【格檔結束】玩家隊伍恢復可受傷狀態");
-
-        // ★ 刪除 ShieldVFX
-        if (activeShieldVfx != null)
+        // 結束格檔
+        isBlocking[index] = false;
+        if (blockEffects[index] != null)
         {
-            Destroy(activeShieldVfx);
-            activeShieldVfx = null;
+            Destroy(blockEffects[index]);
+            blockEffects[index] = null;
         }
+
+        Debug.Log($"【格檔結束】角色 {actor.name} 恢復可受傷");
     }
 
-    // 技能命中回傳，直接吃判定結果
+    // =======================
+    // 傷害判定
+    // =======================
     public void OnHit(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, bool isPerfect)
     {
         if (attacker == null || target == null) return;
 
-        // ★ 判斷是否在格檔狀態，且目標必須是玩家隊伍 (比對 Actor)
-        bool targetIsPlayer = System.Array.Exists(
-            BattleManager.Instance.CTeamInfo,
-            t => t != null && t.Actor == target.Actor
-        );
-        if (isShielding && targetIsPlayer)
+        // 判斷該角色是否處於格檔狀態
+        int targetIndex = System.Array.FindIndex(BattleManager.Instance.CTeamInfo, t => t == target);
+        if (targetIndex >= 0 && isBlocking[targetIndex])
         {
-            Debug.Log($"{attacker.UnitName} 命中 {target.UnitName}，但玩家隊伍格檔免傷！");
-            return; // 玩家隊伍免傷
+            Debug.Log($"【格檔成功】{target.UnitName} 格檔 {attacker.UnitName} 的攻擊！");
+            return;
         }
 
-        float multiplier = 0f;
-
-        if (isPerfect)
-        {
-            multiplier = 1f; // Perfect → 傷害加成
-            attacker.MP = Mathf.Min(attacker.MaxMP, attacker.MP + 10); // Perfect → 回魔
-        }
-        else
-        {
-            //multiplier = 0f; // Miss → 無傷害
-            multiplier = 0f; // Miss → 無傷害
-        }
-
+        float multiplier = isPerfect ? 1f : 0f;
         int finalDamage = Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * multiplier));
 
         target.HP -= finalDamage;
@@ -92,25 +110,29 @@ public class BattleEffectManager : MonoBehaviour
 
         Debug.Log($"{attacker.UnitName} 命中 {target.UnitName}，傷害={finalDamage} 剩餘HP={target.HP} (Perfect={isPerfect})");
 
-        // 通知血條 UI 更新
+        // 回魔（Perfect）
+        if (isPerfect)
+            attacker.MP = Mathf.Min(attacker.MaxMP, attacker.MP + 10);
+
+        // 血條更新
         var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
         if (hb != null) hb.ForceUpdate();
 
+        // 死亡處理
         if (target.HP <= 0)
-        {
             HandleUnitDefeated(target);
-        }
     }
 
     private void HandleUnitDefeated(BattleManager.TeamSlotInfo target)
     {
         Debug.Log($"{target.UnitName} 已被擊敗！");
         if (target.Actor != null)
-        {
-            GameObject.Destroy(target.Actor);
-        }
+            Destroy(target.Actor);
     }
 
+    // =======================
+    // 全體回復（牧師用）
+    // =======================
     public void HealTeam(int healAmount)
     {
         var team = BattleManager.Instance.CTeamInfo;
@@ -120,7 +142,6 @@ public class BattleEffectManager : MonoBehaviour
             {
                 ally.HP = Mathf.Min(ally.MaxHP, ally.HP + healAmount);
 
-                // 通知血條 UI 更新
                 var hb = ally.Actor.GetComponentInChildren<HealthBarUI>();
                 if (hb != null) hb.ForceUpdate();
 
@@ -128,5 +149,4 @@ public class BattleEffectManager : MonoBehaviour
             }
         }
     }
-
 }

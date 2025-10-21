@@ -44,6 +44,10 @@ public class CharacterData : MonoBehaviour
     [Header("技能清單")]
     public List<SkillInfo> Skills = new List<SkillInfo>();
 
+    [Header("格檔特效 Prefab（可選）")]
+    [Tooltip("角色格檔時顯示的特效，例如光盾或閃光效果")]
+    public GameObject ShieldEffectPrefab;
+
     // 主攻擊取用
     public SkillInfo MainNormal => (NormalAttacks != null && NormalAttacks.Count > 0) ? NormalAttacks[0] : null;
     public SkillInfo MainSkill => (Skills != null && Skills.Count > 0) ? Skills[0] : null;

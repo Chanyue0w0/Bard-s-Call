@@ -70,6 +70,12 @@ public class BattleManager : MonoBehaviour
     public InputActionReference actionAttackP3;
     public InputActionReference actionRotateLeft;
     public InputActionReference actionRotateRight;
+    public InputActionReference actionBlockP1;
+    public InputActionReference actionBlockP2;
+    public InputActionReference actionBlockP3;
+
+    private bool _isBlockingActive = false; // 一次只能有一位角色格檔
+
 
     [Header("時序與運動參數")]
     public float actionLockDuration = 0.5f;
@@ -128,6 +134,23 @@ public class BattleManager : MonoBehaviour
             actionAttackP3.action.started += ctx => OnAttackKey(2);
             actionAttackP3.action.Enable();
         }
+
+        if (actionBlockP1 != null)
+        {
+            actionBlockP1.action.started += ctx => OnBlockKey(0);
+            actionBlockP1.action.Enable();
+        }
+        if (actionBlockP2 != null)
+        {
+            actionBlockP2.action.started += ctx => OnBlockKey(1);
+            actionBlockP2.action.Enable();
+        }
+        if (actionBlockP3 != null)
+        {
+            actionBlockP3.action.started += ctx => OnBlockKey(2);
+            actionBlockP3.action.Enable();
+        }
+
         // 其他旋轉輸入照舊
     }
 
@@ -136,6 +159,10 @@ public class BattleManager : MonoBehaviour
         if (actionAttackP1 != null) actionAttackP1.action.started -= ctx => OnAttackKey(0);
         if (actionAttackP2 != null) actionAttackP2.action.started -= ctx => OnAttackKey(1);
         if (actionAttackP3 != null) actionAttackP3.action.started -= ctx => OnAttackKey(2);
+        if (actionBlockP1 != null) actionBlockP1.action.started -= ctx => OnBlockKey(0);
+        if (actionBlockP2 != null) actionBlockP2.action.started -= ctx => OnBlockKey(1);
+        if (actionBlockP3 != null) actionBlockP3.action.started -= ctx => OnBlockKey(2);
+
     }
 
 
@@ -273,35 +300,28 @@ public class BattleManager : MonoBehaviour
         yield return Dash(actor, targetPoint, origin, dashDuration);
     }
 
+    private void OnBlockKey(int index)
+    {
+        if (_isActionLocked) return;
+        if (index < 0 || index >= CTeamInfo.Length) return;
+        var slot = CTeamInfo[index];
+        if (slot == null || slot.Actor == null) return;
 
+        // 拍點檢查
+        bool perfect = BeatJudge.Instance.IsOnBeat();
+        if (!perfect)
+        {
+            Debug.Log("Miss！格檔未在節拍上。");
+            return;
+        }
 
+        // 取得角色資料
+        var charData = slot.Actor.GetComponent<CharacterData>();
+        if (charData == null) return;
 
-    //private void OnAttackP1(InputAction.CallbackContext ctx)
-    //{
-    //    if (_isActionLocked) return;
-    //    if (CTeamInfo[0] == null) return;
-
-    //    bool perfect = BeatJudge.Instance.IsOnBeat();
-    //    var attacker = CTeamInfo[0];
-    //    var target = FindEnemyByClass(attacker.ClassType);
-    //    if (target == null) return;
-
-    //    StartCoroutine(LockAction(actionLockDuration));
-
-    //    StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
-
-    //    if (perfect)
-    //    {
-    //        for (int i = 1; i < CTeamInfo.Length; i++)
-    //        {
-    //            var ally = CTeamInfo[i];
-    //            if (ally != null && ally.Actor != null)
-    //            {
-    //                StartCoroutine(AttackSequence(ally, target, target.SlotTransform.position, true));
-    //            }
-    //        }
-    //    }
-    //}
+        // 呼叫 BattleEffectManager 處理格檔
+        BattleEffectManager.Instance.ActivateBlock(index, BeatManager.Instance.beatTravelTime, charData, slot.Actor);
+    }
 
     // ================= 旋轉邏輯 =================
     private void OnRotateLeft(InputAction.CallbackContext ctx)
@@ -431,7 +451,7 @@ public class BattleManager : MonoBehaviour
                 {
                     if (perfect)
                     {
-                        BattleEffectManager.Instance.ActivateShield(shieldBlockDuration);
+                        //BattleEffectManager.Instance.ActivateShield(shieldBlockDuration);
                         var strikeObj = Instantiate(shieldStrikeVfxPrefab, actor.position, Quaternion.identity);
                         var strike = strikeObj.GetComponent<ShieldStrike>();
                         if (strike != null)

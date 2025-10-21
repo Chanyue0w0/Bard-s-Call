@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8942437497731954073}
   - component: {fileID: 1169071792949382842}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 8648848172586414032}
   - component: {fileID: 2075852334756087652}
   - component: {fileID: 8396992061546174628}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Stars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5019,7 +5019,7 @@ GameObject:
   - component: {fileID: 2309506660634439436}
   - component: {fileID: 3257886859820381199}
   - component: {fileID: 5648672034194141254}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ice trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9862,7 +9862,7 @@ GameObject:
   - component: {fileID: 2903503199848469802}
   - component: {fileID: 6987838555918764396}
   - component: {fileID: 5435479579103460194}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CFXR3 Ice Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14852,7 +14852,7 @@ GameObject:
   - component: {fileID: 6465922031586046826}
   - component: {fileID: 5030250931053202133}
   - component: {fileID: 85865950816839759}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Orbital
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19694,7 +19694,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8652977909490224519}
   - component: {fileID: 6449113649056456990}
-  m_Layer: 0
+  - component: {fileID: 3822676588818817115}
+  m_Layer: 6
   m_Name: IceShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19710,7 +19711,7 @@ Transform:
   m_GameObject: {fileID: 7125099269266668700}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.56, y: -2.5, z: -1.0068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.32825, y: 0.32825, z: 0.32825}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19757,9 +19758,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: af63504fe59d6744b9bec73686d5abb2, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.14901961}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.47058824}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -19769,3 +19770,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3822676588818817115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7125099269266668700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474ca66447f10da438db6e38eb532a6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeTime: 0.5
+  useUnscaledTime: 0
