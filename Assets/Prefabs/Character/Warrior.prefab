@@ -174,7 +174,7 @@ MonoBehaviour:
     SkillName: SwordSplashStrong
     SkillPrefab: {fileID: 4023589613909814861, guid: a1d0e9dd03d04e74a9aabc965e881788, type: 3}
     MPCost: 0
-    DamageMultiplier: 1.5
-    FixedDamage: 0
+    DamageMultiplier: 0
+    FixedDamage: 50
   Skills: []
   ShieldEffectPrefab: {fileID: 7125099269266668700, guid: 3797ab3f5e2aa6148869788f506a8635, type: 3}

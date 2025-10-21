@@ -167,7 +167,7 @@ public class BeatManager : MonoBehaviour
         if (beatText != null)
             beatText.text = "©ç " + currentBeatInCycle + " / " + beatsPerMeasure;
 
-        Debug.Log($"²Ä {currentBeatInCycle} ©ç / {beatsPerMeasure}");
+        //Debug.Log($"²Ä {currentBeatInCycle} ©ç / {beatsPerMeasure}");
     }
 
     private IEnumerator BeatLock()

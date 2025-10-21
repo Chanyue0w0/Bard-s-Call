@@ -223,12 +223,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterName: Slime
   ClassType: 5
-  MaxHP: 600
-  HP: 600
+  MaxHP: 280
+  HP: 280
   MaxMP: 0
   MP: 0
-  OriginAtk: 10
-  Atk: 10
+  OriginAtk: 30
+  Atk: 30
   NormalAttacks: []
   HeavyAttack:
     SkillName: 

@@ -49,6 +49,7 @@ public class DebugTestSlime : MonoBehaviour
     private bool isAttacking = false;
     private bool isWarning = false;
     private bool isDead = false;
+    private bool forceMove = false;
 
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
@@ -86,24 +87,37 @@ public class DebugTestSlime : MonoBehaviour
         ScheduleNextAttack();
     }
 
+    // 外部可呼叫此函式
+    public void SetForceMove(bool value)
+    {
+        forceMove = value;
+        if (forceMove)
+        {
+            // 停止目前動作與攻擊
+            isAttacking = false;
+            readyToAttack = false;
+        }
+    }
+
     void Update()
     {
-        if (isDead || isAttacking) return;
+        if (isDead || isAttacking || forceMove) return; // ← 加入 forceMove
 
-        // 左右擺動
-        float offsetX = Mathf.Sin((Time.unscaledTime + phase) * speed) * amplitude;
-        if (useLocalSpace)
-        {
-            Vector3 p = basePosLocal;
-            p.x += offsetX;
-            transform.localPosition = p;
-        }
-        else
-        {
-            Vector3 p = basePosWorld;
-            p.x += offsetX;
-            transform.position = p;
-        }
+
+        //// 左右擺動
+        //float offsetX = Mathf.Sin((Time.unscaledTime + phase) * speed) * amplitude;
+        //if (useLocalSpace)
+        //{
+        //    Vector3 p = basePosLocal;
+        //    p.x += offsetX;
+        //    transform.localPosition = p;
+        //}
+        //else
+        //{
+        //    Vector3 p = basePosWorld;
+        //    p.x += offsetX;
+        //    transform.position = p;
+        //}
 
         // 優化後的縮放節奏：保持 → 回復
         if (isHolding)
@@ -161,44 +175,6 @@ public class DebugTestSlime : MonoBehaviour
         }
     }
 
-    // 扣血
-    public void TakeDamage(int dmg)
-    {
-        if (isDead) return;
-
-        hp -= dmg;
-        if (hp <= 0)
-        {
-            StartCoroutine(DieAndRespawn());
-        }
-    }
-
-    private IEnumerator DieAndRespawn()
-    {
-        isDead = true;
-        hp = 0;
-
-        Debug.Log($"史萊姆(slot {slotIndex}) 死亡，{respawnDelay} 秒後復活");
-
-        if (spriteRenderer != null) spriteRenderer.enabled = false;
-        if (col != null) col.enabled = false;
-
-        yield return new WaitForSeconds(respawnDelay);
-
-        hp = maxHP;
-        transform.position = spawnPoint;
-        transform.localScale = baseScale;
-
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.enabled = true;
-            spriteRenderer.color = originalColor;
-        }
-        if (col != null) col.enabled = true;
-
-        isDead = false;
-        ScheduleNextAttack();
-    }
 
     private IEnumerator AttackSequence()
     {
@@ -265,4 +241,12 @@ public class DebugTestSlime : MonoBehaviour
         warningTime = nextAttackTime - warningBeats * beatInterval;
         if (warningTime < Time.time) warningTime = Time.time;
     }
+
+    public void RefreshBasePosition()
+    {
+        // 重新記錄目前位置為新的擺動基準
+        basePosLocal = transform.localPosition;
+        basePosWorld = transform.position;
+    }
+
 }

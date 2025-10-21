@@ -604,4 +604,88 @@ public class BattleManager : MonoBehaviour
             yield return null;
         }
     }
+
+    // ================= 敵人死亡與前推邏輯 =================
+    public void OnEnemyDeath(int deadIndex)
+    {
+        if (deadIndex < 0 || deadIndex >= ETeamInfo.Length)
+            return;
+
+        var deadSlot = ETeamInfo[deadIndex];
+
+        // 清空該格資訊
+        if (deadSlot != null && deadSlot.Actor != null)
+        {
+            Destroy(deadSlot.Actor);
+            deadSlot.Actor = null;
+        }
+
+        // 檢查是否需要前推
+        ShiftEnemiesForward();
+    }
+
+
+    private void ShiftEnemiesForward()
+    {
+        StartCoroutine(ShiftEnemiesForwardRoutine());
+    }
+
+    private IEnumerator ShiftEnemiesForwardRoutine()
+    {
+        bool moved = false;
+
+        // 從前到後連續推進
+        for (int i = 1; i < ETeamInfo.Length; i++)
+        {
+            if ((ETeamInfo[i - 1] == null || ETeamInfo[i - 1].Actor == null) &&
+                (ETeamInfo[i] != null && ETeamInfo[i].Actor != null))
+            {
+                var enemy = ETeamInfo[i].Actor;
+                if (enemy == null) continue;
+
+                Vector3 targetPos = enemyPositions[i - 1].position;
+
+                // 更新新的基準位置，防止被拉回原位
+                var slime = enemy.GetComponent<DebugTestSlime>();
+                if (slime != null)
+                {
+                    slime.SetForceMove(false);
+                    slime.RefreshBasePosition(); // ★ 新增這行
+                }
+
+
+                // 平滑移動（快速）
+                float t = 0f;
+                Vector3 start = enemy.transform.position;
+                float moveTime = 0.25f; // 快速但可見
+                while (t < 1f)
+                {
+                    t += Time.deltaTime / moveTime;
+                    enemy.transform.position = Vector3.Lerp(start, targetPos, t);
+                    yield return null;
+                }
+
+                // 更新 slotTransform 與資料
+                ETeamInfo[i - 1] = ETeamInfo[i];
+                ETeamInfo[i - 1].SlotTransform = enemyPositions[i - 1];
+                ETeamInfo[i] = new TeamSlotInfo();
+
+                // 結束後恢復敵人行為
+                if (slime != null)
+                    slime.SetForceMove(false);
+
+                moved = true;
+
+                // 等待 0.05 秒避免同幀多次移動干擾
+                yield return new WaitForSeconds(0.05f);
+            }
+        }
+
+        if (moved)
+            Debug.Log("敵人整隊前推完成");
+    }
+
+
+
+
 }

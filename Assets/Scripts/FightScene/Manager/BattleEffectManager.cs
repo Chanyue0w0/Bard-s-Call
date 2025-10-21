@@ -93,6 +93,7 @@ public class BattleEffectManager : MonoBehaviour
     {
         if (attacker == null || target == null) return;
 
+        // 檢查是否為玩家方被打且格檔中
         int targetIndex = System.Array.FindIndex(BattleManager.Instance.CTeamInfo, t => t == target);
         if (targetIndex >= 0 && isBlocking[targetIndex])
         {
@@ -100,6 +101,7 @@ public class BattleEffectManager : MonoBehaviour
             return;
         }
 
+        // 計算實際傷害（之後可加入防禦力、護盾判定）
         float multiplier = isPerfect ? 1f : 0f;
         int finalDamage = Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * multiplier));
 
@@ -108,7 +110,7 @@ public class BattleEffectManager : MonoBehaviour
 
         Debug.Log($"{attacker.UnitName} 命中 {target.UnitName}，傷害={finalDamage} 剩餘HP={target.HP} (Perfect={isPerfect})");
 
-        // 回魔（Perfect）
+        // Perfect 回魔
         if (isPerfect)
             attacker.MP = Mathf.Min(attacker.MaxMP, attacker.MP + 10);
 
@@ -116,16 +118,37 @@ public class BattleEffectManager : MonoBehaviour
         var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
         if (hb != null) hb.ForceUpdate();
 
+        // === 檢查死亡 ===
         if (target.HP <= 0)
+        {
             HandleUnitDefeated(target);
+        }
     }
 
     private void HandleUnitDefeated(BattleManager.TeamSlotInfo target)
     {
         Debug.Log($"{target.UnitName} 已被擊敗！");
-        if (target.Actor != null)
-            Destroy(target.Actor);
+
+        // 確認是否為敵人
+        int enemyIndex = System.Array.FindIndex(BattleManager.Instance.ETeamInfo, t => t == target);
+        if (enemyIndex >= 0)
+        {
+            BattleManager.Instance.OnEnemyDeath(enemyIndex);
+            return;
+        }
+
+        // 若為我方角色死亡
+        int allyIndex = System.Array.FindIndex(BattleManager.Instance.CTeamInfo, t => t == target);
+        if (allyIndex >= 0)
+        {
+            // 之後可加上我方死亡處理（例如解除格檔、播放動畫等）
+            if (target.Actor != null)
+                Destroy(target.Actor);
+
+            Debug.Log($"我方角色 {target.UnitName} 陣亡！");
+        }
     }
+
 
     public void HealTeam(int healAmount)
     {
