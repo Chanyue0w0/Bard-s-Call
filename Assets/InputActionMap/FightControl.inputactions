@@ -115,7 +115,7 @@
                 {
                     "name": "",
                     "id": "8159262a-e11d-4aa2-bc5f-8a2f32b6b6df",
-                    "path": "<Joystick>/stick/left",
+                    "path": "<Gamepad>/leftStick/left",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
@@ -137,7 +137,7 @@
                 {
                     "name": "",
                     "id": "1996a14c-6cad-4703-8c84-f285e4ee06c7",
-                    "path": "<Joystick>/stick/up",
+                    "path": "<Gamepad>/leftStick/up",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
@@ -159,7 +159,7 @@
                 {
                     "name": "",
                     "id": "90355b53-787c-477d-ba64-2ec2a9ad7a73",
-                    "path": "<Joystick>/stick/right",
+                    "path": "<Gamepad>/leftStick/right",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "FightControlScheme",
