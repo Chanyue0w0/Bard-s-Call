@@ -97,6 +97,8 @@ public class BattleEffectManager : MonoBehaviour
         int targetIndex = System.Array.FindIndex(BattleManager.Instance.CTeamInfo, t => t == target);
         if (targetIndex >= 0 && isBlocking[targetIndex])
         {
+            VibrationManager.Instance.Vibrate("Block");
+
             Debug.Log($"【格檔成功】{target.UnitName} 格檔 {attacker.UnitName} 的攻擊！");
             return;
         }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem; // ★ 新增：使用 Gamepad API
 using System.Collections;
 
 public class BeatJudge : MonoBehaviour
@@ -40,8 +41,8 @@ public class BeatJudge : MonoBehaviour
     // ★ 新增變數
     // ============================================================
     private int lastPerfectBeatIndex = -1;
-    public int LastHitBeatIndex { get; private set; } = -1;  // ★ 公開玩家最後命中拍
-    public double LastHitDelta { get; private set; } = 0.0;  // ★ 命中與拍點誤差（方便調試）
+    public int LastHitBeatIndex { get; private set; } = -1;
+    public double LastHitDelta { get; private set; } = 0.0;
 
     private void Awake()
     {
@@ -82,9 +83,6 @@ public class BeatJudge : MonoBehaviour
         if (currentSamples < 0)
             return false;
 
-        // ---------------------------------------------------------
-        // ★ 計算實際按下時間所對應的理論節拍索引
-        // ---------------------------------------------------------
         double sampledBeat = currentSamples / (frequency * beatInterval);
         double nearestBeatIndex = System.Math.Round(sampledBeat);
         double nearestBeatTime = nearestBeatIndex * beatInterval;
@@ -93,9 +91,6 @@ public class BeatJudge : MonoBehaviour
 
         bool perfect = (delta >= -earlyRange && delta <= lateRange);
 
-        // ---------------------------------------------------------
-        // ★ 同拍防重判
-        // ---------------------------------------------------------
         int beatIndexInt = (int)nearestBeatIndex;
         if (beatIndexInt == lastPerfectBeatIndex)
             return false;
@@ -104,11 +99,8 @@ public class BeatJudge : MonoBehaviour
 
         if (perfect)
         {
-            // ======================================================
-            // ★ 實際命中拍（玩家打下去那一刻）
-            // ======================================================
             lastPerfectBeatIndex = beatIndexInt;
-            LastHitBeatIndex = beatIndexInt;   // ★ 公開出去
+            LastHitBeatIndex = beatIndexInt;
             LastHitDelta = delta;
 
             SpawnPerfectEffect();
@@ -117,6 +109,14 @@ public class BeatJudge : MonoBehaviour
                 double playTime = AudioSettings.dspTime + 0.05;
                 audioSource.clip = snapClip;
                 audioSource.PlayScheduled(playTime);
+            }
+
+            // ======================================================
+            // ★ 新增：Perfect 時震動（左右馬達不同強度）
+            // ======================================================
+            if (Gamepad.current != null)
+            {
+                VibrationManager.Instance.Vibrate("Perfect");
             }
 
             Debug.Log($"[Perfect] 打擊拍 = {LastHitBeatIndex}  Δt = {delta:F4}s");
@@ -131,6 +131,8 @@ public class BeatJudge : MonoBehaviour
 
         return perfect;
     }
+
+    
 
     // ============================================================
     // Combo 系統

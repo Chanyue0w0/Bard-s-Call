@@ -2441,6 +2441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1485250902}
+  - component: {fileID: 1485250903}
   m_Layer: 0
   m_Name: VibrationManager
   m_TagString: Untagged
@@ -2463,6 +2464,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 398088045}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1485250903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485250901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b695ffbcf96d2547a7699f339cc87ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  presets:
+  - name: Perfect
+    lowFrequency: 0.3
+    highFrequency: 0.698
+    duration: 0.1
+  - name: Block
+    lowFrequency: 0.9
+    highFrequency: 1
+    duration: 0.25
+  - name: Hit
+    lowFrequency: 0
+    highFrequency: 0
+    duration: 0
+  - name: Miss
+    lowFrequency: 0
+    highFrequency: 0
+    duration: 0
 --- !u!1 &1518473784 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5412398597152644473, guid: 89e3560769ad7aa438ed0e2c04896cfa, type: 3}
