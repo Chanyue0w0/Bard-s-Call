@@ -100,6 +100,7 @@ public class BattleManager : MonoBehaviour
     public GameObject healthBarPrefab;
     public Canvas uiCanvas;
 
+
     [Header("旋轉移動設定")]
     public float rotateMoveDuration = 0.2f;
 

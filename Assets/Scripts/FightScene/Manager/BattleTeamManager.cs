@@ -19,6 +19,9 @@ public class BattleTeamManager : MonoBehaviour
     public GameObject healthBarPrefab;
     public Canvas uiCanvas;
 
+    [Header("重攻擊 UI")]
+    public GameObject heavyAttackBarPrefab; // 指向 HeavyAttackBarUI 的 Prefab
+
     void Start()
     {
         SetupTeam(CTeamInfo, playerPositions);
@@ -28,6 +31,10 @@ public class BattleTeamManager : MonoBehaviour
         {
             BattleManager.Instance.LoadTeamData(this);
         }
+
+        CreateHeavyAttackBars(CTeamInfo);
+        //CreateHeavyAttackBars(ETeamInfo);
+
     }
 
     private void SetupTeam(BattleManager.TeamSlotInfo[] team, Transform[] positions)
@@ -108,4 +115,43 @@ public class BattleTeamManager : MonoBehaviour
                 hbUI.Init(slot, headPoint, uiCanvas.worldCamera);
         }
     }
+
+    private void CreateHeavyAttackBars(BattleManager.TeamSlotInfo[] team)
+    {
+        if (heavyAttackBarPrefab == null || uiCanvas == null)
+        {
+            Debug.LogWarning("BattleTeamManager: heavyAttackBarPrefab 或 uiCanvas 未指定。");
+            return;
+        }
+
+        foreach (var slot in team)
+        {
+            if (slot == null || slot.Actor == null) continue;
+
+            // 取得/補上 combo 狀態
+            var combo = slot.Actor.GetComponent<CharacterComboState>();
+            if (combo == null) combo = slot.Actor.AddComponent<CharacterComboState>();
+
+            // 找頭頂定位點
+            Transform headPoint = slot.Actor.transform.Find("HeadPoint");
+            if (headPoint == null)
+            {
+                headPoint = slot.Actor.transform;
+                Debug.LogWarning($"{slot.UnitName} 缺少 HeadPoint，將改用角色 Transform。");
+            }
+
+            // 生成 UI 並初始化
+            var barObj = Instantiate(heavyAttackBarPrefab, uiCanvas.transform);
+            var bar = barObj.GetComponent<HeavyAttackBarUI>();
+            if (bar == null)
+            {
+                Debug.LogError("heavyAttackBarPrefab 上沒有 HeavyAttackBarUI 組件。");
+                Destroy(barObj);
+                continue;
+            }
+
+            bar.Init(combo, headPoint, Camera.main);
+        }
+    }
+
 }
