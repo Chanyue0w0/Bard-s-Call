@@ -208,7 +208,7 @@ public class BattleEffectManager : MonoBehaviour
     // =======================
     public void ActivateInfiniteBlock(GameObject actor, CharacterData charData)
     {
-        Vector3 spawnPos = actor.transform.position + Vector3.up * 1.3f;
+        Vector3 spawnPos = actor.transform.position ; //+Vector3.up * 1.3f
         GameObject effectPrefab = (charData != null && charData.ShieldEffectPrefab != null)
             ? charData.ShieldEffectPrefab
             : shieldVfxPrefab;
@@ -223,9 +223,11 @@ public class BattleEffectManager : MonoBehaviour
             var explosion = effect.GetComponent<Explosion>();
             if (explosion != null)
             {
-                explosion.lifeTime = 9999f;       // 幾乎永久
-                explosion.useUnscaledTime = true; // 即使 Time.timeScale = 0 也維持
+                explosion.SetLifeTime(9999f);
+                explosion.SetUseUnscaledTime(true);
+                explosion.Initialize();
             }
+
 
             Debug.Log($"【永久格檔啟動】{actor.name} 進入防禦狀態（特效維持 9999 秒）");
         }
