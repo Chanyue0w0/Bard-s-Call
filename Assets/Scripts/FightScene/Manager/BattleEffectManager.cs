@@ -26,6 +26,8 @@ public class BattleEffectManager : MonoBehaviour
     private bool[] isBlocking = new bool[3];
     private Coroutine[] blockCoroutines = new Coroutine[3];
 
+    public bool isHeavyAttack = false;
+
     public void ActivateBlock(int index, float duration, CharacterData charData, GameObject actor)
     {
         if (index < 0 || index >= isBlocking.Length) return;
@@ -87,23 +89,52 @@ public class BattleEffectManager : MonoBehaviour
     }
 
     // =======================
-    // 傷害判定
+    // 傷害判定（含重攻擊判定與 ShieldGoblin 破防邏輯）
     // =======================
-    public void OnHit(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, bool isPerfect)
+    public void OnHit(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, bool isPerfect, bool isHeavyAttack = false)
     {
         if (attacker == null || target == null) return;
 
-        // 檢查是否為玩家方被打且格檔中
+        // =======================================
+        // ShieldGoblin 永久防禦邏輯
+        // =======================================
+        if (target.Actor != null)
+        {
+            var goblin = target.Actor.GetComponent<ShieldGoblin>();
+            if (goblin != null)
+            {
+                // 若格檔中且未破防
+                if (goblin.IsBlocking())
+                {
+                    // 若是重攻擊 → 破防
+                    if (isHeavyAttack)
+                    {
+                        goblin.BreakShield();
+                        Debug.Log($"【破防成功】{attacker.UnitName} 的重攻擊打破 {target.UnitName} 的防禦！");
+                    }
+                    else
+                    {
+                        Debug.Log($"【格檔成功】{target.UnitName} 擋下 {attacker.UnitName} 的攻擊！");
+                        return; // 不受傷害
+                    }
+                }
+            }
+        }
+
+        // =======================================
+        // 玩家方格檔判定（原有機制）
+        // =======================================
         int targetIndex = System.Array.FindIndex(BattleManager.Instance.CTeamInfo, t => t == target);
         if (targetIndex >= 0 && isBlocking[targetIndex])
         {
             VibrationManager.Instance.Vibrate("Block");
-
             Debug.Log($"【格檔成功】{target.UnitName} 格檔 {attacker.UnitName} 的攻擊！");
             return;
         }
 
-        // 計算實際傷害（之後可加入防禦力、護盾判定）
+        // =======================================
+        // 一般傷害計算（保留原邏輯）
+        // =======================================
         float multiplier = isPerfect ? 1f : 0f;
         int finalDamage = Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * multiplier));
 
@@ -120,12 +151,15 @@ public class BattleEffectManager : MonoBehaviour
         var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
         if (hb != null) hb.ForceUpdate();
 
-        // === 檢查死亡 ===
+        // =======================================
+        // 檢查死亡
+        // =======================================
         if (target.HP <= 0)
         {
             HandleUnitDefeated(target);
         }
     }
+
 
     private void HandleUnitDefeated(BattleManager.TeamSlotInfo target)
     {
@@ -168,4 +202,46 @@ public class BattleEffectManager : MonoBehaviour
             }
         }
     }
+
+    // =======================
+    // 永久格檔支援（敵人專用）
+    // =======================
+    public void ActivateInfiniteBlock(GameObject actor, CharacterData charData)
+    {
+        Vector3 spawnPos = actor.transform.position + Vector3.up * 1.3f;
+        GameObject effectPrefab = (charData != null && charData.ShieldEffectPrefab != null)
+            ? charData.ShieldEffectPrefab
+            : shieldVfxPrefab;
+
+        if (effectPrefab != null)
+        {
+            // 生成持續存在的格檔特效
+            GameObject effect = Instantiate(effectPrefab, spawnPos, Quaternion.identity);
+            effect.transform.SetParent(actor.transform, true);
+
+            // 若該特效含 Explosion 腳本，延長壽命為 9999 秒
+            var explosion = effect.GetComponent<Explosion>();
+            if (explosion != null)
+            {
+                explosion.lifeTime = 9999f;       // 幾乎永久
+                explosion.useUnscaledTime = true; // 即使 Time.timeScale = 0 也維持
+            }
+
+            Debug.Log($"【永久格檔啟動】{actor.name} 進入防禦狀態（特效維持 9999 秒）");
+        }
+    }
+
+
+    // 手動移除格檔特效（用於破防）
+    public void RemoveBlockEffect(GameObject actor)
+    {
+        var effects = actor.GetComponentsInChildren<Explosion>();
+        foreach (var e in effects)
+        {
+            Destroy(e.gameObject);
+        }
+        Debug.Log($"【格檔特效解除】{actor.name}");
+    }
+
+
 }

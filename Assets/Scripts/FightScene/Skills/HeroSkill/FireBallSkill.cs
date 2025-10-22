@@ -8,6 +8,7 @@ public class FireBallSkill : MonoBehaviour
     public GameObject explosionPrefab;
     public float travelTime = 0.05f;
     public bool isPerfect;
+    public bool isHeavyAttack;
 
 
     [Header("UI ³]©w")]
@@ -58,7 +59,7 @@ public class FireBallSkill : MonoBehaviour
                 {
                     Instantiate(explosionPrefab, targetPos, Quaternion.identity);
                 }
-                BattleEffectManager.Instance.OnHit(attacker, target, true);
+                BattleEffectManager.Instance.OnHit(attacker, target, true, isHeavyAttack);
             }
             else
             {
@@ -73,7 +74,7 @@ public class FireBallSkill : MonoBehaviour
                 {
                     Instantiate(explosionPrefab, targetPos, Quaternion.identity);
                 }
-                BattleEffectManager.Instance.OnHit(attacker, target, false);
+                BattleEffectManager.Instance.OnHit(attacker, target, false, isHeavyAttack);
             }
         }
 
