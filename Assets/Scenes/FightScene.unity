@@ -1176,7 +1176,7 @@ MonoBehaviour:
     NormalAttackNames: []
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
-  - PrefabToSpawn: {fileID: 0}
+  - PrefabToSpawn: {fileID: 2656352504891197484, guid: 9bd3d2ef55bff244792cce1e6eb577b7, type: 3}
     UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 0}
@@ -1192,7 +1192,7 @@ MonoBehaviour:
     NormalAttackNames: []
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
-  - PrefabToSpawn: {fileID: 0}
+  - PrefabToSpawn: {fileID: 8859153221285552973, guid: 0fb6f7bd42f6e484d961b4dfa2531c7e, type: 3}
     UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 0}
@@ -1514,7 +1514,7 @@ MonoBehaviour:
   beatPrefabRight: {fileID: 5441473996696962256, guid: 1d9ff83c89fcc3545a68b184dfda0461, type: 3}
   beatCenterPrefab: {fileID: 3071351389764054346, guid: 78eb6fa3fc262f84ca2b2f5082d55880, type: 3}
   hitPoint: {fileID: 381415587}
-  beatTravelTime: 0.85
+  beatTravelTime: 0.8
   visualLeadTime: 0.08
   leftSpawnPoint: {fileID: 1343110492}
   rightSpawnPoint: {fileID: 1932035420}
