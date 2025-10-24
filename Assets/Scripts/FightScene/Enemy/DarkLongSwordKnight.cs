@@ -140,7 +140,7 @@ public class DarkLongSwordKnight : EnemyBase
         if (roll < 50f) return 1;
         if (roll < 70f) return 2;
         if (roll < 90f) return 3;
-        return 2;
+        return 4;
     }
 
     private void EnterWarningPhase()
@@ -360,15 +360,61 @@ public class DarkLongSwordKnight : EnemyBase
     private IEnumerator Skill4_SummonStone()
     {
         isAttacking = true;
+
+        // 檢查 BattleManager 是否存在
+        if (BattleManager.Instance == null)
+        {
+            Debug.LogWarning("【DarkLongSwordKnight】找不到 BattleManager，無法召喚石像。");
+            ResetState();
+            ScheduleNextAttack();
+            yield break;
+        }
+
+        // 檢查第二個敵方位置是否有 Actor
+        var enemySlots = BattleManager.Instance.EnemyTeamInfo;
+        if (enemySlots == null || enemySlots.Length < 2)
+        {
+            Debug.LogWarning("【DarkLongSwordKnight】EnemyTeamInfo 長度不足，無法檢查第二格。");
+            ResetState();
+            ScheduleNextAttack();
+            yield break;
+        }
+
+        if (enemySlots[1] != null && enemySlots[1].Actor != null)
+        {
+            Debug.Log("【DarkLongSwordKnight】第二格已有敵人，取消召喚。");
+            ResetState();
+            ScheduleNextAttack();
+            yield break;
+        }
+
+        // 可以召喚
         if (stoneMinionPrefab != null && enemySlot2 != null)
         {
             var stone = Instantiate(stoneMinionPrefab, enemySlot2.position, Quaternion.identity);
-            Debug.Log("【DarkLongSwordKnight】召喚石像並交換位置！");
+
+            // 註冊到 BattleManager 的 EnemyTeamInfo[1]
+            if (enemySlots[1] == null)
+                enemySlots[1] = new BattleManager.TeamSlotInfo();
+
+            enemySlots[1].Actor = stone;
+            enemySlots[1].SlotTransform = enemySlot2;
+            enemySlots[1].UnitName = "Rock Golem";
+            enemySlots[1].ClassType = BattleManager.UnitClass.Enemy;
+
+            Debug.Log("【DarkLongSwordKnight】成功在第二格召喚 Rock Golem。");
         }
+        else
+        {
+            Debug.LogWarning("【DarkLongSwordKnight】stoneMinionPrefab 或 enemySlot2 為空，無法生成。");
+        }
+
         yield return new WaitForSeconds(1f);
         ResetState();
         ScheduleNextAttack();
     }
+
+
 
     // =====================
     // Dash 通用

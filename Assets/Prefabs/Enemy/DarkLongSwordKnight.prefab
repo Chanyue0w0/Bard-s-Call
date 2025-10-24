@@ -4844,7 +4844,7 @@ MonoBehaviour:
   shieldVfxPrefab: {fileID: 0}
   shieldVfxOffset: {x: 0, y: 3, z: 0}
   shieldDurationBeats: 999
-  stoneMinionPrefab: {fileID: 0}
+  stoneMinionPrefab: {fileID: 7745746892732800290, guid: adf52e6411a54164bb57c2709fd701b5, type: 3}
   enemySlot2: {fileID: 0}
   isShieldActive: 0
   isShieldBroken: 0
