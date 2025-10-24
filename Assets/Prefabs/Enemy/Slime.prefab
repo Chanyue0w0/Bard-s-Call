@@ -143,7 +143,7 @@ MonoBehaviour:
   attackBeatsInterval: 10
   attackVfxPrefab: {fileID: 2090553158902562417, guid: 05d7012d2d4253b43998f755a68508ab, type: 3}
   vfxLifetime: 1.5
-  warningBeats: 3
+  warningBeats: 2
   warningColor: {r: 1, g: 0, b: 0, a: 1}
   targetWarningPrefab: {fileID: 2890410290338222890, guid: 552a24d6ec52aa045a3d3beaccc5ca07, type: 3}
 --- !u!95 &216491200392178936
