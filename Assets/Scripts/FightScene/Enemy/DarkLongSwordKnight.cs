@@ -21,9 +21,14 @@ public class DarkLongSwordKnight : EnemyBase
     public GameObject targetWarningPrefab;
     public GameObject attackVfxPrefab;
     public float vfxLifetime = 1.5f;
-    public Vector3 vfxOffset = new Vector3(0f, 1.0f, 0f);   // ★ 可調整的特效偏移
-    public Vector3 dashOffset = new Vector3(0.4f, 0f, 0f);  // ★ 可調整的攻擊距離
-    public bool smoothDashMovement = true;                  // ★ 平滑衝刺開關
+    public Vector3 vfxOffset = new Vector3(0f, 1.0f, 0f);
+    public Vector3 dashOffset = new Vector3(0.4f, 0f, 0f);
+    public bool smoothDashMovement = true;
+
+    [Header("強大連斬設定 (Skill 2)")]
+    public GameObject multiSlashWarningPrefab;
+    public float multiSlashBeatInterval = 1f; // 以拍為單位
+    public float warningLifetime = 1.5f;      // 警告顯示時間（秒）
 
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
@@ -35,7 +40,10 @@ public class DarkLongSwordKnight : EnemyBase
     private float nextAttackTime;
     private float warningTime;
     private GameObject activeTargetWarning;
+    private GameObject activeBossWarning;
     private int beatsBeforeAttack = -1;
+    private int selectedSkill = 1;
+
     private BattleManager.TeamSlotInfo randomTargetSlot;
 
     protected override void Awake()
@@ -61,7 +69,6 @@ public class DarkLongSwordKnight : EnemyBase
     {
         if (forceMove || isAttacking) return;
 
-        // 回復縮放
         if (isHolding)
         {
             holdTimer -= Time.unscaledDeltaTime;
@@ -70,18 +77,12 @@ public class DarkLongSwordKnight : EnemyBase
         }
         else
         {
-            transform.localScale = Vector3.Lerp(
-                transform.localScale,
-                baseScale,
-                Time.unscaledDeltaTime * returnSpeed
-            );
+            transform.localScale = Vector3.Lerp(transform.localScale, baseScale, Time.unscaledDeltaTime * returnSpeed);
         }
 
-        // 進入警示階段
         if (!isWarning && Time.time >= warningTime)
             EnterWarningPhase();
 
-        // 若錯過時機則重新排程
         if (!isWarning && !isAttacking && Time.time >= nextAttackTime)
             ScheduleNextAttack();
     }
@@ -102,7 +103,12 @@ public class DarkLongSwordKnight : EnemyBase
                 transform.localScale = baseScale * (peakMultiplier + 0.4f);
 
             if (beatsBeforeAttack <= 0)
-                StartCoroutine(Skill1_NormalSlash());
+            {
+                if (selectedSkill == 1)
+                    StartCoroutine(Skill1_NormalSlash());
+                else
+                    StartCoroutine(Skill2_MultiSlash());
+            }
         }
     }
 
@@ -114,16 +120,54 @@ public class DarkLongSwordKnight : EnemyBase
         if (spriteRenderer != null)
             spriteRenderer.color = warningColor;
 
-        // 隨機選擇一位玩家作為攻擊目標
-        randomTargetSlot = GetRandomPlayerSlot();
+        // 隨機決定使用技能
+        selectedSkill = Random.Range(1, 3); // 1 或 2
 
-        if (randomTargetSlot != null && randomTargetSlot.Actor != null && targetWarningPrefab != null)
+        if (selectedSkill == 1)
         {
-            activeTargetWarning = Instantiate(
-                targetWarningPrefab,
-                randomTargetSlot.Actor.transform.position,
-                Quaternion.identity
-            );
+            randomTargetSlot = GetRandomPlayerSlot();
+
+            if (randomTargetSlot != null && randomTargetSlot.Actor != null && targetWarningPrefab != null)
+            {
+                activeTargetWarning = Instantiate(
+                    targetWarningPrefab,
+                    randomTargetSlot.Actor.transform.position,
+                    Quaternion.identity
+                );
+                Destroy(activeTargetWarning, warningLifetime); // ★ 1.5 秒後自動刪除
+            }
+        }
+        else if (selectedSkill == 2)
+        {
+            // 自身警示特效
+            if (multiSlashWarningPrefab != null)
+            {
+                activeBossWarning = Instantiate(multiSlashWarningPrefab, transform.position, Quaternion.identity);
+                Destroy(activeBossWarning, warningLifetime); // ★ 1.5 秒後自動刪除
+            }
+
+            StartCoroutine(SpawnMultiWarnings());
+        }
+    }
+
+    private IEnumerator SpawnMultiWarnings()
+    {
+        var cTeam = BattleManager.Instance?.CTeamInfo;
+        if (cTeam == null) yield break;
+
+        float beatInterval = (BeatManager.Instance != null && BeatManager.Instance.bpm > 0)
+            ? 60f / BeatManager.Instance.bpm
+            : 0.4f;
+
+        for (int i = 0; i < cTeam.Length; i++)
+        {
+            if (cTeam[i].Actor != null && targetWarningPrefab != null)
+            {
+                var warn = Instantiate(targetWarningPrefab, cTeam[i].Actor.transform.position, Quaternion.identity);
+                Destroy(warn, warningLifetime); // ★ 每個警告 1.5 秒後刪除
+            }
+
+            yield return new WaitForSeconds(beatInterval * multiSlashBeatInterval); // ★ 間隔一拍
         }
     }
 
@@ -133,39 +177,65 @@ public class DarkLongSwordKnight : EnemyBase
 
         if (randomTargetSlot == null || randomTargetSlot.Actor == null)
         {
-            Debug.LogWarning($"{name} 攻擊中止：目標為空");
             ResetState();
             yield break;
         }
 
         Vector3 origin = transform.position;
-
-        // Dash 終點（可加上自訂 dashOffset）
         Vector3 contactPoint = randomTargetSlot.Actor.transform.position
                              - BattleManager.Instance.meleeContactOffset
                              + (transform.localScale.x >= 0 ? dashOffset : -dashOffset);
 
-        // Dash 攻擊
         yield return Dash(origin, contactPoint, dashDuration);
 
-        // 攻擊特效
         if (attackVfxPrefab != null)
         {
             Vector3 vfxPos = randomTargetSlot.Actor.transform.position + vfxOffset;
             var vfx = Instantiate(attackVfxPrefab, vfxPos, Quaternion.identity);
-            if (vfxLifetime > 0f)
-                Destroy(vfx, vfxLifetime);
+            if (vfxLifetime > 0f) Destroy(vfx, vfxLifetime);
         }
 
-        // 傷害處理
         BattleEffectManager.Instance?.OnHit(selfSlot, randomTargetSlot, true);
-
-        // 等待動作結束
         yield return new WaitForSeconds(actionLockDuration);
-
-        // 回到原位
         yield return Dash(transform.position, origin, dashDuration);
 
+        ResetState();
+        ScheduleNextAttack();
+    }
+
+    private IEnumerator Skill2_MultiSlash()
+    {
+        isAttacking = true;
+
+        var cTeam = BattleManager.Instance?.CTeamInfo;
+        if (cTeam == null) yield break;
+
+        Vector3 origin = transform.position;
+
+        for (int i = 0; i < cTeam.Length; i++)
+        {
+            if (cTeam[i].Actor == null) continue;
+
+            Vector3 contactPoint = cTeam[i].Actor.transform.position
+                                 - BattleManager.Instance.meleeContactOffset
+                                 + (transform.localScale.x >= 0 ? dashOffset : -dashOffset);
+
+            yield return Dash(origin, contactPoint, dashDuration);
+
+            if (attackVfxPrefab != null)
+            {
+                Vector3 vfxPos = cTeam[i].Actor.transform.position + vfxOffset;
+                var vfx = Instantiate(attackVfxPrefab, vfxPos, Quaternion.identity);
+                if (vfxLifetime > 0f) Destroy(vfx, vfxLifetime);
+            }
+
+            BattleEffectManager.Instance?.OnHit(selfSlot, cTeam[i], true);
+
+            yield return new WaitForSeconds(0.5f); // 小間隔
+            yield return Dash(transform.position, origin, dashDuration);
+        }
+
+        yield return new WaitForSeconds(actionLockDuration);
         ResetState();
         ScheduleNextAttack();
     }
@@ -191,9 +261,7 @@ public class DarkLongSwordKnight : EnemyBase
         float wait = attackBeatsInterval * beatInterval;
         nextAttackTime = Time.time + wait;
         warningTime = nextAttackTime - warningBeats * beatInterval;
-
-        if (warningTime <= Time.time)
-            warningTime = Time.time;
+        if (warningTime <= Time.time) warningTime = Time.time;
 
         isWarning = false;
     }
@@ -202,12 +270,9 @@ public class DarkLongSwordKnight : EnemyBase
     {
         isWarning = false;
         isAttacking = false;
-
-        if (spriteRenderer != null)
-            spriteRenderer.color = originalColor;
-
-        if (activeTargetWarning != null)
-            Destroy(activeTargetWarning);
+        if (spriteRenderer != null) spriteRenderer.color = originalColor;
+        if (activeTargetWarning != null) Destroy(activeTargetWarning);
+        if (activeBossWarning != null) Destroy(activeBossWarning);
     }
 
     private BattleManager.TeamSlotInfo GetRandomPlayerSlot()
