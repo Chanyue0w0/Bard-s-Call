@@ -171,51 +171,58 @@ public class DarkLongSwordKnight : EnemyBase
                 randomTargetSlot = GetRandomPlayerSlot();
                 if (randomTargetSlot != null && randomTargetSlot.Actor != null && targetWarningPrefab != null)
                 {
-                    activeTargetWarning = Instantiate(
-                        targetWarningPrefab,
-                        randomTargetSlot.Actor.transform.position,
-                        Quaternion.identity
-                    );
-                    Destroy(activeTargetWarning, warningLifetime); // 1.5 秒後自動刪除
+                    Vector3 warnPos = randomTargetSlot.Actor.transform.position;
+                    activeTargetWarning = Instantiate(targetWarningPrefab, warnPos, Quaternion.identity);
+                    Destroy(activeTargetWarning, warningLifetime);
+                }
+                else
+                {
+                    // 若無有效目標則取消預警
+                    Debug.Log("【DarkLongSwordKnight】普通斬擊找不到玩家目標，取消警告生成。");
+                    isWarning = false;
+                    return;
                 }
                 break;
 
             case 2:
-                // 強大連斬：生成多重警告
-                if (multiSlashWarningPrefab != null)
-                {
-                    activeBossWarning = Instantiate(multiSlashWarningPrefab, transform.position, Quaternion.identity);
-                    Destroy(activeBossWarning, warningLifetime);
-                }
+                // 強大連斬：在每位玩家頭上依序顯示警告
                 StartCoroutine(SpawnMultiWarnings());
                 break;
 
             case 3:
+                // 重攻擊護盾：固定生成在自身，但顏色標記為藍色
                 if (spriteRenderer != null)
                     spriteRenderer.color = Color.cyan;
 
                 if (shieldVfxPrefab != null)
                 {
-                    var preview = Instantiate(
-                        shieldVfxPrefab,
-                        transform.position + shieldVfxOffset,
-                        Quaternion.identity
-                    );
+                    Vector3 shieldPreviewPos = transform.position + shieldVfxOffset;
+                    var preview = Instantiate(shieldVfxPrefab, shieldPreviewPos, Quaternion.identity);
                     Destroy(preview, warningLifetime);
                 }
                 break;
 
-
             case 4:
-                // 召喚石像：生成警告提示（使用同一個警告Prefab）
-                if (multiSlashWarningPrefab != null)
+                // 召喚石像：在第二個敵方格子位置顯示預警，而非自身
+                var bm = BattleManager.Instance;
+                Transform slot2 = null;
+                if (bm != null && bm.EnemyTeamInfo.Length > 1)
+                    slot2 = bm.EnemyTeamInfo[1]?.SlotTransform;
+
+                if (multiSlashWarningPrefab != null && slot2 != null)
                 {
-                    activeBossWarning = Instantiate(multiSlashWarningPrefab, transform.position, Quaternion.identity);
+                    Vector3 summonWarnPos = slot2.position;
+                    activeBossWarning = Instantiate(multiSlashWarningPrefab, summonWarnPos, Quaternion.identity);
                     Destroy(activeBossWarning, warningLifetime);
+                }
+                else
+                {
+                    Debug.Log("【DarkLongSwordKnight】召喚石像未找到第二格位置，取消警告生成。");
                 }
                 break;
         }
     }
+
 
     private IEnumerator SpawnMultiWarnings()
     {
@@ -378,32 +385,6 @@ public class DarkLongSwordKnight : EnemyBase
             yield break;
         }
 
-        // 自動取得敵方第 2 格的位置（若未指定）
-        if (enemySlot2 == null && bm.EnemyTeamInfo.Length > 1)
-        {
-            if (bm.EnemyTeamInfo[1] != null && bm.EnemyTeamInfo[1].SlotTransform != null)
-            {
-                enemySlot2 = bm.EnemyTeamInfo[1].SlotTransform;
-            }
-            else if (bm.transform.Find("EnemyPosition2") != null)
-            {
-                enemySlot2 = bm.transform.Find("EnemyPosition2");
-            }
-            else if (bm.EnemyTeamInfo.Length >= 2)
-            {
-                // 若都找不到，就嘗試抓取 BattleManager 的 enemyPositions[1]
-                var field = typeof(BattleManager).GetField("enemyPositions",
-                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (field != null)
-                {
-                    var positions = field.GetValue(bm) as Transform[];
-                    if (positions != null && positions.Length > 1)
-                        enemySlot2 = positions[1];
-                }
-            }
-        }
-
-        // 檢查第二格是否有敵人
         var enemySlots = bm.EnemyTeamInfo;
         if (enemySlots == null || enemySlots.Length < 2)
         {
@@ -413,41 +394,60 @@ public class DarkLongSwordKnight : EnemyBase
             yield break;
         }
 
-        if (enemySlots[1] != null && enemySlots[1].Actor != null)
+        // 嘗試尋找可用位置：優先第 2 格，其次第 1 格
+        int targetIndex = -1;
+        if (enemySlots[1] == null || enemySlots[1].Actor == null)
+            targetIndex = 1;
+        else if (enemySlots[0] == null || enemySlots[0].Actor == null)
+            targetIndex = 0;
+
+        if (targetIndex == -1)
         {
-            Debug.Log("【DarkLongSwordKnight】第二格已有敵人，取消召喚。");
+            Debug.Log("【DarkLongSwordKnight】第 1、2 格皆已被佔用，取消召喚。");
             ResetState();
             ScheduleNextAttack();
             yield break;
         }
 
-        // 生成石像
-        if (stoneMinionPrefab != null && enemySlot2 != null)
+        // 取得目標位置 Transform
+        Transform targetSlot = enemySlots[targetIndex]?.SlotTransform;
+        if (targetSlot == null)
         {
-            var stone = Instantiate(stoneMinionPrefab, enemySlot2.position, Quaternion.identity);
+            // 若該格未初始化 SlotTransform，嘗試從 BattleManager 直接取 enemyPositions[]
+            var field = typeof(BattleManager).GetField("enemyPositions",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (field != null)
+            {
+                var positions = field.GetValue(bm) as Transform[];
+                if (positions != null && positions.Length > targetIndex)
+                    targetSlot = positions[targetIndex];
+            }
+        }
+
+        if (stoneMinionPrefab != null && targetSlot != null)
+        {
+            var stone = Instantiate(stoneMinionPrefab, targetSlot.position, Quaternion.identity);
 
             // 註冊到 BattleManager
-            if (enemySlots[1] == null)
-                enemySlots[1] = new BattleManager.TeamSlotInfo();
+            if (enemySlots[targetIndex] == null)
+                enemySlots[targetIndex] = new BattleManager.TeamSlotInfo();
 
-            enemySlots[1].Actor = stone;
-            enemySlots[1].SlotTransform = enemySlot2;
-            enemySlots[1].UnitName = "Rock Golem";
-            enemySlots[1].ClassType = BattleManager.UnitClass.Enemy;
+            enemySlots[targetIndex].Actor = stone;
+            enemySlots[targetIndex].SlotTransform = targetSlot;
+            enemySlots[targetIndex].UnitName = "Rock Golem";
+            enemySlots[targetIndex].ClassType = BattleManager.UnitClass.Enemy;
 
-            Debug.Log("【DarkLongSwordKnight】成功在第二格召喚 Rock Golem。");
+            Debug.Log($"【DarkLongSwordKnight】成功在第 {targetIndex + 1} 格召喚 Rock Golem。");
         }
         else
         {
-            Debug.LogWarning("【DarkLongSwordKnight】stoneMinionPrefab 或 enemySlot2 為空，無法生成。");
+            Debug.LogWarning("【DarkLongSwordKnight】stoneMinionPrefab 或目標位置為空，無法生成。");
         }
 
         yield return new WaitForSeconds(1f);
         ResetState();
         ScheduleNextAttack();
     }
-
-
 
 
     // =====================
