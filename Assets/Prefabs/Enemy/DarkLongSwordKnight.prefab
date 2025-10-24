@@ -4829,7 +4829,7 @@ MonoBehaviour:
   attackDamage: 30
   dashDuration: 0.05
   actionLockDuration: 0.4
-  attackBeatsInterval: 8
+  attackBeatsInterval: 10
   warningBeats: 3
   warningColor: {r: 1, g: 0, b: 0, a: 1}
   targetWarningPrefab: {fileID: 2890410290338222890, guid: 552a24d6ec52aa045a3d3beaccc5ca07, type: 3}
@@ -4838,8 +4838,16 @@ MonoBehaviour:
   vfxOffset: {x: 0, y: 2, z: 0}
   dashOffset: {x: -2, y: 0, z: 0}
   smoothDashMovement: 1
-  multiSlashWarningPrefab: {fileID: 0}
-  multiSlashInterval: 0.5
+  multiSlashWarningPrefab: {fileID: 2890410290338222890, guid: 552a24d6ec52aa045a3d3beaccc5ca07, type: 3}
+  multiSlashBeatInterval: 1
+  warningLifetime: 1.5
+  shieldVfxPrefab: {fileID: 0}
+  shieldVfxOffset: {x: 0, y: 3, z: 0}
+  shieldDurationBeats: 999
+  stoneMinionPrefab: {fileID: 0}
+  enemySlot2: {fileID: 0}
+  isShieldActive: 0
+  isShieldBroken: 0
 --- !u!58 &866068725714919053
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4903,7 +4911,7 @@ MonoBehaviour:
     DamageMultiplier: 1
     FixedDamage: 0
   Skills: []
-  ShieldEffectPrefab: {fileID: 7125099269266668700, guid: 3797ab3f5e2aa6148869788f506a8635, type: 3}
+  ShieldEffectPrefab: {fileID: 2045543721383489176, guid: 0934422c63ee36241ab6acf210b85a68, type: 3}
 --- !u!1 &7181517286469402978
 GameObject:
   m_ObjectHideFlags: 0

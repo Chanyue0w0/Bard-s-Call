@@ -119,6 +119,24 @@ public class BattleEffectManager : MonoBehaviour
                     }
                 }
             }
+            var darkKnight = target.Actor.GetComponent<DarkLongSwordKnight>();
+            if (darkKnight != null)
+            {
+                // 若 Boss 有護盾且未破壞
+                if (darkKnight.isShieldActive && !darkKnight.isShieldBroken)
+                {
+                    if (isHeavyAttack)
+                    {
+                        darkKnight.BreakShield();
+                        Debug.Log($"【破防成功】{attacker.UnitName} 的重攻擊打破 DarkLongSwordKnight 的防禦！");
+                    }
+                    else
+                    {
+                        Debug.Log($"【格檔成功】DarkLongSwordKnight 擋下 {attacker.UnitName} 的攻擊！");
+                        return; // 擋下攻擊，不造成傷害
+                    }
+                }
+            }
         }
 
         // =======================================
