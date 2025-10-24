@@ -133,6 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e3753b65805b1b40807b6441690ccd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ETeam: 2
   maxHP: 50
   hp: 50
   respawnDelay: 10
@@ -145,8 +146,9 @@ MonoBehaviour:
   actionLockDuration: 0.3
   attackVfxPrefab: {fileID: 2090553158902562417, guid: 05d7012d2d4253b43998f755a68508ab, type: 3}
   vfxLifetime: 1.5
-  warningBeats: 2
+  warningBeats: 3
   warningColor: {r: 1, g: 0, b: 0, a: 1}
+  targetWarningPrefab: {fileID: 0}
 --- !u!95 &216491200392178936
 Animator:
   serializedVersion: 5

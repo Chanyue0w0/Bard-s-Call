@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class DebugTestSlime : EnemyBase
 {
-    [Header("膀セ计")]
-    public int maxHP = 50;
-    public int hp = 50;
-    public float respawnDelay = 10f;
+    //[Header("膀セ计")]
+    //public int maxHP = 50;
+    //public int hp = 50;
+    //public float respawnDelay = 10f;
 
     [Header("竊╃罽把计")]
     public Vector3 baseScale = new Vector3(0.15f, 0.15f, 0.15f);
