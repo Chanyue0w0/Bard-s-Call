@@ -140,7 +140,7 @@ public class DarkLongSwordKnight : EnemyBase
         if (roll < 50f) return 1;
         if (roll < 70f) return 2;
         if (roll < 90f) return 3;
-        return 4;
+        return 2;
     }
 
     private void EnterWarningPhase()
@@ -183,13 +183,20 @@ public class DarkLongSwordKnight : EnemyBase
                 break;
 
             case 3:
-                // 重攻擊護盾：生成護盾提示
+                if (spriteRenderer != null)
+                    spriteRenderer.color = Color.cyan;
+
                 if (shieldVfxPrefab != null)
                 {
-                    var preview = Instantiate(shieldVfxPrefab, transform.position + shieldVfxOffset, Quaternion.identity);
+                    var preview = Instantiate(
+                        shieldVfxPrefab,
+                        transform.position + shieldVfxOffset,
+                        Quaternion.identity
+                    );
                     Destroy(preview, warningLifetime);
                 }
                 break;
+
 
             case 4:
                 // 召喚石像：生成警告提示（使用同一個警告Prefab）
