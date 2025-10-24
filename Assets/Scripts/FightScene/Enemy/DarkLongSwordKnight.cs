@@ -75,7 +75,15 @@ public class DarkLongSwordKnight : EnemyBase
     {
         ScheduleNextAttack();
         BeatManager.OnBeat += OnBeat;
+
+        // 自動取得敵方第二格位置
+        if (enemySlot2 == null && BattleManager.Instance != null)
+            enemySlot2 = BattleManager.Instance.EnemyTeamInfo.Length > 1
+                ? BattleManager.Instance.EnemyTeamInfo[1]?.SlotTransform
+                : null;
     }
+
+
 
     void OnDestroy()
     {
@@ -361,8 +369,8 @@ public class DarkLongSwordKnight : EnemyBase
     {
         isAttacking = true;
 
-        // 檢查 BattleManager 是否存在
-        if (BattleManager.Instance == null)
+        var bm = BattleManager.Instance;
+        if (bm == null)
         {
             Debug.LogWarning("【DarkLongSwordKnight】找不到 BattleManager，無法召喚石像。");
             ResetState();
@@ -370,11 +378,36 @@ public class DarkLongSwordKnight : EnemyBase
             yield break;
         }
 
-        // 檢查第二個敵方位置是否有 Actor
-        var enemySlots = BattleManager.Instance.EnemyTeamInfo;
+        // 自動取得敵方第 2 格的位置（若未指定）
+        if (enemySlot2 == null && bm.EnemyTeamInfo.Length > 1)
+        {
+            if (bm.EnemyTeamInfo[1] != null && bm.EnemyTeamInfo[1].SlotTransform != null)
+            {
+                enemySlot2 = bm.EnemyTeamInfo[1].SlotTransform;
+            }
+            else if (bm.transform.Find("EnemyPosition2") != null)
+            {
+                enemySlot2 = bm.transform.Find("EnemyPosition2");
+            }
+            else if (bm.EnemyTeamInfo.Length >= 2)
+            {
+                // 若都找不到，就嘗試抓取 BattleManager 的 enemyPositions[1]
+                var field = typeof(BattleManager).GetField("enemyPositions",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                if (field != null)
+                {
+                    var positions = field.GetValue(bm) as Transform[];
+                    if (positions != null && positions.Length > 1)
+                        enemySlot2 = positions[1];
+                }
+            }
+        }
+
+        // 檢查第二格是否有敵人
+        var enemySlots = bm.EnemyTeamInfo;
         if (enemySlots == null || enemySlots.Length < 2)
         {
-            Debug.LogWarning("【DarkLongSwordKnight】EnemyTeamInfo 長度不足，無法檢查第二格。");
+            Debug.LogWarning("【DarkLongSwordKnight】EnemyTeamInfo 無法使用。");
             ResetState();
             ScheduleNextAttack();
             yield break;
@@ -388,12 +421,12 @@ public class DarkLongSwordKnight : EnemyBase
             yield break;
         }
 
-        // 可以召喚
+        // 生成石像
         if (stoneMinionPrefab != null && enemySlot2 != null)
         {
             var stone = Instantiate(stoneMinionPrefab, enemySlot2.position, Quaternion.identity);
 
-            // 註冊到 BattleManager 的 EnemyTeamInfo[1]
+            // 註冊到 BattleManager
             if (enemySlots[1] == null)
                 enemySlots[1] = new BattleManager.TeamSlotInfo();
 
@@ -413,6 +446,7 @@ public class DarkLongSwordKnight : EnemyBase
         ResetState();
         ScheduleNextAttack();
     }
+
 
 
 
