@@ -14492,6 +14492,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7423278480010749031}
+  - component: {fileID: 8376991244749926376}
   m_Layer: 6
   m_Name: SlimeAttackHit
   m_TagString: Untagged
@@ -14515,6 +14516,20 @@ Transform:
   - {fileID: 9040286350371847132}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8376991244749926376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2090553158902562417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474ca66447f10da438db6e38eb532a6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeTime: 1.5
+  useUnscaledTime: 0
 --- !u!1 &2262557939013924334
 GameObject:
   m_ObjectHideFlags: 0
@@ -28784,6 +28799,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8633128071753497357}
   - component: {fileID: 7956619027172859667}
+  - component: {fileID: 3146586808563780946}
   m_Layer: 6
   m_Name: Point Light
   m_TagString: Untagged
@@ -28868,3 +28884,26 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &3146586808563780946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7716529149734006433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
