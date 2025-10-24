@@ -42,9 +42,9 @@ public class ShieldGoblin : EnemyBase
         return isBlocking && !isBroken;
     }
 
-    protected override void OnBeat()
-    {
-        if (forceMove) return; // ★ 疊帶中不動作
-        // 可加呼吸動畫或特效
-    }
+    //protected override void OnBeat()
+    //{
+    //    if (forceMove) return; // ★ 疊帶中不動作
+    //    // 可加呼吸動畫或特效
+    //}
 }

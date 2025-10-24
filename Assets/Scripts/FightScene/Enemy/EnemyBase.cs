@@ -30,24 +30,9 @@ public abstract class EnemyBase : MonoBehaviour
         {
             AutoAssignSlotIndex();
         }
-
-        // ★ 訂閱 Beat 事件（搬回這裡統一管理）
-        BeatManager.OnBeat += HandleBeatEvent;
     }
 
-    protected virtual void OnDestroy()
-    {
-        // ★ 取消訂閱，避免場景重載報錯
-        BeatManager.OnBeat -= HandleBeatEvent;
-    }
-
-    private void HandleBeatEvent()
-    {
-        if (forceMove) return;
-        OnBeat(); // 呼叫子類別邏輯（如 DebugTestSlime 的 OnBeat）
-    }
-
-    // ★ 延遲等待 BattleManager 準備好
+    // 延遲等待 BattleManager 準備好
     public IEnumerator DelayAssignSlot()
     {
         yield return new WaitUntil(() =>
@@ -75,10 +60,9 @@ public abstract class EnemyBase : MonoBehaviour
         }
     }
 
-    // 目前 forceMove 僅供前推使用，其餘行為不依賴
     public void SetForceMove(bool value) => forceMove = value;
     public bool IsForceMoving() => forceMove;
 
-    // ★ 子類別實作拍點邏輯（如 DebugTestSlime 的 OnBeat）
+    // 子類別實作拍點邏輯
     //protected abstract void OnBeat();
 }

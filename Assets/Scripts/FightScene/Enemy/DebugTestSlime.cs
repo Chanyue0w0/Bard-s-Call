@@ -52,17 +52,15 @@ public class DebugTestSlime : EnemyBase
     {
         ScheduleNextAttack();
 
-        // ★ 新增：訂閱 BeatManager 拍點事件
-       
+        // ★ 自行訂閱 BeatManager.OnBeat（恢復原本機制）
         BeatManager.OnBeat += OnBeat;
     }
 
     void OnDestroy()
     {
-        // ★ 新增：取消訂閱，避免場景重載報錯
+        // ★ 取消訂閱，避免場景重載報錯
         BeatManager.OnBeat -= OnBeat;
     }
-
 
     void Update()
     {
@@ -84,17 +82,13 @@ public class DebugTestSlime : EnemyBase
             );
         }
 
-        // 若到了警示時間但還沒進入警示階段
+        // 進入警示階段
         if (!isWarning && Time.time >= warningTime)
-        {
             EnterWarningPhase();
-        }
 
-        // 若攻擊間隔時間已到但未進入警示（安全檢查）
+        // 安全防呆
         if (!isWarning && !isAttacking && Time.time >= nextAttackTime)
-        {
             ScheduleNextAttack();
-        }
     }
 
     // 每拍觸發
@@ -111,14 +105,10 @@ public class DebugTestSlime : EnemyBase
             beatsBeforeAttack--;
 
             if (beatsBeforeAttack == 1)
-            {
                 transform.localScale = baseScale * (peakMultiplier + 0.4f);
-            }
 
             if (beatsBeforeAttack <= 0)
-            {
                 StartCoroutine(AttackSequence());
-            }
         }
     }
 
@@ -144,13 +134,17 @@ public class DebugTestSlime : EnemyBase
     {
         isAttacking = true;
 
+        if (targetSlot == null || targetSlot.Actor == null)
+        {
+            Debug.LogWarning($"{name} 攻擊中止：目標為空");
+            yield break;
+        }
+
         Vector3 origin = transform.position;
         Vector3 contactPoint = targetSlot.Actor.transform.position - BattleManager.Instance.meleeContactOffset;
 
-        // 移動突進
         yield return Dash(origin, contactPoint, dashDuration);
 
-        // 生成攻擊特效
         if (attackVfxPrefab != null)
         {
             var vfx = Instantiate(attackVfxPrefab, targetSlot.Actor.transform.position, Quaternion.identity);
@@ -158,16 +152,12 @@ public class DebugTestSlime : EnemyBase
                 Destroy(vfx, vfxLifetime);
         }
 
-        // 傷害判定
         BattleEffectManager.Instance?.OnHit(selfSlot, targetSlot, true);
 
-        // 行動鎖（停頓）
         yield return new WaitForSeconds(actionLockDuration);
 
-        // 平滑回原位
         yield return Dash(transform.position, origin, dashDuration);
 
-        // 狀態重置
         if (spriteRenderer != null)
             spriteRenderer.color = originalColor;
 
@@ -176,8 +166,6 @@ public class DebugTestSlime : EnemyBase
 
         isWarning = false;
         isAttacking = false;
-
-        // 重新安排下一輪攻擊
         ScheduleNextAttack();
     }
 
@@ -197,14 +185,15 @@ public class DebugTestSlime : EnemyBase
         float wait = Random.Range(2f, 5f);
         nextAttackTime = Time.time + wait;
 
-        float beatInterval = 60f / BeatManager.Instance.bpm;
+        float beatInterval = (BeatManager.Instance != null && BeatManager.Instance.bpm > 0)
+            ? 60f / BeatManager.Instance.bpm
+            : 0.4f;
+
         warningTime = nextAttackTime - warningBeats * beatInterval;
 
-        // 若警示時間已經過 → 立即進入警示
         if (warningTime <= Time.time)
             warningTime = Time.time;
 
-        // 允許重新進入警示
         isWarning = false;
     }
 
