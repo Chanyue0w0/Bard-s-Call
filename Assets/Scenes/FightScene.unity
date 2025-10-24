@@ -1209,22 +1209,6 @@ MonoBehaviour:
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
   EnemyTeamInfo:
-  - PrefabToSpawn: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
-    UnitName: 
-    Actor: {fileID: 0}
-    SlotTransform: {fileID: 0}
-    ClassType: 0
-    MaxHP: 100
-    HP: 100
-    MaxMP: 100
-    MP: 0
-    OriginAtk: 10
-    Atk: 10
-    SkillNames: []
-    SkillPrefabs: []
-    NormalAttackNames: []
-    NormalAttackPrefabs: []
-    AssignedKeyIndex: 0
   - PrefabToSpawn: {fileID: 0}
     UnitName: 
     Actor: {fileID: 0}
@@ -1242,6 +1226,22 @@ MonoBehaviour:
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
   - PrefabToSpawn: {fileID: 0}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
+  - PrefabToSpawn: {fileID: 3663377574313024256, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
     UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 0}
@@ -3785,79 +3785,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8133816959185968569, guid: 8b3cfa4ff9bd539459cce5ab92e60a73, type: 3}
   m_PrefabInstance: {fileID: 1150684919447361198}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1446558208222677539
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3663377574313024256, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_Name
-      value: DarkLongSwordKnight
-      objectReference: {fileID: 0}
-    - target: {fileID: 3663377574313024256, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4881835321710434160, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4881835321710434160, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4881835321710434160, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7668116609375887615, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1.9358
-      objectReference: {fileID: 0}
-    - target: {fileID: 7668116609375887615, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -3.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 7668116609375887615, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7668116609375887615, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7668116609375887615, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7668116609375887615, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7668116609375887615, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7668116609375887615, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7668116609375887615, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7668116609375887615, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
 --- !u!1001 &2054397380166339188
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4007,9 +3934,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1212533077355768947, guid: ada6764ddd9a6b04c809a23c14aa46bc, type: 3}
+      propertyPath: m_Intensity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6416090778486341625, guid: ada6764ddd9a6b04c809a23c14aa46bc, type: 3}
       propertyPath: m_Name
       value: DarkSwordSlash
+      objectReference: {fileID: 0}
+    - target: {fileID: 6416090778486341625, guid: ada6764ddd9a6b04c809a23c14aa46bc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6781860087854676232, guid: ada6764ddd9a6b04c809a23c14aa46bc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4426,5 +4361,4 @@ SceneRoots:
   - {fileID: 1183324627}
   - {fileID: 1721909335}
   - {fileID: 667108493}
-  - {fileID: 1446558208222677539}
   - {fileID: 5027490728809139567}
