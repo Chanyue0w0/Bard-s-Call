@@ -45,7 +45,6 @@ GameObject:
   - component: {fileID: 216491200392178936}
   - component: {fileID: 2603255283436364462}
   - component: {fileID: -647458030757879125}
-  - component: {fileID: -1216384712203485788}
   m_Layer: 8
   m_Name: Slime
   m_TagString: Enemy
@@ -134,9 +133,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ETeam: 2
-  maxHP: 50
-  hp: 50
-  respawnDelay: 10
   baseScale: {x: 0.3, y: 0.3, z: 0.3}
   peakMultiplier: 1.3
   holdDuration: 0.05
@@ -144,11 +140,12 @@ MonoBehaviour:
   attackDamage: 20
   dashDuration: 0.1
   actionLockDuration: 0.3
+  attackBeatsInterval: 10
   attackVfxPrefab: {fileID: 2090553158902562417, guid: 05d7012d2d4253b43998f755a68508ab, type: 3}
   vfxLifetime: 1.5
   warningBeats: 3
   warningColor: {r: 1, g: 0, b: 0, a: 1}
-  targetWarningPrefab: {fileID: 0}
+  targetWarningPrefab: {fileID: 2890410290338222890, guid: 552a24d6ec52aa045a3d3beaccc5ca07, type: 3}
 --- !u!95 &216491200392178936
 Animator:
   serializedVersion: 5
@@ -234,19 +231,3 @@ MonoBehaviour:
     FixedDamage: 0
   Skills: []
   ShieldEffectPrefab: {fileID: 0}
---- !u!114 &-1216384712203485788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8612621303360054075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseScale: {x: 0.3, y: 0.3, z: 0.3}
-  peakMultiplier: 1.3
-  holdDuration: 0.05
-  returnSpeed: 8

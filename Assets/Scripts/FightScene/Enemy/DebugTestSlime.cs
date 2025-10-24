@@ -19,6 +19,12 @@ public class DebugTestSlime : EnemyBase
     public float dashDuration = 0.1f;
     public float actionLockDuration = 0.3f;
 
+    [Header("拍點攻擊設定")]
+    public int attackBeatsInterval = 8; // 每 8 拍攻擊一次
+
+   
+
+
     [Header("特效設定")]
     public GameObject attackVfxPrefab;
     public float vfxLifetime = 1.5f;
@@ -180,14 +186,31 @@ public class DebugTestSlime : EnemyBase
         }
     }
 
+    //private void ScheduleNextAttack()
+    //{
+    //    float wait = Random.Range(2f, 5f);
+    //    nextAttackTime = Time.time + wait;
+
+    //    float beatInterval = (BeatManager.Instance != null && BeatManager.Instance.bpm > 0)
+    //        ? 60f / BeatManager.Instance.bpm
+    //        : 0.4f;
+
+    //    warningTime = nextAttackTime - warningBeats * beatInterval;
+
+    //    if (warningTime <= Time.time)
+    //        warningTime = Time.time;
+
+    //    isWarning = false;
+    //}
+
     private void ScheduleNextAttack()
     {
-        float wait = Random.Range(2f, 5f);
-        nextAttackTime = Time.time + wait;
-
         float beatInterval = (BeatManager.Instance != null && BeatManager.Instance.bpm > 0)
             ? 60f / BeatManager.Instance.bpm
             : 0.4f;
+
+        float wait = attackBeatsInterval * beatInterval;
+        nextAttackTime = Time.time + wait;
 
         warningTime = nextAttackTime - warningBeats * beatInterval;
 
