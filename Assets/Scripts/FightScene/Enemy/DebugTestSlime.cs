@@ -1,30 +1,21 @@
 using System.Collections;
 using UnityEngine;
 
-public class DebugTestSlime : MonoBehaviour
+public class DebugTestSlime : EnemyBase
 {
     [Header("基本數值")]
     public int maxHP = 50;
     public int hp = 50;
     public float respawnDelay = 10f;
 
-    [Header("左右微動參數")]
-    public float amplitude = 0.05f;
-    public float speed = 1.5f;
-    public bool useLocalSpace = true;
-    public bool randomizePhase = true;
-
-    [Header("節拍縮放參數 (優化版)")]
+    [Header("節拍縮放參數")]
     public Vector3 baseScale = new Vector3(0.15f, 0.15f, 0.15f);
-    public float peakMultiplier = 1.3f;       // 節拍瞬間放大倍數
-    public float holdDuration = 0.05f;        // 放大後停留時間
-    public float returnSpeed = 8f;            // 回復速度
+    public float peakMultiplier = 1.3f;
+    public float holdDuration = 0.05f;
+    public float returnSpeed = 8f;
 
     [Header("攻擊設定")]
     public int attackDamage = 20;
-    public float minAttackInterval = 0f;
-    public float maxAttackInterval = 10f;
-    public int slotIndex = 0;
     public float dashDuration = 0.1f;
     public float actionLockDuration = 0.3f;
 
@@ -36,97 +27,43 @@ public class DebugTestSlime : MonoBehaviour
     public int warningBeats = 2;
     public Color warningColor = Color.red;
 
-    private float phase = 0f;
-    private Vector3 basePosLocal;
-    private Vector3 basePosWorld;
-
-    private bool isHolding = false;
-    private float holdTimer = 0f;
-
-    private float nextAttackTime;
-    private float warningTime;
-    private bool readyToAttack = false;
-    private bool isAttacking = false;
-    private bool isWarning = false;
-    private bool isDead = false;
-    private bool forceMove = false;
-
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
-    private Vector3 spawnPoint;
-    private Collider2D col;
+    private bool isHolding = false;
+    private float holdTimer = 0f;
+    private bool isAttacking = false;
+    private bool readyToAttack = false;
+    private bool isWarning = false;
+    private float nextAttackTime;
+    private float warningTime;
+    private GameObject activeTargetWarning;
 
-    private BattleManager.TeamSlotInfo selfSlot => BattleManager.Instance.ETeamInfo[slotIndex];
-    private BattleManager.TeamSlotInfo targetSlot => BattleManager.Instance.CTeamInfo[slotIndex];
-
-    void OnEnable()
+    protected override void Awake()
     {
-        basePosLocal = transform.localPosition;
-        basePosWorld = transform.position;
-        spawnPoint = transform.position;
-        phase = randomizePhase ? Random.Range(0f, Mathf.PI * 2f) : 0f;
-
-        transform.localScale = baseScale;
-
+        base.Awake(); // ★ 呼叫父類別自動分配 index
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
             originalColor = spriteRenderer.color;
-
-        col = GetComponent<Collider2D>();
-
-        BeatManager.OnBeat += OnBeat;
-    }
-
-    void OnDisable()
-    {
-        BeatManager.OnBeat -= OnBeat;
     }
 
     void Start()
     {
         ScheduleNextAttack();
-    }
+        //nextAttackTime = Time.time + Random.Range(1f, 3f);
 
-    // 外部可呼叫此函式
-    public void SetForceMove(bool value)
-    {
-        forceMove = value;
-        if (forceMove)
-        {
-            // 停止目前動作與攻擊
-            isAttacking = false;
-            readyToAttack = false;
-        }
     }
 
     void Update()
     {
-        if (isDead || isAttacking || forceMove) return; // ← 加入 forceMove
+        if (forceMove || isAttacking) return; // ★ 新增 forceMove 檢查
 
+        if (isAttacking) return;
 
-        //// 左右擺動
-        //float offsetX = Mathf.Sin((Time.unscaledTime + phase) * speed) * amplitude;
-        //if (useLocalSpace)
-        //{
-        //    Vector3 p = basePosLocal;
-        //    p.x += offsetX;
-        //    transform.localPosition = p;
-        //}
-        //else
-        //{
-        //    Vector3 p = basePosWorld;
-        //    p.x += offsetX;
-        //    transform.position = p;
-        //}
-
-        // 優化後的縮放節奏：保持 → 回復
         if (isHolding)
         {
             holdTimer -= Time.unscaledDeltaTime;
             if (holdTimer <= 0f)
-            {
                 isHolding = false;
-            }
         }
         else
         {
@@ -137,7 +74,6 @@ public class DebugTestSlime : MonoBehaviour
             );
         }
 
-        // 到達警示時間 → 變紅
         if (!isWarning && Time.time >= warningTime)
         {
             if (spriteRenderer != null)
@@ -145,29 +81,18 @@ public class DebugTestSlime : MonoBehaviour
             isWarning = true;
         }
 
-        // 冷卻檢查
         if (Time.time >= nextAttackTime)
-        {
             readyToAttack = true;
-        }
     }
 
-    private void OnBeat()
+    // ★ 實作父類別的抽象 OnBeat
+    protected override void OnBeat()
     {
-        if (isDead) return;
+        if (forceMove) return; // ★ 暫停期間不觸發節拍行為
 
-        // Beat瞬間「彈起」→ 停留 → 回復
         transform.localScale = baseScale * peakMultiplier;
         isHolding = true;
         holdTimer = holdDuration;
-
-        float beatInterval = 60f / BeatManager.Instance.bpm;
-        if (!readyToAttack && Time.time + beatInterval >= nextAttackTime)
-        {
-            Vector3 s = transform.localScale;
-            s.y = baseScale.y * 3f;
-            transform.localScale = s;
-        }
 
         if (readyToAttack && targetSlot != null && targetSlot.Actor != null)
         {
@@ -175,11 +100,9 @@ public class DebugTestSlime : MonoBehaviour
         }
     }
 
-
     private IEnumerator AttackSequence()
     {
         isAttacking = true;
-        readyToAttack = false;
 
         Vector3 origin = transform.position;
         Vector3 contactPoint = targetSlot.Actor.transform.position - BattleManager.Instance.meleeContactOffset;
@@ -192,15 +115,7 @@ public class DebugTestSlime : MonoBehaviour
             if (vfxLifetime > 0f) Destroy(vfx, vfxLifetime);
         }
 
-        if (BattleEffectManager.Instance != null)
-        {
-            BattleEffectManager.Instance.OnHit(selfSlot, targetSlot, true);
-        }
-        else
-        {
-            targetSlot.HP -= attackDamage;
-            if (targetSlot.HP < 0) targetSlot.HP = 0;
-        }
+        BattleEffectManager.Instance?.OnHit(selfSlot, targetSlot, true);
 
         yield return new WaitForSeconds(actionLockDuration);
 
@@ -216,17 +131,10 @@ public class DebugTestSlime : MonoBehaviour
 
     private IEnumerator Dash(Vector3 from, Vector3 to, float duration)
     {
-        if (duration <= 0f)
-        {
-            transform.position = to;
-            yield break;
-        }
-
         float t = 0f;
         while (t < 1f)
         {
             t += Time.deltaTime / duration;
-            if (t > 1f) t = 1f;
             transform.position = Vector3.Lerp(from, to, t);
             yield return null;
         }
@@ -234,7 +142,7 @@ public class DebugTestSlime : MonoBehaviour
 
     private void ScheduleNextAttack()
     {
-        float wait = Random.Range(minAttackInterval, maxAttackInterval);
+        float wait = Random.Range(2f, 5f);
         nextAttackTime = Time.time + wait;
 
         float beatInterval = 60f / BeatManager.Instance.bpm;
@@ -244,9 +152,8 @@ public class DebugTestSlime : MonoBehaviour
 
     public void RefreshBasePosition()
     {
-        // 重新記錄目前位置為新的擺動基準
         basePosLocal = transform.localPosition;
         basePosWorld = transform.position;
     }
-
 }
+

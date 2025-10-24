@@ -647,18 +647,17 @@ public class BattleManager : MonoBehaviour
                 Vector3 targetPos = enemyPositions[i - 1].position;
 
                 // 更新新的基準位置，防止被拉回原位
-                var slime = enemy.GetComponent<DebugTestSlime>();
-                if (slime != null)
+                var enemyBase = enemy.GetComponent<EnemyBase>();
+                if (enemyBase != null)
                 {
-                    slime.SetForceMove(false);
-                    slime.RefreshBasePosition(); // ★ 新增這行
+                    enemyBase.SetForceMove(true);  // ★ 所有敵人共用暫停機制
                 }
 
 
-                // 平滑移動（快速）
+                // 平滑移動
                 float t = 0f;
                 Vector3 start = enemy.transform.position;
-                float moveTime = 0.25f; // 快速但可見
+                float moveTime = 0.25f;
                 while (t < 1f)
                 {
                     t += Time.deltaTime / moveTime;
@@ -672,8 +671,14 @@ public class BattleManager : MonoBehaviour
                 ETeamInfo[i] = new TeamSlotInfo();
 
                 // 結束後恢復敵人行為
-                if (slime != null)
-                    slime.SetForceMove(false);
+                if (enemyBase != null)
+                {
+                    var slime = enemyBase as DebugTestSlime;
+                    if (slime != null)
+                        slime.RefreshBasePosition();
+                    enemyBase.SetForceMove(false);
+                }
+
 
                 moved = true;
 

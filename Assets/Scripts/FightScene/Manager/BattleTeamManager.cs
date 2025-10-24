@@ -49,7 +49,17 @@ public class BattleTeamManager : MonoBehaviour
             if (info.Actor == null && info.PrefabToSpawn != null)
             {
                 info.Actor = Instantiate(info.PrefabToSpawn, positions[i].position, Quaternion.identity);
+
+                // ★ 立刻讓敵人自動索引配對（確保 slotIndex 正確）
+                var enemyBase = info.Actor.GetComponent<EnemyBase>();
+                if (enemyBase != null)
+                {
+                    // 強制呼叫自動索引（保險起見，避免 Awake 時序跑太早）
+                    var method = typeof(EnemyBase).GetMethod("AutoAssignSlotIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    method?.Invoke(enemyBase, null);
+                }
             }
+
 
             if (info.Actor == null)
                 continue;

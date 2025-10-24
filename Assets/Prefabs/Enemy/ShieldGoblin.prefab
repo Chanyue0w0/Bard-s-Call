@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7409927436515639361}
   - component: {fileID: 2082435188175359541}
   - component: {fileID: 8512920936193360753}
+  - component: {fileID: 4821754155231326476}
   m_Layer: 8
   m_Name: ShieldGoblin
   m_TagString: Enemy
@@ -188,6 +189,22 @@ MonoBehaviour:
     FixedDamage: 0
   Skills: []
   ShieldEffectPrefab: {fileID: 7125099269266668700, guid: 3797ab3f5e2aa6148869788f506a8635, type: 3}
+--- !u!114 &4821754155231326476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3637990080320469891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseScale: {x: 0.227874, y: 0.227874, z: 0.227874}
+  peakMultiplier: 1.3
+  holdDuration: 0.05
+  returnSpeed: 8
 --- !u!1 &6655271926595468758
 GameObject:
   m_ObjectHideFlags: 0
