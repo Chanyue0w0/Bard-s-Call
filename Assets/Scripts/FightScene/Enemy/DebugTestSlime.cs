@@ -78,8 +78,13 @@ public class DebugTestSlime : EnemyBase
         {
             if (spriteRenderer != null)
                 spriteRenderer.color = warningColor;
+
             isWarning = true;
+
+            // ★ 進入警示階段時，預先標記「下一次拍點攻擊」
+            readyToAttack = true;
         }
+
 
         if (Time.time >= nextAttackTime)
             readyToAttack = true;

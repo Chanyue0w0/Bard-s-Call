@@ -16,15 +16,36 @@ public class Explosion : MonoBehaviour
 
     private void OnEnable()
     {
-        // ぃ笆币笆惠场㊣ Initialize()
+        
     }
 
-    // ﹍て场砞﹚把计㊣
+    private void Start()
+    {
+        // 璝ゼパ场㊣ Initialize()笆箇砞把计币笆
+        if (!isInitialized)
+        {
+            AutoInitialize();
+        }
+    }
+
+    // ﹍て场㊣ㄏノ
     public void Initialize()
     {
         if (isInitialized) return;
         isInitialized = true;
 
+        StartLifeRoutine();
+    }
+
+    // 笆﹍てず场ㄏノOnEnable币笆
+    private void AutoInitialize()
+    {
+        isInitialized = true;
+        StartLifeRoutine();
+    }
+
+    private void StartLifeRoutine()
+    {
         if (useUnscaledTime)
         {
             lifeRoutine = StartCoroutine(DestroyAfterUnscaledTime());
