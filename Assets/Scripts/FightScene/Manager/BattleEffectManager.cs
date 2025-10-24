@@ -166,7 +166,7 @@ public class BattleEffectManager : MonoBehaviour
         Debug.Log($"{target.UnitName} 已被擊敗！");
 
         // 確認是否為敵人
-        int enemyIndex = System.Array.FindIndex(BattleManager.Instance.ETeamInfo, t => t == target);
+        int enemyIndex = System.Array.FindIndex(BattleManager.Instance.EnemyTeamInfo, t => t == target);
         if (enemyIndex >= 0)
         {
             BattleManager.Instance.OnEnemyDeath(enemyIndex);

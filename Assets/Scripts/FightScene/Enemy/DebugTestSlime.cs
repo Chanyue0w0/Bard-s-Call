@@ -24,23 +24,25 @@ public class DebugTestSlime : EnemyBase
     public float vfxLifetime = 1.5f;
 
     [Header("警示設定")]
-    public int warningBeats = 2;
+    public int warningBeats = 3;
     public Color warningColor = Color.red;
+    public GameObject targetWarningPrefab;
 
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private bool isHolding = false;
     private float holdTimer = 0f;
     private bool isAttacking = false;
-    private bool readyToAttack = false;
     private bool isWarning = false;
+
     private float nextAttackTime;
     private float warningTime;
     private GameObject activeTargetWarning;
+    private int beatsBeforeAttack = -1;
 
     protected override void Awake()
     {
-        base.Awake(); // ★ 呼叫父類別自動分配 index
+        base.Awake();
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
             originalColor = spriteRenderer.color;
@@ -49,16 +51,24 @@ public class DebugTestSlime : EnemyBase
     void Start()
     {
         ScheduleNextAttack();
-        //nextAttackTime = Time.time + Random.Range(1f, 3f);
 
+        // ★ 新增：訂閱 BeatManager 拍點事件
+       
+        BeatManager.OnBeat += OnBeat;
     }
+
+    void OnDestroy()
+    {
+        // ★ 新增：取消訂閱，避免場景重載報錯
+        BeatManager.OnBeat -= OnBeat;
+    }
+
 
     void Update()
     {
-        if (forceMove || isAttacking) return; // ★ 新增 forceMove 檢查
+        if (forceMove || isAttacking) return;
 
-        if (isAttacking) return;
-
+        // 回復縮放
         if (isHolding)
         {
             holdTimer -= Time.unscaledDeltaTime;
@@ -70,38 +80,63 @@ public class DebugTestSlime : EnemyBase
             transform.localScale = Vector3.Lerp(
                 transform.localScale,
                 baseScale,
-                Mathf.SmoothStep(0f, 1f, Time.unscaledDeltaTime * returnSpeed)
+                Time.unscaledDeltaTime * returnSpeed
             );
         }
 
+        // 若到了警示時間但還沒進入警示階段
         if (!isWarning && Time.time >= warningTime)
         {
-            if (spriteRenderer != null)
-                spriteRenderer.color = warningColor;
-
-            isWarning = true;
-
-            // ★ 進入警示階段時，預先標記「下一次拍點攻擊」
-            readyToAttack = true;
+            EnterWarningPhase();
         }
 
-
-        if (Time.time >= nextAttackTime)
-            readyToAttack = true;
+        // 若攻擊間隔時間已到但未進入警示（安全檢查）
+        if (!isWarning && !isAttacking && Time.time >= nextAttackTime)
+        {
+            ScheduleNextAttack();
+        }
     }
 
-    // ★ 實作父類別的抽象 OnBeat
-    protected override void OnBeat()
+    // 每拍觸發
+    private void OnBeat()
     {
-        if (forceMove) return; // ★ 暫停期間不觸發節拍行為
+        if (forceMove || isAttacking) return;
 
         transform.localScale = baseScale * peakMultiplier;
         isHolding = true;
         holdTimer = holdDuration;
 
-        if (readyToAttack && targetSlot != null && targetSlot.Actor != null)
+        if (isWarning)
         {
-            StartCoroutine(AttackSequence());
+            beatsBeforeAttack--;
+
+            if (beatsBeforeAttack == 1)
+            {
+                transform.localScale = baseScale * (peakMultiplier + 0.4f);
+            }
+
+            if (beatsBeforeAttack <= 0)
+            {
+                StartCoroutine(AttackSequence());
+            }
+        }
+    }
+
+    private void EnterWarningPhase()
+    {
+        isWarning = true;
+        beatsBeforeAttack = warningBeats;
+
+        if (spriteRenderer != null)
+            spriteRenderer.color = warningColor;
+
+        if (targetSlot != null && targetSlot.Actor != null && targetWarningPrefab != null)
+        {
+            activeTargetWarning = Instantiate(
+                targetWarningPrefab,
+                targetSlot.Actor.transform.position,
+                Quaternion.identity
+            );
         }
     }
 
@@ -112,26 +147,38 @@ public class DebugTestSlime : EnemyBase
         Vector3 origin = transform.position;
         Vector3 contactPoint = targetSlot.Actor.transform.position - BattleManager.Instance.meleeContactOffset;
 
+        // 移動突進
         yield return Dash(origin, contactPoint, dashDuration);
 
+        // 生成攻擊特效
         if (attackVfxPrefab != null)
         {
             var vfx = Instantiate(attackVfxPrefab, targetSlot.Actor.transform.position, Quaternion.identity);
-            if (vfxLifetime > 0f) Destroy(vfx, vfxLifetime);
+            if (vfxLifetime > 0f)
+                Destroy(vfx, vfxLifetime);
         }
 
+        // 傷害判定
         BattleEffectManager.Instance?.OnHit(selfSlot, targetSlot, true);
 
+        // 行動鎖（停頓）
         yield return new WaitForSeconds(actionLockDuration);
 
-        transform.position = origin;
+        // 平滑回原位
+        yield return Dash(transform.position, origin, dashDuration);
 
+        // 狀態重置
         if (spriteRenderer != null)
             spriteRenderer.color = originalColor;
-        isWarning = false;
 
-        ScheduleNextAttack();
+        if (activeTargetWarning != null)
+            Destroy(activeTargetWarning);
+
+        isWarning = false;
         isAttacking = false;
+
+        // 重新安排下一輪攻擊
+        ScheduleNextAttack();
     }
 
     private IEnumerator Dash(Vector3 from, Vector3 to, float duration)
@@ -152,7 +199,13 @@ public class DebugTestSlime : EnemyBase
 
         float beatInterval = 60f / BeatManager.Instance.bpm;
         warningTime = nextAttackTime - warningBeats * beatInterval;
-        if (warningTime < Time.time) warningTime = Time.time;
+
+        // 若警示時間已經過 → 立即進入警示
+        if (warningTime <= Time.time)
+            warningTime = Time.time;
+
+        // 允許重新進入警示
+        isWarning = false;
     }
 
     public void RefreshBasePosition()
@@ -161,4 +214,3 @@ public class DebugTestSlime : EnemyBase
         basePosWorld = transform.position;
     }
 }
-

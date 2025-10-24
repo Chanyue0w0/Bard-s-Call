@@ -13,62 +13,83 @@ public class BattleTeamManager : MonoBehaviour
     public BattleManager.TeamSlotInfo[] CTeamInfo = new BattleManager.TeamSlotInfo[3];
 
     [Header("敵方三格資料")]
-    public BattleManager.TeamSlotInfo[] ETeamInfo = new BattleManager.TeamSlotInfo[3];
+    public BattleManager.TeamSlotInfo[] EnemyTeamInfo = new BattleManager.TeamSlotInfo[3]; // ★ 改名統一
 
     [Header("血條 UI")]
     public GameObject healthBarPrefab;
     public Canvas uiCanvas;
 
     [Header("重攻擊 UI")]
-    public GameObject heavyAttackBarPrefab; // 指向 HeavyAttackBarUI 的 Prefab
+    public GameObject heavyAttackBarPrefab;
 
-    void Start()
+    private void Start()
     {
+        // 先從 GlobalIndex 載入隊伍資料
+        LoadTeamsFromGlobalIndex();
+
+        // 原有流程
         SetupTeam(CTeamInfo, playerPositions);
-        SetupTeam(ETeamInfo, enemyPositions);
+        SetupTeam(EnemyTeamInfo, enemyPositions);
 
         if (BattleManager.Instance != null)
-        {
             BattleManager.Instance.LoadTeamData(this);
-        }
 
         CreateHeavyAttackBars(CTeamInfo);
-        //CreateHeavyAttackBars(ETeamInfo);
-
     }
+
+    private void LoadTeamsFromGlobalIndex()
+    {
+        // 玩家隊伍
+        for (int i = 0; i < CTeamInfo.Length; i++)
+        {
+            if (i < GlobalIndex.PlayerTeamPrefabs.Count && GlobalIndex.PlayerTeamPrefabs[i] != null)
+            {
+                CTeamInfo[i] = new BattleManager.TeamSlotInfo();
+                CTeamInfo[i].PrefabToSpawn = GlobalIndex.PlayerTeamPrefabs[i];
+            }
+        }
+
+        // 敵方隊伍
+        for (int i = 0; i < EnemyTeamInfo.Length; i++)
+        {
+            if (i < GlobalIndex.EnemyTeamPrefabs.Count && GlobalIndex.EnemyTeamPrefabs[i] != null)
+            {
+                EnemyTeamInfo[i] = new BattleManager.TeamSlotInfo();
+                EnemyTeamInfo[i].PrefabToSpawn = GlobalIndex.EnemyTeamPrefabs[i];
+            }
+        }
+    }
+
 
     private void SetupTeam(BattleManager.TeamSlotInfo[] team, Transform[] positions)
     {
         for (int i = 0; i < team.Length && i < positions.Length; i++)
         {
+            if (team[i] == null)
+                team[i] = new BattleManager.TeamSlotInfo();
+
             var info = team[i];
-            if (info == null)
+            if (info.PrefabToSpawn == null)
                 continue;
 
-            // ★ 自動生成角色（若尚未指定 Actor）
-            if (info.Actor == null && info.PrefabToSpawn != null)
+            if (info.Actor == null)
             {
                 info.Actor = Instantiate(info.PrefabToSpawn, positions[i].position, Quaternion.identity);
-
-                // ★ 立刻讓敵人自動索引配對（確保 slotIndex 正確）
-                var enemyBase = info.Actor.GetComponent<EnemyBase>();
-                if (enemyBase != null)
-                {
-                    // 強制呼叫自動索引（保險起見，避免 Awake 時序跑太早）
-                    var method = typeof(EnemyBase).GetMethod("AutoAssignSlotIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    method?.Invoke(enemyBase, null);
-                }
             }
-
 
             if (info.Actor == null)
                 continue;
 
-            // 設定位置
-            info.Actor.transform.position = positions[i].position;
             info.SlotTransform = positions[i];
 
-            // 讀取角色資料
+            // 敵人自動索引
+            var enemyBase = info.Actor.GetComponent<EnemyBase>();
+            if (enemyBase != null)
+            {
+                enemyBase.ETeam = BattleManager.ETeam.Enemy; // ★ 改用新 enum
+                enemyBase.StartCoroutine("DelayAssignSlot");
+            }
+
             var data = info.Actor.GetComponent<CharacterData>();
             if (data != null)
             {
@@ -80,36 +101,11 @@ public class BattleTeamManager : MonoBehaviour
                 info.MP = data.MP;
                 info.OriginAtk = data.OriginAtk;
                 info.Atk = data.Atk;
-
-                // 普通攻擊（可多個）
-                if (data.NormalAttacks != null && data.NormalAttacks.Count > 0)
-                {
-                    info.NormalAttackNames = new string[data.NormalAttacks.Count];
-                    info.NormalAttackPrefabs = new GameObject[data.NormalAttacks.Count];
-                    for (int j = 0; j < data.NormalAttacks.Count; j++)
-                    {
-                        info.NormalAttackNames[j] = data.NormalAttacks[j].SkillName;
-                        info.NormalAttackPrefabs[j] = data.NormalAttacks[j].SkillPrefab;
-                    }
-                }
-
-                // 技能（可多個）
-                if (data.Skills != null && data.Skills.Count > 0)
-                {
-                    info.SkillNames = new string[data.Skills.Count];
-                    info.SkillPrefabs = new GameObject[data.Skills.Count];
-                    for (int j = 0; j < data.Skills.Count; j++)
-                    {
-                        info.SkillNames[j] = data.Skills[j].SkillName;
-                        info.SkillPrefabs[j] = data.Skills[j].SkillPrefab;
-                    }
-                }
             }
 
             CreateHealthBar(info);
         }
     }
-
 
     private void CreateHealthBar(BattleManager.TeamSlotInfo slot)
     {
@@ -129,39 +125,23 @@ public class BattleTeamManager : MonoBehaviour
     private void CreateHeavyAttackBars(BattleManager.TeamSlotInfo[] team)
     {
         if (heavyAttackBarPrefab == null || uiCanvas == null)
-        {
-            Debug.LogWarning("BattleTeamManager: heavyAttackBarPrefab 或 uiCanvas 未指定。");
             return;
-        }
 
         foreach (var slot in team)
         {
-            if (slot == null || slot.Actor == null) continue;
+            if (slot?.Actor == null) continue;
 
-            // 取得/補上 combo 狀態
             var combo = slot.Actor.GetComponent<CharacterComboState>();
             if (combo == null) combo = slot.Actor.AddComponent<CharacterComboState>();
 
-            // 找頭頂定位點
             Transform headPoint = slot.Actor.transform.Find("HeadPoint");
             if (headPoint == null)
-            {
                 headPoint = slot.Actor.transform;
-                Debug.LogWarning($"{slot.UnitName} 缺少 HeadPoint，將改用角色 Transform。");
-            }
 
-            // 生成 UI 並初始化
             var barObj = Instantiate(heavyAttackBarPrefab, uiCanvas.transform);
             var bar = barObj.GetComponent<HeavyAttackBarUI>();
-            if (bar == null)
-            {
-                Debug.LogError("heavyAttackBarPrefab 上沒有 HeavyAttackBarUI 組件。");
-                Destroy(barObj);
-                continue;
-            }
-
-            bar.Init(combo, headPoint, Camera.main);
+            if (bar != null)
+                bar.Init(combo, headPoint, Camera.main);
         }
     }
-
 }

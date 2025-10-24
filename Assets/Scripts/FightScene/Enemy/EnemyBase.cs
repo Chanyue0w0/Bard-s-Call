@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public abstract class EnemyBase : MonoBehaviour
@@ -5,43 +6,79 @@ public abstract class EnemyBase : MonoBehaviour
     protected int slotIndex = -1;
     protected bool forceMove = false;
 
-    // ★ 用於儲存移動基準位置
     protected Vector3 basePosLocal;
     protected Vector3 basePosWorld;
 
+    public BattleManager.ETeam ETeam = BattleManager.ETeam.Enemy;
+    protected BattleManager.TeamSlotInfo selfSlot;
+    protected BattleManager.TeamSlotInfo targetSlot;
+
     protected virtual void Awake()
     {
+        if (ETeam == BattleManager.ETeam.None)
+            ETeam = BattleManager.ETeam.Enemy;
+    }
+
+    protected virtual void Start()
+    {
+        // 延遲配對，確保 BattleManager 存在
+        if (BattleManager.Instance == null)
+        {
+            StartCoroutine(DelayAssignSlot());
+        }
+        else
+        {
+            AutoAssignSlotIndex();
+        }
+
+        // ★ 訂閱 Beat 事件（搬回這裡統一管理）
+        BeatManager.OnBeat += HandleBeatEvent;
+    }
+
+    protected virtual void OnDestroy()
+    {
+        // ★ 取消訂閱，避免場景重載報錯
+        BeatManager.OnBeat -= HandleBeatEvent;
+    }
+
+    private void HandleBeatEvent()
+    {
+        if (forceMove) return;
+        OnBeat(); // 呼叫子類別邏輯（如 DebugTestSlime 的 OnBeat）
+    }
+
+    // ★ 延遲等待 BattleManager 準備好
+    public IEnumerator DelayAssignSlot()
+    {
+        yield return new WaitUntil(() =>
+            BattleManager.Instance != null && BattleManager.Instance.EnemyTeamInfo != null);
         AutoAssignSlotIndex();
     }
 
-    protected void AutoAssignSlotIndex()
+    protected virtual void AutoAssignSlotIndex()
     {
-        // 自動配對敵人索引
-        for (int i = 0; i < BattleManager.Instance.ETeamInfo.Length; i++)
+        if (BattleManager.Instance == null || BattleManager.Instance.EnemyTeamInfo == null)
+            return;
+
+        for (int i = 0; i < BattleManager.Instance.EnemyTeamInfo.Length; i++)
         {
-            if (BattleManager.Instance.ETeamInfo[i].Actor == this.gameObject)
+            var info = BattleManager.Instance.EnemyTeamInfo[i];
+            if (info != null && info.Actor == gameObject)
             {
+                selfSlot = info;
                 slotIndex = i;
-                Debug.Log($"【{gameObject.name}】自動配對到 ETeamInfo[{i}]");
+
+                if (i < BattleManager.Instance.CTeamInfo.Length)
+                    targetSlot = BattleManager.Instance.CTeamInfo[i];
                 return;
             }
         }
-        Debug.LogWarning($"【{gameObject.name}】找不到對應 ETeamInfo 索引！");
     }
 
-    // 暫停/恢復移動行為
-    public void SetForceMove(bool value)
-    {
-        forceMove = value;
-    }
-
-    // 允許子類查詢
+    // 目前 forceMove 僅供前推使用，其餘行為不依賴
+    public void SetForceMove(bool value) => forceMove = value;
     public bool IsForceMoving() => forceMove;
 
-    // 取得自己與目標 slot
-    protected BattleManager.TeamSlotInfo selfSlot => BattleManager.Instance.ETeamInfo[slotIndex];
-    protected BattleManager.TeamSlotInfo targetSlot => BattleManager.Instance.CTeamInfo[slotIndex];
-
-    // 每個敵人都需自行實作 OnBeat()
-    protected abstract void OnBeat();
+    // ★ 子類別實作拍點邏輯（如 DebugTestSlime 的 OnBeat）
+    //protected abstract void OnBeat();
 }

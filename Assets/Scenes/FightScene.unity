@@ -1208,8 +1208,8 @@ MonoBehaviour:
     NormalAttackNames: []
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
-  ETeamInfo:
-  - PrefabToSpawn: {fileID: 3637990080320469891, guid: d0b076231aa6a0f4fb965f3bef29c227, type: 3}
+  EnemyTeamInfo:
+  - PrefabToSpawn: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
     UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 0}
@@ -1225,7 +1225,7 @@ MonoBehaviour:
     NormalAttackNames: []
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
-  - PrefabToSpawn: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
+  - PrefabToSpawn: {fileID: 0}
     UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 0}
@@ -2151,11 +2151,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2397801311962783639, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
   m_PrefabInstance: {fileID: 5485045531590586230}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1144731205 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
-  m_PrefabInstance: {fileID: 5485045531590586230}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1160555322
 GameObject:
   m_ObjectHideFlags: 0
@@ -2395,18 +2390,18 @@ MonoBehaviour:
     NormalAttackNames: []
     NormalAttackPrefabs: []
     AssignedKeyIndex: 2
-  ETeamInfo:
+  EnemyTeamInfo:
   - PrefabToSpawn: {fileID: 0}
     UnitName: 
-    Actor: {fileID: 3637990080320469891, guid: d0b076231aa6a0f4fb965f3bef29c227, type: 3}
-    SlotTransform: {fileID: 871193936}
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
     ClassType: 0
-    MaxHP: 600
-    HP: 600
+    MaxHP: 100
+    HP: 100
     MaxMP: 100
     MP: 0
-    OriginAtk: 30
-    Atk: 30
+    OriginAtk: 10
+    Atk: 10
     SkillNames: []
     SkillPrefabs: []
     NormalAttackNames: []
@@ -2414,20 +2409,36 @@ MonoBehaviour:
     AssignedKeyIndex: 0
   - PrefabToSpawn: {fileID: 0}
     UnitName: 
-    Actor: {fileID: 1144731205}
-    SlotTransform: {fileID: 332195311}
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
     ClassType: 0
-    MaxHP: 400
-    HP: 400
+    MaxHP: 100
+    HP: 100
     MaxMP: 100
     MP: 0
-    OriginAtk: 30
-    Atk: 30
+    OriginAtk: 10
+    Atk: 10
     SkillNames: []
     SkillPrefabs: []
     NormalAttackNames: []
     NormalAttackPrefabs: []
-    AssignedKeyIndex: 2
+    AssignedKeyIndex: 0
+  - PrefabToSpawn: {fileID: 0}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
   actionAttackP1: {fileID: 2043867421210978648, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionAttackP2: {fileID: -8060893466954798792, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionAttackP3: {fileID: 8643363546054971998, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
@@ -2438,6 +2449,8 @@ MonoBehaviour:
   actionBlockP3: {fileID: -4770925364837056878, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionLockDuration: 0.3
   dashDuration: 0.05
+  dashStayDuration: 0.01
+  rotateMoveDuration: 0.2
   meleeContactOffset: {x: 0.5, y: 0, z: 0}
   meleeVfxPrefab: {fileID: 8153514251071552052, guid: f6e99efa5f51f4c458e60b1da308912d, type: 3}
   rangedVfxPrefab: {fileID: 2864930942258562462, guid: 4ca34a493ab195648a5f9c57a9b3266b, type: 3}
@@ -2449,8 +2462,6 @@ MonoBehaviour:
   shieldDamage: 10
   healthBarPrefab: {fileID: 4455289404318607837, guid: 61154c866d0c3ed4187b80832d7c6ec3, type: 3}
   uiCanvas: {fileID: 1719361669}
-  rotateMoveDuration: 0.2
-  dashStayDuration: 0.01
 --- !u!1 &1343110491
 GameObject:
   m_ObjectHideFlags: 0
