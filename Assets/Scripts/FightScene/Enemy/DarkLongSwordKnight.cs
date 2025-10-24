@@ -147,10 +147,86 @@ public class DarkLongSwordKnight : EnemyBase
     {
         isWarning = true;
         beatsBeforeAttack = warningBeats;
+
         if (spriteRenderer != null)
             spriteRenderer.color = warningColor;
+
+        // 選擇技能
         selectedSkill = ChooseNextSkill();
+        Debug.Log($"【DarkLongSwordKnight】進入警告階段，預計使用技能 {selectedSkill}");
+
+        // 技能預警特效
+        switch (selectedSkill)
+        {
+            case 1:
+                // 普通斬擊：鎖定隨機玩家
+                randomTargetSlot = GetRandomPlayerSlot();
+                if (randomTargetSlot != null && randomTargetSlot.Actor != null && targetWarningPrefab != null)
+                {
+                    activeTargetWarning = Instantiate(
+                        targetWarningPrefab,
+                        randomTargetSlot.Actor.transform.position,
+                        Quaternion.identity
+                    );
+                    Destroy(activeTargetWarning, warningLifetime); // 1.5 秒後自動刪除
+                }
+                break;
+
+            case 2:
+                // 強大連斬：生成多重警告
+                if (multiSlashWarningPrefab != null)
+                {
+                    activeBossWarning = Instantiate(multiSlashWarningPrefab, transform.position, Quaternion.identity);
+                    Destroy(activeBossWarning, warningLifetime);
+                }
+                StartCoroutine(SpawnMultiWarnings());
+                break;
+
+            case 3:
+                // 重攻擊護盾：生成護盾提示
+                if (shieldVfxPrefab != null)
+                {
+                    var preview = Instantiate(shieldVfxPrefab, transform.position + shieldVfxOffset, Quaternion.identity);
+                    Destroy(preview, warningLifetime);
+                }
+                break;
+
+            case 4:
+                // 召喚石像：生成警告提示（使用同一個警告Prefab）
+                if (multiSlashWarningPrefab != null)
+                {
+                    activeBossWarning = Instantiate(multiSlashWarningPrefab, transform.position, Quaternion.identity);
+                    Destroy(activeBossWarning, warningLifetime);
+                }
+                break;
+        }
     }
+
+    private IEnumerator SpawnMultiWarnings()
+    {
+        var cTeam = BattleManager.Instance?.CTeamInfo;
+        if (cTeam == null) yield break;
+
+        float beatInterval = (BeatManager.Instance != null && BeatManager.Instance.bpm > 0)
+            ? 60f / BeatManager.Instance.bpm
+            : 0.4f;
+
+        for (int i = 0; i < cTeam.Length; i++)
+        {
+            if (cTeam[i].Actor != null && targetWarningPrefab != null)
+            {
+                var warn = Instantiate(
+                    targetWarningPrefab,
+                    cTeam[i].Actor.transform.position,
+                    Quaternion.identity
+                );
+                Destroy(warn, warningLifetime);
+            }
+
+            yield return new WaitForSeconds(beatInterval * multiSlashBeatInterval);
+        }
+    }
+
 
     // =====================
     // Skill 1：普通斬擊
@@ -158,29 +234,44 @@ public class DarkLongSwordKnight : EnemyBase
     private IEnumerator Skill1_NormalSlash()
     {
         isAttacking = true;
-        randomTargetSlot = GetRandomPlayerSlot();
+
+        // 使用警告階段選定的目標，若當前為空才重新選
+        if (randomTargetSlot == null || randomTargetSlot.Actor == null)
+            randomTargetSlot = GetRandomPlayerSlot();
+
         if (randomTargetSlot == null || randomTargetSlot.Actor == null)
         {
             ResetState();
             yield break;
         }
+
         Vector3 origin = transform.position;
         Vector3 contactPoint = randomTargetSlot.Actor.transform.position
                              - BattleManager.Instance.meleeContactOffset
                              + (transform.localScale.x >= 0 ? dashOffset : -dashOffset);
+
+        // 衝刺攻擊
         yield return Dash(origin, contactPoint, dashDuration);
+
+        // 攻擊特效
         if (attackVfxPrefab != null)
         {
             Vector3 vfxPos = randomTargetSlot.Actor.transform.position + vfxOffset;
             var vfx = Instantiate(attackVfxPrefab, vfxPos, Quaternion.identity);
             Destroy(vfx, vfxLifetime);
         }
+
+        // 傷害處理
         BattleEffectManager.Instance?.OnHit(selfSlot, randomTargetSlot, true);
+
+        // 收尾
         yield return new WaitForSeconds(actionLockDuration);
         yield return Dash(transform.position, origin, dashDuration);
+
         ResetState();
         ScheduleNextAttack();
     }
+
 
     // =====================
     // Skill 2：強大連斬
