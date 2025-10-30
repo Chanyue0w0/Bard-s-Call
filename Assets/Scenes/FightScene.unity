@@ -1577,6 +1577,8 @@ MonoBehaviour:
   visualLeadTime: 0.08
   leftSpawnPoint: {fileID: 1343110492}
   rightSpawnPoint: {fileID: 1932035420}
+  normalBeatColor: {r: 1, g: 1, b: 1, a: 1}
+  heavyBeatColor: {r: 1, g: 0.84313726, b: 0, a: 1}
   beatsPerMeasure: 4
   currentBeatIndex: 0
   currentBeatInCycle: 0
@@ -2193,7 +2195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a80be3587923374497eb2c6719c1f5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultClip: {fileID: 8300000, guid: bb42badaab71ea34e8c3d90c7a6cb230, type: 3}
+  defaultClip: {fileID: 8300000, guid: b09a4ac415a13dc4880aea67464ef09c, type: 3}
   pitch: 1
   volume: 1
   loop: 1

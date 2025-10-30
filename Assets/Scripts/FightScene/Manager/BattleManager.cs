@@ -220,33 +220,29 @@ public class BattleManager : MonoBehaviour
             yield break;
         }
 
-        var comboData = actor.GetComponent<CharacterComboState>() ?? actor.gameObject.AddComponent<CharacterComboState>();
-
-        if (Time.time - comboData.lastAttackTime > 2f)
-            comboData.comboCount = 0;
-
         SkillInfo chosenSkill = null;
         GameObject attackPrefab = null;
 
-        if (comboData.comboCount >= 3)
+        // ★ 新邏輯：只要是第四拍就觸發重攻擊
+        if (beatInCycle == BeatManager.Instance.beatsPerMeasure)
         {
             chosenSkill = charData.HeavyAttack;
             attackPrefab = chosenSkill?.SkillPrefab;
-            comboData.comboCount = 0;
+            Debug.Log($"[戰士重攻擊] 第 {beatInCycle} 拍觸發重攻擊！");
         }
         else
         {
-            int phase = comboData.currentPhase;
-            int attackIndex = Mathf.Clamp(phase - 1, 0, charData.NormalAttacks.Count - 1);
-            chosenSkill = charData.NormalAttacks[attackIndex];
+            // 依拍數循環普通攻擊（例如第1~3拍用一般攻擊循環）
+            int phase = ((beatInCycle - 1) % 3);
+            chosenSkill = charData.NormalAttacks[phase];
             attackPrefab = chosenSkill?.SkillPrefab;
-            comboData.currentPhase = (phase % 3) + 1;
-            comboData.comboCount++;
+            Debug.Log($"[戰士普攻] 第 {beatInCycle} 拍，使用第 {phase + 1} 階普攻。");
         }
 
         if (attackPrefab == null && meleeVfxPrefab != null)
             attackPrefab = meleeVfxPrefab;
 
+        // 前進揮擊
         yield return Dash(actor, origin, targetPoint, dashDuration);
 
         if (attackPrefab != null)
@@ -258,13 +254,14 @@ public class BattleManager : MonoBehaviour
                 sword.attacker = attacker;
                 sword.target = target;
                 sword.isPerfect = perfect;
+                sword.isHeavyAttack = (beatInCycle == BeatManager.Instance.beatsPerMeasure);
             }
         }
 
-        comboData.lastAttackTime = Time.time;
         yield return new WaitForSeconds(dashStayDuration);
         yield return Dash(actor, targetPoint, origin, dashDuration);
     }
+
 
     // --------------------------------------------------
     // 格檔
