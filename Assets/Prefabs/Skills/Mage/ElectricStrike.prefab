@@ -5110,7 +5110,7 @@ MonoBehaviour:
   explosionPrefab: {fileID: 8714966469225416086, guid: b262996d3dc43634485ee3251a0d0107, type: 3}
   travelTime: 0.05
   isPerfect: 0
-  isHeavyAttack: 0
+  isHeavyAttack: 1
   damage: 0
   missTextPrefab: {fileID: 0}
   uiCanvas: {fileID: 0}

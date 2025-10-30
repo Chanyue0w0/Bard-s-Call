@@ -41,8 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6865955657323845612}
   - component: {fileID: 1441404310817688979}
-  - component: {fileID: 4564702581680521582}
   - component: {fileID: 5761249044116123709}
+  - component: {fileID: -9000765520436358034}
   m_Layer: 7
   m_Name: Mage
   m_TagString: Hero
@@ -60,7 +60,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.51, y: -3.6599998, z: 0}
-  m_LocalScale: {x: 0.22, y: 0.22, z: 0.22}
+  m_LocalScale: {x: 0.14767401, y: 0.14767401, z: 0.14767401}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 607836092422809888}
@@ -107,9 +107,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 2282112de72dc6c48ae50f2db42b319f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d375d862653352a45b19ba09cfc73c55, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 9.36, y: 12.46}
@@ -118,22 +118,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4564702581680521582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8859153221285552973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseScale: {x: 0.22, y: 0.22, z: 0.22}
-  peakMultiplier: 1.3
-  holdDuration: 0.05
-  returnSpeed: 8
 --- !u!114 &5761249044116123709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,3 +152,19 @@ MonoBehaviour:
     FixedDamage: 0
   Skills: []
   ShieldEffectPrefab: {fileID: 7125099269266668700, guid: 3797ab3f5e2aa6148869788f506a8635, type: 3}
+--- !u!114 &-9000765520436358034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8859153221285552973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseScale: {x: 0.147674, y: 0.147674, z: 0.147674}
+  peakMultiplier: 1.2
+  holdDuration: 0.05
+  returnSpeed: 8

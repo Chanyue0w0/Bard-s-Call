@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8158479552114564748}
   - component: {fileID: 6347402537250545832}
-  - component: {fileID: 1976277859061991352}
+  - component: {fileID: 5894668438685926040}
   m_Layer: 7
   m_Name: Priest
   m_TagString: Hero
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1976277859061991352
+--- !u!114 &5894668438685926040
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseScale: {x: 0.22, y: 0.22, z: 0.22}
-  peakMultiplier: 1.3
+  peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
 --- !u!1 &8311510172526210414

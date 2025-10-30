@@ -131,6 +131,10 @@ public class BattleTeamManager : MonoBehaviour
         {
             if (slot?.Actor == null) continue;
 
+            // 只在職業為 Mage 時生成 HeavyAttackBar
+            if (slot.ClassType != BattleManager.UnitClass.Mage)
+                continue;
+
             var combo = slot.Actor.GetComponent<CharacterComboState>();
             if (combo == null) combo = slot.Actor.AddComponent<CharacterComboState>();
 
@@ -143,5 +147,6 @@ public class BattleTeamManager : MonoBehaviour
             if (bar != null)
                 bar.Init(combo, headPoint, Camera.main);
         }
+
     }
 }
