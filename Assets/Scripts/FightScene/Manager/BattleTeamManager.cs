@@ -107,6 +107,14 @@ public class BattleTeamManager : MonoBehaviour
         }
     }
 
+    public void SetupEnemyTeam()
+    {
+        SetupTeam(EnemyTeamInfo, enemyPositions);
+
+        if (BattleManager.Instance != null)
+            BattleManager.Instance.LoadTeamData(this);
+    }
+
     private void CreateHealthBar(BattleManager.TeamSlotInfo slot)
     {
         if (slot.Actor == null || healthBarPrefab == null || uiCanvas == null)
