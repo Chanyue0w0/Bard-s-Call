@@ -324,17 +324,21 @@ public class BattleManager : MonoBehaviour
             // === 普通攻擊：0 傷害，獲得一層充能 ===
             Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
 
-            int phase = ((beatInCycle - 1) % 3);
-            // 僅當已有充能時才生成普攻特效
-            if (chargeStacks > 0 && attacker.NormalAttackPrefabs != null && attacker.NormalAttackPrefabs.Length > 0)
+            // 生成充能亮光特效（無論是否已有層）
+            if (charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
             {
-                var prefab = attacker.NormalAttackPrefabs[0];
-                if (prefab != null)
-                    Instantiate(prefab, actor.position, Quaternion.identity);
+                var chargeEffect = charData.NormalAttacks[0].SkillPrefab;
+                if (chargeEffect != null)
+                {
+                    Vector3 spawnPos = actor.position;
+                    Instantiate(chargeEffect, spawnPos, Quaternion.identity);
+                    Debug.Log($"[法師普攻特效] {attacker.UnitName} 生成亮光特效於 {spawnPos}");
+                }
             }
 
             // 通知 BattleEffectManager 處理充能層與特效
             BattleEffectManager.Instance.AddChargeStack(attacker);
+
         }
 
         yield return null;

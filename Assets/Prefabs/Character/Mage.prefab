@@ -155,8 +155,8 @@ MonoBehaviour:
   OriginAtk: 100
   Atk: 100
   NormalAttacks:
-  - SkillName: ElectricCharge
-    SkillPrefab: {fileID: 6655016724648331359, guid: ba2e95d09b1644b408a54b98b37746fa, type: 3}
+  - SkillName: ElectricChargeGlow
+    SkillPrefab: {fileID: 4941075895699883318, guid: 18c1da0903a688f47af3eb8e8abcb843, type: 3}
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0
