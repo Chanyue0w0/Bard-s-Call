@@ -9,7 +9,7 @@ public class FireBallSkill : MonoBehaviour
     public float travelTime = 0.05f;
     public bool isPerfect;
     public bool isHeavyAttack;
-
+    public int damage = 0;
 
     [Header("UI 設定")]
     public GameObject missTextPrefab;   // UI 上的 MissText prefab
@@ -59,7 +59,8 @@ public class FireBallSkill : MonoBehaviour
                 {
                     Instantiate(explosionPrefab, targetPos, Quaternion.identity);
                 }
-                BattleEffectManager.Instance.OnHit(attacker, target, true, isHeavyAttack);
+                BattleEffectManager.Instance.OnHit(attacker, target, true, isHeavyAttack, damage);
+
             }
             else
             {
@@ -74,7 +75,8 @@ public class FireBallSkill : MonoBehaviour
                 {
                     Instantiate(explosionPrefab, targetPos, Quaternion.identity);
                 }
-                BattleEffectManager.Instance.OnHit(attacker, target, false, isHeavyAttack);
+                BattleEffectManager.Instance.OnHit(attacker, target, false, isHeavyAttack, damage);
+
             }
         }
 

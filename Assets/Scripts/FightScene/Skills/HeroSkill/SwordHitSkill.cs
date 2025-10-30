@@ -8,6 +8,7 @@ public class SwordHitSkill : MonoBehaviour
     public float lifeTime = 0.3f;
     public bool isPerfect;
     public bool isHeavyAttack;
+    public int damage = 0;
 
     [Header("UI ³]©w")]
     public GameObject missTextPrefab;   // MissText UI Prefab
@@ -39,7 +40,8 @@ public class SwordHitSkill : MonoBehaviour
                     Instantiate(explosionPrefab, transform.position, Quaternion.identity);
                 }
 
-                BattleEffectManager.Instance.OnHit(attacker, target, true, isHeavyAttack);
+                BattleEffectManager.Instance.OnHit(attacker, target, true, isHeavyAttack, damage);
+
             }
             else
             {
@@ -54,7 +56,8 @@ public class SwordHitSkill : MonoBehaviour
                 {
                     Instantiate(explosionPrefab, transform.position, Quaternion.identity);
                 }
-                BattleEffectManager.Instance.OnHit(attacker, target, false, isHeavyAttack);
+                BattleEffectManager.Instance.OnHit(attacker, target, false, isHeavyAttack, damage);
+
             }
 
             Destroy(gameObject, lifeTime);

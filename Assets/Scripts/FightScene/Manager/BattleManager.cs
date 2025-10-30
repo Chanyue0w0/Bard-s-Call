@@ -277,7 +277,15 @@ public class BattleManager : MonoBehaviour
         // === 第四拍：釋放重攻擊 ===
         if (beatInCycle == BeatManager.Instance.beatsPerMeasure)
         {
+            if (chargeStacks <= 0)
+            {
+                Debug.Log("[法師重攻擊] 無充能層，攻擊無效。");
+                yield break;
+            }
+
             Debug.Log($"[法師重攻擊] 施放重攻擊，消耗 {chargeStacks} 層充電。");
+            BattleEffectManager.Instance.ResetChargeStacks(attacker); // 清除充電層與特效
+
 
             // 生成重攻擊特效
             if (charData.HeavyAttack != null && charData.HeavyAttack.SkillPrefab != null)
@@ -290,6 +298,7 @@ public class BattleManager : MonoBehaviour
                     skill.target = target;
                     skill.isPerfect = perfect;
                     skill.isHeavyAttack = true;
+                    skill.damage = chargeStacks * 30;
                 }
             }
 
@@ -316,15 +325,15 @@ public class BattleManager : MonoBehaviour
             Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
 
             int phase = ((beatInCycle - 1) % 3);
-            if (charData.NormalAttacks != null && charData.NormalAttacks.Count > phase)
+            // 僅當已有充能時才生成普攻特效
+            if (chargeStacks > 0 && attacker.NormalAttackPrefabs != null && attacker.NormalAttackPrefabs.Length > 0)
             {
-                var prefab = charData.NormalAttacks[phase]?.SkillPrefab;
+                var prefab = attacker.NormalAttackPrefabs[0];
                 if (prefab != null)
-                {
                     Instantiate(prefab, actor.position, Quaternion.identity);
-                }
             }
 
+            // 通知 BattleEffectManager 處理充能層與特效
             BattleEffectManager.Instance.AddChargeStack(attacker);
         }
 
@@ -530,58 +539,58 @@ public class BattleManager : MonoBehaviour
         if (deadSlot != null)
             deadSlot.Actor = null;
 
-        ShiftEnemiesForward();
+        //ShiftEnemiesForward();
     }
 
-    private void ShiftEnemiesForward()
-    {
-        StartCoroutine(ShiftEnemiesForwardRoutine());
-    }
+    //private void ShiftEnemiesForward()
+    //{
+    //    StartCoroutine(ShiftEnemiesForwardRoutine());
+    //}
 
-    private IEnumerator ShiftEnemiesForwardRoutine()
-    {
-        bool moved = false;
+    //private IEnumerator ShiftEnemiesForwardRoutine()
+    //{
+    //    bool moved = false;
 
-        for (int i = 1; i < EnemyTeamInfo.Length; i++)
-        {
-            if ((EnemyTeamInfo[i - 1] == null || EnemyTeamInfo[i - 1].Actor == null) &&
-                (EnemyTeamInfo[i]?.Actor != null))
-            {
-                var enemy = EnemyTeamInfo[i].Actor;
-                if (enemy == null) continue;
+    //    for (int i = 1; i < EnemyTeamInfo.Length; i++)
+    //    {
+    //        if ((EnemyTeamInfo[i - 1] == null || EnemyTeamInfo[i - 1].Actor == null) &&
+    //            (EnemyTeamInfo[i]?.Actor != null))
+    //        {
+    //            var enemy = EnemyTeamInfo[i].Actor;
+    //            if (enemy == null) continue;
 
-                Vector3 targetPos = enemyPositions[i - 1].position;
+    //            Vector3 targetPos = enemyPositions[i - 1].position;
 
-                var enemyBase = enemy.GetComponent<EnemyBase>();
-                if (enemyBase != null) enemyBase.SetForceMove(true);
+    //            var enemyBase = enemy.GetComponent<EnemyBase>();
+    //            if (enemyBase != null) enemyBase.SetForceMove(true);
 
-                float t = 0f;
-                Vector3 start = enemy.transform.position;
-                float moveTime = 0.25f;
-                while (t < 1f)
-                {
-                    if (enemy == null) yield break;
-                    t += Time.deltaTime / moveTime;
-                    enemy.transform.position = Vector3.Lerp(start, targetPos, t);
-                    yield return null;
-                }
+    //            float t = 0f;
+    //            Vector3 start = enemy.transform.position;
+    //            float moveTime = 0.25f;
+    //            while (t < 1f)
+    //            {
+    //                if (enemy == null) yield break;
+    //                t += Time.deltaTime / moveTime;
+    //                enemy.transform.position = Vector3.Lerp(start, targetPos, t);
+    //                yield return null;
+    //            }
 
-                EnemyTeamInfo[i - 1] = EnemyTeamInfo[i];
-                EnemyTeamInfo[i - 1].SlotTransform = enemyPositions[i - 1];
-                EnemyTeamInfo[i] = null;
+    //            EnemyTeamInfo[i - 1] = EnemyTeamInfo[i];
+    //            EnemyTeamInfo[i - 1].SlotTransform = enemyPositions[i - 1];
+    //            EnemyTeamInfo[i] = null;
 
-                if (enemyBase != null)
-                {
-                    enemyBase.SetForceMove(false);
-                    enemyBase.SendMessage("RefreshBasePosition", SendMessageOptions.DontRequireReceiver);
-                }
+    //            if (enemyBase != null)
+    //            {
+    //                enemyBase.SetForceMove(false);
+    //                enemyBase.SendMessage("RefreshBasePosition", SendMessageOptions.DontRequireReceiver);
+    //            }
 
-                moved = true;
-                yield return new WaitForSeconds(0.05f);
-            }
-        }
+    //            moved = true;
+    //            yield return new WaitForSeconds(0.05f);
+    //        }
+    //    }
 
-        if (moved)
-            Debug.Log("敵人整隊前推完成");
-    }
+    //    if (moved)
+    //        Debug.Log("敵人整隊前推完成");
+    //}
 }

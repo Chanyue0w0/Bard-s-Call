@@ -30,9 +30,21 @@ public class BattleEffectManager : MonoBehaviour
     public bool isHeavyAttack = false;
 
     // -------------------------
-    // 法師充電 Buff 管理
+    // 法師充電特效管理
+    // -------------------------
+    [Header("Mage 充電特效")]
+    public GameObject mageChargeVfxPrefab; // 指定法師身上的充電特效Prefab
+    private Dictionary<BattleManager.TeamSlotInfo, GameObject> mageChargeEffects = new();
+    // -------------------------
+    // 法師充電層數紀錄
     // -------------------------
     private Dictionary<BattleManager.TeamSlotInfo, int> mageChargeStacks = new Dictionary<BattleManager.TeamSlotInfo, int>();
+
+    public int GetChargeStacks(BattleManager.TeamSlotInfo mage)
+    {
+        if (mage == null) return 0;
+        return mageChargeStacks.ContainsKey(mage) ? mageChargeStacks[mage] : 0;
+    }
 
     public void AddChargeStack(BattleManager.TeamSlotInfo mage)
     {
@@ -41,23 +53,33 @@ public class BattleEffectManager : MonoBehaviour
             mageChargeStacks[mage] = 0;
 
         mageChargeStacks[mage]++;
-        Debug.Log($"【充電增加】{mage.UnitName} 目前充電層數 = {mageChargeStacks[mage]}");
+
+        // 若首次充能，生成特效
+        if (!mageChargeEffects.ContainsKey(mage) && mage.Actor != null && mageChargeVfxPrefab != null)
+        {
+            var effect = Instantiate(mageChargeVfxPrefab, mage.Actor.transform.position, Quaternion.identity, mage.Actor.transform);
+            mageChargeEffects[mage] = effect;
+        }
+
+        Debug.Log($"【充電增加】{mage.UnitName} 現在 {mageChargeStacks[mage]} 層。");
     }
 
     public void ResetChargeStacks(BattleManager.TeamSlotInfo mage)
     {
         if (mage == null) return;
-        if (mageChargeStacks.ContainsKey(mage))
-        {
-            mageChargeStacks[mage] = 0;
-            Debug.Log($"【充電重置】{mage.UnitName} 的充電層數歸零");
-        }
-    }
 
-    public int GetChargeStacks(BattleManager.TeamSlotInfo mage)
-    {
-        if (mage == null) return 0;
-        return mageChargeStacks.ContainsKey(mage) ? mageChargeStacks[mage] : 0;
+        // 歸零層數
+        if (mageChargeStacks.ContainsKey(mage))
+            mageChargeStacks[mage] = 0;
+
+        // 移除特效
+        if (mageChargeEffects.ContainsKey(mage) && mageChargeEffects[mage] != null)
+        {
+            Destroy(mageChargeEffects[mage]);
+            mageChargeEffects.Remove(mage);
+        }
+
+        Debug.Log($"【充電清除】{mage.UnitName} 充電歸零並移除特效。");
     }
 
 
@@ -124,7 +146,7 @@ public class BattleEffectManager : MonoBehaviour
     // =======================
     // 傷害判定（含重攻擊判定與 ShieldGoblin 破防邏輯）
     // =======================
-    public void OnHit(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, bool isPerfect, bool isHeavyAttack = false)
+    public void OnHit(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, bool isPerfect, bool isHeavyAttack = false, int overrideDamage = -1)
     {
         if (attacker == null || target == null) return;
 
@@ -187,7 +209,10 @@ public class BattleEffectManager : MonoBehaviour
         // 一般傷害計算（保留原邏輯）
         // =======================================
         float multiplier = isPerfect ? 1f : 0f;
-        int finalDamage = Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * multiplier));
+        int finalDamage = (overrideDamage >= 0)
+            ? overrideDamage
+            : Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * (isPerfect ? 1f : 0f)));
+
 
         target.HP -= finalDamage;
         if (target.HP < 0) target.HP = 0;
@@ -228,13 +253,13 @@ public class BattleEffectManager : MonoBehaviour
     {
         Debug.Log($"{target.UnitName} 已被擊敗！");
 
-        //// 確認是否為敵人
-        //int enemyIndex = System.Array.FindIndex(BattleManager.Instance.EnemyTeamInfo, t => t == target);
-        //if (enemyIndex >= 0)
-        //{
-        //    BattleManager.Instance.OnEnemyDeath(enemyIndex);
-        //    return;
-        //}
+        // 確認是否為敵人
+        int enemyIndex = System.Array.FindIndex(BattleManager.Instance.EnemyTeamInfo, t => t == target);
+        if (enemyIndex >= 0)
+        {
+            BattleManager.Instance.OnEnemyDeath(enemyIndex);
+            return;
+        }
 
         // 若為我方角色死亡
         int allyIndex = System.Array.FindIndex(BattleManager.Instance.CTeamInfo, t => t == target);
