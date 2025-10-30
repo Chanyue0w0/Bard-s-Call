@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BattleEffectManager : MonoBehaviour
 {
@@ -27,6 +28,38 @@ public class BattleEffectManager : MonoBehaviour
     private Coroutine[] blockCoroutines = new Coroutine[3];
 
     public bool isHeavyAttack = false;
+
+    // -------------------------
+    // 法師充電 Buff 管理
+    // -------------------------
+    private Dictionary<BattleManager.TeamSlotInfo, int> mageChargeStacks = new Dictionary<BattleManager.TeamSlotInfo, int>();
+
+    public void AddChargeStack(BattleManager.TeamSlotInfo mage)
+    {
+        if (mage == null) return;
+        if (!mageChargeStacks.ContainsKey(mage))
+            mageChargeStacks[mage] = 0;
+
+        mageChargeStacks[mage]++;
+        Debug.Log($"【充電增加】{mage.UnitName} 目前充電層數 = {mageChargeStacks[mage]}");
+    }
+
+    public void ResetChargeStacks(BattleManager.TeamSlotInfo mage)
+    {
+        if (mage == null) return;
+        if (mageChargeStacks.ContainsKey(mage))
+        {
+            mageChargeStacks[mage] = 0;
+            Debug.Log($"【充電重置】{mage.UnitName} 的充電層數歸零");
+        }
+    }
+
+    public int GetChargeStacks(BattleManager.TeamSlotInfo mage)
+    {
+        if (mage == null) return 0;
+        return mageChargeStacks.ContainsKey(mage) ? mageChargeStacks[mage] : 0;
+    }
+
 
     public void ActivateBlock(int index, float duration, CharacterData charData, GameObject actor)
     {
@@ -169,6 +202,18 @@ public class BattleEffectManager : MonoBehaviour
         var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
         if (hb != null) hb.ForceUpdate();
 
+        // 玩家方或敵方受傷時 → 若是法師則清除充電層
+        if (target.Actor != null)
+        {
+            var data = target.Actor.GetComponent<CharacterData>();
+            if (data != null && data.ClassType == BattleManager.UnitClass.Mage)
+            {
+                ResetChargeStacks(target);
+                Debug.Log($"【充電中斷】{target.UnitName} 受到攻擊，充電歸零");
+            }
+        }
+
+
         // =======================================
         // 檢查死亡
         // =======================================
@@ -183,13 +228,13 @@ public class BattleEffectManager : MonoBehaviour
     {
         Debug.Log($"{target.UnitName} 已被擊敗！");
 
-        // 確認是否為敵人
-        int enemyIndex = System.Array.FindIndex(BattleManager.Instance.EnemyTeamInfo, t => t == target);
-        if (enemyIndex >= 0)
-        {
-            BattleManager.Instance.OnEnemyDeath(enemyIndex);
-            return;
-        }
+        //// 確認是否為敵人
+        //int enemyIndex = System.Array.FindIndex(BattleManager.Instance.EnemyTeamInfo, t => t == target);
+        //if (enemyIndex >= 0)
+        //{
+        //    BattleManager.Instance.OnEnemyDeath(enemyIndex);
+        //    return;
+        //}
 
         // 若為我方角色死亡
         int allyIndex = System.Array.FindIndex(BattleManager.Instance.CTeamInfo, t => t == target);

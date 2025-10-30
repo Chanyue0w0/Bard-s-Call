@@ -203,8 +203,11 @@ public class BattleManager : MonoBehaviour
 
         if (attacker.ClassType == UnitClass.Warrior)
             StartCoroutine(HandleWarriorAttack(attacker, target, beatInCycle, perfect));
+        else if (attacker.ClassType == UnitClass.Mage)
+            StartCoroutine(HandleMageAttack(attacker, target, beatInCycle, perfect));
         else
             StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
+
     }
 
     private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
@@ -260,6 +263,72 @@ public class BattleManager : MonoBehaviour
 
         yield return new WaitForSeconds(dashStayDuration);
         yield return Dash(actor, targetPoint, origin, dashDuration);
+    }
+
+    private IEnumerator HandleMageAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
+    {
+        var actor = attacker.Actor.transform;
+        var charData = attacker.Actor.GetComponent<CharacterData>();
+        if (charData == null) yield break;
+
+        // 取得目前充電層數
+        int chargeStacks = BattleEffectManager.Instance.GetChargeStacks(attacker);
+
+        // === 第四拍：釋放重攻擊 ===
+        if (beatInCycle == BeatManager.Instance.beatsPerMeasure)
+        {
+            Debug.Log($"[法師重攻擊] 施放重攻擊，消耗 {chargeStacks} 層充電。");
+
+            // 生成重攻擊特效
+            if (charData.HeavyAttack != null && charData.HeavyAttack.SkillPrefab != null)
+            {
+                var heavy = Instantiate(charData.HeavyAttack.SkillPrefab, target.SlotTransform.position, Quaternion.identity);
+                var skill = heavy.GetComponent<FireBallSkill>();
+                if (skill != null)
+                {
+                    skill.attacker = attacker;
+                    skill.target = target;
+                    skill.isPerfect = perfect;
+                    skill.isHeavyAttack = true;
+                }
+            }
+
+            // 計算傷害 = chargeStacks * 30
+            int damage = chargeStacks * 30;
+            target.HP -= damage;
+            if (target.HP < 0) target.HP = 0;
+
+            Debug.Log($"[法師重攻擊] {attacker.UnitName} 對 {target.UnitName} 造成 {damage} 傷害（充電層：{chargeStacks}）");
+
+            // 重置充電層
+            BattleEffectManager.Instance.ResetChargeStacks(attacker);
+
+            // 更新血條
+            var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
+            if (hb != null) hb.ForceUpdate();
+
+            //if (target.HP <= 0)
+            //    BattleEffectManager.Instance.HandleUnitDefeated(target);
+        }
+        else
+        {
+            // === 普通攻擊：0 傷害，獲得一層充能 ===
+            Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
+
+            int phase = ((beatInCycle - 1) % 3);
+            if (charData.NormalAttacks != null && charData.NormalAttacks.Count > phase)
+            {
+                var prefab = charData.NormalAttacks[phase]?.SkillPrefab;
+                if (prefab != null)
+                {
+                    Instantiate(prefab, actor.position, Quaternion.identity);
+                }
+            }
+
+            BattleEffectManager.Instance.AddChargeStack(attacker);
+        }
+
+        yield return null;
     }
 
 

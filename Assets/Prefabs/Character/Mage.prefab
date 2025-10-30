@@ -155,16 +155,16 @@ MonoBehaviour:
   OriginAtk: 100
   Atk: 100
   NormalAttacks:
-  - SkillName: FireBall
-    SkillPrefab: {fileID: 2864930942258562462, guid: 4ca34a493ab195648a5f9c57a9b3266b, type: 3}
+  - SkillName: ElectricCharge
+    SkillPrefab: {fileID: 6655016724648331359, guid: ba2e95d09b1644b408a54b98b37746fa, type: 3}
     MPCost: 0
-    DamageMultiplier: 1
+    DamageMultiplier: 0
     FixedDamage: 0
   HeavyAttack:
-    SkillName: 
-    SkillPrefab: {fileID: 0}
+    SkillName: ElectricExplosion
+    SkillPrefab: {fileID: 1352887301582631612, guid: 912b44e80aaba76429c6ec2b72925062, type: 3}
     MPCost: 0
-    DamageMultiplier: 1
+    DamageMultiplier: 0
     FixedDamage: 0
   Skills: []
   ShieldEffectPrefab: {fileID: 7125099269266668700, guid: 3797ab3f5e2aa6148869788f506a8635, type: 3}
