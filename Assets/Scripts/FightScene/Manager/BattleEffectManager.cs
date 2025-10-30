@@ -53,15 +53,40 @@ public class BattleEffectManager : MonoBehaviour
             mageChargeStacks[mage] = 0;
 
         mageChargeStacks[mage]++;
+        // 限制上限為6層
+        mageChargeStacks[mage] = Mathf.Min(mageChargeStacks[mage], 6);
 
         // 若首次充能，生成特效
-        if (!mageChargeEffects.ContainsKey(mage) && mage.Actor != null && mageChargeVfxPrefab != null)
+        if (mage.Actor != null && mageChargeVfxPrefab != null)
         {
-            var effect = Instantiate(mageChargeVfxPrefab, mage.Actor.transform.position, Quaternion.identity, mage.Actor.transform);
-            mageChargeEffects[mage] = effect;
+            // 若特效不存在或已被銷毀，重新生成
+            if (!mageChargeEffects.ContainsKey(mage) || mageChargeEffects[mage] == null)
+            {
+                Vector3 spawnPos = mage.Actor.transform.position;
+                var effect = Instantiate(mageChargeVfxPrefab, spawnPos, Quaternion.identity);
+                mageChargeEffects[mage] = effect;
+                Debug.Log($"【充電特效生成】於 {mage.UnitName} 位置 {spawnPos}");
+            }
         }
 
+        // 更新 HeavyAttackBarUI 顯示
+        var bar = mage.Actor.GetComponentInChildren<HeavyAttackBarUI>();
+        if (bar != null)
+        {
+            bar.UpdateComboCount(mageChargeStacks[mage]);
+        }
+
+        // 同步 comboState，讓 UI 的 Update() 下一幀維持亮燈
+        var combo = mage.Actor.GetComponent<CharacterComboState>();
+        if (combo != null)
+        {
+            combo.comboCount = mageChargeStacks[mage];
+            combo.currentPhase = mageChargeStacks[mage]; // 若你 UI 依 phase 顯示可一併更新
+        }
+
+
         Debug.Log($"【充電增加】{mage.UnitName} 現在 {mageChargeStacks[mage]} 層。");
+
     }
 
     public void ResetChargeStacks(BattleManager.TeamSlotInfo mage)
@@ -78,6 +103,23 @@ public class BattleEffectManager : MonoBehaviour
             Destroy(mageChargeEffects[mage]);
             mageChargeEffects.Remove(mage);
         }
+
+        // 更新 HeavyAttackBarUI 顯示歸零
+        if (mage.Actor != null)
+        {
+            var bar = mage.Actor.GetComponentInChildren<HeavyAttackBarUI>();
+            if (bar != null)
+                bar.UpdateComboCount(0);
+
+            // 同步 comboState，確保下一幀不被 Update() 蓋回亮燈
+            var combo = mage.Actor.GetComponent<CharacterComboState>();
+            if (combo != null)
+            {
+                combo.comboCount = 0;
+                combo.currentPhase = 0;
+            }
+        }
+
 
         Debug.Log($"【充電清除】{mage.UnitName} 充電歸零並移除特效。");
     }

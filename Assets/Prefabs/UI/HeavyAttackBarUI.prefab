@@ -48,10 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4001501b7e7f0f942804712d865463e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCount: 3
-  swordIconPrefab: {fileID: 2764206778256000266, guid: 8c4dea82d5c4af8479d298ed678a232d, type: 3}
-  iconSpacing: 50
+  maxCount: 6
+  swordIconPrefab: {fileID: 2764206778256000266, guid: 191ab60d5b0955c49b93a2a13b4bc51e, type: 3}
+  iconSpacing: 40
   activeColor: {r: 1, g: 1, b: 1, a: 1}
   inactiveColor: {r: 1, g: 1, b: 1, a: 0.25}
   followTarget: 1
-  screenOffset: {x: -30, y: 50}
+  screenOffset: {x: -80, y: 30}
