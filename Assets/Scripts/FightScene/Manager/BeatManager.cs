@@ -35,6 +35,12 @@ public class BeatManager : MonoBehaviour
     public RectTransform leftSpawnPoint;
     public RectTransform rightSpawnPoint;
 
+    [Header("Beat UI 顏色設定")]
+    public Color normalBeatColor = Color.white;
+    // 金黃色（RGB 255,215,0）
+    public Color heavyBeatColor = new Color32(255, 215, 0, 255);
+
+
     private int lastSpawnBeatIndex = -1;
 
     [Header("拍數設定")]
@@ -121,11 +127,17 @@ public class BeatManager : MonoBehaviour
 
         if (timeToNextBeat <= adjustedTravelTime && nextBeatIndex != lastSpawnBeatIndex)
         {
+            //if (leftSpawnPoint && beatPrefabLeft)
+            //    SpawnBeatUI(beatPrefabLeft, leftSpawnPoint);
+
+            //if (rightSpawnPoint && beatPrefabRight)
+            //    SpawnBeatUI(beatPrefabRight, rightSpawnPoint);
             if (leftSpawnPoint && beatPrefabLeft)
-                SpawnBeatUI(beatPrefabLeft, leftSpawnPoint);
+                SpawnBeatUI(beatPrefabLeft, leftSpawnPoint, nextBeatIndex);
 
             if (rightSpawnPoint && beatPrefabRight)
-                SpawnBeatUI(beatPrefabRight, rightSpawnPoint);
+                SpawnBeatUI(beatPrefabRight, rightSpawnPoint, nextBeatIndex);
+
 
             lastSpawnBeatIndex = nextBeatIndex;
 
@@ -186,7 +198,7 @@ public class BeatManager : MonoBehaviour
         OnBeat?.Invoke();
     }
 
-    private void SpawnBeatUI(GameObject prefab, RectTransform spawnPoint)
+    private void SpawnBeatUI(GameObject prefab, RectTransform spawnPoint, int nextBeatIndex)
     {
         if (prefab == null || hitPoint == null || spawnPoint == null)
             return;
@@ -202,15 +214,15 @@ public class BeatManager : MonoBehaviour
         BeatUI beatUI = beatObj.GetComponent<BeatUI>() ?? beatObj.AddComponent<BeatUI>();
         beatUI.InitFly(spawnPoint, hitPoint, beatTravelTime);
 
-        // ★ 顯示第4拍為紅色
-        //int nextBeatInCycle = ((lastSpawnBeatIndex) % beatsPerMeasure) + 1;
-        //if (nextBeatInCycle == beatsPerMeasure)
-        //{
-        //    var img = beatObj.GetComponent<Image>();
-        //    if (img != null)
-        //        img.color = Color.red;
-        //}
+        // 依拍數決定顏色：每小節的第 4 拍改為金黃色，其餘用一般色
+        int nextBeatInCycle = ((nextBeatIndex - 1) % beatsPerMeasure) + 1;
+        var img = beatObj.GetComponent<Image>() ?? beatObj.GetComponentInChildren<Image>(true);
+        if (img != null)
+        {
+            img.color = (nextBeatInCycle == beatsPerMeasure) ? heavyBeatColor : normalBeatColor;
+        }
     }
+
 }
 
 [System.Serializable]
