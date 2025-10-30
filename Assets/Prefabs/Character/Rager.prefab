@@ -143,13 +143,13 @@ MonoBehaviour:
     SkillPrefab: {fileID: 2864930942258562462, guid: 4ca34a493ab195648a5f9c57a9b3266b, type: 3}
     MPCost: 0
     DamageMultiplier: 1
-    FixedDamage: 0
+    FixedDamage: 20
   HeavyAttack:
-    SkillName: 
-    SkillPrefab: {fileID: 0}
+    SkillName: SnipeArrow
+    SkillPrefab: {fileID: 2864930942258562462, guid: 4ca34a493ab195648a5f9c57a9b3266b, type: 3}
     MPCost: 0
     DamageMultiplier: 1
-    FixedDamage: 0
+    FixedDamage: 50
   Skills: []
   ShieldEffectPrefab: {fileID: 7125099269266668700, guid: 3797ab3f5e2aa6148869788f506a8635, type: 3}
 --- !u!114 &4207006912419618616

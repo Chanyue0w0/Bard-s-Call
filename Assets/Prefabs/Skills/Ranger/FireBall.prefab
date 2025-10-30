@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2003924344844553847}
   - component: {fileID: 4502525186398058665}
   - component: {fileID: 6222711399343778694}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FireBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attacker:
+    PrefabToSpawn: {fileID: 0}
     UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 0}
@@ -57,9 +58,13 @@ MonoBehaviour:
     MP: 0
     OriginAtk: 10
     Atk: 10
-    SkillName: Basic
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
     AssignedKeyIndex: 0
   target:
+    PrefabToSpawn: {fileID: 0}
     UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 0}
@@ -70,11 +75,16 @@ MonoBehaviour:
     MP: 0
     OriginAtk: 10
     Atk: 10
-    SkillName: Basic
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
     AssignedKeyIndex: 0
   explosionPrefab: {fileID: 893806690187975615, guid: da0691a27937e9443a41483ab99209fb, type: 3}
   travelTime: 0.05
   isPerfect: 0
+  isHeavyAttack: 0
+  damage: 0
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
   uiCanvas: {fileID: 0}
 --- !u!58 &6222711399343778694
@@ -123,7 +133,7 @@ GameObject:
   - component: {fileID: 4860159617093972079}
   - component: {fileID: 3082054267474982923}
   - component: {fileID: 792144334684003563}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CFXR3 Fire Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4923,7 +4933,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4967,7 +4977,7 @@ GameObject:
   - component: {fileID: 5723136018598396717}
   - component: {fileID: 5299530295739496179}
   - component: {fileID: 8894810027976623807}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9630,7 +9640,7 @@ GameObject:
   - component: {fileID: 4893844172679193188}
   - component: {fileID: 6206411001947531444}
   - component: {fileID: 5564354450097483429}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ember
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14428,7 +14438,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -14473,7 +14483,7 @@ GameObject:
   - component: {fileID: 9036925744810552814}
   - component: {fileID: 4207080580230434504}
   - component: {fileID: 6281676140852417725}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Fireball A + Fire Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19274,7 +19284,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 3
@@ -19436,7 +19446,7 @@ GameObject:
   - component: {fileID: 8856837710397071242}
   - component: {fileID: 7917231054229755364}
   - component: {fileID: 7216120184531296274}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ember
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24234,7 +24244,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -24277,7 +24287,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7632257787442341915}
   - component: {fileID: 1387055245588614495}
-  m_Layer: 0
+  - component: {fileID: 491465161631529111}
+  m_Layer: 6
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24361,3 +24372,26 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &491465161631529111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8707918775467235162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0

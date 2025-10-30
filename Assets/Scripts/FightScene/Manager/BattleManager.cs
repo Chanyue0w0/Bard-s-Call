@@ -205,8 +205,11 @@ public class BattleManager : MonoBehaviour
             StartCoroutine(HandleWarriorAttack(attacker, target, beatInCycle, perfect));
         else if (attacker.ClassType == UnitClass.Mage)
             StartCoroutine(HandleMageAttack(attacker, target, beatInCycle, perfect));
+        else if (attacker.ClassType == UnitClass.Ranger)
+            StartCoroutine(HandleRangerAttack(attacker, beatInCycle, perfect));
         else
             StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
+
 
     }
 
@@ -343,7 +346,66 @@ public class BattleManager : MonoBehaviour
 
         yield return null;
     }
+    // --------------------------------------------------
+    // Ranger 攻擊邏輯
+    // --------------------------------------------------
+    private IEnumerator HandleRangerAttack(TeamSlotInfo attacker, int beatInCycle, bool perfect)
+    {
+        var actor = attacker.Actor.transform;
+        var charData = attacker.Actor.GetComponent<CharacterData>();
+        if (charData == null) yield break;
 
+        // 取得攻擊Prefab（弓箭或投射物）
+        GameObject arrowPrefab = null;
+        if (charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
+            arrowPrefab = charData.NormalAttacks[0].SkillPrefab;
+
+        if (arrowPrefab == null)
+        {
+            Debug.LogWarning($"[Ranger] {attacker.UnitName} 沒有設定攻擊 Prefab。");
+            yield break;
+        }
+
+        // 判定攻擊目標
+        BattleManager.TeamSlotInfo target = null;
+        bool isHeavy = false;
+        if (beatInCycle == BeatManager.Instance.beatsPerMeasure)
+        {
+            target = FindLastValidEnemy();
+            isHeavy = true;
+            Debug.Log($"[弓箭手重攻擊] {attacker.UnitName} 攻擊最後一位敵人 {target?.UnitName}");
+        }
+        else
+        {
+            target = FindNextValidEnemy(0);
+            Debug.Log($"[弓箭手普攻] {attacker.UnitName} 攻擊首位敵人 {target?.UnitName}");
+        }
+
+        if (target == null || target.Actor == null)
+        {
+            Debug.Log("[Ranger] 找不到目標，取消攻擊。");
+            yield break;
+        }
+
+        // **調整生成位置：右上偏移**
+        Vector3 spawnOffset = new Vector3(0.8f, 2f, 0f);
+        Vector3 spawnPos = actor.position + spawnOffset;
+
+        // 生成投射物（FireBallSkill）
+        GameObject proj = Instantiate(arrowPrefab, spawnPos, Quaternion.identity);
+        FireBallSkill skill = proj.GetComponent<FireBallSkill>();
+        if (skill != null)
+        {
+            skill.attacker = attacker;
+            skill.target = target;
+            skill.isPerfect = perfect;
+            skill.isHeavyAttack = isHeavy;
+            skill.damage = isHeavy ? attacker.Atk * 2 : attacker.Atk;
+        }
+
+        Debug.Log($"[Ranger Attack] {attacker.UnitName} → {target.UnitName} ({(isHeavy ? "重攻擊" : "普攻")}) 傷害 {skill.damage}");
+        yield return null;
+    }
 
     // --------------------------------------------------
     // 格檔

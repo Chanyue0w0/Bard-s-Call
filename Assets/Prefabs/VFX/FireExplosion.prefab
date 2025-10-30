@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5400937362024050352}
   - component: {fileID: 7081664744943851268}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FireExplosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 3457176380975141039}
   - component: {fileID: 2702543860713401046}
   - component: {fileID: 7703289724481388907}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4914,7 +4914,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4958,7 +4958,7 @@ GameObject:
   - component: {fileID: 4585776438603032261}
   - component: {fileID: 6425091291104671410}
   - component: {fileID: 8585793908465836606}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9679,7 +9679,7 @@ GameObject:
   - component: {fileID: 1985881747428547643}
   - component: {fileID: 7305749620172780631}
   - component: {fileID: 1233562559121399872}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sparks smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14473,7 +14473,7 @@ GameObject:
   - component: {fileID: 3444145136753580956}
   - component: {fileID: 4554407720098698154}
   - component: {fileID: 2430320595729583844}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ember
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19329,7 +19329,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -19373,7 +19373,7 @@ GameObject:
   - component: {fileID: 8209723011164684489}
   - component: {fileID: 6073585644727585768}
   - component: {fileID: 8454255181670731296}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sub smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24046,7 +24046,7 @@ GameObject:
   - component: {fileID: 6292387846521288835}
   - component: {fileID: 5430179911610823039}
   - component: {fileID: 3850888958320626647}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FireExplosionVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28908,7 +28908,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -29115,7 +29115,7 @@ GameObject:
   - component: {fileID: 4783346146117185732}
   - component: {fileID: 5248410846566381827}
   - component: {fileID: 6672046487737405416}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Flames delay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33971,7 +33971,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -34014,7 +34014,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1787945739782037083}
   - component: {fileID: 3994681854269522624}
-  m_Layer: 0
+  - component: {fileID: 7761124688198059947}
+  m_Layer: 6
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34098,3 +34099,26 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &7761124688198059947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8171190786969797698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0

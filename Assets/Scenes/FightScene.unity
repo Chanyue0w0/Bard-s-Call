@@ -1199,7 +1199,7 @@ MonoBehaviour:
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
   EnemyTeamInfo:
-  - PrefabToSpawn: {fileID: 0}
+  - PrefabToSpawn: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
     UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 0}
@@ -1215,7 +1215,7 @@ MonoBehaviour:
     NormalAttackNames: []
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
-  - PrefabToSpawn: {fileID: 0}
+  - PrefabToSpawn: {fileID: 3637990080320469891, guid: d0b076231aa6a0f4fb965f3bef29c227, type: 3}
     UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 0}
