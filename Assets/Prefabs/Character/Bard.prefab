@@ -125,7 +125,7 @@ MonoBehaviour:
   Atk: 10
   NormalAttacks:
   - SkillName: BardHit
-    SkillPrefab: {fileID: 0}
+    SkillPrefab: {fileID: 592523860695835115, guid: 4c321682ee2fbea44b955014a0940c81, type: 3}
     MPCost: 0
     DamageMultiplier: 1
     FixedDamage: 10

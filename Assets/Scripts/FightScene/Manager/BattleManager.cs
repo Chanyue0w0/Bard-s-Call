@@ -207,6 +207,8 @@ public class BattleManager : MonoBehaviour
             StartCoroutine(HandleMageAttack(attacker, target, beatInCycle, perfect));
         else if (attacker.ClassType == UnitClass.Ranger)
             StartCoroutine(HandleRangerAttack(attacker, beatInCycle, perfect));
+        else if (attacker.ClassType == UnitClass.Bard)
+            StartCoroutine(HandleBardAttack(attacker, target, beatInCycle, perfect));
         else
             StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
 
@@ -406,6 +408,75 @@ public class BattleManager : MonoBehaviour
         Debug.Log($"[Ranger Attack] {attacker.UnitName} → {target.UnitName} ({(isHeavy ? "重攻擊" : "普攻")}) 傷害 {skill.damage}");
         yield return null;
     }
+
+    // --------------------------------------------------
+    // Bard 攻擊邏輯
+    // --------------------------------------------------
+    private IEnumerator HandleBardAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
+    {
+        var actor = attacker.Actor.transform;
+        var charData = attacker.Actor.GetComponent<CharacterData>();
+        if (charData == null) yield break;
+
+        // **普通攻擊：與 Warrior 相同邏輯（衝刺攻擊）**
+        if (beatInCycle != BeatManager.Instance.beatsPerMeasure)
+        {
+            Vector3 origin = actor.position;
+            Vector3 targetPoint = target.SlotTransform.position + meleeContactOffset;
+
+            // Dash 前進
+            yield return Dash(actor, origin, targetPoint, dashDuration);
+
+            // 生成普攻特效
+            GameObject attackPrefab = null;
+            if (charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
+                attackPrefab = charData.NormalAttacks[0].SkillPrefab;
+
+            if (attackPrefab == null)
+                attackPrefab = meleeVfxPrefab;
+
+            if (attackPrefab != null)
+            {
+                var skillObj = Instantiate(attackPrefab, targetPoint, Quaternion.identity);
+                var sword = skillObj.GetComponent<SwordHitSkill>();
+                if (sword != null)
+                {
+                    sword.attacker = attacker;
+                    sword.target = target;
+                    sword.isPerfect = perfect;
+                    sword.isHeavyAttack = false;
+                }
+            }
+
+            yield return new WaitForSeconds(dashStayDuration);
+            yield return Dash(actor, targetPoint, origin, dashDuration);
+            yield break;
+        }
+
+        // **重攻擊：全隊回復血量 +10，並生成治癒特效**
+        Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復10HP！");
+        BattleEffectManager.Instance.HealTeamWithEffect(10);
+
+
+        //// 為每位回復的隊友生成治癒特效
+        //foreach (var ally in CTeamInfo)
+        //{
+        //    if (ally == null || ally.Actor == null) continue;
+
+        //    Vector3 healPos = ally.Actor.transform.position;// + Vector3.up * 1.3f
+        //    if (BattleEffectManager.Instance.healVfxPrefab != null)
+        //    {
+        //        GameObject healVfx = Instantiate(BattleEffectManager.Instance.healVfxPrefab, healPos, Quaternion.identity);
+        //        //Destroy(healVfx, BattleEffectManager.Instance.healVfxPrefab.GetComponent<Explosion>()?.lifeTime ?? 1.5f);
+        //    }
+
+        //    Debug.Log($"[吟遊詩人治癒特效] 生成於 {ally.UnitName} 位置 {healPos}");
+        //}
+
+        yield return null;
+    }
+
+
 
     // --------------------------------------------------
     // 格檔

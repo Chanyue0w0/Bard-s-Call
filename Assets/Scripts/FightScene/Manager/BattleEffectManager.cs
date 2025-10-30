@@ -363,6 +363,46 @@ public class BattleEffectManager : MonoBehaviour
         }
     }
 
+    // -------------------------
+    // 全隊回復（附帶治癒特效）
+    // -------------------------
+    public void HealTeamWithEffect(int healAmount)
+    {
+        var team = BattleManager.Instance.CTeamInfo;
+        foreach (var ally in team)
+        {
+            if (ally == null || ally.Actor == null) continue;
+
+            // 回復血量
+            ally.HP = Mathf.Min(ally.MaxHP, ally.HP + healAmount);
+
+            // 更新血條
+            var hb = ally.Actor.GetComponentInChildren<HealthBarUI>();
+            if (hb != null) hb.ForceUpdate();
+
+            // 生成治癒特效
+            if (healVfxPrefab != null)
+            {
+                Vector3 healPos = ally.Actor.transform.position; // + Vector3.up * 1.3f
+                GameObject healVfx = Instantiate(healVfxPrefab, healPos, Quaternion.identity);
+
+                // 若特效有 Explosion 腳本則讓它自行管理壽命
+                var exp = healVfx.GetComponent<Explosion>();
+                if (exp != null)
+                {
+                    exp.SetUseUnscaledTime(true);
+                    exp.Initialize();
+                }
+                else
+                {
+                    Destroy(healVfx, 1.5f);
+                }
+            }
+
+            Debug.Log($"【治癒回復】{ally.UnitName} +{healAmount} HP → {ally.HP}/{ally.MaxHP}");
+        }
+    }
+
 
     // 手動移除格檔特效（用於破防）
     public void RemoveBlockEffect(GameObject actor)
