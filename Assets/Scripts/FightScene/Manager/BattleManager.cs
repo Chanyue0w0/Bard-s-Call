@@ -193,8 +193,8 @@ public class BattleManager : MonoBehaviour
         if (target == null) return;
 
         // ´«¨¤¦â­«¸m combo
-        if (lastSuccessfulAttacker != null && lastSuccessfulAttacker != attacker.Actor)
-            ResetAllComboStates();
+        //if (lastSuccessfulAttacker != null && lastSuccessfulAttacker != attacker.Actor)
+        //    ResetAllComboStates();
 
         lastSuccessfulAttacker = attacker.Actor;
         StartCoroutine(LockAction(actionLockDuration));
