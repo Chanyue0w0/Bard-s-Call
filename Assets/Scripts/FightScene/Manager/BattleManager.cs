@@ -21,7 +21,7 @@ public class BattleManager : MonoBehaviour
         Warrior,
         Mage,
         Shield,
-        Priest,
+        Bard,
         Ranger,
         Enemy
     }

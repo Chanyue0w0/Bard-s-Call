@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 6212741414959072869}
   - component: {fileID: 3946093324634478070}
   - component: {fileID: 5849689319696274514}
+  - component: {fileID: 7422378496407293497}
   m_Layer: 7
   m_Name: ShieldSoldier
   m_TagString: Hero
@@ -133,3 +134,32 @@ MonoBehaviour:
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
+--- !u!114 &7422378496407293497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2912741584857405815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83aebeb4487f9af4587e28f850d85599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CharacterName: 
+  ClassType: 0
+  MaxHP: 100
+  HP: 100
+  MaxMP: 50
+  MP: 0
+  OriginAtk: 10
+  Atk: 10
+  NormalAttacks: []
+  HeavyAttack:
+    SkillName: 
+    SkillPrefab: {fileID: 0}
+    MPCost: 0
+    DamageMultiplier: 1
+    FixedDamage: 0
+  Skills: []
+  ShieldEffectPrefab: {fileID: 0}
