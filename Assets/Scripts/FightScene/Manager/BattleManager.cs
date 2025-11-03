@@ -181,6 +181,15 @@ public class BattleManager : MonoBehaviour
         if (index < 0 || index >= CTeamInfo.Length) return;
         if (CTeamInfo[index] == null) return;
 
+        var attacker = CTeamInfo[index];
+
+        if (attacker == null || attacker.Actor == null) return;
+        if (attacker.HP <= 0 || attacker.Actor == null)
+        {
+            Debug.Log($"[{attacker.UnitName}] 已死亡，僅打節拍但不觸發攻擊。");
+            return;
+        }
+
         bool perfect = BeatJudge.Instance.IsOnBeat();
         if (!perfect)
         {
@@ -188,7 +197,6 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        var attacker = CTeamInfo[index];
         var target = FindEnemyByClass(attacker.ClassType);
         int beatInCycle = BeatManager.Instance.predictedNextBeat;
 
