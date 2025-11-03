@@ -190,16 +190,38 @@ public class BattleManager : MonoBehaviour
 
         var attacker = CTeamInfo[index];
         var target = FindEnemyByClass(attacker.ClassType);
-        if (target == null) return;
+        int beatInCycle = BeatManager.Instance.predictedNextBeat;
 
-        // 換角色重置 combo
-        //if (lastSuccessfulAttacker != null && lastSuccessfulAttacker != attacker.Actor)
-        //    ResetAllComboStates();
+        // ------------------------------------------------------------
+        // 特例處理：即使沒有敵人也能發動的技能
+        // ------------------------------------------------------------
+        if (target == null)
+        {
+            // 法師普攻：沒敵人仍可充能
+            if (attacker.ClassType == UnitClass.Mage && beatInCycle != BeatManager.Instance.beatsPerMeasure)
+            {
+                Debug.Log("[特例] 法師普攻在無敵人時仍可充能");
+                StartCoroutine(HandleMageAttack(attacker, null, beatInCycle, perfect));
+                return;
+            }
 
+            // 吟遊詩人重攻擊：沒敵人仍可治癒全隊
+            if (attacker.ClassType == UnitClass.Bard && beatInCycle == BeatManager.Instance.beatsPerMeasure)
+            {
+                Debug.Log("[特例] 吟遊詩人重攻擊在無敵人時仍可施放治癒");
+                StartCoroutine(HandleBardAttack(attacker, null, beatInCycle, perfect));
+                return;
+            }
+
+            // 其他角色若沒目標就不攻擊
+            return;
+        }
+
+        // ------------------------------------------------------------
+        // 正常攻擊流程
+        // ------------------------------------------------------------
         lastSuccessfulAttacker = attacker.Actor;
         StartCoroutine(LockAction(actionLockDuration));
-
-        int beatInCycle = BeatManager.Instance.predictedNextBeat;
 
         if (attacker.ClassType == UnitClass.Warrior)
             StartCoroutine(HandleWarriorAttack(attacker, target, beatInCycle, perfect));
@@ -211,9 +233,8 @@ public class BattleManager : MonoBehaviour
             StartCoroutine(HandleBardAttack(attacker, target, beatInCycle, perfect));
         else
             StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
-
-
     }
+
 
     private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
     {
@@ -276,10 +297,9 @@ public class BattleManager : MonoBehaviour
         var charData = attacker.Actor.GetComponent<CharacterData>();
         if (charData == null) yield break;
 
-        // 取得目前充電層數
         int chargeStacks = BattleEffectManager.Instance.GetChargeStacks(attacker);
 
-        // === 第四拍：釋放重攻擊 ===
+        // === 第四拍：重攻擊 ===
         if (beatInCycle == BeatManager.Instance.beatsPerMeasure)
         {
             if (chargeStacks <= 0)
@@ -288,12 +308,10 @@ public class BattleManager : MonoBehaviour
                 yield break;
             }
 
-            Debug.Log($"[法師重攻擊] 施放重攻擊，消耗 {chargeStacks} 層充電。");
-            BattleEffectManager.Instance.ResetChargeStacks(attacker); // 清除充電層與特效
+            Debug.Log($"[法師重攻擊] 消耗 {chargeStacks} 層充電。");
 
-
-            // 生成重攻擊特效
-            if (charData.HeavyAttack != null && charData.HeavyAttack.SkillPrefab != null)
+            // 若仍有敵人，正常生成重攻擊特效
+            if (target != null && charData.HeavyAttack?.SkillPrefab != null)
             {
                 var heavy = Instantiate(charData.HeavyAttack.SkillPrefab, target.SlotTransform.position, Quaternion.identity);
                 var skill = heavy.GetComponent<FireBallSkill>();
@@ -305,49 +323,43 @@ public class BattleManager : MonoBehaviour
                     skill.isHeavyAttack = true;
                     skill.damage = chargeStacks * 30;
                 }
+
+                // 計算傷害
+                int damage = chargeStacks * 30;
+                target.HP -= damage;
+                if (target.HP < 0) target.HP = 0;
+
+                var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
+                if (hb != null) hb.ForceUpdate();
             }
-
-            // 計算傷害 = chargeStacks * 30
-            int damage = chargeStacks * 30;
-            target.HP -= damage;
-            if (target.HP < 0) target.HP = 0;
-
-            Debug.Log($"[法師重攻擊] {attacker.UnitName} 對 {target.UnitName} 造成 {damage} 傷害（充電層：{chargeStacks}）");
-
-            // 重置充電層
-            BattleEffectManager.Instance.ResetChargeStacks(attacker);
-
-            // 更新血條
-            var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
-            if (hb != null) hb.ForceUpdate();
-
-            //if (target.HP <= 0)
-            //    BattleEffectManager.Instance.HandleUnitDefeated(target);
-        }
-        else
-        {
-            // === 普通攻擊：0 傷害，獲得一層充能 ===
-            Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
-
-            // 生成充能亮光特效（無論是否已有層）
-            if (charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
+            else
             {
-                var chargeEffect = charData.NormalAttacks[0].SkillPrefab;
-                if (chargeEffect != null)
-                {
-                    Vector3 spawnPos = actor.position;
-                    Instantiate(chargeEffect, spawnPos, Quaternion.identity);
-                    Debug.Log($"[法師普攻特效] {attacker.UnitName} 生成亮光特效於 {spawnPos}");
-                }
+                Debug.Log("[法師重攻擊] 無敵人存在，僅釋放能量特效。");
             }
 
-            // 通知 BattleEffectManager 處理充能層與特效
-            BattleEffectManager.Instance.AddChargeStack(attacker);
-
+            // 清除充能層
+            BattleEffectManager.Instance.ResetChargeStacks(attacker);
+            yield break;
         }
 
+        // === 普通攻擊：無論有無敵人都能充能 ===
+        Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
+
+        // 生成亮光特效
+        if (charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
+        {
+            var chargeEffect = charData.NormalAttacks[0].SkillPrefab;
+            if (chargeEffect != null)
+            {
+                Vector3 spawnPos = actor.position;
+                Instantiate(chargeEffect, spawnPos, Quaternion.identity);
+            }
+        }
+
+        BattleEffectManager.Instance.AddChargeStack(attacker);
         yield return null;
     }
+
     // --------------------------------------------------
     // Ranger 攻擊邏輯
     // --------------------------------------------------
@@ -418,9 +430,10 @@ public class BattleManager : MonoBehaviour
         var charData = attacker.Actor.GetComponent<CharacterData>();
         if (charData == null) yield break;
 
-        // **普通攻擊：與 Warrior 相同邏輯（衝刺攻擊）**
+        // **普通攻擊：需要敵人存在**
         if (beatInCycle != BeatManager.Instance.beatsPerMeasure)
         {
+            if (target == null) yield break; // 沒敵人就不揮擊
             Vector3 origin = actor.position;
             Vector3 targetPoint = target.SlotTransform.position + meleeContactOffset;
 
@@ -431,9 +444,7 @@ public class BattleManager : MonoBehaviour
             GameObject attackPrefab = null;
             if (charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
                 attackPrefab = charData.NormalAttacks[0].SkillPrefab;
-
-            if (attackPrefab == null)
-                attackPrefab = meleeVfxPrefab;
+            if (attackPrefab == null) attackPrefab = meleeVfxPrefab;
 
             if (attackPrefab != null)
             {
@@ -453,30 +464,12 @@ public class BattleManager : MonoBehaviour
             yield break;
         }
 
-        // **重攻擊：全隊回復血量 +10，並生成治癒特效**
+        // **重攻擊：全隊回復血量 +10**
         Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復10HP！");
         BattleEffectManager.Instance.HealTeamWithEffect(10);
 
-
-        //// 為每位回復的隊友生成治癒特效
-        //foreach (var ally in CTeamInfo)
-        //{
-        //    if (ally == null || ally.Actor == null) continue;
-
-        //    Vector3 healPos = ally.Actor.transform.position;// + Vector3.up * 1.3f
-        //    if (BattleEffectManager.Instance.healVfxPrefab != null)
-        //    {
-        //        GameObject healVfx = Instantiate(BattleEffectManager.Instance.healVfxPrefab, healPos, Quaternion.identity);
-        //        //Destroy(healVfx, BattleEffectManager.Instance.healVfxPrefab.GetComponent<Explosion>()?.lifeTime ?? 1.5f);
-        //    }
-
-        //    Debug.Log($"[吟遊詩人治癒特效] 生成於 {ally.UnitName} 位置 {healPos}");
-        //}
-
         yield return null;
     }
-
-
 
     // --------------------------------------------------
     // 格檔
