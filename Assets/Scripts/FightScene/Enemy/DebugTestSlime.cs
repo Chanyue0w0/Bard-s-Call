@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class DebugTestSlime : EnemyBase
 {
-    //[Header("基本數值")]
-    //public int maxHP = 50;
-    //public int hp = 50;
-    //public float respawnDelay = 10f;
-
     [Header("節拍縮放參數")]
     public Vector3 baseScale = new Vector3(0.15f, 0.15f, 0.15f);
     public float peakMultiplier = 1.3f;
@@ -21,9 +16,6 @@ public class DebugTestSlime : EnemyBase
 
     [Header("拍點攻擊設定")]
     public int attackBeatsInterval = 8; // 每 8 拍攻擊一次
-
-   
-
 
     [Header("特效設定")]
     public GameObject attackVfxPrefab;
@@ -57,14 +49,14 @@ public class DebugTestSlime : EnemyBase
     void Start()
     {
         ScheduleNextAttack();
-
-        // ★ 自行訂閱 BeatManager.OnBeat（恢復原本機制）
         BeatManager.OnBeat += OnBeat;
+
+        // 初始化目標（首位存活玩家）
+        SetTargetToFirstAlivePlayer();
     }
 
     void OnDestroy()
     {
-        // ★ 取消訂閱，避免場景重載報錯
         BeatManager.OnBeat -= OnBeat;
     }
 
@@ -92,12 +84,11 @@ public class DebugTestSlime : EnemyBase
         if (!isWarning && Time.time >= warningTime)
             EnterWarningPhase();
 
-        // 安全防呆
+        // 防呆保險
         if (!isWarning && !isAttacking && Time.time >= nextAttackTime)
             ScheduleNextAttack();
     }
 
-    // 每拍觸發
     private void OnBeat()
     {
         if (forceMove || isAttacking) return;
@@ -126,6 +117,9 @@ public class DebugTestSlime : EnemyBase
         if (spriteRenderer != null)
             spriteRenderer.color = warningColor;
 
+        // 在進入警示階段前再次確認目標
+        SetTargetToFirstAlivePlayer();
+
         if (targetSlot != null && targetSlot.Actor != null && targetWarningPrefab != null)
         {
             activeTargetWarning = Instantiate(
@@ -140,9 +134,14 @@ public class DebugTestSlime : EnemyBase
     {
         isAttacking = true;
 
+        // 每次攻擊前都重新偵測首位存活玩家
+        SetTargetToFirstAlivePlayer();
+
         if (targetSlot == null || targetSlot.Actor == null)
         {
             Debug.LogWarning($"{name} 攻擊中止：目標為空");
+            isAttacking = false;
+            ScheduleNextAttack();
             yield break;
         }
 
@@ -158,10 +157,10 @@ public class DebugTestSlime : EnemyBase
                 Destroy(vfx, vfxLifetime);
         }
 
+        // 造成傷害
         BattleEffectManager.Instance?.OnHit(selfSlot, targetSlot, true);
 
         yield return new WaitForSeconds(actionLockDuration);
-
         yield return Dash(transform.position, origin, dashDuration);
 
         if (spriteRenderer != null)
@@ -172,6 +171,9 @@ public class DebugTestSlime : EnemyBase
 
         isWarning = false;
         isAttacking = false;
+
+        // 攻擊完後再一次確認目標（若前排死亡，改攻下一位）
+        SetTargetToFirstAlivePlayer();
         ScheduleNextAttack();
     }
 
@@ -186,22 +188,24 @@ public class DebugTestSlime : EnemyBase
         }
     }
 
-    //private void ScheduleNextAttack()
-    //{
-    //    float wait = Random.Range(2f, 5f);
-    //    nextAttackTime = Time.time + wait;
+    // 永遠搜尋「首位仍存活的玩家」
+    private void SetTargetToFirstAlivePlayer()
+    {
+        var teamInfo = BattleManager.Instance?.CTeamInfo;
+        if (teamInfo == null)
+            return;
 
-    //    float beatInterval = (BeatManager.Instance != null && BeatManager.Instance.bpm > 0)
-    //        ? 60f / BeatManager.Instance.bpm
-    //        : 0.4f;
+        foreach (var slot in teamInfo)
+        {
+            if (slot != null && slot.Actor != null)
+            {
+                targetSlot = slot;
+                return;
+            }
+        }
 
-    //    warningTime = nextAttackTime - warningBeats * beatInterval;
-
-    //    if (warningTime <= Time.time)
-    //        warningTime = Time.time;
-
-    //    isWarning = false;
-    //}
+        targetSlot = null;
+    }
 
     private void ScheduleNextAttack()
     {
@@ -211,7 +215,6 @@ public class DebugTestSlime : EnemyBase
 
         float wait = attackBeatsInterval * beatInterval;
         nextAttackTime = Time.time + wait;
-
         warningTime = nextAttackTime - warningBeats * beatInterval;
 
         if (warningTime <= Time.time)
