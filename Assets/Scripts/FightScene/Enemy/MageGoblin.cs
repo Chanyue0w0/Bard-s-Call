@@ -66,7 +66,7 @@ public class MageGoblin : EnemyBase
         // ★ 若剛被嘲諷且特效尚未生成 → 生成頭上特效
         if (activeTauntVfx == null && tauntedByObj != null && tauntVfxPrefab != null)
         {
-            activeTauntVfx = Instantiate(tauntVfxPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
+            activeTauntVfx = Instantiate(tauntVfxPrefab, transform.position, Quaternion.identity); // + Vector3.up * 0f
             activeTauntVfx.transform.SetParent(transform);
             Debug.Log($"【嘲諷特效啟動】{name} 被 {tauntedByObj.name} 嘲諷");
         }
