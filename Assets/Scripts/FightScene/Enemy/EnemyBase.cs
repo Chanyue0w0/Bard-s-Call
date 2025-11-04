@@ -12,6 +12,7 @@ public abstract class EnemyBase : MonoBehaviour
     public BattleManager.ETeam ETeam = BattleManager.ETeam.Enemy;
     protected BattleManager.TeamSlotInfo selfSlot;
     protected BattleManager.TeamSlotInfo targetSlot;
+    public BattleManager.TeamSlotInfo thisSlotInfo;  // 紀錄該敵人對應的 TeamSlotInfo
 
     protected virtual void Awake()
     {
@@ -30,6 +31,29 @@ public abstract class EnemyBase : MonoBehaviour
         {
             AutoAssignSlotIndex();
         }
+    }
+
+
+    // 初始化時由 BattleManager 指派
+    public void InitSlotInfo(BattleManager.TeamSlotInfo info)
+    {
+        thisSlotInfo = info;
+    }
+
+    // 嘲諷檢查函式
+    protected BattleManager.TeamSlotInfo CheckTauntRedirectTarget(BattleManager.TeamSlotInfo originalTarget)
+    {
+        // 檢查自己是否被嘲諷
+        var taunter = BattleEffectManager.Instance.GetTaunter(thisSlotInfo);
+
+        if (taunter != null && taunter.Actor != null)
+        {
+            Debug.Log($"【嘲諷生效】{thisSlotInfo.UnitName} 被迫攻擊 {taunter.UnitName}");
+            return taunter;
+        }
+
+        // 否則使用原本的攻擊邏輯
+        return originalTarget;
     }
 
     // 延遲等待 BattleManager 準備好

@@ -16,9 +16,8 @@ public class MageGoblin : EnemyBase
     public int warningBeats = 3;
 
     [Header("火球技能設定")]
-    public GameObject fireBallPrefab;       // FireBallSkill Prefab
-    //public GameObject explosionPrefab;      // 爆炸特效 Prefab
-    public Transform firePoint;             // 施法位置（可設定在手上或身前）
+    public GameObject fireBallPrefab;
+    public Transform firePoint;
 
     [Header("警示設定")]
     public Color warningColor = Color.red;
@@ -129,8 +128,21 @@ public class MageGoblin : EnemyBase
     {
         isAttacking = true;
 
+        // ★ Step 1：先選出原始目標（最後一位玩家）
         SetTargetToLastAlivePlayer();
 
+        // ★ Step 2：嘲諷檢查（若被 Paladin 嘲諷，改成打 Paladin）
+        if (BattleEffectManager.Instance != null && thisSlotInfo != null)
+        {
+            var taunter = BattleEffectManager.Instance.GetTaunter(thisSlotInfo);
+            if (taunter != null && taunter.Actor != null)
+            {
+                Debug.Log($"【嘲諷生效】{name} 攻擊改為 Paladin {taunter.UnitName}");
+                targetSlot = taunter;
+            }
+        }
+
+        // ★ Step 3：防呆，目標不存在就跳過
         if (targetSlot == null || targetSlot.Actor == null)
         {
             Debug.LogWarning($"{name} 攻擊中止：目標為空");
@@ -156,7 +168,6 @@ public class MageGoblin : EnemyBase
             {
                 skill.attacker = selfSlot;
                 skill.target = targetSlot;
-                //skill.explosionPrefab = explosionPrefab;
                 skill.damage = attackDamage;
                 skill.isPerfect = true;
                 skill.isHeavyAttack = false;

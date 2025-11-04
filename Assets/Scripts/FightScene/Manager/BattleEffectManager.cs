@@ -415,5 +415,62 @@ public class BattleEffectManager : MonoBehaviour
         Debug.Log($"【格檔特效解除】{actor.name}");
     }
 
+    // -------------------------
+    // 嘲諷效果系統（Paladin 專用）
+    // -------------------------
+    private class TauntInfo
+    {
+        public BattleManager.TeamSlotInfo enemy;
+        public BattleManager.TeamSlotInfo paladin;
+        public int remainingBeats;
+    }
+
+    private List<TauntInfo> activeTaunts = new List<TauntInfo>();
+
+    // 新增或刷新嘲諷
+    public void ApplyTaunt(BattleManager.TeamSlotInfo enemy, BattleManager.TeamSlotInfo paladin, int durationBeats)
+    {
+        if (enemy == null || paladin == null) return;
+
+        var existing = activeTaunts.Find(t => t.enemy == enemy);
+        if (existing != null)
+        {
+            existing.remainingBeats = durationBeats;
+            existing.paladin = paladin;
+            Debug.Log($"【嘲諷刷新】{enemy.UnitName} 再次被 {paladin.UnitName} 嘲諷 ({durationBeats} 拍)");
+        }
+        else
+        {
+            activeTaunts.Add(new TauntInfo
+            {
+                enemy = enemy,
+                paladin = paladin,
+                remainingBeats = durationBeats
+            });
+            Debug.Log($"【嘲諷施加】{paladin.UnitName} 嘲諷 {enemy.UnitName} 持續 {durationBeats} 拍");
+        }
+    }
+
+    // 每拍倒數（請由 BeatManager 呼叫）
+    public void TickTauntBeats()
+    {
+        for (int i = activeTaunts.Count - 1; i >= 0; i--)
+        {
+            activeTaunts[i].remainingBeats--;
+            if (activeTaunts[i].remainingBeats <= 0)
+            {
+                Debug.Log($"【嘲諷結束】{activeTaunts[i].enemy.UnitName} 恢復自由攻擊目標");
+                activeTaunts.RemoveAt(i);
+            }
+        }
+    }
+
+    // 檢查敵人是否被嘲諷中，若是則回傳該 Paladin
+    public BattleManager.TeamSlotInfo GetTaunter(BattleManager.TeamSlotInfo enemy)
+    {
+        var data = activeTaunts.Find(t => t.enemy == enemy);
+        return data != null ? data.paladin : null;
+    }
+
 
 }

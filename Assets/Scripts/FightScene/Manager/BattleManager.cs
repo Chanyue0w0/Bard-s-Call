@@ -23,6 +23,7 @@ public class BattleManager : MonoBehaviour
         Shield,
         Bard,
         Ranger,
+        Paladin,
         Enemy
     }
 
@@ -239,6 +240,8 @@ public class BattleManager : MonoBehaviour
             StartCoroutine(HandleRangerAttack(attacker, beatInCycle, perfect));
         else if (attacker.ClassType == UnitClass.Bard)
             StartCoroutine(HandleBardAttack(attacker, target, beatInCycle, perfect));
+        else if (attacker.ClassType == UnitClass.Paladin)
+            StartCoroutine(HandlePaladinAttack(attacker, target, beatInCycle, perfect));
         else
             StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
     }
@@ -478,6 +481,42 @@ public class BattleManager : MonoBehaviour
 
         yield return null;
     }
+
+    private IEnumerator HandlePaladinAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
+    {
+        if (attacker == null || target == null) yield break;
+        var actor = attacker.Actor.transform;
+        Vector3 origin = actor.position;
+        Vector3 targetPoint = target.SlotTransform.position + meleeContactOffset;
+
+        // 輕攻擊：Dash 前進並施加嘲諷
+        yield return Dash(actor, origin, targetPoint, dashDuration);
+
+        // 生成攻擊特效
+        GameObject attackPrefab = meleeVfxPrefab;
+        if (attackPrefab != null)
+        {
+            var vfx = Instantiate(attackPrefab, targetPoint, Quaternion.identity);
+            var sword = vfx.GetComponent<SwordHitSkill>();
+            if (sword != null)
+            {
+                sword.attacker = attacker;
+                sword.target = target;
+                sword.isPerfect = perfect;
+                sword.isHeavyAttack = false;
+            }
+        }
+
+        // 嘲諷效果：16 拍
+        BattleEffectManager.Instance.ApplyTaunt(target, attacker, 16);
+
+        // 傷害處理（沿用原本Hit機制）
+        BattleEffectManager.Instance.OnHit(attacker, target, perfect);
+
+        yield return new WaitForSeconds(dashStayDuration);
+        yield return Dash(actor, targetPoint, origin, dashDuration);
+    }
+
 
     // --------------------------------------------------
     // 格檔

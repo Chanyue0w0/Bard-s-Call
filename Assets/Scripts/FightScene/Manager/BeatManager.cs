@@ -173,6 +173,13 @@ public class BeatManager : MonoBehaviour
         persistentBeat?.OnBeat();
         InvokeBeat();
 
+        // ★ 嘲諷效果倒數：每拍執行一次
+        if (BattleEffectManager.Instance != null)
+        {
+            BattleEffectManager.Instance.TickTauntBeats();
+        }
+
+
         currentBeatIndex++;
         currentBeatInCycle = ((currentBeatIndex - 1) % beatsPerMeasure) + 1;
 
