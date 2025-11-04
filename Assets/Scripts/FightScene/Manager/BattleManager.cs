@@ -526,8 +526,8 @@ public class BattleManager : MonoBehaviour
             Debug.Log("【嘲諷測試】BattleEffectManager 實例存在，準備呼叫 ApplyTaunt()");
         }
 
-        // 嘲諷效果：16 拍
-        BattleEffectManager.Instance.ApplyTaunt(target.Actor, attacker.Actor, 16);
+        // 嘲諷效果：8 拍
+        BattleEffectManager.Instance.ApplyTaunt(target.Actor, attacker.Actor, 8);
 
         // 傷害處理（沿用原本Hit機制）
         BattleEffectManager.Instance.OnHit(attacker, target, perfect);

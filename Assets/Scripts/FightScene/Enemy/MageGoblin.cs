@@ -24,6 +24,10 @@ public class MageGoblin : EnemyBase
     public GameObject targetWarningPrefab;
     private GameObject activeTargetWarning;
 
+    [Header("嘲諷特效設定")]
+    public GameObject tauntVfxPrefab;  // 嘲諷期間顯示在敵人頭上的特效
+    private GameObject activeTauntVfx; // 當前特效實例
+
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private bool isHolding = false;
@@ -59,6 +63,47 @@ public class MageGoblin : EnemyBase
     {
         if (forceMove || isAttacking) return;
 
+        // ★ 若剛被嘲諷且特效尚未生成 → 生成頭上特效
+        if (activeTauntVfx == null && tauntedByObj != null && tauntVfxPrefab != null)
+        {
+            activeTauntVfx = Instantiate(tauntVfxPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
+            activeTauntVfx.transform.SetParent(transform);
+            Debug.Log($"【嘲諷特效啟動】{name} 被 {tauntedByObj.name} 嘲諷");
+        }
+
+
+        // 嘲諷倒數更新（沿用 EnemyBase 內的 tauntBeatsRemaining 機制）
+        if (tauntBeatsRemaining > 0)
+        {
+            float beatTime = (BeatManager.Instance != null) ? 60f / BeatManager.Instance.bpm : 0.4f;
+            tauntBeatsRemaining -= Time.deltaTime / beatTime;
+
+            if (tauntBeatsRemaining <= 0)
+            {
+                Debug.Log($"【嘲諷結束】{name} 嘲諷時間到，恢復自由目標。");
+                tauntedByObj = null;
+                tauntBeatsRemaining = 0;
+
+                // ★ 銷毀嘲諷特效
+                if (activeTauntVfx != null)
+                {
+                    Destroy(activeTauntVfx);
+                    activeTauntVfx = null;
+                    Debug.Log($"【嘲諷特效解除】{name} 嘲諷特效已刪除");
+                }
+
+                // ★ 嘲諷結束後恢復原本的攻擊邏輯
+                SetTargetToLastAlivePlayer();
+
+                // ★ 若有警示特效，立即更新位置
+                if (activeTargetWarning != null && targetSlot?.Actor != null)
+                {
+                    activeTargetWarning.transform.position = targetSlot.Actor.transform.position;
+                }
+            }
+        }
+
+
         // 回復縮放動畫
         if (isHolding)
         {
@@ -83,17 +128,17 @@ public class MageGoblin : EnemyBase
         if (!isWarning && !isAttacking && Time.time >= nextAttackTime)
             ScheduleNextAttack();
 
-        //if (tauntBeatsRemaining > 0)
-        //{
-        //    // 每秒轉換為拍的倒數方式（每拍約 60/bpm 秒）
-        //    float beatTime = (BeatManager.Instance != null) ? 60f / BeatManager.Instance.bpm : 0.4f;
-        //    tauntBeatsRemaining -= Time.deltaTime / beatTime;
-        //    if (tauntBeatsRemaining <= 0)
-        //    {
-        //        Debug.Log($"【嘲諷結束】{name} 恢復自由目標");
-        //        tauntedBy = null;
-        //    }
-        //}
+        // ★ 更新警示特效位置（讓紅圈持續跟隨攻擊目標）
+        if (activeTargetWarning != null && targetSlot?.Actor != null)
+        {
+            activeTargetWarning.transform.position = targetSlot.Actor.transform.position;
+        }
+
+        // ★ 嘲諷特效持續跟隨敵人頭頂位置
+        if (activeTauntVfx != null)
+        {
+            activeTauntVfx.transform.position = transform.position + Vector3.up * 2f;
+        }
 
     }
 
@@ -125,32 +170,10 @@ public class MageGoblin : EnemyBase
         if (spriteRenderer != null)
             spriteRenderer.color = warningColor;
 
-        SetTargetToLastAlivePlayer();
-
-        if (targetSlot != null && targetSlot.Actor != null && targetWarningPrefab != null)
-        {
-            activeTargetWarning = Instantiate(
-                targetWarningPrefab,
-                targetSlot.Actor.transform.position,
-                Quaternion.identity
-            );
-        }
-    }
-
-    private IEnumerator AttackSequence()
-    {
-        isAttacking = true;
-
-        // ★ Step 1：先選出原始目標（最後一位玩家）
-        SetTargetToLastAlivePlayer();
-
-        // ★ 嘲諷檢查（若被 Paladin 嘲諷，改成打 Paladin）
+        // ★ 嘲諷檢查：如果目前被嘲諷 → 鎖定 Paladin
         if (tauntedByObj != null)
         {
             var paladinActor = tauntedByObj;
-            Debug.Log($"【嘲諷生效】{name} 攻擊改為 {paladinActor.name}");
-
-            // 找出 Paladin 在隊伍資料中對應的 TeamSlot
             var paladinSlot = System.Array.Find(
                 BattleManager.Instance.CTeamInfo,
                 t => t != null && t.Actor == paladinActor
@@ -159,6 +182,52 @@ public class MageGoblin : EnemyBase
             if (paladinSlot != null)
                 targetSlot = paladinSlot;
         }
+        else
+        {
+            // 若沒被嘲諷，照舊選最後一位玩家
+            SetTargetToLastAlivePlayer();
+        }
+
+        // ★ 更新警示生成位置為實際攻擊目標
+        if (targetSlot != null && targetSlot.Actor != null && targetWarningPrefab != null)
+        {
+            if (activeTargetWarning != null)
+                Destroy(activeTargetWarning);
+
+            activeTargetWarning = Instantiate(
+                targetWarningPrefab,
+                targetSlot.Actor.transform.position,
+                Quaternion.identity
+            );
+        }
+    }
+
+
+    private IEnumerator AttackSequence()
+    {
+        isAttacking = true;
+
+        // 嘲諷檢查（若被 Paladin 嘲諷，改成打 Paladin）
+        if (tauntedByObj != null)
+        {
+            var paladinActor = tauntedByObj;
+            var paladinSlot = System.Array.Find(
+                BattleManager.Instance.CTeamInfo,
+                t => t != null && t.Actor == paladinActor
+            );
+
+            if (paladinSlot != null)
+            {
+                targetSlot = paladinSlot;
+                Debug.Log($"【嘲諷生效】{name} 攻擊改為 Paladin {paladinSlot.UnitName}");
+            }
+        }
+        else
+        {
+            // 嘲諷已解除，回復預設邏輯
+            SetTargetToLastAlivePlayer();
+        }
+
 
         // ★ Step 3：防呆，目標不存在就跳過
         if (targetSlot == null || targetSlot.Actor == null)

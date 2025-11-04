@@ -154,6 +154,8 @@ MonoBehaviour:
     NormalAttackNames: []
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
+  tauntedByObj: {fileID: 0}
+  tauntBeatsRemaining: 0
   baseScale: {x: 0.227874, y: 0.227874, z: 0.227874}
   peakMultiplier: 1.25
   holdDuration: 0.05
@@ -161,11 +163,12 @@ MonoBehaviour:
   attackDamage: 10
   actionLockDuration: 0.5
   attackBeatsInterval: 8
-  warningBeats: 3
+  warningBeats: 2
   fireBallPrefab: {fileID: 2864930942258562462, guid: 9058b50fda0864e408446c4267772020, type: 3}
   firePoint: {fileID: 0}
   warningColor: {r: 1, g: 0, b: 0, a: 1}
   targetWarningPrefab: {fileID: 2890410290338222890, guid: 552a24d6ec52aa045a3d3beaccc5ca07, type: 3}
+  tauntVfxPrefab: {fileID: 1706224664778853816, guid: a86e1a8bdd3a39b4fbafa6298302f385, type: 3}
 --- !u!114 &5232348094153654182
 MonoBehaviour:
   m_ObjectHideFlags: 0

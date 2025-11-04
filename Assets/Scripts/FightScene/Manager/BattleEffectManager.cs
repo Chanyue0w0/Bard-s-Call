@@ -463,11 +463,11 @@ public class BattleEffectManager : MonoBehaviour
         }
 
         // ★ 嘲諷特效（顯示在敵人頭上）
-        if (tauntVfxPrefab != null)
-        {
-            var vfx = Instantiate(tauntVfxPrefab, enemyObj.transform.position + Vector3.up * 2f, Quaternion.identity);
-            vfx.transform.SetParent(enemyObj.transform);
-        }
+        //if (tauntVfxPrefab != null)
+        //{
+        //    var vfx = Instantiate(tauntVfxPrefab, enemyObj.transform.position + Vector3.up * 2f, Quaternion.identity);
+        //    vfx.transform.SetParent(enemyObj.transform);
+        //}
     }
 
 
