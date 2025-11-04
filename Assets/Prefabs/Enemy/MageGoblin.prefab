@@ -137,11 +137,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ETeam: 2
+  thisSlotInfo:
+    PrefabToSpawn: {fileID: 0}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
   baseScale: {x: 0.227874, y: 0.227874, z: 0.227874}
   peakMultiplier: 1.25
   holdDuration: 0.05
   returnSpeed: 8
-  attackDamage: 25
+  attackDamage: 10
   actionLockDuration: 0.5
   attackBeatsInterval: 8
   warningBeats: 3

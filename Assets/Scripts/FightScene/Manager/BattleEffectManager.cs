@@ -422,44 +422,55 @@ public class BattleEffectManager : MonoBehaviour
     // -------------------------
     private class TauntInfo
     {
-        public BattleManager.TeamSlotInfo enemy;
-        public BattleManager.TeamSlotInfo paladin;
+        public GameObject enemyObj;
+        public GameObject paladinObj;
         public int remainingBeats;
     }
-
     private List<TauntInfo> activeTaunts = new List<TauntInfo>();
 
     // 新增或刷新嘲諷
-    public void ApplyTaunt(BattleManager.TeamSlotInfo enemy, BattleManager.TeamSlotInfo paladin, int durationBeats)
+    public void ApplyTaunt(GameObject enemyObj, GameObject paladinObj, int durationBeats)
     {
-        if (enemy == null || paladin == null) return;
+        if (enemyObj == null || paladinObj == null) return;
 
-        var existing = activeTaunts.Find(t => t.enemy == enemy);
+        // 嘲諷列表檢查
+        var existing = activeTaunts.Find(t => t.enemyObj == enemyObj);
         if (existing != null)
         {
             existing.remainingBeats = durationBeats;
-            existing.paladin = paladin;
-            Debug.Log($"【嘲諷刷新】{enemy.UnitName} 再次被 {paladin.UnitName} 嘲諷 ({durationBeats} 拍)");
+            existing.paladinObj = paladinObj;
+            Debug.Log($"【嘲諷刷新】{enemyObj.name} 再次被 {paladinObj.name} 嘲諷 ({durationBeats} 拍)");
         }
         else
         {
             activeTaunts.Add(new TauntInfo
             {
-                enemy = enemy,
-                paladin = paladin,
+                enemyObj = enemyObj,
+                paladinObj = paladinObj,
                 remainingBeats = durationBeats
             });
-            Debug.Log($"【嘲諷施加】{paladin.UnitName} 嘲諷 {enemy.UnitName} 持續 {durationBeats} 拍");
+            Debug.Log($"【嘲諷施加】{paladinObj.name} 嘲諷 {enemyObj.name} 持續 {durationBeats} 拍");
         }
 
-        // 視覺特效（可選）
-        if (enemy.Actor != null && tauntVfxPrefab != null)
+        // ★ 新增：讓敵人知道自己被誰嘲諷
+        var enemyBase = enemyObj.GetComponent<EnemyBase>();
+        if (enemyBase != null)
         {
-            var vfx = Instantiate(tauntVfxPrefab, enemy.Actor.transform.position + Vector3.up * 2f, Quaternion.identity);
-            vfx.transform.SetParent(enemy.Actor.transform);
+            // 我們不再用 TeamSlotInfo，直接傳物件進去
+            enemyBase.tauntedByObj = paladinObj;
+            enemyBase.tauntBeatsRemaining = durationBeats;
+            Debug.Log($"【嘲諷指定】{enemyObj.name} 現在鎖定 {paladinObj.name} (持續 {durationBeats} 拍)");
         }
 
+        // ★ 嘲諷特效（顯示在敵人頭上）
+        if (tauntVfxPrefab != null)
+        {
+            var vfx = Instantiate(tauntVfxPrefab, enemyObj.transform.position + Vector3.up * 2f, Quaternion.identity);
+            vfx.transform.SetParent(enemyObj.transform);
+        }
     }
+
+
 
     // 每拍倒數（請由 BeatManager 呼叫）
     public void TickTauntBeats()
@@ -469,18 +480,19 @@ public class BattleEffectManager : MonoBehaviour
             activeTaunts[i].remainingBeats--;
             if (activeTaunts[i].remainingBeats <= 0)
             {
-                Debug.Log($"【嘲諷結束】{activeTaunts[i].enemy.UnitName} 恢復自由攻擊目標");
+                Debug.Log($"【嘲諷結束】{activeTaunts[i].enemyObj.name} 嘲諷結束");
                 activeTaunts.RemoveAt(i);
             }
         }
     }
 
     // 檢查敵人是否被嘲諷中，若是則回傳該 Paladin
-    public BattleManager.TeamSlotInfo GetTaunter(BattleManager.TeamSlotInfo enemy)
+    public GameObject GetTaunter(GameObject enemyObj)
     {
-        var data = activeTaunts.Find(t => t.enemy == enemy);
-        return data != null ? data.paladin : null;
+        var data = activeTaunts.Find(t => t.enemyObj == enemyObj);
+        return data != null ? data.paladinObj : null;
     }
+
 
 
 }

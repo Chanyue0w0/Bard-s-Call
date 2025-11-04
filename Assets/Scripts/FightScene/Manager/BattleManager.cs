@@ -527,7 +527,7 @@ public class BattleManager : MonoBehaviour
         }
 
         // 嘲諷效果：16 拍
-        BattleEffectManager.Instance.ApplyTaunt(target, attacker, 16);
+        BattleEffectManager.Instance.ApplyTaunt(target.Actor, attacker.Actor, 16);
 
         // 傷害處理（沿用原本Hit機制）
         BattleEffectManager.Instance.OnHit(attacker, target, perfect);

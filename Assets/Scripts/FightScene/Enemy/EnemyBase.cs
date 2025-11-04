@@ -14,6 +14,13 @@ public abstract class EnemyBase : MonoBehaviour
     protected BattleManager.TeamSlotInfo targetSlot;
     public BattleManager.TeamSlotInfo thisSlotInfo;  // 紀錄該敵人對應的 TeamSlotInfo
 
+    [HideInInspector]
+    public GameObject tauntedByObj;           // 被哪個角色嘲諷
+    [HideInInspector]
+    public float tauntBeatsRemaining = 0f;    // 嘲諷剩餘拍數
+
+
+
     protected virtual void Awake()
     {
         if (ETeam == BattleManager.ETeam.None)
@@ -33,6 +40,21 @@ public abstract class EnemyBase : MonoBehaviour
         }
     }
 
+    protected virtual void Update()
+    {
+        if (tauntBeatsRemaining > 0)
+        {
+            float beatTime = (BeatManager.Instance != null) ? 60f / BeatManager.Instance.bpm : 0.4f;
+            tauntBeatsRemaining -= Time.deltaTime / beatTime;
+            if (tauntBeatsRemaining <= 0)
+            {
+                Debug.Log($"【嘲諷結束】{name} 恢復自由目標");
+                tauntedByObj = null;
+                tauntBeatsRemaining = 0;
+            }
+        }
+    }
+
 
     // 初始化時由 BattleManager 指派
     public void InitSlotInfo(BattleManager.TeamSlotInfo info)
@@ -41,20 +63,20 @@ public abstract class EnemyBase : MonoBehaviour
     }
 
     // 嘲諷檢查函式
-    protected BattleManager.TeamSlotInfo CheckTauntRedirectTarget(BattleManager.TeamSlotInfo originalTarget)
-    {
-        // 檢查自己是否被嘲諷
-        var taunter = BattleEffectManager.Instance.GetTaunter(thisSlotInfo);
+    //protected BattleManager.TeamSlotInfo CheckTauntRedirectTarget(BattleManager.TeamSlotInfo originalTarget)
+    //{
+    //    // 檢查自己是否被嘲諷
+    //    var taunter = BattleEffectManager.Instance.GetTaunter(thisSlotInfo);
 
-        if (taunter != null && taunter.Actor != null)
-        {
-            Debug.Log($"【嘲諷生效】{thisSlotInfo.UnitName} 被迫攻擊 {taunter.UnitName}");
-            return taunter;
-        }
+    //    if (taunter != null && taunter.Actor != null)
+    //    {
+    //        Debug.Log($"【嘲諷生效】{thisSlotInfo.UnitName} 被迫攻擊 {taunter.UnitName}");
+    //        return taunter;
+    //    }
 
-        // 否則使用原本的攻擊邏輯
-        return originalTarget;
-    }
+    //    // 否則使用原本的攻擊邏輯
+    //    return originalTarget;
+    //}
 
     // 延遲等待 BattleManager 準備好
     public IEnumerator DelayAssignSlot()

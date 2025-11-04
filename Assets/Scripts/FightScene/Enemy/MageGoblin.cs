@@ -10,7 +10,7 @@ public class MageGoblin : EnemyBase
     public float returnSpeed = 8f;
 
     [Header("攻擊設定")]
-    public int attackDamage = 25;
+    public int attackDamage = 10;
     public float actionLockDuration = 0.5f;
     public int attackBeatsInterval = 8; // 每 8 拍施放一次火球
     public int warningBeats = 3;
@@ -82,6 +82,19 @@ public class MageGoblin : EnemyBase
         // 防呆：若警示結束但未攻擊，重新安排下一輪攻擊
         if (!isWarning && !isAttacking && Time.time >= nextAttackTime)
             ScheduleNextAttack();
+
+        //if (tauntBeatsRemaining > 0)
+        //{
+        //    // 每秒轉換為拍的倒數方式（每拍約 60/bpm 秒）
+        //    float beatTime = (BeatManager.Instance != null) ? 60f / BeatManager.Instance.bpm : 0.4f;
+        //    tauntBeatsRemaining -= Time.deltaTime / beatTime;
+        //    if (tauntBeatsRemaining <= 0)
+        //    {
+        //        Debug.Log($"【嘲諷結束】{name} 恢復自由目標");
+        //        tauntedBy = null;
+        //    }
+        //}
+
     }
 
     private void OnBeat()
@@ -131,15 +144,20 @@ public class MageGoblin : EnemyBase
         // ★ Step 1：先選出原始目標（最後一位玩家）
         SetTargetToLastAlivePlayer();
 
-        // ★ Step 2：嘲諷檢查（若被 Paladin 嘲諷，改成打 Paladin）
-        if (BattleEffectManager.Instance != null && thisSlotInfo != null)
+        // ★ 嘲諷檢查（若被 Paladin 嘲諷，改成打 Paladin）
+        if (tauntedByObj != null)
         {
-            var taunter = BattleEffectManager.Instance.GetTaunter(thisSlotInfo);
-            if (taunter != null && taunter.Actor != null)
-            {
-                Debug.Log($"【嘲諷生效】{name} 攻擊改為 Paladin {taunter.UnitName}");
-                targetSlot = taunter;
-            }
+            var paladinActor = tauntedByObj;
+            Debug.Log($"【嘲諷生效】{name} 攻擊改為 {paladinActor.name}");
+
+            // 找出 Paladin 在隊伍資料中對應的 TeamSlot
+            var paladinSlot = System.Array.Find(
+                BattleManager.Instance.CTeamInfo,
+                t => t != null && t.Actor == paladinActor
+            );
+
+            if (paladinSlot != null)
+                targetSlot = paladinSlot;
         }
 
         // ★ Step 3：防呆，目標不存在就跳過
