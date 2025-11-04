@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 219277248322158399}
   - component: {fileID: 1101927367008297466}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Taunted
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 3270927943686685174}
   - component: {fileID: 8883291069439209369}
   - component: {fileID: 9107232044299946689}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Frowns
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4676,7 +4676,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 3
