@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6550500961603457954}
   - component: {fileID: 8919035856882640952}
   - component: {fileID: 5650874075677838820}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ground ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4876,7 +4876,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4921,7 +4921,7 @@ GameObject:
   - component: {fileID: 6452027349506626741}
   - component: {fileID: 8188938435140726896}
   - component: {fileID: 4232465793848660457}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ShieldStrike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4938,7 +4938,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.0882096, y: 1.0882096, z: 1.0882096}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2336539425831718018}
@@ -5071,7 +5071,7 @@ GameObject:
   - component: {fileID: 5287822397750019991}
   - component: {fileID: 3272509256086278631}
   - component: {fileID: 3241308102303697084}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CFXR2 Ground Hit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9757,7 +9757,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0

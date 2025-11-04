@@ -9912,7 +9912,7 @@ GameObject:
   - component: {fileID: 3574208472909852995}
   - component: {fileID: -3079194361473140035}
   m_Layer: 0
-  m_Name: ShieldStrike
+  m_Name: (old)ShieldStrike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

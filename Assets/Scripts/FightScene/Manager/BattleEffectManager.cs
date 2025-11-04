@@ -29,6 +29,8 @@ public class BattleEffectManager : MonoBehaviour
 
     public bool isHeavyAttack = false;
 
+    [Header("Paladin 嘲諷效果特效")]
+    public GameObject tauntVfxPrefab;
     // -------------------------
     // 法師充電特效管理
     // -------------------------
@@ -449,6 +451,14 @@ public class BattleEffectManager : MonoBehaviour
             });
             Debug.Log($"【嘲諷施加】{paladin.UnitName} 嘲諷 {enemy.UnitName} 持續 {durationBeats} 拍");
         }
+
+        // 視覺特效（可選）
+        if (enemy.Actor != null && tauntVfxPrefab != null)
+        {
+            var vfx = Instantiate(tauntVfxPrefab, enemy.Actor.transform.position + Vector3.up * 2f, Quaternion.identity);
+            vfx.transform.SetParent(enemy.Actor.transform);
+        }
+
     }
 
     // 每拍倒數（請由 BeatManager 呼叫）

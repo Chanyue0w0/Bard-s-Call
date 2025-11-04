@@ -484,16 +484,26 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator HandlePaladinAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
     {
+        Debug.Log($"[Paladin Attack] 嘲諷流程測試開始：{attacker?.UnitName} → {target?.UnitName}");
+
         if (attacker == null || target == null) yield break;
         var actor = attacker.Actor.transform;
         Vector3 origin = actor.position;
         Vector3 targetPoint = target.SlotTransform.position + meleeContactOffset;
 
+        // 取出角色資料
+        var charData = attacker.Actor.GetComponent<CharacterData>();
+
         // 輕攻擊：Dash 前進並施加嘲諷
         yield return Dash(actor, origin, targetPoint, dashDuration);
 
+        // ★ 使用角色專屬的 NormalAttack 特效
+        GameObject attackPrefab = null;
+        if (charData != null && charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
+            attackPrefab = charData.NormalAttacks[0].SkillPrefab;
+        if (attackPrefab == null) attackPrefab = meleeVfxPrefab; // fallback 安全機制
+
         // 生成攻擊特效
-        GameObject attackPrefab = meleeVfxPrefab;
         if (attackPrefab != null)
         {
             var vfx = Instantiate(attackPrefab, targetPoint, Quaternion.identity);
@@ -507,6 +517,15 @@ public class BattleManager : MonoBehaviour
             }
         }
 
+        if (BattleEffectManager.Instance == null)
+        {
+            Debug.LogError("【錯誤】BattleEffectManager.Instance 為 null！");
+        }
+        else
+        {
+            Debug.Log("【嘲諷測試】BattleEffectManager 實例存在，準備呼叫 ApplyTaunt()");
+        }
+
         // 嘲諷效果：16 拍
         BattleEffectManager.Instance.ApplyTaunt(target, attacker, 16);
 
@@ -516,7 +535,6 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(dashStayDuration);
         yield return Dash(actor, targetPoint, origin, dashDuration);
     }
-
 
     // --------------------------------------------------
     // 格檔
