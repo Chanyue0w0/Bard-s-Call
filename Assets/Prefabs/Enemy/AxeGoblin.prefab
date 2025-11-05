@@ -126,7 +126,7 @@ MonoBehaviour:
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
-  attackDamage: 20
+  attackDamage: 10
   dashDuration: 0.1
   actionLockDuration: 0.3
   attackBeatsInterval: 10
@@ -209,8 +209,8 @@ MonoBehaviour:
   HP: 280
   MaxMP: 0
   MP: 0
-  OriginAtk: 30
-  Atk: 30
+  OriginAtk: 10
+  Atk: 10
   NormalAttacks: []
   HeavyAttack:
     SkillName: 

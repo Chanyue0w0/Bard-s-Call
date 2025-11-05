@@ -188,8 +188,8 @@ MonoBehaviour:
   HP: 280
   MaxMP: 0
   MP: 0
-  OriginAtk: 0
-  Atk: 0
+  OriginAtk: 10
+  Atk: 10
   NormalAttacks: []
   HeavyAttack:
     SkillName: 
