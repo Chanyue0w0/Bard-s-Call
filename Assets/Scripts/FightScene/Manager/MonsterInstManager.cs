@@ -8,7 +8,9 @@ public class MonsterInstManager : MonoBehaviour
 
     [Header("怪物 Prefabs")]
     public GameObject slimePrefab;
+    public GameObject axeGoblinPrefab;
     public GameObject shieldGoblinPrefab;
+    public GameObject mageGoblinPrefab;
     public GameObject darkKnightPrefab;
 
     [Header("關聯組件")]
@@ -76,9 +78,18 @@ public class MonsterInstManager : MonoBehaviour
             teamManager.EnemyTeamInfo[i] = new BattleManager.TeamSlotInfo();
         }
 
-        // 根據 Level 生成敵人
+        // 定義可用怪物池
+        List<GameObject> monsterPool = new List<GameObject>()
+        {
+            slimePrefab,
+            shieldGoblinPrefab,
+            axeGoblinPrefab,
+            mageGoblinPrefab
+        };
+
         if (currentLevel < 4)
         {
+            // 第 1~3 關，從普通怪物中隨機生成 1~3 隻
             int enemyCount = Random.Range(1, 4); // 1~3 隻
             List<int> availableSlots = new List<int>() { 0, 1, 2 };
 
@@ -89,18 +100,32 @@ public class MonsterInstManager : MonoBehaviour
                 int slotIndex = availableSlots[Random.Range(0, availableSlots.Count)];
                 availableSlots.Remove(slotIndex);
 
-                GameObject prefab = (Random.value > 0.5f) ? slimePrefab : shieldGoblinPrefab;
+                GameObject prefab = monsterPool[Random.Range(0, monsterPool.Count)];
                 teamManager.EnemyTeamInfo[slotIndex].PrefabToSpawn = prefab;
             }
         }
         else
         {
-            // Level 4 生成 DarkLongSwordKnight
-            int bossSlot = Random.Range(0, 3);
-            teamManager.EnemyTeamInfo[bossSlot].PrefabToSpawn = darkKnightPrefab;
+            // 第 4 關，Boss 與普通怪物機率相同
+            List<GameObject> fullPool = new List<GameObject>(monsterPool);
+            fullPool.Add(darkKnightPrefab);
+
+            int enemyCount = Random.Range(1, 4);
+            List<int> availableSlots = new List<int>() { 0, 1, 2 };
+
+            for (int i = 0; i < enemyCount; i++)
+            {
+                if (availableSlots.Count == 0) break;
+
+                int slotIndex = availableSlots[Random.Range(0, availableSlots.Count)];
+                availableSlots.Remove(slotIndex);
+
+                GameObject prefab = fullPool[Random.Range(0, fullPool.Count)];
+                teamManager.EnemyTeamInfo[slotIndex].PrefabToSpawn = prefab;
+            }
         }
 
-        // 使用原有流程生成
+        // 生成敵人
         teamManager.SetupEnemyTeam();
     }
 }

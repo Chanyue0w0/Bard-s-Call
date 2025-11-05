@@ -270,7 +270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63c91c47b09c07147b772a7d1172ea70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slimePrefab: {fileID: 8612621303360054075, guid: a8d95f74bdd296547bd2af00e301adce, type: 3}
+  slimePrefab: {fileID: 2638506003195011200, guid: ff7a0259006304c45bb70ae574cf97e8, type: 3}
   shieldGoblinPrefab: {fileID: 3637990080320469891, guid: d0b076231aa6a0f4fb965f3bef29c227, type: 3}
   darkKnightPrefab: {fileID: 3663377574313024256, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
   teamManager: {fileID: 589954060}
@@ -3793,75 +3793,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8469d0c03f33b940bbd55aca467cc25, type: 3}
---- !u!1001 &4931929036131966668
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3412195076714824846, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3412195076714824846, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3412195076714824846, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3412195076714824846, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3412195076714824846, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3412195076714824846, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3412195076714824846, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3412195076714824846, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3412195076714824846, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3412195076714824846, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3890001018182162824, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3890001018182162824, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8525389730701380064, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_Name
-      value: TauntedAura
-      objectReference: {fileID: 0}
-    - target: {fileID: 8525389730701380064, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
 --- !u!1001 &5027490728809139567
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4071,5 +4002,4 @@ SceneRoots:
   - {fileID: 5027490728809139567}
   - {fileID: 30715189}
   - {fileID: 2447239891941807240}
-  - {fileID: 4931929036131966668}
   - {fileID: 7638661459253607314}

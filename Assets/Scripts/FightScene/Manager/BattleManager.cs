@@ -505,7 +505,7 @@ public class BattleManager : MonoBehaviour
                     Instantiate(charData.HeavyAttack.SkillPrefab, enemy.SlotTransform.position, Quaternion.identity);
 
                     // 套用嘲諷效果（假設 ApplyTaunt 仍為有效方法）
-                    BattleEffectManager.Instance.ApplyTaunt(enemy.Actor, attacker.Actor, 8);
+                    BattleEffectManager.Instance.ApplyTaunt(enemy.Actor, attacker.Actor, 16);
                 }
             }
             yield break;
