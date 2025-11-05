@@ -1436,7 +1436,7 @@ MonoBehaviour:
     NormalAttackNames: []
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
-  - PrefabToSpawn: {fileID: 1071723761893033997, guid: c805ec80bea21a942bcf03ac5152b9ad, type: 3}
+  - PrefabToSpawn: {fileID: 2638506003195011200, guid: ff7a0259006304c45bb70ae574cf97e8, type: 3}
     UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 0}
@@ -1452,7 +1452,7 @@ MonoBehaviour:
     NormalAttackNames: []
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
-  - PrefabToSpawn: {fileID: 0}
+  - PrefabToSpawn: {fileID: 1071723761893033997, guid: c805ec80bea21a942bcf03ac5152b9ad, type: 3}
     UnitName: 
     Actor: {fileID: 0}
     SlotTransform: {fileID: 0}
