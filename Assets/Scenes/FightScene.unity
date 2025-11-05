@@ -3554,6 +3554,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CaptainAura
       objectReference: {fileID: 0}
+    - target: {fileID: 1084632303058564081, guid: 8b3cfa4ff9bd539459cce5ab92e60a73, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5765224557364367842, guid: 8b3cfa4ff9bd539459cce5ab92e60a73, type: 3}
       propertyPath: m_Intensity
       value: 0

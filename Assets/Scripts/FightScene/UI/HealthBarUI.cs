@@ -4,6 +4,8 @@ using UnityEngine.UI;
 public class HealthBarUI : MonoBehaviour
 {
     [SerializeField] private Slider slider;
+    [SerializeField] private Text hpText; // ★ 新增：顯示血量的文字
+
     private Transform target;                // 角色的頭部位置
     private Camera uiCamera;
     private RectTransform rectTransform;
@@ -33,8 +35,15 @@ public class HealthBarUI : MonoBehaviour
 
     private void UpdateUI()
     {
-        if (info == null || slider == null) return;
-        slider.value = Mathf.Clamp01((float)info.HP / info.MaxHP);
+        if (info == null) return;
+
+        // 更新血條數值
+        if (slider != null)
+            slider.value = Mathf.Clamp01((float)info.HP / info.MaxHP);
+
+        // ★ 更新文字顯示
+        if (hpText != null)
+            hpText.text = info.HP + ""; //+" / " + info.MaxHP
     }
 
     void Update()
