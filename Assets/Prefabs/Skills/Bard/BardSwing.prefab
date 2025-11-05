@@ -85,7 +85,7 @@ MonoBehaviour:
   lifeTime: 0.3
   isPerfect: 0
   isHeavyAttack: 0
-  damage: 30
+  damage: 10
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
   uiCanvas: {fileID: 0}
 --- !u!58 &1841288746243108311

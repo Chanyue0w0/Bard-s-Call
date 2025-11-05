@@ -257,7 +257,6 @@ public class BattleEffectManager : MonoBehaviour
             ? overrideDamage
             : Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * (isPerfect ? 1f : 0f)));
 
-
         target.HP -= finalDamage;
         if (target.HP < 0) target.HP = 0;
 
@@ -270,6 +269,12 @@ public class BattleEffectManager : MonoBehaviour
         // 血條更新
         var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
         if (hb != null) hb.ForceUpdate();
+
+        // 顯示傷害數字（非 UI 物件）
+        if (target.Actor != null && DamageNumberManager.Instance != null)
+        {
+            DamageNumberManager.Instance.ShowDamage(target.Actor.transform, finalDamage);
+        }
 
         // 玩家方或敵方受傷時 → 若是法師則清除充電層
         if (target.Actor != null)
