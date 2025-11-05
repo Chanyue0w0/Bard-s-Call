@@ -11,7 +11,9 @@ public class DamageNumberGroup : MonoBehaviour
         public int digit;
         public float ttl;
         public float t;
+        public Dictionary<int, Queue<ParticleSystem>> pool;
     }
+
 
     [HideInInspector] public DamageNumberManager manager;
 
@@ -22,16 +24,18 @@ public class DamageNumberGroup : MonoBehaviour
     private float groupDuration;
     private bool running;
 
-    public void RegisterDigit(ParticleSystem ps, int digit, float lifetime)
+    public void RegisterDigit(ParticleSystem ps, int digit, float lifetime, Dictionary<int, Queue<ParticleSystem>> pool)
     {
         entries.Add(new DigitEntry
         {
             ps = ps,
             digit = digit,
             ttl = lifetime,
-            t = 0f
+            t = 0f,
+            pool = pool
         });
     }
+
 
     public void Begin(float floatUp, float duration)
     {
@@ -60,7 +64,7 @@ public class DamageNumberGroup : MonoBehaviour
             if (e.t >= e.ttl || (e.ps == null))
             {
                 if (e.ps != null && manager != null)
-                    manager.ReturnDigit(e.digit, e.ps);
+                    manager.ReturnDigit(e.digit, e.ps, e.pool);
 
                 entries.RemoveAt(i);
             }

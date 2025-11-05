@@ -387,6 +387,13 @@ public class BattleEffectManager : MonoBehaviour
             var hb = ally.Actor.GetComponentInChildren<HealthBarUI>();
             if (hb != null) hb.ForceUpdate();
 
+            // 顯示治療數字（綠色）
+            if (DamageNumberManager.Instance != null)
+            {
+                DamageNumberManager.Instance.ShowHeal(ally.Actor.transform, healAmount);
+            }
+
+
             // 生成治癒特效
             if (healVfxPrefab != null)
             {
