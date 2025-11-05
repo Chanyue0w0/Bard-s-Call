@@ -7,7 +7,7 @@ public class MonsterInstManager : MonoBehaviour
     public static MonsterInstManager Instance { get; private set; }
 
     [Header("怪物 Prefabs")]
-    public GameObject slimePrefab;
+    //public GameObject slimePrefab;
     public GameObject axeGoblinPrefab;
     public GameObject shieldGoblinPrefab;
     public GameObject mageGoblinPrefab;
@@ -81,7 +81,7 @@ public class MonsterInstManager : MonoBehaviour
         // 定義可用怪物池
         List<GameObject> monsterPool = new List<GameObject>()
         {
-            slimePrefab,
+            //slimePrefab,
             shieldGoblinPrefab,
             axeGoblinPrefab,
             mageGoblinPrefab

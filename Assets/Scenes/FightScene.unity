@@ -270,8 +270,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63c91c47b09c07147b772a7d1172ea70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slimePrefab: {fileID: 2638506003195011200, guid: ff7a0259006304c45bb70ae574cf97e8, type: 3}
+  axeGoblinPrefab: {fileID: 2638506003195011200, guid: ff7a0259006304c45bb70ae574cf97e8, type: 3}
   shieldGoblinPrefab: {fileID: 3637990080320469891, guid: d0b076231aa6a0f4fb965f3bef29c227, type: 3}
+  mageGoblinPrefab: {fileID: 1071723761893033997, guid: c805ec80bea21a942bcf03ac5152b9ad, type: 3}
   darkKnightPrefab: {fileID: 3663377574313024256, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
   teamManager: {fileID: 589954060}
   checkInterval: 1
