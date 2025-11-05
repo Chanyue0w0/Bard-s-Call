@@ -162,9 +162,9 @@ MonoBehaviour:
     FixedDamage: 1
   HeavyAttack:
     SkillName: 
-    SkillPrefab: {fileID: 0}
+    SkillPrefab: {fileID: 8525389730701380064, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
     MPCost: 0
-    DamageMultiplier: 1
+    DamageMultiplier: 0
     FixedDamage: 0
   Skills: []
   ShieldEffectPrefab: {fileID: 0}

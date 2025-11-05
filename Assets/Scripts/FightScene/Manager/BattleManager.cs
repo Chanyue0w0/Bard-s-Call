@@ -482,28 +482,49 @@ public class BattleManager : MonoBehaviour
         yield return null;
     }
 
+    // --------------------------------------------------
+    // Paladin 攻擊邏輯（輕攻擊 + 重攻擊）
+    // --------------------------------------------------
     private IEnumerator HandlePaladinAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
     {
-        Debug.Log($"[Paladin Attack] 嘲諷流程測試開始：{attacker?.UnitName} → {target?.UnitName}");
-
-        if (attacker == null || target == null) yield break;
         var actor = attacker.Actor.transform;
+        var charData = attacker.Actor.GetComponent<CharacterData>();
+        if (charData == null) yield break;
+
+        // === 第四拍：重攻擊 ===
+        if (beatInCycle == BeatManager.Instance.beatsPerMeasure)
+        {
+            Debug.Log($"[聖騎士重攻擊] {attacker.UnitName} 嘲諷全體敵人！");
+            if (charData.HeavyAttack?.SkillPrefab != null)
+            {
+                foreach (var enemy in EnemyTeamInfo)
+                {
+                    if (enemy == null || enemy.Actor == null) continue;
+
+                    // 在敵方位置生成 Paladin 的重攻擊特效
+                    Instantiate(charData.HeavyAttack.SkillPrefab, enemy.SlotTransform.position, Quaternion.identity);
+
+                    // 套用嘲諷效果（假設 ApplyTaunt 仍為有效方法）
+                    BattleEffectManager.Instance.ApplyTaunt(enemy.Actor, attacker.Actor, 8);
+                }
+            }
+            yield break;
+        }
+
+        // === 普通攻擊（不附帶嘲諷） ===
+        if (attacker == null || target == null) yield break;
         Vector3 origin = actor.position;
         Vector3 targetPoint = target.SlotTransform.position + meleeContactOffset;
 
-        // 取出角色資料
-        var charData = attacker.Actor.GetComponent<CharacterData>();
-
-        // 輕攻擊：Dash 前進並施加嘲諷
+        // Dash 前進
         yield return Dash(actor, origin, targetPoint, dashDuration);
 
-        // ★ 使用角色專屬的 NormalAttack 特效
+        // 普攻特效
         GameObject attackPrefab = null;
-        if (charData != null && charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
+        if (charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
             attackPrefab = charData.NormalAttacks[0].SkillPrefab;
-        if (attackPrefab == null) attackPrefab = meleeVfxPrefab; // fallback 安全機制
+        if (attackPrefab == null) attackPrefab = meleeVfxPrefab;
 
-        // 生成攻擊特效
         if (attackPrefab != null)
         {
             var vfx = Instantiate(attackPrefab, targetPoint, Quaternion.identity);
@@ -517,24 +538,13 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        if (BattleEffectManager.Instance == null)
-        {
-            Debug.LogError("【錯誤】BattleEffectManager.Instance 為 null！");
-        }
-        else
-        {
-            Debug.Log("【嘲諷測試】BattleEffectManager 實例存在，準備呼叫 ApplyTaunt()");
-        }
-
-        // 嘲諷效果：8 拍
-        BattleEffectManager.Instance.ApplyTaunt(target.Actor, attacker.Actor, 8);
-
-        // 傷害處理（沿用原本Hit機制）
+        // 傷害計算（沿用既有邏輯）
         BattleEffectManager.Instance.OnHit(attacker, target, perfect);
 
         yield return new WaitForSeconds(dashStayDuration);
         yield return Dash(actor, targetPoint, origin, dashDuration);
     }
+
 
     // --------------------------------------------------
     // 格檔
