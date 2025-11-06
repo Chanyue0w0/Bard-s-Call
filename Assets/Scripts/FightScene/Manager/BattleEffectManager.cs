@@ -323,22 +323,22 @@ public class BattleEffectManager : MonoBehaviour
     }
 
 
-    public void HealTeam(int healAmount)
-    {
-        var team = BattleManager.Instance.CTeamInfo;
-        foreach (var ally in team)
-        {
-            if (ally != null && ally.Actor != null)
-            {
-                ally.HP = Mathf.Min(ally.MaxHP, ally.HP + healAmount);
+    //public void HealTeam(int healAmount)
+    //{
+    //    var team = BattleManager.Instance.CTeamInfo;
+    //    foreach (var ally in team)
+    //    {
+    //        if (ally != null && ally.Actor != null)
+    //        {
+    //            ally.HP = Mathf.Min(ally.MaxHP, ally.HP + healAmount);
 
-                var hb = ally.Actor.GetComponentInChildren<HealthBarUI>();
-                if (hb != null) hb.ForceUpdate();
+    //            var hb = ally.Actor.GetComponentInChildren<HealthBarUI>();
+    //            if (hb != null) hb.ForceUpdate();
 
-                Debug.Log($"{ally.UnitName} 回復 {healAmount} → 現在 HP={ally.HP}");
-            }
-        }
-    }
+    //            Debug.Log($"{ally.UnitName} 回復 {healAmount} → 現在 HP={ally.HP}");
+    //        }
+    //    }
+    //}
 
     // =======================
     // 永久格檔支援（敵人專用）

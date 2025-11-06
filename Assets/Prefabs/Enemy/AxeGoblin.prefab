@@ -129,7 +129,7 @@ MonoBehaviour:
   attackDamage: 10
   dashDuration: 0.1
   actionLockDuration: 0.3
-  attackBeatsInterval: 10
+  attackBeatsInterval: 15
   attackVfxPrefab: {fileID: 2090553158902562417, guid: 05d7012d2d4253b43998f755a68508ab, type: 3}
   vfxLifetime: 1.5
   warningBeats: 2

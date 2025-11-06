@@ -339,7 +339,7 @@ public class BattleManager : MonoBehaviour
             : 0.6f;
 
         // ★ 延遲3拍（演奏前奏）
-        yield return new WaitForSeconds(secondsPerBeat * 3f);
+        yield return new WaitForSeconds(secondsPerBeat * 5f);
 
         Debug.Log($"[Fever-Bard] {bard.UnitName} 演奏群體治癒！");
 
@@ -363,7 +363,7 @@ public class BattleManager : MonoBehaviour
         }
 
         // 執行全體治療
-        BattleEffectManager.Instance.HealTeam(50);
+        BattleEffectManager.Instance.HealTeamWithEffect(50);
         Debug.Log("[Fever-Bard] 全體回復 50 HP！");
 
         yield return null;
@@ -383,7 +383,7 @@ public class BattleManager : MonoBehaviour
             : 0.6f;
 
         // ★ 延遲兩拍（聚氣）
-        yield return new WaitForSeconds(secondsPerBeat * 2f);
+        yield return new WaitForSeconds(secondsPerBeat * 3f);
 
         Debug.Log($"[Fever-Mage] {mage.UnitName} 釋放雷擊！");
 
