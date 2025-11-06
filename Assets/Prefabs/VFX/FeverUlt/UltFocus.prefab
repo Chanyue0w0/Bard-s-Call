@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4621478162060656668}
   - component: {fileID: 2956321732260595964}
   - component: {fileID: 1374315108424967953}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CFXR Magical Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4893,7 +4893,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9103467637845560028}
   - component: {fileID: 2260862464808053813}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: UltFocus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4910,7 +4910,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.78176796, y: 0.78176796, z: 0.78176796}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1037993324881084439}
@@ -4941,7 +4941,7 @@ GameObject:
   - component: {fileID: 1655303759453104355}
   - component: {fileID: 8290933965342635009}
   - component: {fileID: 8417436993626395920}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Small glows
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9739,7 +9739,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -9783,7 +9783,7 @@ GameObject:
   - component: {fileID: 5136618135901425366}
   - component: {fileID: 6408350392739918909}
   - component: {fileID: 3693061193093236310}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9901,7 +9901,7 @@ GameObject:
   - component: {fileID: 5991093159155692006}
   - component: {fileID: 3697604514097167812}
   - component: {fileID: 607174714607627909}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14757,7 +14757,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
