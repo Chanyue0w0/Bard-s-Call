@@ -82,13 +82,15 @@ public class BattleTeamManager : MonoBehaviour
 
             info.SlotTransform = positions[i];
 
-            // 敵人自動索引
             var enemyBase = info.Actor.GetComponent<EnemyBase>();
             if (enemyBase != null)
             {
-                enemyBase.ETeam = BattleManager.ETeam.Enemy; // ★ 改用新 enum
-                enemyBase.StartCoroutine("DelayAssignSlot");
+                enemyBase.ETeam = BattleManager.ETeam.Enemy;
+                enemyBase.AssignSelfSlot(info);                // ★ 用公開方法設定
+                enemyBase.StartCoroutine(enemyBase.DelayAssignSlot());
             }
+
+
 
             var data = info.Actor.GetComponent<CharacterData>();
             if (data != null)

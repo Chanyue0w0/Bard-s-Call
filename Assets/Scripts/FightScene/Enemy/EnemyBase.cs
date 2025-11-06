@@ -36,6 +36,43 @@ public abstract class EnemyBase : MonoBehaviour
         FeverManager.OnFeverUltStart -= HandleFeverStart;
     }
 
+    // --------------------------------------------------
+    // 延遲 Slot 指派（供 BattleTeamManager 呼叫）
+    // --------------------------------------------------
+    public IEnumerator DelayAssignSlot()
+    {
+        // 避免在 Instantiate 當下取不到 BattleManager
+        yield return new WaitForSeconds(0.05f);
+
+        var bm = BattleManager.Instance;
+        if (bm == null) yield break;
+
+        // 嘗試尋找自身的 TeamSlot
+        for (int i = 0; i < bm.EnemyTeamInfo.Length; i++)
+        {
+            var info = bm.EnemyTeamInfo[i];
+            if (info != null && info.Actor == this.gameObject)
+            {
+                thisSlotInfo = info;
+                slotIndex = i;
+                basePosWorld = transform.position;
+                basePosLocal = transform.localPosition;
+                Debug.Log($"[DelayAssignSlot] {name} 已綁定 slot {i}");
+                yield break;
+            }
+        }
+    }
+
+    // --------------------------------------------------
+    // 外部設定自身 Slot（供 BattleTeamManager 呼叫）
+    // --------------------------------------------------
+    public void AssignSelfSlot(BattleManager.TeamSlotInfo slot)
+    {
+        selfSlot = slot;
+        thisSlotInfo = slot;
+    }
+
+
     protected virtual void Update()
     {
         // 嘲諷倒數
@@ -63,7 +100,7 @@ public abstract class EnemyBase : MonoBehaviour
             }
         }
     }
-
+    
     // ★ Fever事件處理：所有敵人共用
     private void HandleFeverStart(int durationBeats)
     {
