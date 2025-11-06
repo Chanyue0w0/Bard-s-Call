@@ -119,12 +119,20 @@ public class BeatJudge : MonoBehaviour
                 VibrationManager.Instance.Vibrate("Perfect");
             }
 
+            // 若節拍命中 Perfect，FeverManager
+            FeverManager.Instance.AddPerfect();
+
+
             Debug.Log($"[Perfect] 打擊拍 = {LastHitBeatIndex}  Δt = {delta:F4}s");
             RegisterBeatResult(true);
         }
         else
         {
             SpawnMissText();
+
+            // 若打錯拍，FeverManager
+            FeverManager.Instance.AddMiss();
+
             Debug.Log($"[Miss] Δt = {delta:F4}s");
             RegisterBeatResult(false);
         }
