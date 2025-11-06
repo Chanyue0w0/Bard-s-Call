@@ -221,8 +221,8 @@ MonoBehaviour:
     DamageMultiplier: 1
     FixedDamage: 0
   Skills:
-  - SkillName: HealEffect(Cross)
-    SkillPrefab: {fileID: 6447799702543544102, guid: 6157b86770cb3724a84252b4cd283c13, type: 3}
+  - SkillName: HealExplosionWithCross
+    SkillPrefab: {fileID: 5649239540752143569, guid: 5bc5c59e92fadb343b3c89367d801cea, type: 3}
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0

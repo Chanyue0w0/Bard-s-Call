@@ -327,15 +327,48 @@ public class BattleManager : MonoBehaviour
 
 
     // =============================================
-    // 2. 吟遊詩人 Fever：全體治癒
+    // 2. 吟遊詩人 Fever：延遲3拍後在全隊位置生成治癒特效並全體治療
     // =============================================
     private IEnumerator HandleBardFever(TeamSlotInfo bard, CharacterData data)
     {
+        Debug.Log($"[Fever-Bard] {bard.UnitName} 正在演奏治癒旋律……");
+
+        // 取得每拍的秒數
+        float secondsPerBeat = (BeatManager.Instance != null)
+            ? (60f / BeatManager.Instance.bpm)
+            : 0.6f;
+
+        // ★ 延遲3拍（演奏前奏）
+        yield return new WaitForSeconds(secondsPerBeat * 3f);
+
         Debug.Log($"[Fever-Bard] {bard.UnitName} 演奏群體治癒！");
+
+        // 生成 Skill[0] 特效於我方全隊位置上
+        if (data.Skills != null && data.Skills[0] != null && data.Skills[0].SkillPrefab != null)
+        {
+            foreach (var ally in CTeamInfo)
+            {
+                if (ally != null && ally.Actor != null && ally.HP > 0)
+                {
+                    Vector3 spawnPos = ally.SlotTransform.position + new Vector3(0f, 0.5f, 0f);
+                    GameObject vfx = Instantiate(data.Skills[0].SkillPrefab, spawnPos, Quaternion.identity);
+                    Debug.Log($"[Fever-Bard] 治癒光環生成於 {ally.UnitName} 的位置！");
+                    GameObject.Destroy(vfx, 4f); // 可自行調整特效存留時間
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[Fever-Bard] 未設定 Skill[0] 或 Prefab 無效，無法生成特效。");
+        }
+
+        // 執行全體治療
         BattleEffectManager.Instance.HealTeam(50);
+        Debug.Log("[Fever-Bard] 全體回復 50 HP！");
 
         yield return null;
     }
+
 
     // =============================================
     // 3. 法師 Fever：延遲兩拍後在敵方第二個位置生成雷電 MultiStrikeSkill
