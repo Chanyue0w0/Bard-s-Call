@@ -130,6 +130,8 @@ public class FeverManager : MonoBehaviour
                     Transform actorTrans = slot.Actor.transform;
                     Vector3 pos = actorTrans.position + new Vector3(0f, 0.5f, 0f);
                     GameObject vfx = Instantiate(ultFocusVFXPrefab, pos, Quaternion.identity);
+                    vfx.transform.SetParent(actorTrans, worldPositionStays: true);
+
                     Destroy(vfx, 3f);
                 }
             }
