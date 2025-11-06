@@ -10,9 +10,9 @@ public class FeverManager : MonoBehaviour
     public float feverMax = 100f;
 
     [Header("累積參數")]
-    public float gainPerPerfect = 1.12f;    // 每次 Perfect 增加值
-    public float bonusPerBar = 0.5f;        // 小節全Perfect獎勵
-    public float missPenalty = 8f;          // Miss 扣除值
+    public float gainPerPerfect = 1.12f;
+    public float bonusPerBar = 0.5f;
+    public float missPenalty = 8f;
 
     [Header("拍點判定設定")]
     public int beatsPerBar = 4;
@@ -26,16 +26,17 @@ public class FeverManager : MonoBehaviour
     // Fever 大招動畫控制
     // --------------------------------------------------
     [Header("Fever 大招演出參數")]
-    public GameObject feverUltBackground;   // Fever 背景 UI
-    public Transform focusPoint;            // 聚焦目標（角色或中央）
-    public float cameraZoomScale = 0.5f;    // 鏡頭縮放比例
-    public float zoomDuration = 0.3f;       // 進出縮放時間
-    public float holdBeats = 4f;            // 持續拍數（4拍）
+    public GameObject feverUltBackground;
+    public Transform focusPoint;
+    public float cameraZoomScale = 0.5f;
+    public float zoomDuration = 0.3f;
+    public float holdBeats = 4f;
     private Camera mainCam;
     private float originalSize;
     private Vector3 originalCamPos;
+
     [Header("Fever 大招特效")]
-    public GameObject ultFocusVFXPrefab; // ★ 新增：全隊大招聚氣特效
+    public GameObject ultFocusVFXPrefab;
 
 
     private void Awake()
@@ -100,13 +101,13 @@ public class FeverManager : MonoBehaviour
     }
 
     // --------------------------------------------------
-    // Fever 大招動畫流程（鏡頭 + 背景）
+    // Fever 大招動畫流程（鏡頭 + 背景 + 角色行動）
     // --------------------------------------------------
     public IEnumerator HandleFeverUltimateSequence()
     {
         Debug.Log("[FeverManager] 啟動全隊大招動畫流程");
 
-        // ★ 立即歸零 Fever，防止重複觸發
+        // 歸零防重觸發
         currentFever = 0f;
         feverTriggered = false;
         UpdateFeverUI();
@@ -114,57 +115,54 @@ public class FeverManager : MonoBehaviour
         if (feverUltBackground != null)
             feverUltBackground.SetActive(true);
 
-        // 鏡頭縮放聚焦
+        // 鏡頭聚焦
         if (mainCam != null && focusPoint != null)
             yield return StartCoroutine(CameraFocusZoom(true));
 
-        // ★ 生成三位玩家的 Ult 聚氣特效
+        // 生成聚氣特效（第1拍期間）
         if (ultFocusVFXPrefab != null && BattleManager.Instance != null)
         {
             var bm = BattleManager.Instance;
-            for (int i = 0; i < bm.CTeamInfo.Length; i++)
+            foreach (var slot in bm.CTeamInfo)
             {
-                var slot = bm.CTeamInfo[i];
                 if (slot != null && slot.Actor != null)
                 {
                     Transform actorTrans = slot.Actor.transform;
                     Vector3 pos = actorTrans.position + new Vector3(0f, 0.5f, 0f);
-                    GameObject vfx = GameObject.Instantiate(ultFocusVFXPrefab, pos, Quaternion.identity);
-                    GameObject.Destroy(vfx, 3f);
+                    GameObject vfx = Instantiate(ultFocusVFXPrefab, pos, Quaternion.identity);
+                    Destroy(vfx, 3f);
                 }
             }
         }
 
-        // ----------------------------
-        // 計算節奏時間
-        // ----------------------------
+        // 拍點節奏計算
         float secondsPerBeat = (BeatManager.Instance != null)
             ? (60f / BeatManager.Instance.bpm)
             : 0.6f;
 
-        float focusDuration = secondsPerBeat * 2f; // 鏡頭聚焦持續2拍
-        float bgDuration = secondsPerBeat * 4f;    // 背景持續4拍
+        // ★ 第1拍：聚焦中
+        yield return new WaitForSeconds(secondsPerBeat * 1f);
 
-        // ----------------------------
-        // 1. 鏡頭持續2拍 → 回復
-        // ----------------------------
-        yield return new WaitForSeconds(focusDuration);
-
+        // ★ 第2拍：開始鏡頭回復
         if (mainCam != null)
-            yield return StartCoroutine(CameraFocusZoom(false));
+            StartCoroutine(CameraFocusZoom(false));
 
-        // ----------------------------
-        // 2. 背景再多留2拍後關閉
-        // ----------------------------
-        float remainDuration = bgDuration - focusDuration;
-        if (remainDuration > 0f)
-            yield return new WaitForSeconds(remainDuration);
+        // ★ 第3拍：全隊施放大招
+        yield return new WaitForSeconds(secondsPerBeat * 1f);
+        if (BattleManager.Instance != null)
+        {
+            Debug.Log("[FeverManager] 第3拍：全隊施放大招！");
+            BattleManager.Instance.TriggerFeverActions(phase: 3);
+        }
 
+        // ★ 第4拍：收尾演出
+        yield return new WaitForSeconds(secondsPerBeat * 1f);
         if (feverUltBackground != null)
             feverUltBackground.SetActive(false);
 
-        Debug.Log("[FeverManager] 大招動畫結束，可進入全隊施放階段。");
+        Debug.Log("[FeverManager] 大招動畫結束。");
     }
+
 
 
     private IEnumerator CameraFocusZoom(bool zoomIn)
@@ -189,9 +187,6 @@ public class FeverManager : MonoBehaviour
         }
     }
 
-    // --------------------------------------------------
-    // UI 更新與重置
-    // --------------------------------------------------
     private void UpdateFeverUI()
     {
         if (feverUI != null)

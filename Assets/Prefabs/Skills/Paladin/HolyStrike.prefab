@@ -29418,7 +29418,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8812389661824061792}
-  - component: {fileID: 5774832277395769523}
+  - component: {fileID: 2052847979744935552}
   - component: {fileID: 459832527493559426}
   - component: {fileID: 3143638159585214615}
   m_Layer: 6
@@ -29448,7 +29448,7 @@ Transform:
   - {fileID: 6006496978102827817}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5774832277395769523
+--- !u!114 &2052847979744935552
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29457,7 +29457,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4588907083462827215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 307f19dc64bd78a43801a8b1076bd667, type: 3}
+  m_Script: {fileID: 11500000, guid: 6cadbf80de33b3f4eaaae500c67a83f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   attacker:
@@ -29477,28 +29477,12 @@ MonoBehaviour:
     NormalAttackNames: []
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
-  target:
-    PrefabToSpawn: {fileID: 0}
-    UnitName: 
-    Actor: {fileID: 0}
-    SlotTransform: {fileID: 0}
-    ClassType: 0
-    MaxHP: 100
-    HP: 100
-    MaxMP: 100
-    MP: 0
-    OriginAtk: 10
-    Atk: 10
-    SkillNames: []
-    SkillPrefabs: []
-    NormalAttackNames: []
-    NormalAttackPrefabs: []
-    AssignedKeyIndex: 0
-  explosionPrefab: {fileID: 6872082441951201123, guid: fc5cbae039fb7fd49af34b243e9f69f4, type: 3}
-  lifeTime: 0.3
+  targets: []
+  explosionPrefab: {fileID: 8166078708589751786, guid: 7cb10d9cf1a36e342aadda7c60f1d577, type: 3}
+  lifeTime: 1
   isPerfect: 0
   isHeavyAttack: 1
-  damage: 10
+  damage: 100
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
   uiCanvas: {fileID: 0}
 --- !u!61 &459832527493559426
@@ -29533,7 +29517,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -1.6408387, y: 0}
+  m_Offset: {x: -1.6408386, y: 1.2017866}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -29544,7 +29528,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 4.2816763, y: 1}
+  m_Size: {x: 4.2816763, y: 3.4035733}
   m_EdgeRadius: 0
 --- !u!50 &3143638159585214615
 Rigidbody2D:

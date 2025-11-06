@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -206,6 +207,154 @@ public class BattleManager : MonoBehaviour
         StartCoroutine(FeverManager.Instance.HandleFeverUltimateSequence());
     }
 
+    // --------------------------------------------------
+    // Fever 大招階段（第3拍觸發）
+    // --------------------------------------------------
+    public void TriggerFeverActions(int phase)
+    {
+        if (phase != 3) return; // 僅在第三拍觸發實際攻擊行動
+        Debug.Log("[BattleManager] Fever 第3拍：全隊施放各自大招！");
+
+        foreach (var slot in CTeamInfo)
+        {
+            if (slot == null || slot.Actor == null || slot.HP <= 0)
+                continue;
+
+            var charData = slot.Actor.GetComponent<CharacterData>();
+            if (charData == null)
+            {
+                Debug.LogWarning($"[Fever] {slot.UnitName} 沒有 CharacterData，略過。");
+                continue;
+            }
+
+            switch (slot.ClassType)
+            {
+                // -----------------------------
+                // 聖騎士 Paladin
+                // -----------------------------
+                case UnitClass.Paladin:
+                    StartCoroutine(HandlePaladinFever(slot, charData));
+                    break;
+
+                // -----------------------------
+                // 吟遊詩人 Bard
+                // -----------------------------
+                //case UnitClass.Bard:
+                //    StartCoroutine(HandleBardFever(slot, charData));
+                //    break;
+
+                //// -----------------------------
+                //// 法師 Mage
+                //// -----------------------------
+                //case UnitClass.Mage:
+                //    StartCoroutine(HandleMageFever(slot, charData));
+                //    break;
+
+                default:
+                    Debug.Log($"[Fever] {slot.UnitName} 無特別大招。");
+                    break;
+            }
+        }
+    }
+
+    #region Fever 技能細節實作
+
+    // =============================================
+    // 1. 聖騎士 Fever：全體嘲諷攻擊
+    // =============================================
+    private IEnumerator HandlePaladinFever(TeamSlotInfo paladin, CharacterData data)
+    {
+        Debug.Log($"[Fever-Paladin] {paladin.UnitName} 啟動神聖猛擊！");
+
+        // Dash 至首位敵人（可視為主要衝刺方向）
+        var firstTarget = FindNextValidEnemy(0);
+        if (firstTarget != null && firstTarget.Actor != null)
+        {
+            Transform actor = paladin.Actor.transform;
+            Vector3 origin = actor.position;
+            Vector3 targetPos = firstTarget.SlotTransform.position + meleeContactOffset;
+
+            // 衝刺到第一個敵人
+            yield return Dash(actor, origin, targetPos, dashDuration);
+
+            // 準備生成 MultiStrikeSkill
+            if (data.Skills != null && data.Skills[0].SkillPrefab != null)
+            {
+                GameObject skillObj = Instantiate(data.Skills[0].SkillPrefab, targetPos, Quaternion.identity);
+                MultiStrikeSkill skill = skillObj.GetComponent<MultiStrikeSkill>();
+
+                if (skill != null)
+                {
+                    // 指定攻擊者
+                    skill.attacker = paladin;
+
+                    // 取得場上所有敵人並傳入
+                    // 取得場上所有敵人並傳入
+                    List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
+                    foreach (var enemy in EnemyTeamInfo)
+                    {
+                        if (enemy != null && enemy.Actor != null && enemy.HP > 0)
+                            allEnemies.Add(enemy);
+                    }
+
+                    skill.targets = allEnemies;
+                    skill.isPerfect = true;      // 若要依拍點判斷，也可改由 BeatJudge 傳入
+                    skill.isHeavyAttack = true;  // Fever 攻擊通常屬於重擊
+                    //skill.damage = paladin.Atk * 2; // 例如攻擊力加倍，可依實際設計調整
+                }
+            }
+
+            // 暫停一段時間後返回原位
+            yield return new WaitForSeconds(dashStayDuration);
+            yield return Dash(actor, targetPos, origin, dashDuration);
+        }
+        else
+        {
+            Debug.Log("[Fever-Paladin] 無敵人存在，跳過 Dash。");
+        }
+    }
+
+
+    // =============================================
+    // 2. 吟遊詩人 Fever：全體治癒
+    // =============================================
+    private IEnumerator HandleBardFever(TeamSlotInfo bard, CharacterData data)
+    {
+        Debug.Log($"[Fever-Bard] {bard.UnitName} 演奏群體治癒！");
+        BattleEffectManager.Instance.HealTeam(50);
+
+        yield return null;
+    }
+
+    // =============================================
+    // 3. 法師 Fever：雷電打擊
+    // =============================================
+    private IEnumerator HandleMageFever(TeamSlotInfo mage, CharacterData data)
+    {
+        Debug.Log($"[Fever-Mage] {mage.UnitName} 釋放雷擊！");
+
+        // 鎖定敵方中衛位置
+        int midIndex = EnemyTeamInfo.Length / 2;
+        var targetMid = EnemyTeamInfo[midIndex];
+
+        Vector3 spawnPos;
+        if (targetMid != null && targetMid.Actor != null)
+            spawnPos = targetMid.SlotTransform.position;
+        else
+            spawnPos = new Vector3(-2f, 0f, 0f); // fallback 安全點
+
+        // 生成 UltLighteningStrike 特效
+        if (data.Skills[0] != null && data.Skills[0].SkillPrefab != null)
+        {
+            Instantiate(data.Skills[0].SkillPrefab, spawnPos, Quaternion.identity);
+        }
+
+        yield return null;
+    }
+
+    #endregion
+
+
 
     // --------------------------------------------------
     // 攻擊邏輯
@@ -370,9 +519,9 @@ public class BattleManager : MonoBehaviour
                 }
 
                 // 計算傷害
-                int damage = chargeStacks * 30;
-                target.HP -= damage;
-                if (target.HP < 0) target.HP = 0;
+                //int damage = chargeStacks * 30;
+                //target.HP -= damage;
+                //if (target.HP < 0) target.HP = 0;
 
                 var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
                 if (hb != null) hb.ForceUpdate();
@@ -573,7 +722,7 @@ public class BattleManager : MonoBehaviour
         }
 
         // 傷害計算（沿用既有邏輯）
-        BattleEffectManager.Instance.OnHit(attacker, target, perfect);
+        //BattleEffectManager.Instance.OnHit(attacker, target, perfect);
 
         yield return new WaitForSeconds(dashStayDuration);
         yield return Dash(actor, targetPoint, origin, dashDuration);
@@ -618,36 +767,6 @@ public class BattleManager : MonoBehaviour
         lastSuccessfulAttacker = null;
     }
 
-    // --------------------------------------------------
-    // 旋轉邏輯
-    // --------------------------------------------------
-    //private void RotateTeamClockwise()
-    //{
-    //    var temp = CTeamInfo[2];
-    //    CTeamInfo[2] = CTeamInfo[1];
-    //    CTeamInfo[1] = CTeamInfo[0];
-    //    CTeamInfo[0] = temp;
-    //    UpdatePositions();
-    //}
-
-    //private void RotateTeamCounterClockwise()
-    //{
-    //    var temp = CTeamInfo[0];
-    //    CTeamInfo[0] = CTeamInfo[1];
-    //    CTeamInfo[1] = CTeamInfo[2];
-    //    CTeamInfo[2] = temp;
-    //    UpdatePositions();
-    //}
-
-    //private void UpdatePositions()
-    //{
-    //    for (int i = 0; i < CTeamInfo.Length; i++)
-    //    {
-    //        if (CTeamInfo[i]?.Actor == null) continue;
-    //        StartCoroutine(MoveToPosition(CTeamInfo[i].Actor.transform, playerPositions[i].position, rotateMoveDuration));
-    //        CTeamInfo[i].SlotTransform = playerPositions[i];
-    //    }
-    //}
 
     private IEnumerator MoveToPosition(Transform actor, Vector3 targetPos, float duration)
     {
