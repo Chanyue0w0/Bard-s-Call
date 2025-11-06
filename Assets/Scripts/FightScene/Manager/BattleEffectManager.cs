@@ -354,7 +354,9 @@ public class BattleEffectManager : MonoBehaviour
         {
             // 生成持續存在的格檔特效
             GameObject effect = Instantiate(effectPrefab, spawnPos, Quaternion.identity);
-            effect.transform.SetParent(actor.transform, true);
+            effect.transform.SetParent(actor.transform, false);
+            effect.transform.localPosition = new Vector3(-0.7f, 1.3f, 0f);
+
 
             // 若該特效含 Explosion 腳本，延長壽命為 9999 秒
             var explosion = effect.GetComponent<Explosion>();

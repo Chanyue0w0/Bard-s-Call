@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 2638506003195011200}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.0026, y: -2.1444, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3012945520225697330}
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 125e43c5dce4353438dea28dfb6f7f28, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b5fd062b1a07862449d6d9b9b76db712, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -122,7 +122,7 @@ MonoBehaviour:
     AssignedKeyIndex: 0
   tauntedByObj: {fileID: 0}
   tauntBeatsRemaining: 0
-  baseScale: {x: 0.2, y: 0.2, z: 0.2}
+  baseScale: {x: 0.4, y: 0.4, z: 0.4}
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
@@ -188,9 +188,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 2.0188463, y: 1.9388593}
+  m_Offset: {x: -0.5616578, y: 1.9388585}
   serializedVersion: 2
-  m_Radius: 2.3441694
+  m_Radius: 1.5587994
 --- !u!114 &5183481086003271547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,8 +246,8 @@ Transform:
   m_GameObject: {fileID: 6575706614532428528}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.8, y: -1.6, z: 0}
-  m_LocalScale: {x: 2.1818, y: 0.98964995, z: 2.1818}
+  m_LocalPosition: {x: -0.54, y: -0.15, z: 0}
+  m_LocalScale: {x: 1.074018, y: 0.48716745, z: 1.074018}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2883322385856445823}
@@ -329,7 +329,7 @@ Transform:
   m_GameObject: {fileID: 8921187374602877969}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.02, z: 0}
+  m_LocalPosition: {x: -0.63, y: -1.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
