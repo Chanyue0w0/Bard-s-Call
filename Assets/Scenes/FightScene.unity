@@ -148,7 +148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8163684771574148739, guid: 6dc4191059d6c3a4a820270672bbf567, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8163684771574148750, guid: 6dc4191059d6c3a4a820270672bbf567, type: 3}
       propertyPath: m_LocalPosition.x
@@ -605,6 +605,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 226924083}
   m_CullTransparentMesh: 1
+--- !u!224 &277369383 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+  m_PrefabInstance: {fileID: 7448186229776027132}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &294284868
 GameObject:
   m_ObjectHideFlags: 0
@@ -1424,6 +1429,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 577140060}
+  - component: {fileID: 577140061}
   m_Layer: 0
   m_Name: FeverManager
   m_TagString: Untagged
@@ -1446,6 +1452,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 398088045}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &577140061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 577140059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42d6642efe88c5c4da476a83f353b003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &589954058
 GameObject:
   m_ObjectHideFlags: 0
@@ -2582,7 +2600,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6447799702543544102, guid: 6157b86770cb3724a84252b4cd283c13, type: 3}
       propertyPath: m_Name
-      value: HealingEffect
+      value: HealingEffect(Cross)
       objectReference: {fileID: 0}
     - target: {fileID: 6447799702543544102, guid: 6157b86770cb3724a84252b4cd283c13, type: 3}
       propertyPath: m_IsActive
@@ -3354,6 +3372,7 @@ RectTransform:
   - {fileID: 2133190112}
   - {fileID: 1343110492}
   - {fileID: 1932035420}
+  - {fileID: 277369383}
   - {fileID: 381415587}
   - {fileID: 830531824}
   - {fileID: 294284869}
@@ -3775,7 +3794,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1084632303058564081, guid: 8b3cfa4ff9bd539459cce5ab92e60a73, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4294402808854694192, guid: 8b3cfa4ff9bd539459cce5ab92e60a73, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 0.50980395
       objectReference: {fileID: 0}
     - target: {fileID: 5765224557364367842, guid: 8b3cfa4ff9bd539459cce5ab92e60a73, type: 3}
       propertyPath: m_Intensity
@@ -3995,6 +4018,10 @@ PrefabInstance:
     - target: {fileID: 6605164388181476191, guid: 49fc3da80503fc3469e8130a9aceba55, type: 3}
       propertyPath: m_Name
       value: FeverUltBackGround
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605164388181476191, guid: 49fc3da80503fc3469e8130a9aceba55, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4251,6 +4278,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HolyStrike
       objectReference: {fileID: 0}
+    - target: {fileID: 4588907083462827215, guid: b8469d0c03f33b940bbd55aca467cc25, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8812389661824061792, guid: b8469d0c03f33b940bbd55aca467cc25, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.11
@@ -4487,6 +4518,115 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ae129ae50055bf44f88c532e663c59a6, type: 3}
+--- !u!1001 &7448186229776027132
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1719361670}
+    m_Modifications:
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -456
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2360223594467892122, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2360223594467892122, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279901405869851545, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_Name
+      value: BeatFeverBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279901405869851545, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

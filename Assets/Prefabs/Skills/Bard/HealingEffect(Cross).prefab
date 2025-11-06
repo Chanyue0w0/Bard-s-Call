@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7739153918780127421}
   m_Layer: 0
-  m_Name: HealingEffect
+  m_Name: HealingEffect(Cross)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
