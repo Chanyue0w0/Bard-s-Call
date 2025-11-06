@@ -62,7 +62,7 @@ public class DebugTestSlime : EnemyBase
 
     void Update()
     {
-        if (forceMove || isAttacking) return;
+        if (forceMove || isAttacking || IsFeverLocked()) return;
 
         // ¦^´_ÁY©ñ
         if (isHolding)
@@ -91,7 +91,7 @@ public class DebugTestSlime : EnemyBase
 
     private void OnBeat()
     {
-        if (forceMove || isAttacking) return;
+        if (forceMove || isAttacking || IsFeverLocked()) return;
 
         transform.localScale = baseScale * peakMultiplier;
         isHolding = true;

@@ -61,7 +61,7 @@ public class MageGoblin : EnemyBase
 
     void Update()
     {
-        if (forceMove || isAttacking) return;
+        if (forceMove || isAttacking || IsFeverLocked()) return;
 
         // ★ 若剛被嘲諷且特效尚未生成 → 生成頭上特效
         if (activeTauntVfx == null && tauntedByObj != null && tauntVfxPrefab != null)
@@ -144,7 +144,7 @@ public class MageGoblin : EnemyBase
 
     private void OnBeat()
     {
-        if (forceMove || isAttacking) return;
+        if (forceMove || isAttacking || IsFeverLocked()) return;
 
         transform.localScale = baseScale * peakMultiplier;
         isHolding = true;

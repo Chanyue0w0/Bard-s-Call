@@ -38,6 +38,8 @@ public class FeverManager : MonoBehaviour
     [Header("Fever 大招特效")]
     public GameObject ultFocusVFXPrefab;
 
+    public static event System.Action<int> OnFeverUltStart; // 參數為持續拍數
+
 
     private void Awake()
     {
@@ -111,6 +113,10 @@ public class FeverManager : MonoBehaviour
         currentFever = 0f;
         feverTriggered = false;
         UpdateFeverUI();
+
+        // ★★★ 在這裡廣播事件，讓所有敵人立即鎖定 12 拍 ★★★
+        OnFeverUltStart?.Invoke(12);
+        Debug.Log("[FeverManager] 已通知所有敵人進入Fever鎖定狀態（12拍）");
 
         if (feverUltBackground != null)
             feverUltBackground.SetActive(true);
