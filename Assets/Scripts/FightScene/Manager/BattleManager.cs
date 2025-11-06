@@ -621,33 +621,33 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     // ±ÛÂàÅÞ¿è
     // --------------------------------------------------
-    private void RotateTeamClockwise()
-    {
-        var temp = CTeamInfo[2];
-        CTeamInfo[2] = CTeamInfo[1];
-        CTeamInfo[1] = CTeamInfo[0];
-        CTeamInfo[0] = temp;
-        UpdatePositions();
-    }
+    //private void RotateTeamClockwise()
+    //{
+    //    var temp = CTeamInfo[2];
+    //    CTeamInfo[2] = CTeamInfo[1];
+    //    CTeamInfo[1] = CTeamInfo[0];
+    //    CTeamInfo[0] = temp;
+    //    UpdatePositions();
+    //}
 
-    private void RotateTeamCounterClockwise()
-    {
-        var temp = CTeamInfo[0];
-        CTeamInfo[0] = CTeamInfo[1];
-        CTeamInfo[1] = CTeamInfo[2];
-        CTeamInfo[2] = temp;
-        UpdatePositions();
-    }
+    //private void RotateTeamCounterClockwise()
+    //{
+    //    var temp = CTeamInfo[0];
+    //    CTeamInfo[0] = CTeamInfo[1];
+    //    CTeamInfo[1] = CTeamInfo[2];
+    //    CTeamInfo[2] = temp;
+    //    UpdatePositions();
+    //}
 
-    private void UpdatePositions()
-    {
-        for (int i = 0; i < CTeamInfo.Length; i++)
-        {
-            if (CTeamInfo[i]?.Actor == null) continue;
-            StartCoroutine(MoveToPosition(CTeamInfo[i].Actor.transform, playerPositions[i].position, rotateMoveDuration));
-            CTeamInfo[i].SlotTransform = playerPositions[i];
-        }
-    }
+    //private void UpdatePositions()
+    //{
+    //    for (int i = 0; i < CTeamInfo.Length; i++)
+    //    {
+    //        if (CTeamInfo[i]?.Actor == null) continue;
+    //        StartCoroutine(MoveToPosition(CTeamInfo[i].Actor.transform, playerPositions[i].position, rotateMoveDuration));
+    //        CTeamInfo[i].SlotTransform = playerPositions[i];
+    //    }
+    //}
 
     private IEnumerator MoveToPosition(Transform actor, Vector3 targetPos, float duration)
     {
