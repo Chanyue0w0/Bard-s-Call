@@ -372,7 +372,7 @@ public class BattleManager : MonoBehaviour
             {
                 if (ally != null && ally.Actor != null && ally.HP > 0)
                 {
-                    Vector3 spawnPos = ally.SlotTransform.position + new Vector3(0f, 0.5f, 0f);
+                    Vector3 spawnPos = ally.Actor.transform.position + new Vector3(0f, 0.5f, 0f);
                     GameObject vfx = Instantiate(data.Skills[0].SkillPrefab, spawnPos, Quaternion.identity);
 
                     // ★ 將治癒特效設為角色子物件，確保跟隨角色移動
