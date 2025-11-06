@@ -100,14 +100,19 @@ public abstract class EnemyBase : MonoBehaviour
             }
         }
     }
-    
+
     // ★ Fever事件處理：所有敵人共用
     private void HandleFeverStart(int durationBeats)
     {
+        // 若物件已被銷毀或失效，直接略過
+        if (this == null || gameObject == null) return;
+
         isFeverLock = true;
         feverBeatsRemaining = durationBeats;
+
         Debug.Log($"【Fever鎖定】{name} 停止行動 {durationBeats} 拍");
     }
+
 
     public bool IsFeverLocked() => isFeverLock;
 
