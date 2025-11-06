@@ -80,6 +80,9 @@ public class BattleManager : MonoBehaviour
     public InputActionReference actionBlockP1;
     public InputActionReference actionBlockP2;
     public InputActionReference actionBlockP3;
+    [Header("Fever 大招輸入")]
+    public InputActionReference actionFeverUltimate;  // 新增輸入引用 (在 Inspector 綁定)
+    private System.Action<InputAction.CallbackContext> feverUltHandler;
 
     [Header("時序與運動參數")]
     public float actionLockDuration = 0.5f;
@@ -140,6 +143,8 @@ public class BattleManager : MonoBehaviour
         blockP1Handler = ctx => OnBlockKey(0);
         blockP2Handler = ctx => OnBlockKey(1);
         blockP3Handler = ctx => OnBlockKey(2);
+        feverUltHandler = ctx => OnFeverUltimate();
+        
 
         if (actionAttackP1 != null) { actionAttackP1.action.started += attackP1Handler; actionAttackP1.action.Enable(); }
         if (actionAttackP2 != null) { actionAttackP2.action.started += attackP2Handler; actionAttackP2.action.Enable(); }
@@ -147,6 +152,7 @@ public class BattleManager : MonoBehaviour
         if (actionBlockP1 != null) { actionBlockP1.action.started += blockP1Handler; actionBlockP1.action.Enable(); }
         if (actionBlockP2 != null) { actionBlockP2.action.started += blockP2Handler; actionBlockP2.action.Enable(); }
         if (actionBlockP3 != null) { actionBlockP3.action.started += blockP3Handler; actionBlockP3.action.Enable(); }
+        if (actionFeverUltimate != null) { actionFeverUltimate.action.started += feverUltHandler; actionFeverUltimate.action.Enable(); }
     }
 
     private void OnDisable()
@@ -157,6 +163,7 @@ public class BattleManager : MonoBehaviour
         if (actionBlockP1 != null) actionBlockP1.action.started -= blockP1Handler;
         if (actionBlockP2 != null) actionBlockP2.action.started -= blockP2Handler;
         if (actionBlockP3 != null) actionBlockP3.action.started -= blockP3Handler;
+        if (actionFeverUltimate != null) { actionFeverUltimate.action.started -= feverUltHandler;}
     }
 
     // --------------------------------------------------
@@ -172,6 +179,33 @@ public class BattleManager : MonoBehaviour
         Debug.Log("載入隊伍成功，玩家角色：" +
             string.Join(", ", CTeamInfo.Where(x => x != null).Select(x => x.UnitName)));
     }
+
+    // --------------------------------------------------
+    // Fever 大招輸入邏輯（已整合拍點判定）
+    // --------------------------------------------------
+    private void OnFeverUltimate()
+    {
+        if (FeverManager.Instance == null) return;
+
+        // 檢查是否在拍上（Perfect）
+        bool perfect = BeatJudge.Instance.IsOnBeat();
+        if (!perfect)
+        {
+            Debug.Log("[BattleManager] Fever大招 Miss，未在節拍上，不觸發。");
+            return;
+        }
+
+        // 檢查是否滿值
+        if (FeverManager.Instance.currentFever < FeverManager.Instance.feverMax)
+        {
+            Debug.Log("[BattleManager] Fever未滿，無法啟動大招。");
+            return;
+        }
+
+        Debug.Log("[BattleManager] 對拍成功且Fever滿值，啟動全隊大招！");
+        StartCoroutine(FeverManager.Instance.HandleFeverUltimateSequence());
+    }
+
 
     // --------------------------------------------------
     // 攻擊邏輯
@@ -747,55 +781,4 @@ public class BattleManager : MonoBehaviour
         //ShiftEnemiesForward();
     }
 
-    //private void ShiftEnemiesForward()
-    //{
-    //    StartCoroutine(ShiftEnemiesForwardRoutine());
-    //}
-
-    //private IEnumerator ShiftEnemiesForwardRoutine()
-    //{
-    //    bool moved = false;
-
-    //    for (int i = 1; i < EnemyTeamInfo.Length; i++)
-    //    {
-    //        if ((EnemyTeamInfo[i - 1] == null || EnemyTeamInfo[i - 1].Actor == null) &&
-    //            (EnemyTeamInfo[i]?.Actor != null))
-    //        {
-    //            var enemy = EnemyTeamInfo[i].Actor;
-    //            if (enemy == null) continue;
-
-    //            Vector3 targetPos = enemyPositions[i - 1].position;
-
-    //            var enemyBase = enemy.GetComponent<EnemyBase>();
-    //            if (enemyBase != null) enemyBase.SetForceMove(true);
-
-    //            float t = 0f;
-    //            Vector3 start = enemy.transform.position;
-    //            float moveTime = 0.25f;
-    //            while (t < 1f)
-    //            {
-    //                if (enemy == null) yield break;
-    //                t += Time.deltaTime / moveTime;
-    //                enemy.transform.position = Vector3.Lerp(start, targetPos, t);
-    //                yield return null;
-    //            }
-
-    //            EnemyTeamInfo[i - 1] = EnemyTeamInfo[i];
-    //            EnemyTeamInfo[i - 1].SlotTransform = enemyPositions[i - 1];
-    //            EnemyTeamInfo[i] = null;
-
-    //            if (enemyBase != null)
-    //            {
-    //                enemyBase.SetForceMove(false);
-    //                enemyBase.SendMessage("RefreshBasePosition", SendMessageOptions.DontRequireReceiver);
-    //            }
-
-    //            moved = true;
-    //            yield return new WaitForSeconds(0.05f);
-    //        }
-    //    }
-
-    //    if (moved)
-    //        Debug.Log("敵人整隊前推完成");
-    //}
 }

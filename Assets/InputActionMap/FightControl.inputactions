@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "FeverUlt",
+                    "type": "Button",
+                    "id": "a0bbd5bf-f90d-468b-bc36-7037fd24bd22",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Character1Defend",
                     "type": "Button",
                     "id": "6ebca434-1e1b-4002-bed5-1359caa34fdc",
@@ -208,6 +217,28 @@
                     "processors": "",
                     "groups": "FightControlScheme",
                     "action": "Character3Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "73baa9c9-e16e-473a-9408-f6d9ce1840b4",
+                    "path": "<Keyboard>/r",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "FeverUlt",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a2364d37-a57e-474f-9836-3ee9cd8606da",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "FeverUlt",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
