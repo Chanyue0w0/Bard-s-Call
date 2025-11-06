@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8152037637937327985}
   - component: {fileID: 7276513509969146231}
   - component: {fileID: 7677724047614840464}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ground Arcs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4665,7 +4665,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4709,7 +4709,7 @@ GameObject:
   - component: {fileID: 7005458923475400489}
   - component: {fileID: 6039064181621143271}
   - component: {fileID: 6616997694944544308}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9565,7 +9565,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -9610,7 +9610,7 @@ GameObject:
   - component: {fileID: 2896788485082658403}
   - component: {fileID: 8378618651497642050}
   - component: {fileID: 4455319074934040800}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CFXR Lightning Impact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14319,7 +14319,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -14515,7 +14515,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8056765341650713605}
-  m_Layer: 0
+  - component: {fileID: 1942006916429548588}
+  - component: {fileID: 5903818313801829113}
+  - component: {fileID: 378359608873491303}
+  m_Layer: 6
   m_Name: UltLighteningStrike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14538,6 +14541,115 @@ Transform:
   - {fileID: 32855054091569568}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1942006916429548588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7438099246538764141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cadbf80de33b3f4eaaae500c67a83f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attacker:
+    PrefabToSpawn: {fileID: 0}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
+  targets: []
+  explosionPrefab: {fileID: 8714966469225416086, guid: b262996d3dc43634485ee3251a0d0107, type: 3}
+  lifeTime: 0.5
+  isPerfect: 0
+  isHeavyAttack: 0
+  damage: 200
+  missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
+  uiCanvas: {fileID: 0}
+--- !u!61 &5903818313801829113
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7438099246538764141}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.053340197, y: 0.6811265}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 5.9793305, y: 4.431794}
+  m_EdgeRadius: 0
+--- !u!50 &378359608873491303
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7438099246538764141}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &7881809320471275976
 GameObject:
   m_ObjectHideFlags: 0
@@ -14549,7 +14661,7 @@ GameObject:
   - component: {fileID: 4518523993204716111}
   - component: {fileID: 6302713291892788375}
   - component: {fileID: 1326742988488677439}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Electric Arcs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19347,7 +19459,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -19391,7 +19503,7 @@ GameObject:
   - component: {fileID: 8518901081546617274}
   - component: {fileID: 8332140529808071905}
   - component: {fileID: 3379331099750769916}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ground Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24247,7 +24359,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -24292,7 +24404,7 @@ GameObject:
   - component: {fileID: 8335114780516504654}
   - component: {fileID: 7192708927248567866}
   - component: {fileID: 3811889930940171844}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CFXR Lightning Strike + Impact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24307,14 +24419,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8047655530541629134}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.74, y: -1.79, z: 0}
+  m_LocalRotation: {x: -0.15292206, y: -0, z: -0, w: 0.9882383}
+  m_LocalPosition: {x: 0, y: -0.2, z: 0.2426707}
   m_LocalScale: {x: 0.79494, y: 0.79494, z: 0.79494}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1728310197135046058}
   m_Father: {fileID: 8056765341650713605}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -17.593, y: 0, z: 0}
 --- !u!198 &8335114780516504654
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -29158,7 +29270,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -29205,13 +29317,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clearBehavior: 2
   cameraShake:
-    enabled: 0
+    enabled: 1
     useMainCamera: 1
     cameras: []
     delay: 0
     duration: 1
     shakeSpace: 0
-    shakeStrength: {x: 0.1, y: 0.1, z: 0.1}
+    shakeStrength: {x: 0.5, y: 0.5, z: 0.5}
     shakeCurve:
       serializedVersion: 2
       m_Curve:
@@ -29392,7 +29504,7 @@ GameObject:
   - component: {fileID: 4608130932374814155}
   - component: {fileID: 3761969994780185676}
   - component: {fileID: 8047402229876108139}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29510,7 +29622,7 @@ GameObject:
   - component: {fileID: 8362086290629373886}
   - component: {fileID: 5028159188774350823}
   - component: {fileID: 4995426140368489424}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Electric Spikes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34424,7 +34536,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0

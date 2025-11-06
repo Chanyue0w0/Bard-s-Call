@@ -155,8 +155,8 @@ public class FeverManager : MonoBehaviour
             BattleManager.Instance.TriggerFeverActions(phase: 3);
         }
 
-        // ★ 第4拍：收尾演出
-        yield return new WaitForSeconds(secondsPerBeat * 1f);
+        // ★ 第4~第8拍：維持背景（收尾氣氛）
+        yield return new WaitForSeconds(secondsPerBeat * 5f);
         if (feverUltBackground != null)
             feverUltBackground.SetActive(false);
 

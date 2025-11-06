@@ -266,52 +266,63 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log($"[Fever-Paladin] {paladin.UnitName} 啟動神聖猛擊！");
 
-        // Dash 至首位敵人（可視為主要衝刺方向）
         var firstTarget = FindNextValidEnemy(0);
-        if (firstTarget != null && firstTarget.Actor != null)
-        {
-            Transform actor = paladin.Actor.transform;
-            Vector3 origin = actor.position;
-            Vector3 targetPos = firstTarget.SlotTransform.position + meleeContactOffset;
-
-            // 衝刺到第一個敵人
-            yield return Dash(actor, origin, targetPos, dashDuration);
-
-            // 準備生成 MultiStrikeSkill
-            if (data.Skills != null && data.Skills[0].SkillPrefab != null)
-            {
-                GameObject skillObj = Instantiate(data.Skills[0].SkillPrefab, targetPos, Quaternion.identity);
-                MultiStrikeSkill skill = skillObj.GetComponent<MultiStrikeSkill>();
-
-                if (skill != null)
-                {
-                    // 指定攻擊者
-                    skill.attacker = paladin;
-
-                    // 取得場上所有敵人並傳入
-                    // 取得場上所有敵人並傳入
-                    List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
-                    foreach (var enemy in EnemyTeamInfo)
-                    {
-                        if (enemy != null && enemy.Actor != null && enemy.HP > 0)
-                            allEnemies.Add(enemy);
-                    }
-
-                    skill.targets = allEnemies;
-                    skill.isPerfect = true;      // 若要依拍點判斷，也可改由 BeatJudge 傳入
-                    skill.isHeavyAttack = true;  // Fever 攻擊通常屬於重擊
-                    //skill.damage = paladin.Atk * 2; // 例如攻擊力加倍，可依實際設計調整
-                }
-            }
-
-            // 暫停一段時間後返回原位
-            yield return new WaitForSeconds(dashStayDuration);
-            yield return Dash(actor, targetPos, origin, dashDuration);
-        }
-        else
+        if (firstTarget == null || firstTarget.Actor == null)
         {
             Debug.Log("[Fever-Paladin] 無敵人存在，跳過 Dash。");
+            yield break;
         }
+
+        Transform actor = paladin.Actor.transform;
+        Vector3 origin = actor.position;
+        Vector3 targetPos = firstTarget.SlotTransform.position + meleeContactOffset;
+
+        // 拍長（以 BeatManager 為基準）
+        float secondsPerBeat = (BeatManager.Instance != null)
+            ? (60f / BeatManager.Instance.bpm)
+            : 0.6f;
+
+        // 第1拍：衝刺到敵人位置
+        yield return Dash(actor, origin, targetPos, dashDuration);
+        Debug.Log("[Fever-Paladin] Dash 完成 → 蓄力準備中。");
+
+        // 第2拍：原地停留（蓄力Pose）
+        yield return new WaitForSeconds(secondsPerBeat);
+        Debug.Log("[Fever-Paladin] 開始釋放神聖猛擊特效！");
+
+        // 第3拍：生成 MultiStrikeSkill（攻擊）
+        if (data.Skills != null && data.Skills[0].SkillPrefab != null)
+        {
+            GameObject skillObj = Instantiate(data.Skills[0].SkillPrefab, targetPos, Quaternion.identity);
+            MultiStrikeSkill skill = skillObj.GetComponent<MultiStrikeSkill>();
+
+            if (skill != null)
+            {
+                // 指定攻擊者
+                skill.attacker = paladin;
+
+                // 取得所有有效敵人
+                List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
+                foreach (var enemy in EnemyTeamInfo)
+                {
+                    if (enemy != null && enemy.Actor != null && enemy.HP > 0)
+                        allEnemies.Add(enemy);
+                }
+
+                skill.targets = allEnemies;
+                skill.isPerfect = true;
+                skill.isHeavyAttack = true;
+                //skill.damage = paladin.Atk * 2; // 可視覺化傷害調整
+            }
+        }
+
+        // 第4拍：原地等待一拍（收刀Pose）
+        Debug.Log("[Fever-Paladin] 等待一拍後返回原位。");
+        yield return new WaitForSeconds(secondsPerBeat);
+
+        // 返回原位
+        yield return Dash(actor, targetPos, origin, dashDuration);
+        Debug.Log("[Fever-Paladin] 返回原位完成。");
     }
 
 
