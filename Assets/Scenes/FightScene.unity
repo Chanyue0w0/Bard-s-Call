@@ -4387,6 +4387,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UltLighteningStrike
       objectReference: {fileID: 0}
+    - target: {fileID: 7438099246538764141, guid: cdc428e0f62d2e944ac748ebd112d5c0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8056765341650713605, guid: cdc428e0f62d2e944ac748ebd112d5c0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
