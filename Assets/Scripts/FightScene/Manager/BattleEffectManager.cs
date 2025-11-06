@@ -399,6 +399,7 @@ public class BattleEffectManager : MonoBehaviour
             {
                 Vector3 healPos = ally.Actor.transform.position; // + Vector3.up * 1.3f
                 GameObject healVfx = Instantiate(healVfxPrefab, healPos, Quaternion.identity);
+                healVfx.transform.SetParent(ally.Actor.transform, worldPositionStays: true);
 
                 // 若特效有 Explosion 腳本則讓它自行管理壽命
                 var exp = healVfx.GetComponent<Explosion>();

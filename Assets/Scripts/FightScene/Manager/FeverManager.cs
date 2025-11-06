@@ -156,7 +156,7 @@ public class FeverManager : MonoBehaviour
         }
 
         // ★ 第4~第8拍：維持背景（收尾氣氛）
-        yield return new WaitForSeconds(secondsPerBeat * 5f);
+        yield return new WaitForSeconds(secondsPerBeat * 8f);
         if (feverUltBackground != null)
             feverUltBackground.SetActive(false);
 

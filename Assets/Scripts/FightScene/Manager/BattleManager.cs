@@ -325,25 +325,44 @@ public class BattleManager : MonoBehaviour
         Debug.Log("[Fever-Paladin] 返回原位完成。");
     }
 
-
     // =============================================
-    // 2. 吟遊詩人 Fever：延遲3拍後在全隊位置生成治癒特效並全體治療
+    // 2. 吟遊詩人 Fever：共七拍節奏
+    // 第1～5拍：延遲（演奏前奏）
+    // 第5拍末：Dash 至敵方首位前方（若無敵人則固定前進）
+    // 第6拍：在全隊位置生成治癒特效並全體治療（特效綁定角色）
+    // 第7拍：收尾並返回原位
     // =============================================
     private IEnumerator HandleBardFever(TeamSlotInfo bard, CharacterData data)
     {
         Debug.Log($"[Fever-Bard] {bard.UnitName} 正在演奏治癒旋律……");
 
-        // 取得每拍的秒數
         float secondsPerBeat = (BeatManager.Instance != null)
             ? (60f / BeatManager.Instance.bpm)
             : 0.6f;
 
-        // ★ 延遲3拍（演奏前奏）
-        yield return new WaitForSeconds(secondsPerBeat * 5f);
+        // 找出敵方首位（若無敵人則給預設 dash 位置）
+        var firstTarget = FindNextValidEnemy(0);
+        Transform actor = bard.Actor.transform;
+        Vector3 origin = actor.position;
+        Vector3 dashTargetPos;
 
+        if (firstTarget != null && firstTarget.Actor != null)
+            dashTargetPos = firstTarget.SlotTransform.position + meleeContactOffset;
+        else
+            dashTargetPos = origin + new Vector3(-1.5f, 0f, 0f); // 沒敵人時也前進一小段
+
+        // ★ 第1～5拍：延遲（演奏前奏）
+        yield return new WaitForSeconds(secondsPerBeat * 5f);
+        Debug.Log("[Fever-Bard] 演奏高潮來臨，向前邁進！");
+
+        // ★ 第5拍末：Dash 至敵方首位前方（必定等待完成）
+        yield return Dash(actor, origin, dashTargetPos, dashDuration);
+        Debug.Log("[Fever-Bard] Dash 完成，準備施放治癒！");
+
+        // ★ 第6拍：在全隊位置生成治癒特效 + 全體治療
+        yield return new WaitForSeconds(secondsPerBeat);
         Debug.Log($"[Fever-Bard] {bard.UnitName} 演奏群體治癒！");
 
-        // 生成 Skill[0] 特效於我方全隊位置上
         if (data.Skills != null && data.Skills[0] != null && data.Skills[0].SkillPrefab != null)
         {
             foreach (var ally in CTeamInfo)
@@ -352,8 +371,12 @@ public class BattleManager : MonoBehaviour
                 {
                     Vector3 spawnPos = ally.SlotTransform.position + new Vector3(0f, 0.5f, 0f);
                     GameObject vfx = Instantiate(data.Skills[0].SkillPrefab, spawnPos, Quaternion.identity);
-                    Debug.Log($"[Fever-Bard] 治癒光環生成於 {ally.UnitName} 的位置！");
-                    GameObject.Destroy(vfx, 4f); // 可自行調整特效存留時間
+
+                    // ★ 將治癒特效設為角色子物件，確保跟隨角色移動
+                    vfx.transform.SetParent(ally.Actor.transform, worldPositionStays: true);
+
+                    Debug.Log($"[Fever-Bard] 治癒光環生成並附著於 {ally.UnitName}！");
+                    GameObject.Destroy(vfx, 4f);
                 }
             }
         }
@@ -366,38 +389,60 @@ public class BattleManager : MonoBehaviour
         BattleEffectManager.Instance.HealTeamWithEffect(50);
         Debug.Log("[Fever-Bard] 全體回復 50 HP！");
 
-        yield return null;
+        // ★ 第7拍：收尾並返回原位
+        yield return new WaitForSeconds(secondsPerBeat);
+        yield return Dash(actor, dashTargetPos, origin, dashDuration);
+        Debug.Log("[Fever-Bard] 返回原位完成。");
     }
 
 
     // =============================================
-    // 3. 法師 Fever：延遲兩拍後在敵方第二個位置生成雷電 MultiStrikeSkill
+    // 3. 法師 Fever：共經過五拍
+    // 第1～2拍：延遲蓄氣
+    // 第3拍：Dash 至敵方首位
+    // 第4拍：生成雷電 MultiStrikeSkill（敵方第2格）
+    // 第5拍：停留一拍後返回原位
     // =============================================
     private IEnumerator HandleMageFever(TeamSlotInfo mage, CharacterData data)
     {
         Debug.Log($"[Fever-Mage] {mage.UnitName} 正在聚集魔力……");
 
-        // 取得每拍的秒數
+        // 每拍秒數
         float secondsPerBeat = (BeatManager.Instance != null)
             ? (60f / BeatManager.Instance.bpm)
             : 0.6f;
 
-        // ★ 延遲兩拍（聚氣）
-        yield return new WaitForSeconds(secondsPerBeat * 3f);
+        // 找出敵方首位與第二位
+        var firstTarget = FindNextValidEnemy(0);
+        var secondTarget = (EnemyTeamInfo.Length > 1) ? EnemyTeamInfo[1] : null;
 
-        Debug.Log($"[Fever-Mage] {mage.UnitName} 釋放雷擊！");
-
-        // 目標為敵方第二個位置（index = 1）
-        int targetIndex = 1;
-        Vector3 spawnPos;
-
-        if (EnemyTeamInfo.Length > targetIndex && EnemyTeamInfo[targetIndex] != null && EnemyTeamInfo[targetIndex].Actor != null)
+        if (firstTarget == null || firstTarget.Actor == null)
         {
-            spawnPos = EnemyTeamInfo[targetIndex].SlotTransform.position;
+            Debug.Log("[Fever-Mage] 無敵人存在，跳過 Dash。");
+            yield break;
         }
+
+        Transform actor = mage.Actor.transform;
+        Vector3 origin = actor.position;
+        Vector3 dashTargetPos = firstTarget.SlotTransform.position + meleeContactOffset;
+
+        // ★ 第1～2拍：延遲兩拍（聚氣）
+        yield return new WaitForSeconds(secondsPerBeat * 2f);
+        Debug.Log("[Fever-Mage] 聚能完成，開始施放法術！");
+
+        // ★ 第3拍：Dash 至首位敵人前
+        yield return Dash(actor, origin, dashTargetPos, dashDuration);
+        Debug.Log("[Fever-Mage] Dash 完成，準備釋放雷擊！");
+
+        // ★ 第4拍：在敵方第二位生成 MultiStrikeSkill
+        yield return new WaitForSeconds(secondsPerBeat);
+
+        Vector3 spawnPos;
+        if (secondTarget != null && secondTarget.Actor != null)
+            spawnPos = secondTarget.SlotTransform.position;
         else
         {
-            // 若該位置沒有敵人 → fallback 至中衛位置或固定點
+            // fallback：若第二格沒敵人則使用中衛或固定點
             int midIndex = EnemyTeamInfo.Length / 2;
             var targetMid = EnemyTeamInfo[midIndex];
             spawnPos = (targetMid != null && targetMid.Actor != null)
@@ -405,20 +450,18 @@ public class BattleManager : MonoBehaviour
                 : new Vector3(-2f, 0f, 0f);
         }
 
-        // 生成 MultiStrikeSkill 特效
         if (data.Skills != null && data.Skills[0] != null && data.Skills[0].SkillPrefab != null)
         {
             GameObject skillObj = Instantiate(data.Skills[0].SkillPrefab, spawnPos, Quaternion.identity);
-            Debug.Log($"[Fever-Mage] 雷電 MultiStrikeSkill 生成於敵方第 {targetIndex + 1} 位置！");
+            Debug.Log($"[Fever-Mage] 雷電 MultiStrikeSkill 生成於敵方第2位置！");
 
-            // 嘗試取得 MultiStrikeSkill 組件
+            // 設定 MultiStrikeSkill 屬性
             MultiStrikeSkill skill = skillObj.GetComponent<MultiStrikeSkill>();
             if (skill != null)
             {
-                // 設定攻擊者
                 skill.attacker = mage;
 
-                // 取得所有敵人並加入 target 列表
+                // 加入全體敵人為目標
                 List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
                 foreach (var enemy in EnemyTeamInfo)
                 {
@@ -427,9 +470,8 @@ public class BattleManager : MonoBehaviour
                 }
 
                 skill.targets = allEnemies;
-                skill.isPerfect = true;       // Fever 技能預設為完美命中
-                skill.isHeavyAttack = true;   // Fever 技能視為重攻擊
-                                              // skill.damage = mage.Atk * 2; // 可根據實際平衡需求開啟
+                skill.isPerfect = true;
+                skill.isHeavyAttack = true;
             }
         }
         else
@@ -437,13 +479,16 @@ public class BattleManager : MonoBehaviour
             Debug.LogWarning("[Fever-Mage] 未設定 Skill[0] 或 Prefab 無效，無法生成特效。");
         }
 
-        yield return null;
+        // ★ 第5拍：原地停留一拍（收尾Pose）
+        yield return new WaitForSeconds(secondsPerBeat);
+        Debug.Log("[Fever-Mage] 結束施法，返回原位。");
+
+        // ★ 返回原位
+        yield return Dash(actor, dashTargetPos, origin, dashDuration);
+        Debug.Log("[Fever-Mage] 返回原位完成。");
     }
 
-
     #endregion
-
-
 
     // --------------------------------------------------
     // 攻擊邏輯
