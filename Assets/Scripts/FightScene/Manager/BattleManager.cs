@@ -100,6 +100,9 @@ public class BattleManager : MonoBehaviour
     public GameObject magicUseAuraPrefab;
     public float vfxLifetime = 1.5f;
 
+    [Header("Fever 大招展示位置")]
+    public Transform feverUltShowingPoint;
+
     [Header("Shield 設定")]
     public float shieldBlockDuration = 2.0f;
     public int shieldDamage = 10;
@@ -275,7 +278,10 @@ public class BattleManager : MonoBehaviour
 
         Transform actor = paladin.Actor.transform;
         Vector3 origin = actor.position;
-        Vector3 targetPos = firstTarget.SlotTransform.position + meleeContactOffset;
+        Vector3 targetPos = (feverUltShowingPoint != null)
+            ? feverUltShowingPoint.position
+            : (firstTarget.SlotTransform.position + meleeContactOffset);
+
 
         // 拍長（以 BeatManager 為基準）
         float secondsPerBeat = (BeatManager.Instance != null)
@@ -346,10 +352,7 @@ public class BattleManager : MonoBehaviour
         Vector3 origin = actor.position;
         Vector3 dashTargetPos;
 
-        if (firstTarget != null && firstTarget.Actor != null)
-            dashTargetPos = firstTarget.SlotTransform.position + meleeContactOffset;
-        else
-            dashTargetPos = origin + new Vector3(-1.5f, 0f, 0f); // 沒敵人時也前進一小段
+        dashTargetPos = feverUltShowingPoint.position;
 
         // ★ 第1～4拍：延遲（演奏前奏）
         yield return new WaitForSeconds(secondsPerBeat * 4f);
@@ -424,7 +427,10 @@ public class BattleManager : MonoBehaviour
 
         Transform actor = mage.Actor.transform;
         Vector3 origin = actor.position;
-        Vector3 dashTargetPos = firstTarget.SlotTransform.position + meleeContactOffset;
+        Vector3 dashTargetPos = (feverUltShowingPoint != null)
+            ? feverUltShowingPoint.position
+            : (firstTarget.SlotTransform.position + meleeContactOffset);
+
 
         // ★ 第1～2拍：延遲兩拍（聚氣）
         yield return new WaitForSeconds(secondsPerBeat * 2f);
