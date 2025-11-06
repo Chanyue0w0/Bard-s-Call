@@ -239,16 +239,16 @@ public class BattleManager : MonoBehaviour
                 // -----------------------------
                 // 吟遊詩人 Bard
                 // -----------------------------
-                //case UnitClass.Bard:
-                //    StartCoroutine(HandleBardFever(slot, charData));
-                //    break;
+                case UnitClass.Bard:
+                    StartCoroutine(HandleBardFever(slot, charData));
+                    break;
 
-                //// -----------------------------
-                //// 法師 Mage
-                //// -----------------------------
-                //case UnitClass.Mage:
-                //    StartCoroutine(HandleMageFever(slot, charData));
-                //    break;
+                // -----------------------------
+                // 法師 Mage
+                // -----------------------------
+                case UnitClass.Mage:
+                    StartCoroutine(HandleMageFever(slot, charData));
+                    break;
 
                 default:
                     Debug.Log($"[Fever] {slot.UnitName} 無特別大招。");
@@ -338,30 +338,75 @@ public class BattleManager : MonoBehaviour
     }
 
     // =============================================
-    // 3. 法師 Fever：雷電打擊
+    // 3. 法師 Fever：延遲兩拍後在敵方第二個位置生成雷電 MultiStrikeSkill
     // =============================================
     private IEnumerator HandleMageFever(TeamSlotInfo mage, CharacterData data)
     {
+        Debug.Log($"[Fever-Mage] {mage.UnitName} 正在聚集魔力……");
+
+        // 取得每拍的秒數
+        float secondsPerBeat = (BeatManager.Instance != null)
+            ? (60f / BeatManager.Instance.bpm)
+            : 0.6f;
+
+        // ★ 延遲兩拍（聚氣）
+        yield return new WaitForSeconds(secondsPerBeat * 2f);
+
         Debug.Log($"[Fever-Mage] {mage.UnitName} 釋放雷擊！");
 
-        // 鎖定敵方中衛位置
-        int midIndex = EnemyTeamInfo.Length / 2;
-        var targetMid = EnemyTeamInfo[midIndex];
-
+        // 目標為敵方第二個位置（index = 1）
+        int targetIndex = 1;
         Vector3 spawnPos;
-        if (targetMid != null && targetMid.Actor != null)
-            spawnPos = targetMid.SlotTransform.position;
-        else
-            spawnPos = new Vector3(-2f, 0f, 0f); // fallback 安全點
 
-        // 生成 UltLighteningStrike 特效
-        if (data.Skills[0] != null && data.Skills[0].SkillPrefab != null)
+        if (EnemyTeamInfo.Length > targetIndex && EnemyTeamInfo[targetIndex] != null && EnemyTeamInfo[targetIndex].Actor != null)
         {
-            Instantiate(data.Skills[0].SkillPrefab, spawnPos, Quaternion.identity);
+            spawnPos = EnemyTeamInfo[targetIndex].SlotTransform.position;
+        }
+        else
+        {
+            // 若該位置沒有敵人 → fallback 至中衛位置或固定點
+            int midIndex = EnemyTeamInfo.Length / 2;
+            var targetMid = EnemyTeamInfo[midIndex];
+            spawnPos = (targetMid != null && targetMid.Actor != null)
+                ? targetMid.SlotTransform.position
+                : new Vector3(-2f, 0f, 0f);
+        }
+
+        // 生成 MultiStrikeSkill 特效
+        if (data.Skills != null && data.Skills[0] != null && data.Skills[0].SkillPrefab != null)
+        {
+            GameObject skillObj = Instantiate(data.Skills[0].SkillPrefab, spawnPos, Quaternion.identity);
+            Debug.Log($"[Fever-Mage] 雷電 MultiStrikeSkill 生成於敵方第 {targetIndex + 1} 位置！");
+
+            // 嘗試取得 MultiStrikeSkill 組件
+            MultiStrikeSkill skill = skillObj.GetComponent<MultiStrikeSkill>();
+            if (skill != null)
+            {
+                // 設定攻擊者
+                skill.attacker = mage;
+
+                // 取得所有敵人並加入 target 列表
+                List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
+                foreach (var enemy in EnemyTeamInfo)
+                {
+                    if (enemy != null && enemy.Actor != null && enemy.HP > 0)
+                        allEnemies.Add(enemy);
+                }
+
+                skill.targets = allEnemies;
+                skill.isPerfect = true;       // Fever 技能預設為完美命中
+                skill.isHeavyAttack = true;   // Fever 技能視為重攻擊
+                                              // skill.damage = mage.Atk * 2; // 可根據實際平衡需求開啟
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[Fever-Mage] 未設定 Skill[0] 或 Prefab 無效，無法生成特效。");
         }
 
         yield return null;
     }
+
 
     #endregion
 
