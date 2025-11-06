@@ -167,7 +167,12 @@ MonoBehaviour:
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0
-  Skills: []
+  Skills:
+  - SkillName: HolyStrike
+    SkillPrefab: {fileID: 4588907083462827215, guid: b8469d0c03f33b940bbd55aca467cc25, type: 3}
+    MPCost: 0
+    DamageMultiplier: 0
+    FixedDamage: 0
   ShieldEffectPrefab: {fileID: 0}
 --- !u!1 &4903006136213224238
 GameObject:

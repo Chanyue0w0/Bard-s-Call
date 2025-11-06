@@ -106,7 +106,7 @@ public class FeverManager : MonoBehaviour
     {
         Debug.Log("[FeverManager] 啟動全隊大招動畫流程");
 
-        // ★ 立即歸零 Fever
+        // ★ 立即歸零 Fever，防止重複觸發
         currentFever = 0f;
         feverTriggered = false;
         UpdateFeverUI();
@@ -119,7 +119,6 @@ public class FeverManager : MonoBehaviour
             yield return StartCoroutine(CameraFocusZoom(true));
 
         // ★ 生成三位玩家的 Ult 聚氣特效
-        // ★ 改為從角色實際位置生成特效（而非固定座標）
         if (ultFocusVFXPrefab != null && BattleManager.Instance != null)
         {
             var bm = BattleManager.Instance;
@@ -129,31 +128,43 @@ public class FeverManager : MonoBehaviour
                 if (slot != null && slot.Actor != null)
                 {
                     Transform actorTrans = slot.Actor.transform;
-                    Vector3 pos = actorTrans.position + new Vector3(0f, 0.5f, 0f); // 稍微抬高半格視覺居中
+                    Vector3 pos = actorTrans.position + new Vector3(0f, 0.5f, 0f);
                     GameObject vfx = GameObject.Instantiate(ultFocusVFXPrefab, pos, Quaternion.identity);
                     GameObject.Destroy(vfx, 3f);
                 }
             }
         }
 
-
-        // 持續 4 拍（由 BPM 自動轉換）
+        // ----------------------------
+        // 計算節奏時間
+        // ----------------------------
         float secondsPerBeat = (BeatManager.Instance != null)
             ? (60f / BeatManager.Instance.bpm)
             : 0.6f;
-        float holdTime = secondsPerBeat * holdBeats;
-        yield return new WaitForSeconds(holdTime);
 
-        // 鏡頭還原
+        float focusDuration = secondsPerBeat * 2f; // 鏡頭聚焦持續2拍
+        float bgDuration = secondsPerBeat * 4f;    // 背景持續4拍
+
+        // ----------------------------
+        // 1. 鏡頭持續2拍 → 回復
+        // ----------------------------
+        yield return new WaitForSeconds(focusDuration);
+
         if (mainCam != null)
             yield return StartCoroutine(CameraFocusZoom(false));
+
+        // ----------------------------
+        // 2. 背景再多留2拍後關閉
+        // ----------------------------
+        float remainDuration = bgDuration - focusDuration;
+        if (remainDuration > 0f)
+            yield return new WaitForSeconds(remainDuration);
 
         if (feverUltBackground != null)
             feverUltBackground.SetActive(false);
 
         Debug.Log("[FeverManager] 大招動畫結束，可進入全隊施放階段。");
     }
-
 
 
     private IEnumerator CameraFocusZoom(bool zoomIn)

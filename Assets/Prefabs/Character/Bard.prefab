@@ -220,7 +220,12 @@ MonoBehaviour:
     MPCost: 0
     DamageMultiplier: 1
     FixedDamage: 0
-  Skills: []
+  Skills:
+  - SkillName: HealEffect(Cross)
+    SkillPrefab: {fileID: 6447799702543544102, guid: 6157b86770cb3724a84252b4cd283c13, type: 3}
+    MPCost: 0
+    DamageMultiplier: 0
+    FixedDamage: 0
   ShieldEffectPrefab: {fileID: 0}
 --- !u!1 &8311510172526210414
 GameObject:

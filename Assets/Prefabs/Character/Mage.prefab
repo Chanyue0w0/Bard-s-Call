@@ -235,7 +235,12 @@ MonoBehaviour:
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0
-  Skills: []
+  Skills:
+  - SkillName: UltLighteningStrike
+    SkillPrefab: {fileID: 7438099246538764141, guid: cdc428e0f62d2e944ac748ebd112d5c0, type: 3}
+    MPCost: 0
+    DamageMultiplier: 0
+    FixedDamage: 0
   ShieldEffectPrefab: {fileID: 7125099269266668700, guid: 3797ab3f5e2aa6148869788f506a8635, type: 3}
 --- !u!114 &-9000765520436358034
 MonoBehaviour:
