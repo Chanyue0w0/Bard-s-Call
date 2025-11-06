@@ -351,15 +351,15 @@ public class BattleManager : MonoBehaviour
         else
             dashTargetPos = origin + new Vector3(-1.5f, 0f, 0f); // 沒敵人時也前進一小段
 
-        // ★ 第1～5拍：延遲（演奏前奏）
-        yield return new WaitForSeconds(secondsPerBeat * 5f);
+        // ★ 第1～4拍：延遲（演奏前奏）
+        yield return new WaitForSeconds(secondsPerBeat * 4f);
         Debug.Log("[Fever-Bard] 演奏高潮來臨，向前邁進！");
 
-        // ★ 第5拍末：Dash 至敵方首位前方（必定等待完成）
+        // ★ 第4拍末：Dash 至敵方首位前方（必定等待完成）
         yield return Dash(actor, origin, dashTargetPos, dashDuration);
         Debug.Log("[Fever-Bard] Dash 完成，準備施放治癒！");
 
-        // ★ 第6拍：在全隊位置生成治癒特效 + 全體治療
+        // ★ 第5拍：在全隊位置生成治癒特效 + 全體治療
         yield return new WaitForSeconds(secondsPerBeat);
         Debug.Log($"[Fever-Bard] {bard.UnitName} 演奏群體治癒！");
 
