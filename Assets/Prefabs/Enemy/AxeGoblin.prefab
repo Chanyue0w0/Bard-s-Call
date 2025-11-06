@@ -205,8 +205,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterName: Slime
   ClassType: 5
-  MaxHP: 280
-  HP: 280
+  MaxHP: 140
+  HP: 140
   MaxMP: 0
   MP: 0
   OriginAtk: 10

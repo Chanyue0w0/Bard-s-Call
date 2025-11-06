@@ -184,8 +184,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterName: ShieldGoblin
   ClassType: 5
-  MaxHP: 280
-  HP: 280
+  MaxHP: 90
+  HP: 90
   MaxMP: 0
   MP: 0
   OriginAtk: 10
