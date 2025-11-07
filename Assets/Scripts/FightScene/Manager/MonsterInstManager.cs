@@ -100,7 +100,7 @@ public class MonsterInstManager : MonoBehaviour
         Debug.Log($"[MonsterInstManager] 章節 {chapter} - 關卡 {level} - 當前 Stage {stage}");
 
         // 檢查 Stage 上限
-        int maxStage = (level == 1) ? 5 : 10;
+        int maxStage = (level == 1) ? 5 : 6;
         if (stage > maxStage)
         {
             Debug.Log("[MonsterInstManager] 關卡已通關，顯示結算面板。");
@@ -183,7 +183,7 @@ public class MonsterInstManager : MonoBehaviour
         }
         else if (level == 2)
         {
-            if (stage < 10)
+            if (stage < 6)
             {
                 int enemyCount = Random.Range(1, 4); // 1~3
                 for (int i = 0; i < enemyCount && slots.Count > 0; i++)
@@ -194,7 +194,7 @@ public class MonsterInstManager : MonoBehaviour
                     teamManager.EnemyTeamInfo[slotIndex].PrefabToSpawn = prefab;
                 }
             }
-            else if (stage == 10)
+            else if (stage == 6)
             {
                 teamManager.EnemyTeamInfo[0].PrefabToSpawn = darkKnightPrefab;
             }
