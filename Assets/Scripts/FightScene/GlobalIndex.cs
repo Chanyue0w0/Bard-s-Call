@@ -9,22 +9,21 @@ public class GlobalIndex : MonoBehaviour
     // 全域遊戲變數
     // -------------------------------
 
-    // 關卡資訊
-    public static int CurrentStageIndex = 0;
+    // 關卡資訊（★修改：改為三層結構）
+    public static int CurrentChapterIndex = 1; // 章節
+    public static int CurrentLevelIndex = 1;   // 關卡
+    public static int CurrentStageIndex = 0;   // 小關卡波數
     public static string CurrentStageName = "Forest01";
-    public static string NextSceneName = "BattleScene";
+    public static string NextSceneName = "FightScene";
 
     // 隊伍資訊
-    public static List<GameObject> PlayerTeamPrefabs = new List<GameObject>(); // 我方角色 Prefabs
-    public static List<GameObject> EnemyTeamPrefabs = new List<GameObject>();  // 敵方角色 Prefabs
+    public static List<GameObject> PlayerTeamPrefabs = new List<GameObject>();
+    public static List<GameObject> EnemyTeamPrefabs = new List<GameObject>();
 
     // 系統設定
     public static int DifficultyLevel = 1; // 1=Normal, 2=Hard, 3=Extreme
     public static bool IsTutorialCleared = false;
 
-    // -------------------------------
-    // 單例初始化
-    // -------------------------------
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -36,9 +35,6 @@ public class GlobalIndex : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // -------------------------------
-    // 對外方法：設定隊伍資料
-    // -------------------------------
     public static void SetPlayerTeam(params GameObject[] prefabs)
     {
         PlayerTeamPrefabs.Clear();
@@ -51,13 +47,10 @@ public class GlobalIndex : MonoBehaviour
         EnemyTeamPrefabs.AddRange(prefabs);
     }
 
-    // -------------------------------
-    // 對外方法：切換關卡
-    // -------------------------------
-    public static void LoadStage(string sceneName, int stageIndex = -1)
-    {
-        if (stageIndex >= 0) CurrentStageIndex = stageIndex;
-        NextSceneName = sceneName;
-        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
-    }
+    //public static void LoadStage(string sceneName, int stageIndex = -1)
+    //{
+    //    if (stageIndex >= 0) CurrentStageIndex = stageIndex;
+    //    NextSceneName = sceneName;
+    //    UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    //}
 }

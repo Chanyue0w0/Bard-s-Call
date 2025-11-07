@@ -7,7 +7,6 @@ public class MonsterInstManager : MonoBehaviour
     public static MonsterInstManager Instance { get; private set; }
 
     [Header("怪物 Prefabs")]
-    //public GameObject slimePrefab;
     public GameObject axeGoblinPrefab;
     public GameObject shieldGoblinPrefab;
     public GameObject mageGoblinPrefab;
@@ -17,9 +16,12 @@ public class MonsterInstManager : MonoBehaviour
     public BattleTeamManager teamManager;
 
     [Header("生成設定")]
-    public float checkInterval = 1.0f; // 每秒檢查是否清場
-    public float spawnDelay = 1.5f;    // 清場後延遲生成下一波
-    private int currentLevel = 1;
+    public float checkInterval = 1.0f;
+    public float spawnDelay = 1.5f;
+    private bool isStageCleared = false;
+
+    [Header("UI 元件 (結算面板)")]
+    public GameObject stageCompletePanel; // Inspector 指派，打完最後一關顯示
 
     private void Awake()
     {
@@ -45,10 +47,16 @@ public class MonsterInstManager : MonoBehaviour
         {
             yield return new WaitForSeconds(checkInterval);
 
-            if (IsAllEnemyCleared())
+            if (IsAllEnemyCleared() && !isStageCleared)
             {
+                isStageCleared = true;
+
                 yield return new WaitForSeconds(spawnDelay);
-                SpawnNextWave();
+
+                // 進入下一關卡流程
+                SpawnNextStage();
+
+                isStageCleared = false;
             }
         }
     }
@@ -63,69 +71,102 @@ public class MonsterInstManager : MonoBehaviour
         return true;
     }
 
-    private void SpawnNextWave()
+    // =========================================================
+    // ★ 關鍵函式：生成下一波 Stage（不切換場景）
+    // =========================================================
+    private void SpawnNextStage()
     {
-        // Level 循環
-        currentLevel++;
-        if (currentLevel > 4)
-            currentLevel = 1;
+        // 增加 Stage
+        GlobalIndex.CurrentStageIndex++;
 
-        Debug.Log("=== Spawn Next Wave: Level " + currentLevel + " ===");
+        int chapter = GlobalIndex.CurrentChapterIndex;
+        int level = GlobalIndex.CurrentLevelIndex;
+        int stage = GlobalIndex.CurrentStageIndex;
 
-        // 清空舊敵人資料
+        Debug.Log($"[MonsterInstManager] 章節 {chapter} - 關卡 {level} - 當前 Stage {stage}");
+
+        // 檢查 Stage 上限
+        int maxStage = (level == 1) ? 5 : 10;
+        if (stage > maxStage)
+        {
+            Debug.Log("[MonsterInstManager] 關卡已通關，顯示結算面板。");
+            if (stageCompletePanel != null)
+                stageCompletePanel.SetActive(true);
+            else
+                Debug.LogWarning("未指派 StageCompletePanel！");
+            return;
+        }
+
+        // 清空上一波敵人資訊
         for (int i = 0; i < teamManager.EnemyTeamInfo.Length; i++)
         {
             teamManager.EnemyTeamInfo[i] = new BattleManager.TeamSlotInfo();
         }
 
-        // 定義可用怪物池
+        // 根據關卡內容生成
+        SpawnByLevelAndStage(level, stage);
+
+        // 呼叫原有敵隊生成邏輯
+        teamManager.SetupEnemyTeam();
+    }
+
+    // =========================================================
+    // ★ 新增：依據 Level / Stage 決定生成內容
+    // =========================================================
+    private void SpawnByLevelAndStage(int level, int stage)
+    {
         List<GameObject> monsterPool = new List<GameObject>()
         {
-            //slimePrefab,
             shieldGoblinPrefab,
             axeGoblinPrefab,
             mageGoblinPrefab
         };
 
-        if (currentLevel < 4)
+        // 從第一個位置開始依序填入
+        List<int> slots = new List<int>() { 0, 1, 2 };
+
+        if (level == 1)
         {
-            // 第 1~3 關，從普通怪物中隨機生成 1~3 隻
-            int enemyCount = Random.Range(1, 4); // 1~3 隻
-            List<int> availableSlots = new List<int>() { 0, 1, 2 };
-
-            for (int i = 0; i < enemyCount; i++)
+            switch (stage)
             {
-                if (availableSlots.Count == 0) break;
-
-                int slotIndex = availableSlots[Random.Range(0, availableSlots.Count)];
-                availableSlots.Remove(slotIndex);
-
-                GameObject prefab = monsterPool[Random.Range(0, monsterPool.Count)];
-                teamManager.EnemyTeamInfo[slotIndex].PrefabToSpawn = prefab;
+                case 1:
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
+                    break;
+                case 2:
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
+                    break;
+                case 3:
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = mageGoblinPrefab;
+                    break;
+                case 4:
+                case 5:
+                    for (int i = 0; i < 2 && slots.Count > 0; i++)
+                    {
+                        int slotIndex = slots[0];
+                        slots.RemoveAt(0);
+                        var prefab = monsterPool[Random.Range(0, monsterPool.Count)];
+                        teamManager.EnemyTeamInfo[slotIndex].PrefabToSpawn = prefab;
+                    }
+                    break;
             }
         }
-        else
+        else if (level == 2)
         {
-            // 第 4 關，Boss 與普通怪物機率相同
-            List<GameObject> fullPool = new List<GameObject>(monsterPool);
-            fullPool.Add(darkKnightPrefab);
-
-            int enemyCount = Random.Range(1, 4);
-            List<int> availableSlots = new List<int>() { 0, 1, 2 };
-
-            for (int i = 0; i < enemyCount; i++)
+            if (stage < 10)
             {
-                if (availableSlots.Count == 0) break;
-
-                int slotIndex = availableSlots[Random.Range(0, availableSlots.Count)];
-                availableSlots.Remove(slotIndex);
-
-                GameObject prefab = fullPool[Random.Range(0, fullPool.Count)];
-                teamManager.EnemyTeamInfo[slotIndex].PrefabToSpawn = prefab;
+                int enemyCount = Random.Range(1, 4); // 1~3
+                for (int i = 0; i < enemyCount && slots.Count > 0; i++)
+                {
+                    int slotIndex = slots[0];
+                    slots.RemoveAt(0);
+                    var prefab = monsterPool[Random.Range(0, monsterPool.Count)];
+                    teamManager.EnemyTeamInfo[slotIndex].PrefabToSpawn = prefab;
+                }
+            }
+            else if (stage == 10)
+            {
+                teamManager.EnemyTeamInfo[0].PrefabToSpawn = darkKnightPrefab;
             }
         }
-
-        // 生成敵人
-        teamManager.SetupEnemyTeam();
     }
 }
