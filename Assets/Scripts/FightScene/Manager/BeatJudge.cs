@@ -179,7 +179,7 @@ public class BeatJudge : MonoBehaviour
     private void UpdateComboUI()
     {
         if (comboText == null) return;
-        comboText.text = comboCount > 0 ? "x " + comboCount.ToString() : "";
+        comboText.text = comboCount > 0 ? "" + comboCount.ToString() : "";
     }
 
     // ============================================================
