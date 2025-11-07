@@ -295,6 +295,9 @@ public class BattleEffectManager : MonoBehaviour
         {
             HandleUnitDefeated(target);
         }
+
+        BattleManager.Instance.CheckPlayerDefeat();
+
     }
 
 

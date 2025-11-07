@@ -4798,7 +4798,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 262bc39e44beefb43952e34430061ec2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a79fc53c073fd604ba0420cb5d5080ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4822,6 +4822,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ETeam: 2
+  thisSlotInfo:
+    PrefabToSpawn: {fileID: 0}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
+  tauntedByObj: {fileID: 0}
+  tauntBeatsRemaining: 0
   baseScale: {x: 0.51, y: 0.51, z: 0.51}
   peakMultiplier: 1.2
   holdDuration: 0.05
