@@ -27,6 +27,10 @@ public class MonsterInstManager : MonoBehaviour
     public Text summaryTimeText;
     public Text summaryComboText;
 
+    // ★ 新增：顯示當前關卡進度的 Text
+    public Text stageProgressText;
+
+
     [Header("戰鬥計時器")] 
     private float battleTimer = 0f;
     private bool battleEnded = false;
@@ -100,7 +104,12 @@ public class MonsterInstManager : MonoBehaviour
         Debug.Log($"[MonsterInstManager] 章節 {chapter} - 關卡 {level} - 當前 Stage {stage}");
 
         // 檢查 Stage 上限
-        int maxStage = (level == 1) ? 5 : 6;
+        int maxStage = (level == 1) ? 5 : 6; // Level1打5關、Level2打6關
+
+        // ★ 更新關卡顯示 UI
+        if (stageProgressText != null)
+            stageProgressText.text = $"Round: {stage}/{maxStage}";
+
         if (stage > maxStage)
         {
             Debug.Log("[MonsterInstManager] 關卡已通關，顯示結算面板。");
