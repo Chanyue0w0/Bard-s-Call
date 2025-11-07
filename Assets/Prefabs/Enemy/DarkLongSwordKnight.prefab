@@ -4867,6 +4867,7 @@ MonoBehaviour:
   enemySlot2: {fileID: 0}
   isShieldActive: 0
   isShieldBroken: 0
+  tauntVfxPrefab: {fileID: 1706224664778853816, guid: a86e1a8bdd3a39b4fbafa6298302f385, type: 3}
 --- !u!58 &866068725714919053
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4920,8 +4921,8 @@ MonoBehaviour:
   HP: 1000
   MaxMP: 0
   MP: 0
-  OriginAtk: 30
-  Atk: 30
+  OriginAtk: 10
+  Atk: 10
   NormalAttacks: []
   HeavyAttack:
     SkillName: 

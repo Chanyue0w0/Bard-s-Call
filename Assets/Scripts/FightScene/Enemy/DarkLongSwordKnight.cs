@@ -62,6 +62,10 @@ public class DarkLongSwordKnight : EnemyBase
     private BattleManager.TeamSlotInfo randomTargetSlot;
     private CharacterData charData;
 
+    [Header("嘲諷特效設定")]
+    public GameObject tauntVfxPrefab;
+    private GameObject activeTauntVfx;
+
     protected override void Awake()
     {
         base.Awake();
@@ -84,15 +88,51 @@ public class DarkLongSwordKnight : EnemyBase
     }
 
 
-
     void OnDestroy()
     {
         BeatManager.OnBeat -= OnBeat;
     }
 
-    void Update()
+    protected override void Update()
     {
-        if (forceMove || isAttacking) return;
+        base.Update(); // ★ 讓基底的 Fever 倒數邏輯繼續運作
+
+        if (forceMove || isAttacking || IsFeverLocked()) return;
+
+
+        // 嘲諷特效生成
+        if (activeTauntVfx == null && tauntedByObj != null && tauntVfxPrefab != null)
+        {
+            activeTauntVfx = Instantiate(tauntVfxPrefab, transform.position, Quaternion.identity);
+            activeTauntVfx.transform.SetParent(transform);
+            Debug.Log($"【嘲諷特效啟動】{name} 被 {tauntedByObj.name} 嘲諷");
+        }
+
+        // 嘲諷倒數更新
+        if (tauntBeatsRemaining > 0)
+        {
+            float beatTime = (BeatManager.Instance != null) ? 60f / BeatManager.Instance.bpm : 0.4f;
+            tauntBeatsRemaining -= Time.deltaTime / beatTime;
+
+            if (tauntBeatsRemaining <= 0)
+            {
+                Debug.Log($"【嘲諷結束】{name} 嘲諷時間到，恢復自由目標。");
+                tauntedByObj = null;
+                tauntBeatsRemaining = 0;
+
+                if (activeTauntVfx != null)
+                {
+                    Destroy(activeTauntVfx);
+                    activeTauntVfx = null;
+                }
+            }
+        }
+
+        // 嘲諷特效持續跟隨
+        if (activeTauntVfx != null)
+            activeTauntVfx.transform.position = transform.position + Vector3.up * 2f;
+
+
 
         if (isHolding)
         {
@@ -145,10 +185,11 @@ public class DarkLongSwordKnight : EnemyBase
         //if (!isShieldActive || isShieldBroken)
         //    return 3; // 沒護盾 → 強制開護盾
         float roll = Random.value * 100f;
-        if (roll < 50f) return 1;
-        if (roll < 70f) return 2;
-        if (roll < 90f) return 3;
-        return 4;
+        if (roll < 50f) return 1;   // 普通斬擊 60%
+        if (roll < 80f) return 2;   // 強大連斬 30%
+        if (roll < 90f) return 3;   // 護盾技能降為 10%
+        return 1;                   // 召喚石像 0%
+
     }
 
     private void EnterWarningPhase()
@@ -257,6 +298,21 @@ public class DarkLongSwordKnight : EnemyBase
     {
         isAttacking = true;
 
+        // 嘲諷檢查：若被嘲諷 → 改為攻擊嘲諷者
+        if (tauntedByObj != null)
+        {
+            var paladinSlot = System.Array.Find(
+                BattleManager.Instance.CTeamInfo,
+                t => t != null && t.Actor == tauntedByObj
+            );
+            if (paladinSlot != null)
+            {
+                randomTargetSlot = paladinSlot;
+                Debug.Log($"【嘲諷生效】{name} 使用技能1 攻擊嘲諷者 {paladinSlot.UnitName}");
+            }
+        }
+
+
         // 使用警告階段選定的目標，若當前為空才重新選
         if (randomTargetSlot == null || randomTargetSlot.Actor == null)
             randomTargetSlot = GetRandomPlayerSlot();
@@ -304,6 +360,23 @@ public class DarkLongSwordKnight : EnemyBase
         var cTeam = BattleManager.Instance?.CTeamInfo;
         if (cTeam == null) yield break;
         Vector3 origin = transform.position;
+
+        // 嘲諷檢查：若被嘲諷 → 三連斬全都攻擊該對象
+        if (tauntedByObj != null)
+        {
+            var paladinSlot = System.Array.Find(
+                BattleManager.Instance.CTeamInfo,
+                t => t != null && t.Actor == tauntedByObj
+            );
+
+            if (paladinSlot != null)
+            {
+                cTeam = new BattleManager.TeamSlotInfo[] { paladinSlot };
+                Debug.Log($"【嘲諷生效】{name} 使用技能2 三連斬鎖定嘲諷者 {paladinSlot.UnitName}");
+            }
+        }
+
+
         for (int i = 0; i < cTeam.Length; i++)
         {
             if (cTeam[i].Actor == null) continue;
