@@ -218,8 +218,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterName: Rethys
   ClassType: 1
-  MaxHP: 70
-  HP: 70
+  MaxHP: 60
+  HP: 60
   MaxMP: 8
   MP: 0
   OriginAtk: 100
