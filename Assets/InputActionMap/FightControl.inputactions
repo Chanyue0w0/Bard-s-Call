@@ -42,33 +42,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Character1Defend",
-                    "type": "Button",
-                    "id": "6ebca434-1e1b-4002-bed5-1359caa34fdc",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Character2Defend",
-                    "type": "Button",
-                    "id": "89ec10de-d224-42ae-9eae-475188e773ac",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Character3Defend",
-                    "type": "Button",
-                    "id": "96840a44-2a87-4bfd-b3a1-613852a20eb4",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "TeamRotateClockWise",
                     "type": "Button",
                     "id": "5dda9972-4dd7-4b21-8f69-c60d34c8e16a",
@@ -107,72 +80,6 @@
                     "processors": "",
                     "groups": "FightControlScheme",
                     "action": "Character1Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "189de2c6-5b7b-4acb-acd9-11d1bd2e8501",
-                    "path": "<Keyboard>/u",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "FightControlScheme",
-                    "action": "Character1Defend",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8159262a-e11d-4aa2-bc5f-8a2f32b6b6df",
-                    "path": "<Gamepad>/leftStick/left",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "FightControlScheme",
-                    "action": "Character1Defend",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ac583284-54a3-4d3e-85da-3d89fe73033b",
-                    "path": "<Keyboard>/i",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "FightControlScheme",
-                    "action": "Character2Defend",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1996a14c-6cad-4703-8c84-f285e4ee06c7",
-                    "path": "<Gamepad>/leftStick/up",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "FightControlScheme",
-                    "action": "Character2Defend",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "58e93785-0f57-4938-b15b-42c394431cd8",
-                    "path": "<Keyboard>/o",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "FightControlScheme",
-                    "action": "Character3Defend",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "90355b53-787c-477d-ba64-2ec2a9ad7a73",
-                    "path": "<Gamepad>/leftStick/right",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "FightControlScheme",
-                    "action": "Character3Defend",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
