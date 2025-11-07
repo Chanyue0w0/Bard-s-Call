@@ -1883,6 +1883,7 @@ GameObject:
   - component: {fileID: 762947547}
   - component: {fileID: 762947548}
   - component: {fileID: 762947549}
+  - component: {fileID: 762947550}
   m_Layer: 0
   m_Name: B Button
   m_TagString: Untagged
@@ -1899,7 +1900,7 @@ Transform:
   m_GameObject: {fileID: 762947546}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.2, y: -1.06, z: 0}
+  m_LocalPosition: {x: 0.2, y: 2.48, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1947,7 +1948,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -966832563, guid: d4638eb75c55a004bb15f14fb3b0573e, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.7490196}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1973,6 +1974,20 @@ MonoBehaviour:
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
+--- !u!114 &762947550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762947546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474ca66447f10da438db6e38eb532a6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeTime: 10
+  useUnscaledTime: 0
 --- !u!1 &806207500
 GameObject:
   m_ObjectHideFlags: 0
@@ -2698,6 +2713,7 @@ GameObject:
   - component: {fileID: 1183916858}
   - component: {fileID: 1183916859}
   - component: {fileID: 1183916860}
+  - component: {fileID: 1183916861}
   m_Layer: 0
   m_Name: X Button
   m_TagString: Untagged
@@ -2714,7 +2730,7 @@ Transform:
   m_GameObject: {fileID: 1183916857}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.06, z: 0}
+  m_LocalPosition: {x: 0, y: 2.48, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2762,7 +2778,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -1489365111, guid: d4638eb75c55a004bb15f14fb3b0573e, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.7490196}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2788,6 +2804,20 @@ MonoBehaviour:
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
+--- !u!114 &1183916861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183916857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474ca66447f10da438db6e38eb532a6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeTime: 10
+  useUnscaledTime: 0
 --- !u!1 &1331803163
 GameObject:
   m_ObjectHideFlags: 0
@@ -3640,6 +3670,7 @@ GameObject:
   - component: {fileID: 1779930175}
   - component: {fileID: 1779930176}
   - component: {fileID: 1779930177}
+  - component: {fileID: 1779930178}
   m_Layer: 0
   m_Name: Y Button
   m_TagString: Untagged
@@ -3656,7 +3687,7 @@ Transform:
   m_GameObject: {fileID: 1779930174}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.06, z: 0}
+  m_LocalPosition: {x: 0, y: 2.48, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3704,7 +3735,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 245532618, guid: d4638eb75c55a004bb15f14fb3b0573e, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.7490196}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3730,6 +3761,20 @@ MonoBehaviour:
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
+--- !u!114 &1779930178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779930174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474ca66447f10da438db6e38eb532a6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeTime: 10
+  useUnscaledTime: 0
 --- !u!1 &1795676077
 GameObject:
   m_ObjectHideFlags: 0
