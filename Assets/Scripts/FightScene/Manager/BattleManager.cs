@@ -1054,4 +1054,46 @@ public class BattleManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene("CampScene");
     }
 
+
+    // --------------------------------------------------
+    // 玩家失敗判定與 LosePanel 顯示
+    // --------------------------------------------------
+    [Header("戰敗 UI 面板")]
+    public GameObject losePanel;
+    private bool isBattleEnded = false;
+
+    public void CheckPlayerDefeat()
+    {
+        if (isBattleEnded) return;
+
+        bool allDead = true;
+        foreach (var slot in CTeamInfo)
+        {
+            if (slot != null && slot.Actor != null && slot.HP > 0)
+            {
+                allDead = false;
+                break;
+            }
+        }
+
+        if (allDead)
+        {
+            isBattleEnded = true;
+            ShowLosePanel();
+        }
+    }
+
+    private void ShowLosePanel()
+    {
+        if (losePanel != null)
+        {
+            losePanel.SetActive(true);
+            Debug.Log("[BattleManager] 全員陣亡，開啟 LosePanel！");
+        }
+        else
+        {
+            Debug.LogWarning("[BattleManager] LosePanel 未綁定！");
+        }
+    }
+
 }
