@@ -153,6 +153,10 @@ public class BeatJudge : MonoBehaviour
             lastHitTime = Time.time;
             UpdateComboUI();
 
+            // ★ 新增：紀錄最大連擊
+            if (comboCount > GlobalIndex.MaxCombo)
+                GlobalIndex.MaxCombo = comboCount;
+
             if (comboTimerCoroutine != null)
                 StopCoroutine(comboTimerCoroutine);
             comboTimerCoroutine = StartCoroutine(ComboTimeout());

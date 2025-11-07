@@ -12,9 +12,16 @@ public class GlobalIndex : MonoBehaviour
     // 關卡資訊（★修改：改為三層結構）
     public static int CurrentChapterIndex = 1; // 章節
     public static int CurrentLevelIndex = 1;   // 關卡
-    public static int CurrentStageIndex = 0;   // 小關卡波數
+    public static int CurrentStageIndex = 4;   // 小關卡波數
     public static string CurrentStageName = "Forest01";
     public static string NextSceneName = "FightScene";
+
+    // -------------------------------
+    // 玩家統計資料（★新增）
+    // -------------------------------
+    public static float TotalBattleTime = 0f; // 本場戰鬥累積秒數
+    public static int MaxCombo = 0;           // 玩家最高連擊數
+
 
     // 隊伍資訊
     public static List<GameObject> PlayerTeamPrefabs = new List<GameObject>();

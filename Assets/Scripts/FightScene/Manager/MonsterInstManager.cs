@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MonsterInstManager : MonoBehaviour
 {
@@ -22,6 +23,14 @@ public class MonsterInstManager : MonoBehaviour
 
     [Header("UI 元件 (結算面板)")]
     public GameObject stageCompletePanel; // Inspector 指派，打完最後一關顯示
+    // ★ 新增：Summary 結算顯示 Text
+    public Text summaryTimeText;
+    public Text summaryComboText;
+
+    [Header("戰鬥計時器")] 
+    private float battleTimer = 0f;
+    private bool battleEnded = false;
+
 
     private void Awake()
     {
@@ -40,7 +49,12 @@ public class MonsterInstManager : MonoBehaviour
 
         StartCoroutine(CheckEnemyClearLoop());
     }
-
+    private void Update()
+    {
+        // 若戰鬥尚未結束，累積時間
+        if (!battleEnded)
+            battleTimer += Time.deltaTime;
+    }
     private IEnumerator CheckEnemyClearLoop()
     {
         while (true)
@@ -90,12 +104,29 @@ public class MonsterInstManager : MonoBehaviour
         if (stage > maxStage)
         {
             Debug.Log("[MonsterInstManager] 關卡已通關，顯示結算面板。");
+
+            // ★ 紀錄總戰鬥時間
+            GlobalIndex.TotalBattleTime = battleTimer;
+            battleEnded = true;
+
+            // ★ 更新結算文字
+            if (summaryTimeText != null)
+                summaryTimeText.text = $"通關時間 {GlobalIndex.TotalBattleTime:F1} 秒";
+
+            if (summaryComboText != null)
+                summaryComboText.text = $"最高連擊數 {GlobalIndex.MaxCombo} Combo";
+
+            // 顯示結算面板
             if (stageCompletePanel != null)
                 stageCompletePanel.SetActive(true);
             else
                 Debug.LogWarning("未指派 StageCompletePanel！");
+
             return;
         }
+
+
+
 
         // 清空上一波敵人資訊
         for (int i = 0; i < teamManager.EnemyTeamInfo.Length; i++)

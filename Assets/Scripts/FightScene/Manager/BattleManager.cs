@@ -1040,4 +1040,18 @@ public class BattleManager : MonoBehaviour
         //ShiftEnemiesForward();
     }
 
+    // --------------------------------------------------
+    // 返回主畫面（CampScene）
+    // --------------------------------------------------
+    public void ReturnToCampScene()
+    {
+        // 重置關卡索引（可視需求調整）
+        GlobalIndex.CurrentStageIndex = 0;
+        GlobalIndex.TotalBattleTime = 0;
+        GlobalIndex.MaxCombo = 0;
+
+        // 切換回主畫面
+        UnityEngine.SceneManagement.SceneManager.LoadScene("CampScene");
+    }
+
 }
