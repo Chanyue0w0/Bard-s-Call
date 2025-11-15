@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7301778324285810434}
   - component: {fileID: 9081312265207823958}
   - component: {fileID: 7082320240048378149}
+  - component: {fileID: 7460336850473596772}
+  - component: {fileID: 8980858215728687347}
   m_Layer: 8
   m_Name: AxeGoblin
   m_TagString: Enemy
@@ -152,6 +154,57 @@ MonoBehaviour:
     FixedDamage: 0
   Skills: []
   ShieldEffectPrefab: {fileID: 0}
+--- !u!114 &7460336850473596772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2850400381512628172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dff8b091bf01c1842982d6b2bb028b57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 8980858215728687347}
+--- !u!114 &8980858215728687347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2850400381512628172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5268661f352c40b48a441c646753e826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 7301778324285810434}
+  clips:
+  - clipName: Idle
+    frames:
+    - sprite: {fileID: 21300000, guid: a34139611b612014ab356ec6cb485b3f, type: 3}
+      beatLength: 1
+    - sprite: {fileID: 21300000, guid: c535aa69931848b4989a5b3c6d7742b4, type: 3}
+      beatLength: 1
+    - sprite: {fileID: 21300000, guid: a34139611b612014ab356ec6cb485b3f, type: 3}
+      beatLength: 1
+    loop: 1
+    holdLastFrame: 0
+  - clipName: Attack
+    frames:
+    - sprite: {fileID: 21300000, guid: 125fc39776a9030408975046aeec3511, type: 3}
+      beatLength: 1
+    - sprite: {fileID: 21300000, guid: 2b84d9baab81a5247ac90884b5228df7, type: 3}
+      beatLength: 1
+    - sprite: {fileID: 21300000, guid: 41ab110ff9e2a484dad848b807feb3d4, type: 3}
+      beatLength: 1
+    - sprite: {fileID: 21300000, guid: 70e7e83e90db86046b7403e9170e4a6f, type: 3}
+      beatLength: 1
+    loop: 0
+    holdLastFrame: 0
+  defaultClipName: Idle
+  playDefaultOnStart: 1
 --- !u!1 &5299797397414461518
 GameObject:
   m_ObjectHideFlags: 0

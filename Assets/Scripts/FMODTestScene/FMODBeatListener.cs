@@ -133,8 +133,11 @@ public class FMODBeatListener : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+
+        // 刪掉這行
+        // DontDestroyOnLoad(gameObject);
     }
+
 
     void Start()
     {
@@ -149,7 +152,7 @@ public class FMODBeatListener : MonoBehaviour
         musicInstance.start();
 
         // 可提前 release，FMOD 會在播放完後真正釋放
-        musicInstance.release();
+        //musicInstance.release();
     }
 
     void Update()
