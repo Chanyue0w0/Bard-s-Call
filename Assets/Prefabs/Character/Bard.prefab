@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 5894668438685926040}
   - component: {fileID: 8535338501439863612}
   - component: {fileID: 372741867450944935}
+  - component: {fileID: 5903065188219034040}
   m_Layer: 7
   m_Name: Bard
   m_TagString: Hero
@@ -249,6 +250,30 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5903065188219034040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6258503229764174105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5268661f352c40b48a441c646753e826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 6347402537250545832}
+  clips:
+  - clipName: Idle
+    frames:
+    - sprite: {fileID: 21300000, guid: 9a528c359f42e9347a1d143aa0a89a1b, type: 3}
+      beatLength: 1
+    - sprite: {fileID: 21300000, guid: 11913c5e411fa35459e0c23d151ca347, type: 3}
+      beatLength: 1
+    loop: 1
+    holdLastFrame: 0
+  defaultClipName: Idle
+  playDefaultOnStart: 1
 --- !u!1 &8311510172526210414
 GameObject:
   m_ObjectHideFlags: 0

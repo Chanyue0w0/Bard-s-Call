@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: a34139611b612014ab356ec6cb485b3f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c535aa69931848b4989a5b3c6d7742b4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 8980858215728687347}
+  attackIntervalBeats: 8
 --- !u!114 &8980858215728687347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,8 +184,6 @@ MonoBehaviour:
   clips:
   - clipName: Idle
     frames:
-    - sprite: {fileID: 21300000, guid: a34139611b612014ab356ec6cb485b3f, type: 3}
-      beatLength: 1
     - sprite: {fileID: 21300000, guid: c535aa69931848b4989a5b3c6d7742b4, type: 3}
       beatLength: 1
     - sprite: {fileID: 21300000, guid: a34139611b612014ab356ec6cb485b3f, type: 3}

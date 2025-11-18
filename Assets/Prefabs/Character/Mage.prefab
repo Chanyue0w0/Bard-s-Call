@@ -128,6 +128,7 @@ GameObject:
   - component: {fileID: 5761249044116123709}
   - component: {fileID: -9000765520436358034}
   - component: {fileID: 6557653212308108786}
+  - component: {fileID: 767516820050819641}
   m_Layer: 7
   m_Name: Mage
   m_TagString: Hero
@@ -280,3 +281,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &767516820050819641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8859153221285552973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5268661f352c40b48a441c646753e826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 1441404310817688979}
+  clips:
+  - clipName: Idle
+    frames:
+    - sprite: {fileID: 21300000, guid: 953ac68274b5816448a8b627ab9620ab, type: 3}
+      beatLength: 0
+    - sprite: {fileID: 21300000, guid: a083bced67a509f46883a19ea6a0f30b, type: 3}
+      beatLength: 0
+    loop: 1
+    holdLastFrame: 0
+  defaultClipName: Idle
+  playDefaultOnStart: 1
