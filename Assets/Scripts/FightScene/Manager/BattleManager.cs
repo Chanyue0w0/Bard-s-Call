@@ -191,15 +191,20 @@ public class BattleManager : MonoBehaviour
     {
         if (FeverManager.Instance == null) return;
 
-        // 檢查是否在拍上（Perfect）
-        bool perfect = BeatJudge.Instance.IsOnBeat();
+        // 使用新的 FMODBeatJudge
+        if (FMODBeatJudge.Instance == null)
+        {
+            Debug.LogWarning("[BattleManager] FMODBeatJudge.Instance 為 null，無法判定對拍！");
+            return;
+        }
+
+        bool perfect = FMODBeatJudge.Instance.IsOnBeat();
         if (!perfect)
         {
             Debug.Log("[BattleManager] Fever大招 Miss，未在節拍上，不觸發。");
             return;
         }
 
-        // 檢查是否滿值
         if (FeverManager.Instance.currentFever < FeverManager.Instance.feverMax)
         {
             Debug.Log("[BattleManager] Fever未滿，無法啟動大招。");
@@ -508,13 +513,19 @@ public class BattleManager : MonoBehaviour
         var attacker = CTeamInfo[index];
 
         if (attacker == null || attacker.Actor == null) return;
-        if (attacker.HP <= 0 || attacker.Actor == null)
+        if (attacker.HP <= 0)
         {
             Debug.Log($"[{attacker.UnitName}] 已死亡，僅打節拍但不觸發攻擊。");
             return;
         }
 
-        bool perfect = BeatJudge.Instance.IsOnBeat();
+        if (FMODBeatJudge.Instance == null)
+        {
+            Debug.LogWarning("[BattleManager] FMODBeatJudge.Instance 為 null，無法判定對拍！");
+            return;
+        }
+
+        bool perfect = FMODBeatJudge.Instance.IsOnBeat();
         if (!perfect)
         {
             Debug.Log("Miss！未在節拍上，不觸發攻擊。");
@@ -522,7 +533,7 @@ public class BattleManager : MonoBehaviour
         }
 
         var target = FindEnemyByClass(attacker.ClassType);
-        int beatInCycle = BeatManager.Instance.predictedNextBeat;
+        int beatInCycle = BeatManager.Instance.predictedNextBeat;  // 這個你之後要再改成用 FMOD 節拍，但先保留
 
         // ------------------------------------------------------------
         // 特例處理：即使沒有敵人也能發動的技能
@@ -879,7 +890,13 @@ public class BattleManager : MonoBehaviour
         var slot = CTeamInfo[index];
         if (slot == null || slot.Actor == null) return;
 
-        bool perfect = BeatJudge.Instance.IsOnBeat();
+        if (FMODBeatJudge.Instance == null)
+        {
+            Debug.LogWarning("[BattleManager] FMODBeatJudge.Instance 為 null，無法判定格檔對拍！");
+            return;
+        }
+
+        bool perfect = FMODBeatJudge.Instance.IsOnBeat();
         if (!perfect)
         {
             Debug.Log("Miss！格檔未在節拍上。");
@@ -889,7 +906,12 @@ public class BattleManager : MonoBehaviour
         var charData = slot.Actor.GetComponent<CharacterData>();
         if (charData == null) return;
 
-        BattleEffectManager.Instance.ActivateBlock(index, BeatManager.Instance.beatTravelTime, charData, slot.Actor);
+        BattleEffectManager.Instance.ActivateBlock(
+            index,
+            BeatManager.Instance.beatTravelTime,   // 這個之後也要改成 FMOD 的時間
+            charData,
+            slot.Actor
+        );
     }
 
     private void ResetAllComboStates()
