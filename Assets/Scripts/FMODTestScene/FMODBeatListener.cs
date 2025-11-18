@@ -28,9 +28,6 @@ public class FMODBeatListener : MonoBehaviour
     public float pulseRecoverTime = 0.12f;
     private Coroutine pulseRoutine;
 
-    [Header("Perfect 特效（依照 Judge 判定）")]
-    public GameObject perfectEffectPrefab;
-
     // ========================================
     // 拍點狀態
     // ========================================
@@ -164,13 +161,6 @@ public class FMODBeatListener : MonoBehaviour
             // UI 節奏 Pulse
             PlayPulseAnimation();
 
-            // 若該拍 Perfect，生成粒子特效
-            if (FMODBeatJudge.Instance != null &&
-                FMODBeatJudge.Instance.LastHitBeatIndex == s_globalBeatIndex)
-            {
-                SpawnPerfectEffectOnUI();
-            }
-
             OnGlobalBeat?.Invoke(s_globalBeatIndex);
             OnBarBeat?.Invoke(s_currentBar, s_currentBeatInBar);
             OnBeatInfo?.Invoke(info);
@@ -230,24 +220,6 @@ public class FMODBeatListener : MonoBehaviour
         rt.localScale = s0;
     }
 
-    // ========================================
-    // Perfect 粒子特效（Transform，不是 RectTransform）
-    // ========================================
-    private void SpawnPerfectEffectOnUI()
-    {
-        if (perfectEffectPrefab == null || beatPulseImage == null) return;
-
-        GameObject obj = Instantiate(perfectEffectPrefab, beatPulseImage.transform.parent);
-
-        // 嘗試依 UI 定位，但不強制 RectTransform
-        var rt = obj.GetComponent<RectTransform>();
-        if (rt != null)
-            rt.anchoredPosition = beatPulseImage.rectTransform.anchoredPosition;
-        else
-            obj.transform.localPosition = beatPulseImage.transform.localPosition;
-
-        Destroy(obj, 1.2f);
-    }
 
     // ========================================
     // FMOD Callback
