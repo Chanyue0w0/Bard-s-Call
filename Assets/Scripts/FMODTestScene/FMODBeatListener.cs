@@ -28,6 +28,19 @@ public class FMODBeatListener : MonoBehaviour
     public float pulseRecoverTime = 0.12f;
     private Coroutine pulseRoutine;
 
+    [Header("Heavy Beat Notify UI")]
+    public Image heavyBeatNotifyUI;         // 要綁在 Inspector 的 UI Image
+    public Sprite normalBeatSprite;         // 輕拍（消失或透明）
+    public Sprite preHeavyBeatSprite;       // 灰色提示
+    public Sprite heavyBeatSprite;          // 金色重拍
+
+    [Tooltip("重拍間隔，例如 4 表示每 4 拍是重拍")]
+    public int heavyBeatInterval = 4;
+
+    [Tooltip("是否啟用重拍提示 UI")]
+    public bool enableHeavyBeatNotify = true;
+
+
     // ========================================
     // 拍點狀態 (Private)
     // ========================================
@@ -164,6 +177,9 @@ public class FMODBeatListener : MonoBehaviour
             // UI 節奏脈衝
             PlayPulseAnimation();
 
+            // === Heavy Beat UI Notify ===
+            UpdateHeavyBeatUI(d.beatInBar);
+
             // ==========================================================
             // ★ Debug：每拍自動 Perfect（你需要的功能）
             // ==========================================================
@@ -197,6 +213,33 @@ public class FMODBeatListener : MonoBehaviour
             }
         }
     }
+
+    private void UpdateHeavyBeatUI(int beatInBar)
+    {
+        if (!enableHeavyBeatNotify) return;
+        if (heavyBeatNotifyUI == null) return;
+
+        // 當前拍 index 從 1 開始，重拍間隔為 heavyBeatInterval
+        bool isHeavyBeat = (beatInBar % heavyBeatInterval == 0);
+        bool isPreHeavyBeat = ((beatInBar + 1) % heavyBeatInterval == 0);
+
+        if (isHeavyBeat)
+        {
+            heavyBeatNotifyUI.gameObject.SetActive(true);
+            heavyBeatNotifyUI.sprite = heavyBeatSprite;
+        }
+        else if (isPreHeavyBeat)
+        {
+            heavyBeatNotifyUI.gameObject.SetActive(true);
+            heavyBeatNotifyUI.sprite = preHeavyBeatSprite;
+        }
+        else
+        {
+            // Normal light beat
+            heavyBeatNotifyUI.gameObject.SetActive(false);
+        }
+    }
+
 
     // ========================================
     // UI Pulse

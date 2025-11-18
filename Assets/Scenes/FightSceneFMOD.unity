@@ -182,6 +182,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3633230120927880608, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
   m_PrefabInstance: {fileID: 1490132932690333473}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &45134933 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7369639355996623999, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
+  m_PrefabInstance: {fileID: 1490132932690333473}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &87777126
 GameObject:
   m_ObjectHideFlags: 0
@@ -2546,7 +2557,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &762947547
 Transform:
   m_ObjectHideFlags: 0
@@ -3633,7 +3644,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1183916858
 Transform:
   m_ObjectHideFlags: 0
@@ -4586,6 +4597,12 @@ MonoBehaviour:
   pulseScaleUp: 1.35
   pulseScaleTime: 0.08
   pulseRecoverTime: 0.12
+  heavyBeatNotifyUI: {fileID: 45134933}
+  normalBeatSprite: {fileID: 0}
+  preHeavyBeatSprite: {fileID: 21300000, guid: 5ecd988cc59f3f54dafb0e17b99f25b0, type: 3}
+  heavyBeatSprite: {fileID: 21300000, guid: 3ec1041f1a2a98a498fa07d1b1fcef1f, type: 3}
+  heavyBeatInterval: 4
+  enableHeavyBeatNotify: 1
 --- !u!4 &1671276746
 Transform:
   m_ObjectHideFlags: 0
@@ -5043,7 +5060,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1779930175
 Transform:
   m_ObjectHideFlags: 0
@@ -5998,10 +6015,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeavyBeatNotifyUI
       objectReference: {fileID: 0}
-    - target: {fileID: 7369639355996623999, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 5ecd988cc59f3f54dafb0e17b99f25b0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
