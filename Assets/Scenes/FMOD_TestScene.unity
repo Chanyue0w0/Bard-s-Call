@@ -2776,7 +2776,7 @@ GameObject:
   - component: {fileID: 1414234345}
   - component: {fileID: 1414234344}
   m_Layer: 0
-  m_Name: FMODBeatListenerObj
+  m_Name: FMODBeatManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4472,6 +4472,18 @@ PrefabInstance:
     - target: {fileID: 5391117829326575777, guid: 4c8702a21d5b5c943b347992ba68d17f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301778324285810434, guid: 4c8702a21d5b5c943b347992ba68d17f, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301778324285810434, guid: 4c8702a21d5b5c943b347992ba68d17f, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301778324285810434, guid: 4c8702a21d5b5c943b347992ba68d17f, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8980858215728687347, guid: 4c8702a21d5b5c943b347992ba68d17f, type: 3}
       propertyPath: clips.Array.size
