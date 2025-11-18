@@ -4612,7 +4612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c87531e786d874945af2d806b1013f64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  earlyRange: 0.12
+  earlyRange: 0.1
   judgeOffset: 0.03
   autoCalibrateOffset: 0
   perfectEffectPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}

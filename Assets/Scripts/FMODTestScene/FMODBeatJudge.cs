@@ -267,8 +267,6 @@ public class FMODBeatJudge : MonoBehaviour
             obj.transform.localRotation = Quaternion.identity;
             obj.transform.localScale = Vector3.one;
         }
-
-        Destroy(obj, 1.2f);
     }
 
     private void SpawnMissText()
