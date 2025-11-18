@@ -22,7 +22,7 @@ public class AxeGoblin : MonoBehaviour
         //   讓哥布林進場後先等待 8 拍才第一次攻擊
         if (FMODBeatListener.Instance != null)
         {
-            lastAttackBeat = FMODBeatListener.Instance.GlobalBeatIndex;
+            lastAttackBeat = FMODBeatListener.GlobalBeatIndex;
         }
         else
         {

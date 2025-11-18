@@ -29,15 +29,23 @@ public class FMODBeatListener : MonoBehaviour
     private Coroutine pulseRoutine;
 
     // ========================================
-    // 拍點狀態
+    // 拍點狀態 (Private)
     // ========================================
     private static int s_currentBar;
     private static int s_currentBeatInBar;
     private static int s_globalBeatIndex = -1;
-
-    private static float s_tempo = 120f;
     private static int s_timeSigUpper = 4;
     private static int s_timeSigLower = 4;
+
+    // ========================================
+    // Public Getter (外部唯讀)
+    // ========================================
+    public static int CurrentBeatInBar => s_currentBeatInBar;
+    public static int CurrentBar => s_currentBar;
+    public static int BeatsPerMeasure => s_timeSigUpper;
+    public static int GlobalBeatIndex => s_globalBeatIndex;
+
+    private static float s_tempo = 120f; //Unity 的 BPM 快取值
 
     private struct BeatData
     {
@@ -68,8 +76,6 @@ public class FMODBeatListener : MonoBehaviour
     public static event Action<BeatInfo> OnBeatInfo;
 
     public float SecondsPerBeat => 60f / Mathf.Max(1f, s_tempo);
-    public int GlobalBeatIndex => s_globalBeatIndex;
-
 
     // ========================================
     // 排程

@@ -533,7 +533,8 @@ public class BattleManager : MonoBehaviour
         }
 
         var target = FindEnemyByClass(attacker.ClassType);
-        int beatInCycle = BeatManager.Instance.predictedNextBeat;  // 這個你之後要再改成用 FMOD 節拍，但先保留
+        int beatInCycle = FMODBeatListener.CurrentBeatInBar;
+        int beatsPerMeasure = FMODBeatListener.BeatsPerMeasure;
 
         // ------------------------------------------------------------
         // 特例處理：即使沒有敵人也能發動的技能
@@ -541,18 +542,18 @@ public class BattleManager : MonoBehaviour
         if (target == null)
         {
             // 法師普攻：沒敵人仍可充能
-            if (attacker.ClassType == UnitClass.Mage && beatInCycle != BeatManager.Instance.beatsPerMeasure)
+            if (attacker.ClassType == UnitClass.Mage && beatInCycle != beatsPerMeasure)
             {
                 Debug.Log("[特例] 法師普攻在無敵人時仍可充能");
-                StartCoroutine(HandleMageAttack(attacker, null, beatInCycle, perfect));
+                StartCoroutine(HandleMageAttack(attacker, null, beatInCycle, beatsPerMeasure, perfect));
                 return;
             }
 
             // 吟遊詩人重攻擊：沒敵人仍可治癒全隊
-            if (attacker.ClassType == UnitClass.Bard && beatInCycle == BeatManager.Instance.beatsPerMeasure)
+            if (attacker.ClassType == UnitClass.Bard && beatInCycle == beatsPerMeasure)
             {
                 Debug.Log("[特例] 吟遊詩人重攻擊在無敵人時仍可施放治癒");
-                StartCoroutine(HandleBardAttack(attacker, null, beatInCycle, perfect));
+                StartCoroutine(HandleBardAttack(attacker, null, beatInCycle, beatsPerMeasure, perfect));
                 return;
             }
 
@@ -567,21 +568,21 @@ public class BattleManager : MonoBehaviour
         StartCoroutine(LockAction(actionLockDuration));
 
         if (attacker.ClassType == UnitClass.Warrior)
-            StartCoroutine(HandleWarriorAttack(attacker, target, beatInCycle, perfect));
+            StartCoroutine(HandleWarriorAttack(attacker, target, beatInCycle, beatsPerMeasure, perfect));
         else if (attacker.ClassType == UnitClass.Mage)
-            StartCoroutine(HandleMageAttack(attacker, target, beatInCycle, perfect));
+            StartCoroutine(HandleMageAttack(attacker, target, beatInCycle, beatsPerMeasure, perfect));
         else if (attacker.ClassType == UnitClass.Ranger)
-            StartCoroutine(HandleRangerAttack(attacker, beatInCycle, perfect));
+            StartCoroutine(HandleRangerAttack(attacker, beatInCycle, beatsPerMeasure, perfect));
         else if (attacker.ClassType == UnitClass.Bard)
-            StartCoroutine(HandleBardAttack(attacker, target, beatInCycle, perfect));
+            StartCoroutine(HandleBardAttack(attacker, target, beatInCycle, beatsPerMeasure, perfect));
         else if (attacker.ClassType == UnitClass.Paladin)
-            StartCoroutine(HandlePaladinAttack(attacker, target, beatInCycle, perfect));
+            StartCoroutine(HandlePaladinAttack(attacker, target, beatInCycle, beatsPerMeasure, perfect));
         else
             StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
     }
 
 
-    private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
+    private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle,int beatsPerMeasure, bool perfect)
     {
         var actor = attacker.Actor.transform;
         Vector3 origin = actor.position;
@@ -598,7 +599,7 @@ public class BattleManager : MonoBehaviour
         GameObject attackPrefab = null;
 
         // ★ 新邏輯：只要是第四拍就觸發重攻擊
-        if (beatInCycle == BeatManager.Instance.beatsPerMeasure)
+        if (beatInCycle == beatsPerMeasure)
         {
             chosenSkill = charData.HeavyAttack;
             attackPrefab = chosenSkill?.SkillPrefab;
@@ -628,7 +629,7 @@ public class BattleManager : MonoBehaviour
                 sword.attacker = attacker;
                 sword.target = target;
                 sword.isPerfect = perfect;
-                sword.isHeavyAttack = (beatInCycle == BeatManager.Instance.beatsPerMeasure);
+                sword.isHeavyAttack = (beatInCycle == beatsPerMeasure);
             }
         }
 
@@ -636,7 +637,7 @@ public class BattleManager : MonoBehaviour
         yield return Dash(actor, targetPoint, origin, dashDuration);
     }
 
-    private IEnumerator HandleMageAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
+    private IEnumerator HandleMageAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, int beatsPerMeasure, bool perfect)
     {
         var actor = attacker.Actor.transform;
         var charData = attacker.Actor.GetComponent<CharacterData>();
@@ -645,7 +646,7 @@ public class BattleManager : MonoBehaviour
         int chargeStacks = BattleEffectManager.Instance.GetChargeStacks(attacker);
 
         // === 第四拍：重攻擊 ===
-        if (beatInCycle == BeatManager.Instance.beatsPerMeasure)
+        if (beatInCycle == beatsPerMeasure)
         {
             if (chargeStacks <= 0)
             {
@@ -708,7 +709,7 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     // Ranger 攻擊邏輯
     // --------------------------------------------------
-    private IEnumerator HandleRangerAttack(TeamSlotInfo attacker, int beatInCycle, bool perfect)
+    private IEnumerator HandleRangerAttack(TeamSlotInfo attacker, int beatInCycle,int beatsPerMeasure, bool perfect)
     {
         var actor = attacker.Actor.transform;
         var charData = attacker.Actor.GetComponent<CharacterData>();
@@ -728,7 +729,7 @@ public class BattleManager : MonoBehaviour
         // 判定攻擊目標
         BattleManager.TeamSlotInfo target = null;
         bool isHeavy = false;
-        if (beatInCycle == BeatManager.Instance.beatsPerMeasure)
+        if (beatInCycle == beatsPerMeasure)
         {
             target = FindLastValidEnemy();
             isHeavy = true;
@@ -769,14 +770,14 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     // Bard 攻擊邏輯
     // --------------------------------------------------
-    private IEnumerator HandleBardAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
+    private IEnumerator HandleBardAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, int beatsPerMeasure, bool perfect)
     {
         var actor = attacker.Actor.transform;
         var charData = attacker.Actor.GetComponent<CharacterData>();
         if (charData == null) yield break;
 
         // **普通攻擊：需要敵人存在**
-        if (beatInCycle != BeatManager.Instance.beatsPerMeasure)
+        if (beatInCycle != beatsPerMeasure)
         {
             if (target == null) yield break; // 沒敵人就不揮擊
             Vector3 origin = actor.position;
@@ -819,14 +820,14 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     // Paladin 攻擊邏輯（輕攻擊 + 重攻擊）
     // --------------------------------------------------
-    private IEnumerator HandlePaladinAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, bool perfect)
+    private IEnumerator HandlePaladinAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, int beatsPerMeasure, bool perfect)
     {
         var actor = attacker.Actor.transform;
         var charData = attacker.Actor.GetComponent<CharacterData>();
         if (charData == null) yield break;
 
         // === 第四拍：重攻擊 ===
-        if (beatInCycle == BeatManager.Instance.beatsPerMeasure)
+        if (beatInCycle == beatsPerMeasure)
         {
             Debug.Log($"[聖騎士重攻擊] {attacker.UnitName} 嘲諷全體敵人！");
             if (charData.HeavyAttack?.SkillPrefab != null)
