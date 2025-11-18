@@ -145,9 +145,6 @@ public class FMODBeatListener : MonoBehaviour
             s_timeSigLower = d.tsLower;
             s_globalBeatIndex = d.globalBeatIndex;
 
-            // ★ 不再播放 beatSFXEvent
-            // FMOD 音效移到 Judge（Perfect 時觸發）
-
             BeatInfo info = new BeatInfo
             {
                 bar = s_currentBar,
@@ -158,16 +155,29 @@ public class FMODBeatListener : MonoBehaviour
                 timeSigLower = s_timeSigLower
             };
 
-            // UI 節奏 Pulse
+            // UI 節奏脈衝
             PlayPulseAnimation();
 
+            // ==========================================================
+            // ★ Debug：每拍自動 Perfect（你需要的功能）
+            // ==========================================================
+            if (FMODBeatJudge.Instance != null && FMODBeatJudge.Instance.autoPerfectEveryBeat)
+            {
+                FMODBeatJudge.Instance.ForcePerfectFromListener(s_globalBeatIndex);
+            }
+
+            // 廣播事件（角色 AI / UI 都會聽到）
             OnGlobalBeat?.Invoke(s_globalBeatIndex);
             OnBarBeat?.Invoke(s_currentBar, s_currentBeatInBar);
             OnBeatInfo?.Invoke(info);
 
+            // ==========================================================
+            // ★ 修正重點：使排程與下一拍行為能正確執行！！
+            // ==========================================================
             ProcessScheduledActions(s_globalBeatIndex);
         }
     }
+
 
     private void ProcessScheduledActions(int beat)
     {

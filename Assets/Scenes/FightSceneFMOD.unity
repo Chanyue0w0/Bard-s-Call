@@ -4612,9 +4612,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c87531e786d874945af2d806b1013f64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  earlyRange: 0.03
-  lateRange: 0.07
-  judgeOffset: 0
+  earlyRange: 0.12
+  judgeOffset: 0.03
+  autoCalibrateOffset: 0
   perfectEffectPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
   beatHitPointUI: {fileID: 381415587}
@@ -4623,13 +4623,14 @@ MonoBehaviour:
   animTime: 0.15
   beatSFXEvent:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 950292341
+      Data2: 1178528322
+      Data3: 1965921689
+      Data4: 167301944
+    Path: event:/castanets
   comboText: {fileID: 1914947629}
   comboResetTime: 3
+  autoPerfectEveryBeat: 0
 --- !u!114 &1671276745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4660,7 +4661,6 @@ MonoBehaviour:
   pulseScaleUp: 1.35
   pulseScaleTime: 0.08
   pulseRecoverTime: 0.12
-  perfectEffectPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}
 --- !u!4 &1671276746
 Transform:
   m_ObjectHideFlags: 0
