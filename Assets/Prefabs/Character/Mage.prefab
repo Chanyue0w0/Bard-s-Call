@@ -298,9 +298,11 @@ MonoBehaviour:
   - clipName: Idle
     frames:
     - sprite: {fileID: 21300000, guid: 953ac68274b5816448a8b627ab9620ab, type: 3}
-      beatLength: 0
+      beatLength: 0.3
     - sprite: {fileID: 21300000, guid: a083bced67a509f46883a19ea6a0f30b, type: 3}
-      beatLength: 0
+      beatLength: 0.4
+    - sprite: {fileID: 21300000, guid: 6f11f603222809449b060b6de626f8f2, type: 3}
+      beatLength: 0.3
     loop: 1
     holdLastFrame: 0
   defaultClipName: Idle

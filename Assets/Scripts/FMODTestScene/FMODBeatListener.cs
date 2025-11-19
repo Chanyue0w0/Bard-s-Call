@@ -18,6 +18,13 @@ public class FMODBeatListener : MonoBehaviour
     private EventInstance musicInstance;
     private FMOD.Studio.EVENT_CALLBACK beatCallback;
 
+    // ====== Float Beat System ======
+    private float lastBeatTime = 0f;
+    private float currentBeatTime = 0f;
+
+    public static event Action<float> OnBeatDelta;
+
+
     // ========================================
     // UI °Êµe
     // ========================================
@@ -136,6 +143,7 @@ public class FMODBeatListener : MonoBehaviour
     private void Update()
     {
         ProcessPendingBeats();
+        UpdateFloatBeat();
     }
 
     private void OnDestroy()
@@ -238,6 +246,29 @@ public class FMODBeatListener : MonoBehaviour
             // Normal light beat
             heavyBeatNotifyUI.gameObject.SetActive(false);
         }
+    }
+
+    private void UpdateFloatBeat()
+    {
+        if (musicInstance.isValid() == false) return;
+
+        musicInstance.getTimelinePosition(out int ms);
+        float sec = ms / 1000f;
+
+        currentBeatTime = sec * (s_tempo / 60f);
+
+        float deltaBeat = currentBeatTime - lastBeatTime;
+
+        if (deltaBeat > 0)
+        {
+            OnBeatDelta?.Invoke(deltaBeat);
+            lastBeatTime = currentBeatTime;
+        }
+    }
+
+    public float GetCurrentBeatTime()
+    {
+        return currentBeatTime;
     }
 
 
