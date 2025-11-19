@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6258578856599182009}
   - component: {fileID: 7369639355996623999}
   - component: {fileID: 5508040413087327451}
+  - component: {fileID: 5131778725280024723}
   m_Layer: 5
   m_Name: HeavyBeatNotifyUI
   m_TagString: Untagged
@@ -92,3 +93,20 @@ MonoBehaviour:
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
+--- !u!114 &5131778725280024723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5030886368537041734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 304f3dabf138c22449eb131abc155ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 7369639355996623999}
+  sequence:
+    frames: []
+    loop: 1
+  applyFirstFrameOnEnable: 1

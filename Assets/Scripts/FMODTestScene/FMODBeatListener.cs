@@ -41,6 +41,7 @@ public class FMODBeatListener : MonoBehaviour
     public Sprite preHeavyBeatSprite;       // 灰色提示
     public Sprite heavyBeatSprite;          // 金色重拍
 
+
     [Tooltip("重拍間隔，例如 4 表示每 4 拍是重拍")]
     public int heavyBeatInterval = 4;
 
@@ -186,7 +187,7 @@ public class FMODBeatListener : MonoBehaviour
             PlayPulseAnimation();
 
             // === Heavy Beat UI Notify ===
-            UpdateHeavyBeatUI(d.beatInBar);
+            //UpdateHeavyBeatUI(d.beatInBar);
 
             // ==========================================================
             // ★ Debug：每拍自動 Perfect（你需要的功能）
@@ -222,31 +223,31 @@ public class FMODBeatListener : MonoBehaviour
         }
     }
 
-    private void UpdateHeavyBeatUI(int beatInBar)
-    {
-        if (!enableHeavyBeatNotify) return;
-        if (heavyBeatNotifyUI == null) return;
+    //private void UpdateHeavyBeatUI(int beatInBar)
+    //{
+    //    if (!enableHeavyBeatNotify) return;
+    //    if (heavyBeatNotifyUI == null) return;
 
-        // 當前拍 index 從 1 開始，重拍間隔為 heavyBeatInterval
-        bool isHeavyBeat = (beatInBar % heavyBeatInterval == 0);
-        bool isPreHeavyBeat = ((beatInBar + 1) % heavyBeatInterval == 0);
+    //    // 當前拍 index 從 1 開始，重拍間隔為 heavyBeatInterval
+    //    bool isHeavyBeat = (beatInBar % heavyBeatInterval == 0);
+    //    bool isPreHeavyBeat = ((beatInBar + 1) % heavyBeatInterval == 0);
 
-        if (isHeavyBeat)
-        {
-            heavyBeatNotifyUI.gameObject.SetActive(true);
-            heavyBeatNotifyUI.sprite = heavyBeatSprite;
-        }
-        else if (isPreHeavyBeat)
-        {
-            heavyBeatNotifyUI.gameObject.SetActive(true);
-            heavyBeatNotifyUI.sprite = preHeavyBeatSprite;
-        }
-        else
-        {
-            // Normal light beat
-            heavyBeatNotifyUI.gameObject.SetActive(false);
-        }
-    }
+    //    if (isHeavyBeat)
+    //    {
+    //        heavyBeatNotifyUI.gameObject.SetActive(true);
+    //        heavyBeatNotifyUI.sprite = heavyBeatSprite;
+    //    }
+    //    else if (isPreHeavyBeat)
+    //    {
+    //        heavyBeatNotifyUI.gameObject.SetActive(true);
+    //        heavyBeatNotifyUI.sprite = preHeavyBeatSprite;
+    //    }
+    //    else
+    //    {
+    //        // Normal light beat
+    //        heavyBeatNotifyUI.gameObject.SetActive(false);
+    //    }
+    //}
 
     private void UpdateFloatBeat()
     {
@@ -267,9 +268,9 @@ public class FMODBeatListener : MonoBehaviour
     }
 
     public float GetCurrentBeatTime()
-    {
-        return currentBeatTime;
-    }
+{
+    return currentBeatTime;
+}
 
 
     // ========================================
