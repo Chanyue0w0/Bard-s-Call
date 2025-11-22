@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01e58968e50492b49ae8c2e5956233f5, type: 3}
-  m_Name: basic_armor
+  m_Name: basic_accessory
   m_EditorClassIdentifier: 
-  equipmentId: armor001
-  displayName: basic_armor
-  slotType: 1
-  addCon: 1
-  addLuk: 1
-  addPer: 1
-  addStr: 1
-  addAgi: 1
-  addInt: 1
+  equipmentId: accessory001
+  displayName: basic_accessory
+  slotType: 2
+  addCon: 0
+  addLuk: 3
+  addPer: 0
+  addStr: 0
+  addAgi: 0
+  addInt: 0
