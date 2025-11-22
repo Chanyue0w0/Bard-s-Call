@@ -4512,11 +4512,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicEvent:
     Guid:
-      Data1: -134592702
-      Data2: 1142622056
-      Data3: -617991272
-      Data4: 1802796627
-    Path: event:/BnB_Combat1_LoopAB
+      Data1: -164559263
+      Data2: 1128257918
+      Data3: -1420859206
+      Data4: -439808027
+    Path: event:/BnB_Combat1(Ver2)
   beatSFXEvent:
     Guid:
       Data1: 950292341
