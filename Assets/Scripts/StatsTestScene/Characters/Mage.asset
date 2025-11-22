@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d22b081b5b448b4489e3020dadec6de, type: 3}
+  m_Name: Mage
+  m_EditorClassIdentifier: 
+  characterId: character003
+  displayName: Rethys
+  classType: 2
+  baseCon: 2
+  baseLuk: 1
+  basePer: 1
+  baseStr: 1
+  baseAgi: 1
+  baseInt: 3
+  defaultWeapon: {fileID: 0}
+  defaultArmor: {fileID: 0}
+  defaultAccessory: {fileID: 0}

@@ -4,10 +4,9 @@ public enum CharacterClassType
 {
     Paladin,
     Bard,
-    CatGirl,
+    Mage,
     Warrior,
-    Archer,
-    Rogue
+    Archer
 }
 
 [CreateAssetMenu(menuName = "Game/Data/Character Base Data", fileName = "CharacterBaseData")]
