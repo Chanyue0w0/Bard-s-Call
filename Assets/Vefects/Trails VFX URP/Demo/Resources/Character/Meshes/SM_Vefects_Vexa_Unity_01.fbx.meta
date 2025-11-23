@@ -106,8 +106,8 @@ ModelImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 303478
-  packageName: Zap VFX
-  packageVersion: 1.0.0
-  assetPath: Assets/Vefects/Zap VFX/Demo/Resources/Meshes/SM_Vefects_Vexa_Unity_01.fbx
-  uploadId: 712890
+  productId: 308259
+  packageName: Pixel Craft VFX - URP
+  packageVersion: 1.0.02
+  assetPath: Assets/Vefects/Pixel Craft VFX URP/Demo/Resources/Meshes/SM_Vefects_Vexa_Unity_01.fbx
+  uploadId: 771196
