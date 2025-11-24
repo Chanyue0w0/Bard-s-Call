@@ -41,6 +41,9 @@ public class FMODBeatListener : MonoBehaviour
     public Sprite preHeavyBeatSprite;       // 灰色提示
     public Sprite heavyBeatSprite;          // 金色重拍
 
+    [Header("Debug｜拍點顯示")]
+    public Text beatDebugText;   // ★ 新增：用來顯示當前拍點
+
 
     [Tooltip("重拍間隔，例如 4 表示每 4 拍是重拍")]
     public int heavyBeatInterval = 4;
@@ -201,6 +204,16 @@ public class FMODBeatListener : MonoBehaviour
             OnGlobalBeat?.Invoke(s_globalBeatIndex);
             OnBarBeat?.Invoke(s_currentBar, s_currentBeatInBar);
             OnBeatInfo?.Invoke(info);
+
+            // ★ 更新 Debug Text 顯示
+            if (beatDebugText != null)
+            {
+                beatDebugText.text =
+                    "Bar: " + s_currentBar +
+                    " | Beat: " + s_currentBeatInBar +
+                    " | Global: " + s_globalBeatIndex;
+            }
+
 
             ProcessScheduledActions(s_globalBeatIndex);
         }
