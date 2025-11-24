@@ -73,9 +73,13 @@ public class FMODBeatJudge : MonoBehaviour
     private void OnBeatUpdate(FMODBeatListener.BeatInfo info)
     {
         latestBeatIndex = info.globalBeat;
-        lastBeatTime = Time.unscaledTime;
+
+        //使用 FMOD 的拍點時間，而不是 Unity 時間
+        lastBeatTime = FMODBeatListener.Instance.GetCurrentBeatTime();
+
         secPerBeat = 60f / info.tempo;
     }
+
 
     // ==========================================================
     // Debug：Listener 直接叫 Judge 自動 Perfect
@@ -101,32 +105,31 @@ public class FMODBeatJudge : MonoBehaviour
     // ==========================================================
     // 玩家輸入判定（核心）
     // ==========================================================
-    // ==========================================================
-    // 玩家輸入判定（核心）
-    // ==========================================================
     public bool IsOnBeat()
     {
         if (latestBeatIndex < 0 || secPerBeat <= 0)
             return false;
 
-        double now = Time.unscaledTime + judgeOffset;
+        // 1. 取得 FMOD 拍子時間（float, 例如：12.37 拍）
+        float nowBeat = FMODBeatListener.Instance.GetCurrentBeatTime() + judgeOffset;
 
-        // ================================
-        // 1. 推估 nearest beat index
-        // ================================
-        double beatOffset = (now - lastBeatTime) / secPerBeat;
-        int nearestBeatIndex = latestBeatIndex + Mathf.RoundToInt((float)beatOffset);
-        double nearestBeatTime = lastBeatTime + Mathf.RoundToInt((float)beatOffset) * secPerBeat;
+        // 2. 取最接近的整數拍子（例如：四捨五入後 = 12）
+        int nearestBeatIndex = Mathf.RoundToInt(nowBeat);
 
-        // ================================
-        // 2. 計算落差（毫秒）
-        // ================================
-        double delta = now - nearestBeatTime;
-        Debug.Log($"[BeatJudge] Δ = {delta * 1000:0.0} ms");
+        // 3. 找出這個整數拍子的 beatTime（就是 12.0f）
+        float nearestBeatTime = nearestBeatIndex;
 
-        bool perfect = Math.Abs(delta) <= earlyRange;
+        // 4. 計算兩者的落差（單位：拍）
+        float deltaBeat = nowBeat - nearestBeatTime;
 
-        LastHitDelta = delta;
+        // 5. 轉成秒
+        float deltaSec = deltaBeat * secPerBeat;
+
+        Debug.Log($"[BeatJudge] Δ = {deltaSec * 1000:0.0} ms");
+
+        bool perfect = Mathf.Abs(deltaSec) <= earlyRange;
+
+        LastHitDelta = deltaSec;
         LastHitBeatIndex = nearestBeatIndex;
 
         PlayPressScale();
@@ -154,19 +157,16 @@ public class FMODBeatJudge : MonoBehaviour
             RegisterBeatResult(false);
         }
 
-        // ==========================================================
-        // 3. ★ 自動校準 Offset（新增開關）
-        // ==========================================================
+        // Offset Auto Calibration
         if (autoCalibrateOffset && perfect)
         {
-            // 讓 Offset 漸漸逼近玩家習慣的節奏輸入時間
-            judgeOffset = Mathf.Lerp((float)judgeOffset, (float)(judgeOffset - delta), 0.15f);
-
+            judgeOffset = Mathf.Lerp(judgeOffset, judgeOffset - deltaSec, 0.15f);
             Debug.Log($"[Offset Calibration] offset = {judgeOffset:0.000}");
         }
 
         return perfect;
     }
+
 
 
     // ==========================================================
