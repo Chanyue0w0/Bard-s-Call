@@ -5423,8 +5423,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 581455879ffaebb43a6835bf39098d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shieldVfxPrefab: {fileID: 6687333978429584195, guid: 26f185912e7da264586c220ed30643d4, type: 3}
-  healVfxPrefab: {fileID: 6068961692500194184, guid: ff03e8eedb4c50e4ab43b77689457bc9, type: 3}
+  shieldVfxPrefab: {fileID: 6759902882087295716, guid: 7ef62f028474402449bfc0e7a25b32f6, type: 3}
+  healVfxPrefab: {fileID: 7864261854669677603, guid: cdf562e5f2698d84f866d6eaf10bea2a, type: 3}
   isHeavyAttack: 0
   tauntVfxPrefab: {fileID: 1706224664778853816, guid: a86e1a8bdd3a39b4fbafa6298302f385, type: 3}
   mageChargeVfxPrefab: {fileID: 6655016724648331359, guid: ba2e95d09b1644b408a54b98b37746fa, type: 3}
@@ -67855,6 +67855,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: be9773e39ae2deb4481079be4ee83037, type: 3}
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
+      propertyPath: sequence.frames.Array.data[11].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 547ac94706a77f445a8cefee7b654976, type: 3}
+    - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[0].beatLength
       value: 1
       objectReference: {fileID: 0}
@@ -67897,6 +67901,10 @@ PrefabInstance:
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[10].beatLength
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
+      propertyPath: sequence.frames.Array.data[11].beatLength
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5508040413087327451, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: m_Enabled
@@ -68624,6 +68632,10 @@ SceneRoots:
   - {fileID: 398088045}
   - {fileID: 128722963}
   - {fileID: 357244787}
+  - {fileID: 743317295}
+  - {fileID: 1719361670}
+  - {fileID: 1658400638}
+  - {fileID: 159131745}
   - {fileID: 6019052893780664134}
   - {fileID: 9071915118298896952}
   - {fileID: 6878661488020066762}
@@ -68631,9 +68643,5 @@ SceneRoots:
   - {fileID: 200815323}
   - {fileID: 929118769}
   - {fileID: 2066453010}
-  - {fileID: 743317295}
-  - {fileID: 1719361670}
-  - {fileID: 1658400638}
-  - {fileID: 159131745}
   - {fileID: 909751600}
   - {fileID: 944632520}

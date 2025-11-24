@@ -75,7 +75,7 @@ public class FMODBeatListener : MonoBehaviour
         public float tempo;
         public int tsUpper;
         public int tsLower;
-        public int globalBeatIndex;
+        //public int globalBeatIndex;
     }
     private static readonly Queue<BeatData> s_pendingBeats = new();
 
@@ -161,17 +161,25 @@ public class FMODBeatListener : MonoBehaviour
     // ========================================
     private void ProcessPendingBeats()
     {
-        while (s_pendingBeats.Count > 0)
+        while (true)
         {
             BeatData d;
-            lock (s_pendingBeats) d = s_pendingBeats.Dequeue();
+            lock (s_pendingBeats)
+            {
+                if (s_pendingBeats.Count == 0)
+                    break;
+
+                d = s_pendingBeats.Dequeue();
+            }
+
+            // 每處理一個 Beat，就遞增 global index
+            s_globalBeatIndex++;
 
             s_currentBar = d.bar;
             s_currentBeatInBar = d.beatInBar;
             s_tempo = d.tempo;
             s_timeSigUpper = d.tsUpper;
             s_timeSigLower = d.tsLower;
-            s_globalBeatIndex = d.globalBeatIndex;
 
             BeatInfo info = new BeatInfo
             {
@@ -183,28 +191,17 @@ public class FMODBeatListener : MonoBehaviour
                 timeSigLower = s_timeSigLower
             };
 
-            // UI 節奏脈衝
             PlayPulseAnimation();
 
-            // === Heavy Beat UI Notify ===
-            //UpdateHeavyBeatUI(d.beatInBar);
-
-            // ==========================================================
-            // ★ Debug：每拍自動 Perfect（你需要的功能）
-            // ==========================================================
             if (FMODBeatJudge.Instance != null && FMODBeatJudge.Instance.autoPerfectEveryBeat)
             {
                 FMODBeatJudge.Instance.ForcePerfectFromListener(s_globalBeatIndex);
             }
 
-            // 廣播事件（角色 AI / UI 都會聽到）
             OnGlobalBeat?.Invoke(s_globalBeatIndex);
             OnBarBeat?.Invoke(s_currentBar, s_currentBeatInBar);
             OnBeatInfo?.Invoke(info);
 
-            // ==========================================================
-            // ★ 修正重點：使排程與下一拍行為能正確執行！！
-            // ==========================================================
             ProcessScheduledActions(s_globalBeatIndex);
         }
     }
@@ -330,7 +327,7 @@ public class FMODBeatListener : MonoBehaviour
             tempo = p.tempo,
             tsUpper = p.timesignatureupper,
             tsLower = p.timesignaturelower,
-            globalBeatIndex = s_globalBeatIndex + 1
+            //globalBeatIndex = s_globalBeatIndex + 1
         };
 
         lock (s_pendingBeats)
