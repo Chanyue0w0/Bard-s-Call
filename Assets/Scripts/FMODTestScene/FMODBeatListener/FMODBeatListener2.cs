@@ -51,6 +51,17 @@ public class FMODBeatListener2 : MonoBehaviour
 
     private bool beatTimelineReady = false;
 
+    [Header("播放延遲設定")]
+    [Tooltip("開始遊戲後，延遲幾秒再播放 BGM（秒）")]
+    public float musicStartDelay = 0f;
+
+    [Header("Auto Perfect 設定")]
+    [Tooltip("自動在每個拍點觸發 Perfect（用於測試拍點正確性）")]
+    public bool autoPerfect = false;
+
+    private int lastAutoBeatIndex = -1; // 避免同一拍重複觸發
+
+
     // ================================
     // callback 佇列（避免在 audio thread 動到 Unity）
     // ================================
@@ -84,12 +95,87 @@ public class FMODBeatListener2 : MonoBehaviour
     private void Start()
     {
         InitializeFMOD();
+
+        if (musicStartDelay > 0f)
+            Invoke(nameof(StartMusic), musicStartDelay);
+        else
+            StartMusic();
     }
+
+    private void StartMusic()
+    {
+        if (!musicInstance.isValid())
+        {
+            Debug.LogError("[FMODBeatListener2] musicInstance 無效，無法播放");
+            return;
+        }
+
+        musicInstance.start();
+        Debug.Log($"[FMODBeatListener2] 音樂已播放（延遲 {musicStartDelay:F2} 秒後啟動）");
+    }
+
 
     private void Update()
     {
         ProcessPendingCallbacks();
+        AutoPerfectTick();
     }
+
+    // ===============================================
+    // Auto Perfect：自動在每拍觸發 Perfect 事件
+    // ===============================================
+    private void AutoPerfectTick()
+    {
+        if (!autoPerfect) return;
+        if (!beatTimelineReady) return;
+        if (!musicInstance.isValid()) return;
+
+        // 取得現在音樂時間
+        musicInstance.getTimelinePosition(out int posMs);
+        float currentMusicTime = posMs / 1000f + audioLatencyOffset;
+
+        // 找最近拍點
+        float minAbsDelta = float.MaxValue;
+        float bestDelta = 0f;
+        int bestIndex = -1;
+
+        for (int i = 0; i < beatTimeline.Count; i++)
+        {
+            float d = currentMusicTime - beatTimeline[i].time;
+            float abs = Mathf.Abs(d);
+
+            if (abs < minAbsDelta)
+            {
+                minAbsDelta = abs;
+                bestDelta = d;
+                bestIndex = i;
+            }
+        }
+
+        if (bestIndex == -1)
+            return;
+
+        // 避免同一拍點多次觸發
+        if (bestIndex == lastAutoBeatIndex)
+            return;
+
+        // 若離拍點太遠，不要判定
+        if (minAbsDelta > perfectWindow)
+            return;
+
+        lastAutoBeatIndex = bestIndex;
+
+        // 播音效
+        if (!perfectSFX.IsNull)
+            RuntimeManager.PlayOneShot(perfectSFX);
+
+        var info = beatTimeline[bestIndex];
+
+        Debug.Log(
+            $"<color=cyan>[AUTO PERFECT]</color> " +
+            $"拍 {bestIndex} | bar={info.bar}, beat={info.beat} | Δ = {bestDelta * 1000f:+0.0;-0.0} ms");
+    }
+
 
     private void OnDestroy()
     {
@@ -136,8 +222,8 @@ public class FMODBeatListener2 : MonoBehaviour
         }
 
         // 啟動音樂
-        musicInstance.start();
-        Debug.Log("[FMODBeatListener2] 音樂已啟動，等待第一個拍點 callback...");
+        //musicInstance.start();
+        //Debug.Log("[FMODBeatListener2] 音樂已啟動，等待第一個拍點 callback...");
     }
 
     // ================================
@@ -353,21 +439,15 @@ public class FMODBeatListener2 : MonoBehaviour
         float absDelta = Mathf.Abs(bestDelta);
 
         if (absDelta <= perfectWindow)
-{
-    result = Judge.Perfect;
-
-    // ★ 播放 Perfect 音效
-    if (!perfectSFX.IsNull)
-    {
-        RuntimeManager.PlayOneShot(perfectSFX);
-    }
-
-    return true;
-}
-
-        else if (absDelta <= maxJudgeWindow)
         {
-            result = (bestDelta > 0f) ? Judge.Late : Judge.Early;
+            result = Judge.Perfect;
+
+            // ★ 播放 Perfect 音效
+            if (!perfectSFX.IsNull)
+            {
+                RuntimeManager.PlayOneShot(perfectSFX);
+            }
+
             return true;
         }
         else
