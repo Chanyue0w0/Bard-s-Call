@@ -24,6 +24,16 @@ public class FMODBeatListener2 : MonoBehaviour
     [Tooltip("延遲補償(秒)")]
     public float audioLatencyOffset = 0f;
 
+    // ========== 新動畫用 Beat 浮動系統 ==========
+    // 基於 beatTimeline 和 tempo 估算的「全局浮動拍點位置」
+    private float lastBeatPosition = 0f;
+    private float currentBeatPosition = 0f;
+
+    // 對動畫廣播（BeatSpriteAnimator 會訂閱）
+    public static event Action<float> OnBeatDelta_Anim;
+
+
+
     // ================================
     // Beat Timeline（整首歌）
     // ================================
@@ -78,6 +88,24 @@ public class FMODBeatListener2 : MonoBehaviour
 
     private FMOD.Studio.EVENT_CALLBACK beatCallbackDelegate;
 
+    // ========== 全局 Beat 事件（供角色、AI、技能、UI 使用） ==========
+    public struct BeatEventInfo
+    {
+        public int bar;
+        public int beat;
+        public int globalBeat;
+        public float tempo;
+        public int timeSigUpper;
+        public int timeSigLower;
+    }
+    // 供整個遊戲使用的全局拍點序號（從 0 開始）
+    public int GlobalBeatIndex = -1;
+
+    public static event Action<int> OnGlobalBeat;          // 例如：斧頭哥布林每 8 拍攻擊
+    public static event Action<int, int> OnBarBeat;        // 小節 + 拍
+    public static event Action<BeatEventInfo> OnBeatInfo;  // 完整資訊
+
+
     // ================================
     // Life Cycle
     // ================================
@@ -119,7 +147,40 @@ public class FMODBeatListener2 : MonoBehaviour
     {
         ProcessPendingCallbacks();
         AutoPerfectTick();
+        UpdateAnimationBeat();   // ★ 新增：給動畫用
     }
+
+    // ======================================================
+    // ★★★ 新動畫節拍系統（基於 beatTimeline + tempo）
+    // ======================================================
+    private void UpdateAnimationBeat()
+    {
+        if (!beatTimelineReady)
+            return;
+
+        if (!musicInstance.isValid())
+            return;
+
+        // 取得 FMOD 音樂目前播放秒數
+        musicInstance.getTimelinePosition(out int posMs);
+        float musicSec = posMs / 1000f + audioLatencyOffset;
+
+        // 取得此秒數的「第幾拍（float）」：起點 firstBeatMusicTime
+        float beatInterval = 60f / currentTempo;
+
+        currentBeatPosition = (musicSec - firstBeatMusicTime) / beatInterval;
+
+        // 計算這一 frame 過了多少拍
+        float beatDelta = currentBeatPosition - lastBeatPosition;
+
+        if (beatDelta > 0f)
+        {
+            OnBeatDelta_Anim?.Invoke(beatDelta);
+            lastBeatPosition = currentBeatPosition;
+        }
+    }
+
+
 
     // ===============================================
     // Auto Perfect：自動在每拍觸發 Perfect 事件
@@ -279,13 +340,13 @@ public class FMODBeatListener2 : MonoBehaviour
                 data = s_pendingCallbacks.Dequeue();
             }
 
-            // 第一次收到拍點 → 當作整首拍點的起點
+            // 第一次拍點
             if (!firstBeatReceived)
             {
                 firstBeatReceived = true;
 
                 musicInstance.getTimelinePosition(out int posMs);
-                firstBeatMusicTime = posMs / 1000f;  // 秒
+                firstBeatMusicTime = posMs / 1000f;
 
                 firstBar = data.bar;
                 firstBeatInBar = data.beat;
@@ -293,23 +354,36 @@ public class FMODBeatListener2 : MonoBehaviour
                 timeSigUpper = data.tsUpper;
                 timeSigLower = data.tsLower;
 
-                Debug.Log(
-                    $"[FMODBeatListener2] 第一個拍點: bar={firstBar}, beat={firstBeatInBar}, tempo={currentTempo}, musicTime={firstBeatMusicTime:F3}s");
-
                 BuildBeatTimelineFromFirstBeat();
             }
             else
             {
-                // 如果中途 tempo 變化，這邊可以再做進階處理（目前先忽略）
                 if (Mathf.Abs(data.tempo - currentTempo) > 0.01f)
                 {
-                    Debug.Log(
-                        $"[FMODBeatListener2] BPM 變化：{currentTempo:F1} → {data.tempo:F1}（目前範例先不重建 timeline）");
                     currentTempo = data.tempo;
                 }
             }
+
+            // ★★★ 推進全局拍點（舊版 Listener 也有）
+            GlobalBeatIndex++;
+
+            // ★★★ 廣播與舊版 Listener 相同的事件
+            BeatEventInfo info = new BeatEventInfo
+            {
+                bar = data.bar,
+                beat = data.beat,
+                globalBeat = GlobalBeatIndex,
+                tempo = currentTempo,
+                timeSigUpper = timeSigUpper,
+                timeSigLower = timeSigLower
+            };
+
+            OnGlobalBeat?.Invoke(GlobalBeatIndex);    // 玩家、怪物、UI、技能都會用到
+            OnBarBeat?.Invoke(data.bar, data.beat);
+            OnBeatInfo?.Invoke(info);
         }
     }
+
 
     // ================================
     // 用「第一個拍點」＋ tempo ＋ event 長度 → 預算整首拍點
@@ -460,30 +534,6 @@ public class FMODBeatListener2 : MonoBehaviour
         {
             result = Judge.Miss;
             return false;
-        }
-    }
-
-    // 簡化版：只關心是不是 Perfect
-    public bool IsPerfect()
-    {
-        return IsOnBeat(out Judge r, out _, out _) && r == Judge.Perfect;
-    }
-
-    // 方便你在 Inspector 右鍵測試
-    [ContextMenu("Debug 顯示前 8 拍")]
-    private void DebugPrintFirstBeats()
-    {
-        if (!beatTimelineReady)
-        {
-            Debug.LogWarning("beatTimeline 尚未 ready");
-            return;
-        }
-
-        int count = Mathf.Min(8, beatTimeline.Count);
-        for (int i = 0; i < count; i++)
-        {
-            var b = beatTimeline[i];
-            Debug.Log($"Beat[{i}] t={b.time:F3}s, bar={b.bar}, beat={b.beat}");
         }
     }
 }

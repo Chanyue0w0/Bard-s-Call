@@ -16,24 +16,17 @@ public class AxeGoblin : MonoBehaviour
 
     private void OnEnable()
     {
-        FMODBeatListener.OnGlobalBeat += HandleBeat;
+        FMODBeatListener2.OnGlobalBeat += HandleBeat;
 
         // ★ 修正：使用正確的 FMODBeatListener Getter
         //   讓哥布林進場後先等待 8 拍才第一次攻擊
-        if (FMODBeatListener.Instance != null)
-        {
-            lastAttackBeat = FMODBeatListener.GlobalBeatIndex;
-        }
-        else
-        {
-            // 沒有 Listener 時至少避免 -999 造成立即攻擊
-            lastAttackBeat = 0;
-        }
+        lastAttackBeat = FMODBeatListener2.Instance.GlobalBeatIndex;
+        
     }
 
     private void OnDisable()
     {
-        FMODBeatListener.OnGlobalBeat -= HandleBeat;
+        FMODBeatListener2.OnGlobalBeat -= HandleBeat;
     }
 
     private void HandleBeat(int globalBeat)

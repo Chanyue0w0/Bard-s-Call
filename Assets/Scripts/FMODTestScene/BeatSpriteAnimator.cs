@@ -59,18 +59,12 @@ public class BeatSpriteAnimator : MonoBehaviour
 
     void OnEnable()
     {
-        if (FMODBeatListener.Instance != null)
-        {
-            FMODBeatListener.OnBeatDelta += HandleBeatDelta;  // 改浮點拍點
-        }
+        FMODBeatListener2.OnBeatDelta_Anim += HandleBeatDelta;  // 改浮點拍點
     }
 
     void OnDisable()
     {
-        if (FMODBeatListener.Instance != null)
-        {
-            FMODBeatListener.OnBeatDelta -= HandleBeatDelta;
-        }
+        FMODBeatListener2.OnBeatDelta_Anim -= HandleBeatDelta;
     }
 
     void Start()
@@ -87,6 +81,7 @@ public class BeatSpriteAnimator : MonoBehaviour
     // ======================================================
     private void HandleBeatDelta(float beatDelta)
     {
+        //Debug.Log($"{name} 收到 beatDelta = {beatDelta}");
         if (!isPlaying || currentClip == null)
             return;
 
