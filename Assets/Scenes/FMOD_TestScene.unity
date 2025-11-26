@@ -2790,11 +2790,11 @@ PrefabInstance:
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[0].sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4920304396524c545ad2c11057abc36f, type: 3}
+      objectReference: {fileID: 21300000, guid: 170eda40fef08fd4caf4fee6432820fb, type: 3}
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[1].sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 170eda40fef08fd4caf4fee6432820fb, type: 3}
+      objectReference: {fileID: 21300000, guid: 4920304396524c545ad2c11057abc36f, type: 3}
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[2].sprite
       value: 
@@ -2806,11 +2806,11 @@ PrefabInstance:
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[4].sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 793d6776967237247b7b535ae605a668, type: 3}
+      objectReference: {fileID: 21300000, guid: f8fc23014d868d44ab8a59bc8d2a37f0, type: 3}
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[5].sprite
       value: 
-      objectReference: {fileID: 21300000, guid: f8fc23014d868d44ab8a59bc8d2a37f0, type: 3}
+      objectReference: {fileID: 21300000, guid: 793d6776967237247b7b535ae605a668, type: 3}
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[6].sprite
       value: 
@@ -2822,11 +2822,11 @@ PrefabInstance:
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[8].sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 32f4d28490a243c46b9b4201b99e2f85, type: 3}
+      objectReference: {fileID: 21300000, guid: 4d9b812ad5e512c41b7822b822aa68a1, type: 3}
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[9].sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4d9b812ad5e512c41b7822b822aa68a1, type: 3}
+      objectReference: {fileID: 21300000, guid: 32f4d28490a243c46b9b4201b99e2f85, type: 3}
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[10].sprite
       value: 
@@ -2838,11 +2838,11 @@ PrefabInstance:
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[12].sprite
       value: 
-      objectReference: {fileID: 21300000, guid: f381bf8d14ba52f4ca71ad21ac941f88, type: 3}
+      objectReference: {fileID: 21300000, guid: 8f8d9672ea7fa2f4fac973db1ddd8d9b, type: 3}
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[13].sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 8f8d9672ea7fa2f4fac973db1ddd8d9b, type: 3}
+      objectReference: {fileID: 21300000, guid: f381bf8d14ba52f4ca71ad21ac941f88, type: 3}
     - target: {fileID: 5131778725280024723, guid: e3cadc96931197e41ae25849c6e690bf, type: 3}
       propertyPath: sequence.frames.Array.data[14].sprite
       value: 
