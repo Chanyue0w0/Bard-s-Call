@@ -26,7 +26,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 39
+  Length: 34
 --- !u!114 &-2384467188881039204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638997663565887086
+  lastModified: 638997889115638660
   FileSizes:
   - Name: Desktop
     Value: 918
@@ -99,7 +99,7 @@ MonoBehaviour:
   - {fileID: 6828801144302610801}
   StringsBanks:
   - {fileID: -2384467188881039204}
-  cacheTime: 638997663565887086
+  cacheTime: 638997889115638660
   cacheVersion: 131621
 --- !u!114 &807386294593801694
 MonoBehaviour:
@@ -170,7 +170,7 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638997663565866984
+  lastModified: 638997889115618467
   FileSizes:
   - Name: Desktop
     Value: 3586016

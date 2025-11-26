@@ -16,13 +16,13 @@ public class BeatScale : MonoBehaviour
         transform.localScale = baseScale;
 
         // ★ 改用 FMOD 拍點事件
-        FMODBeatListener.OnGlobalBeat += OnBeat;
+        FMODBeatListener2.OnGlobalBeat += OnBeat;
         //（如果只想在每小節的拍子觸發，也可以改用 OnBarBeat）
     }
 
     void OnDisable()
     {
-        FMODBeatListener.OnGlobalBeat -= OnBeat;
+        FMODBeatListener2.OnGlobalBeat -= OnBeat;
     }
 
     void Update()

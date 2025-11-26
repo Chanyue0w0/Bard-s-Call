@@ -14,6 +14,11 @@ public class FMODBeatListener2 : MonoBehaviour
     [Header("Perfect 音效")]
     public EventReference perfectSFX;
 
+    [Header("Perfect / Miss UI")]
+    public GameObject perfectEffectPrefab;
+    public GameObject missTextPrefab;
+    public RectTransform beatHitPointUI;
+
     [Header("判定範圍設定")]
     [Tooltip("Perfect ±範圍(秒)")]
     public float perfectWindow = 0.10f;   // 100ms 推薦
@@ -582,13 +587,59 @@ public class FMODBeatListener2 : MonoBehaviour
 
             RuntimeManager.PlayOneShot(perfectSFX);
 
+            // 播放特效與音效
+            SpawnPerfectEffect();
+
             return true;
         }
 
         else
         {
+            SpawnMissText();
             result = Judge.Miss;
             return false;
         }
     }
+
+    private void SpawnPerfectEffect()
+    {
+        if (perfectEffectPrefab == null)
+            return;
+
+        GameObject obj = Instantiate(perfectEffectPrefab, beatHitPointUI);
+        var rt = obj.GetComponent<RectTransform>();
+        if (rt != null)
+        {
+            rt.anchorMin = beatHitPointUI.anchorMin;
+            rt.anchorMax = beatHitPointUI.anchorMax;
+            rt.anchoredPosition = Vector2.zero;
+            rt.localScale = Vector3.one;
+        }
+        else
+        {
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.localRotation = Quaternion.identity;
+            obj.transform.localScale = Vector3.one;
+        }
+    }
+
+    private void SpawnMissText()
+    {
+        if (missTextPrefab == null || beatHitPointUI == null)
+            return;
+
+        GameObject obj = Instantiate(missTextPrefab, beatHitPointUI.parent);
+        var rt = obj.GetComponent<RectTransform>();
+        if (rt != null)
+        {
+            rt.anchoredPosition = beatHitPointUI.anchoredPosition + new Vector2(0, 60f);
+        }
+        else
+        {
+            obj.transform.localPosition = beatHitPointUI.localPosition + new Vector3(0, 60f, 0);
+        }
+
+        Destroy(obj, 0.3f);
+    }
+
 }
