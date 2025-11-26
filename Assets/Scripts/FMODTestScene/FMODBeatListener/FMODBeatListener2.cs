@@ -60,7 +60,7 @@ public class FMODBeatListener2 : MonoBehaviour
     public bool autoPerfect = false;
 
     private int lastAutoBeatIndex = -1; // 避免同一拍重複觸發
-
+    private int lastJudgedBeatIndex = -1;
 
     // ================================
     // callback 佇列（避免在 audio thread 動到 Unity）
@@ -440,16 +440,22 @@ public class FMODBeatListener2 : MonoBehaviour
 
         if (absDelta <= perfectWindow)
         {
+            if (bestIndex == lastJudgedBeatIndex)
+            {
+                // 同一拍點不可重複判定
+                result = Judge.Miss;
+                return false;
+            }
+
             result = Judge.Perfect;
 
-            // ★ 播放 Perfect 音效
-            if (!perfectSFX.IsNull)
-            {
-                RuntimeManager.PlayOneShot(perfectSFX);
-            }
+            lastJudgedBeatIndex = bestIndex;
+
+            RuntimeManager.PlayOneShot(perfectSFX);
 
             return true;
         }
+
         else
         {
             result = Judge.Miss;
