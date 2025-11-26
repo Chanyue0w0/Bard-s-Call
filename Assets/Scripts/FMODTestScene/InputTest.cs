@@ -59,7 +59,7 @@ public class InputTest : MonoBehaviour
         );
 
         // 從 nearestBeatIndex 計算四拍循環（1~4）
-        int beatInCycle = ((nearestBeatIndex % 4) + 3) % 4 + 1;
+        int beatInCycle = listener.CorrectedBeatInCycle;
         string beatType = (beatInCycle == 4) ? "重拍" : "輕拍";
 
         float deltaMs = deltaSec * 1000f;
@@ -109,7 +109,7 @@ public class InputTest : MonoBehaviour
 
         Debug.Log(
             $"<color=red>❌ Miss</color> " +
-            $"最近拍點 {nearestBeatIndex} | Δ={deltaMs:+0.0;-0.0}ms | 超出 ±{perfectMs:0.0}ms"
+            $"最近拍點 {nearestBeatIndex}（第 {beatInCycle} 拍） | Δ={deltaMs:+0.0;-0.0}ms | 超出 ±{perfectMs:0.0}ms"
         );
 
         if (showDetailedLog) ShowStatistics();

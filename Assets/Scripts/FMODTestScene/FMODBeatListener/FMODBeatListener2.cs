@@ -589,10 +589,13 @@ public class FMODBeatListener2 : MonoBehaviour
 
         if (bestIndex == -1)
         {
-            // 找不到落在判定窗內的拍點
             return false;
         }
 
+        // ★★★ 這裡才是正確的循環拍來源！★★★
+        CorrectedBeatInCycle = ((bestIndex % timeSigUpper) + timeSigUpper) % timeSigUpper + 1;
+
+        // 視覺回傳的拍點 index
         nearestBeatIndex = bestIndex + 1;
         if (nearestBeatIndex >= beatTimeline.Count)
             nearestBeatIndex = beatTimeline.Count - 1;
