@@ -42,10 +42,10 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638995918550595080
+  lastModified: 638997663565887086
   FileSizes:
   - Name: Desktop
-    Value: 868
+    Value: 918
   Exists: 1
 --- !u!114 &-579768070649717542
 MonoBehaviour:
@@ -93,12 +93,13 @@ MonoBehaviour:
   - {fileID: -579768070649717542}
   - {fileID: -7370040820053357967}
   - {fileID: 807386294593801694}
+  - {fileID: 5156717331999112038}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6828801144302610801}
   StringsBanks:
   - {fileID: -2384467188881039204}
-  cacheTime: 638995918550595080
+  cacheTime: 638997663565887086
   cacheVersion: 131621
 --- !u!114 &807386294593801694
 MonoBehaviour:
@@ -127,6 +128,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 127502
+--- !u!114 &5156717331999112038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BnB_Combat1(Ver2)TestLoop
+  m_EditorClassIdentifier: 
+  Path: event:/BnB_Combat1(Ver2)TestLoop
+  Guid:
+    Data1: -942448395
+    Data2: 1194571955
+    Data3: 714199448
+    Data4: 58560230
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 127502
 --- !u!114 &6828801144302610801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,8 +170,8 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638995918550569549
+  lastModified: 638997663565866984
   FileSizes:
   - Name: Desktop
-    Value: 3584992
+    Value: 3586016
   Exists: 1

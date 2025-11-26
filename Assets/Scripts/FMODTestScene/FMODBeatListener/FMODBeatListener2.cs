@@ -33,19 +33,6 @@ public class FMODBeatListener2 : MonoBehaviour
     public static event Action<float> OnBeatDelta_Anim;
 
 
-
-    // ================================
-    // Beat Timeline（整首歌）
-    // ================================
-    public class BeatInfo
-    {
-        public int index;
-        public float time;   // 秒（FMOD timeline position）
-        public int bar;
-        public int beat;
-        public float tempo;
-    }
-
     private readonly List<BeatInfo> beatTimeline = new List<BeatInfo>();
     private EventInstance musicInstance;
 
@@ -72,32 +59,9 @@ public class FMODBeatListener2 : MonoBehaviour
     private int lastAutoBeatIndex = -1; // 避免同一拍重複觸發
     private int lastJudgedBeatIndex = -1;
 
-    // ================================
-    // callback 佇列（避免在 audio thread 動到 Unity）
-    // ================================
-    private struct CallbackData
-    {
-        public int bar;
-        public int beat;
-        public float tempo;
-        public int tsUpper;
-        public int tsLower;
-    }
+    private int lastTimelineMs = 0;
 
-    private static readonly Queue<CallbackData> s_pendingCallbacks = new Queue<CallbackData>();
 
-    private FMOD.Studio.EVENT_CALLBACK beatCallbackDelegate;
-
-    // ========== 全局 Beat 事件（供角色、AI、技能、UI 使用） ==========
-    public struct BeatEventInfo
-    {
-        public int bar;
-        public int beat;
-        public int globalBeat;
-        public float tempo;
-        public int timeSigUpper;
-        public int timeSigLower;
-    }
     // 供整個遊戲使用的全局拍點序號（從 0 開始）
     public int GlobalBeatIndex = -1;
 
@@ -117,6 +81,46 @@ public class FMODBeatListener2 : MonoBehaviour
     public static event Action<int, int> OnBarBeat;        // 小節 + 拍
     public static event Action<BeatEventInfo> OnBeatInfo;  // 完整資訊
 
+
+    private static readonly Queue<CallbackData> s_pendingCallbacks = new Queue<CallbackData>();
+
+    private FMOD.Studio.EVENT_CALLBACK beatCallbackDelegate;
+
+    // ================================
+    // Beat Timeline（整首歌）
+    // ================================
+    public class BeatInfo
+    {
+        public int index;
+        public float time;   // 秒（FMOD timeline position）
+        public int bar;
+        public int beat;
+        public float tempo;
+    }
+
+    // ================================
+    // callback 佇列（避免在 audio thread 動到 Unity）
+    // ================================
+    private struct CallbackData
+    {
+        public int bar;
+        public int beat;
+        public float tempo;
+        public int tsUpper;
+        public int tsLower;
+    }
+
+    // ========== 全局 Beat 事件（供角色、AI、技能、UI 使用） ==========
+    public struct BeatEventInfo
+    {
+        public int bar;
+        public int beat;
+        public int globalBeat;
+        public float tempo;
+        public int timeSigUpper;
+        public int timeSigLower;
+    }
+    
 
     // ================================
     // Life Cycle
@@ -157,10 +161,41 @@ public class FMODBeatListener2 : MonoBehaviour
 
     private void Update()
     {
+        DetectLoop();            // ★★★ 新增：偵測 Loop
         ProcessPendingCallbacks();
         AutoPerfectTick();
         UpdateAnimationBeat();   // ★ 新增：給動畫用
     }
+
+    private void DetectLoop()
+    {
+        if (!musicInstance.isValid())
+            return;
+
+        musicInstance.getTimelinePosition(out int posMs);
+
+        // ★★★ 判定是否 Loop（秒數從大跳到小）
+        if (posMs < lastTimelineMs)
+        {
+            Debug.Log("<color=yellow>[FMODBeatListener2] Loop detected — resetting phase</color>");
+
+            // ★ 重新對準浮動拍點系統
+            firstBeatMusicTime = 0f;
+
+            // ★ 重置動畫節奏推進
+            lastBeatPosition = 0f;
+            currentBeatPosition = 0f;
+
+            // ★ 重置 UI/Animator 使用的 beatTime
+            CurrentBeatTime = 0f;
+
+            // 注意：不要重置 GlobalBeatIndex
+            // 因為遊戲邏輯（敵人AI/技能）需要連續拍點，不是每輪都 0..
+        }
+
+        lastTimelineMs = posMs;
+    }
+
 
     // ======================================================
     // ★★★ 新動畫節拍系統（基於 beatTimeline + tempo）
