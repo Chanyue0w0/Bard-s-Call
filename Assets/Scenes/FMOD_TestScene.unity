@@ -2912,7 +2912,7 @@ MonoBehaviour:
   maxJudgeWindow: 0.12
   audioLatencyOffset: 0.03
   musicStartDelay: 3
-  autoPerfect: 0
+  autoPerfect: 1
 --- !u!1 &1463850323
 GameObject:
   m_ObjectHideFlags: 0

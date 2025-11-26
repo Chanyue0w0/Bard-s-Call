@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
+    path: Assets/Scenes/FMOD_TestScene.unity
+    guid: 99da555be9bda9a49b9ede9a68cd5f1e
+  - enabled: 1
     path: Assets/Scenes/CampScene.unity
     guid: c0346619978fa7944916d6d3ffee5454
   - enabled: 1
