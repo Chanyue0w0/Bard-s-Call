@@ -418,9 +418,21 @@ public class FMODBeatListener2 : MonoBehaviour
 
             // ★★★ 推進全局拍點（舊版 Listener 也有）
             GlobalBeatIndex++;
-            // 更新目前所在小節資訊
-            CurrentBar = data.bar;
-            CurrentBeatInBar = data.beat;
+
+            // ★★★ 拍點 -1 補正（核心）
+            int correctedBeat = data.beat + 1;
+
+            // 若變成 0，要借上一小節
+            int correctedBar = data.bar;
+            if (correctedBeat > timeSigUpper)
+            {
+                correctedBeat = 1;
+                correctedBar += 1;
+            }
+
+            // 套用補正後值
+            CurrentBar = correctedBar;
+            CurrentBeatInBar = correctedBeat;
 
             // 計算浮動 beat position（單純用 timeline）
             musicInstance.getTimelinePosition(out int posMsUpdate);
@@ -430,8 +442,9 @@ public class FMODBeatListener2 : MonoBehaviour
             // ★★★ 廣播與舊版 Listener 相同的事件
             BeatEventInfo info = new BeatEventInfo
             {
-                bar = data.bar,
-                beat = data.beat,
+                bar = correctedBar,
+                beat = correctedBeat,
+
                 globalBeat = GlobalBeatIndex,
                 tempo = currentTempo,
                 timeSigUpper = timeSigUpper,
@@ -473,7 +486,15 @@ public class FMODBeatListener2 : MonoBehaviour
         if (maxBeats < 0) maxBeats = 0;
 
         int currentBar = firstBar;
-        int currentBeatInBar = firstBeatInBar;
+        int currentBeatInBar = firstBeatInBar + 1;
+
+        // 若借拍時為 0，借上一小節
+        if (currentBeatInBar > timeSigUpper)
+        {
+            currentBeatInBar = 1;
+            currentBar += 1;
+        }
+
 
         for (int i = 0; i < maxBeats; i++)
         {
@@ -567,7 +588,10 @@ public class FMODBeatListener2 : MonoBehaviour
             return false;
         }
 
-        nearestBeatIndex = bestIndex;
+        nearestBeatIndex = bestIndex + 1;
+        if (nearestBeatIndex >= beatTimeline.Count)
+            nearestBeatIndex = beatTimeline.Count - 1;
+
         deltaSec = bestDelta;
 
         float absDelta = Mathf.Abs(bestDelta);
