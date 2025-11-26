@@ -44,6 +44,7 @@ public class InputTest : MonoBehaviour
     private void OnAnyKeyPressed()
     {
         var listener = FMODBeatListener2.Instance;
+
         if (listener == null)
         {
             Debug.LogWarning("[InputTest] Listener2 尚未初始化");
@@ -56,6 +57,10 @@ public class InputTest : MonoBehaviour
             out int nearestBeatIndex,
             out float deltaSec
         );
+
+        // 從 nearestBeatIndex 計算四拍循環（1~4）
+        int beatInCycle = ((nearestBeatIndex % 4) + 3) % 4 + 1;
+        string beatType = (beatInCycle == 4) ? "重拍" : "輕拍";
 
         float deltaMs = deltaSec * 1000f;
         string timing = deltaSec > 0 ? "晚" : "早";
@@ -72,8 +77,10 @@ public class InputTest : MonoBehaviour
 
             Debug.Log(
                 $"<color=lime>✨ Perfect! </color>" +
-                $"拍點 {nearestBeatIndex} | Δ={deltaMs:+0.0;-0.0}ms ({timing}) | 平均誤差 {avgDelta:0.0}ms"
+                $"拍點 {nearestBeatIndex}（第 {beatInCycle} 拍・{beatType}） | " +
+                $"Δ={deltaMs:+0.0;-0.0}ms ({timing}) | 平均誤差 {avgDelta:0.0}ms"
             );
+
 
             if (showDetailedLog) ShowStatistics();
             return;

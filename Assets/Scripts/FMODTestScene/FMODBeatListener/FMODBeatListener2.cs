@@ -78,6 +78,9 @@ public class FMODBeatListener2 : MonoBehaviour
     // 用於 BeatUIAnimator 的 (float) 拍點時間
     public float CurrentBeatTime { get; private set; } = 0f;
 
+    // ★ 正確後拍點（1~BeatsPerMeasure 循環）
+    public int CorrectedBeatInCycle { get; private set; } = 1;
+
     // 每拍秒數
     public float SecondsPerBeat => 60f / Mathf.Max(1f, currentTempo);
 
@@ -434,10 +437,12 @@ public class FMODBeatListener2 : MonoBehaviour
             CurrentBar = correctedBar;
             CurrentBeatInBar = correctedBeat;
 
-            // 計算浮動 beat position（單純用 timeline）
+            // ★ 新增：維持 1~4 循環（節奏輕輕輕重）
+            CorrectedBeatInCycle = ((correctedBeat - 1) % timeSigUpper) + 1;
+
+            // 計算浮動 beat position
             musicInstance.getTimelinePosition(out int posMsUpdate);
             CurrentBeatTime = (posMsUpdate / 1000f - firstBeatMusicTime) * (currentTempo / 60f);
-
 
             // ★★★ 廣播與舊版 Listener 相同的事件
             BeatEventInfo info = new BeatEventInfo
