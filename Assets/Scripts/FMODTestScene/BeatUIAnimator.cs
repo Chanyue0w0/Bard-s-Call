@@ -54,10 +54,10 @@ public class BeatUIAnimator : MonoBehaviour
     private IEnumerator WaitAndSubscribe()
     {
         // 等到 FMODBeatListener 真正建好
-        while (FMODBeatListener.Instance == null)
+        while (FMODBeatListener2.Instance == null)
             yield return null;
 
-        FMODBeatListener.OnBeatDelta += HandleBeatDelta;
+        FMODBeatListener2.OnBeatDelta_Anim += HandleBeatDelta;
         subscribed = true;
 
         if (applyFirstFrameOnEnable)
@@ -75,10 +75,8 @@ public class BeatUIAnimator : MonoBehaviour
             waitRoutine = null;
         }
 
-        if (subscribed && FMODBeatListener.Instance != null)
-        {
-            FMODBeatListener.OnBeatDelta -= HandleBeatDelta;
-        }
+        
+        FMODBeatListener2.OnBeatDelta_Anim -= HandleBeatDelta;
         subscribed = false;
     }
 
@@ -167,23 +165,24 @@ public class BeatUIAnimator : MonoBehaviour
     }
 
     // ========================================================================
-    // Getter：讀取 FMODBeatListener 拍點資訊（你要的）
+    // Getter：讀取 FMODBeatListener2 拍點資訊（你要的）
     // ========================================================================
 
-    public int GlobalBeat =>
-        FMODBeatListener.GlobalBeatIndex;
+    public int GlobalBeat => 
+        FMODBeatListener2.Instance.GlobalBeatIndex;
 
     public int BeatInBar =>
-        FMODBeatListener.CurrentBeatInBar;
+        FMODBeatListener2.Instance.CurrentBeatInBar;
 
     public int BeatsPerMeasure =>
-        FMODBeatListener.BeatsPerMeasure;
+        FMODBeatListener2.Instance.BeatsPerMeasure;
 
     public float BeatTime =>
-        FMODBeatListener.Instance != null ?
-        FMODBeatListener.Instance.GetCurrentBeatTime() : 0;
+        FMODBeatListener2.Instance != null ?
+        FMODBeatListener2.Instance.CurrentBeatTime : 0;
 
     public float BPM =>
-        FMODBeatListener.Instance != null ?
-        60f / FMODBeatListener.Instance.SecondsPerBeat : 120f;
+        FMODBeatListener2.Instance != null ?
+        60f / FMODBeatListener2.Instance.SecondsPerBeat : 100f;
+
 }

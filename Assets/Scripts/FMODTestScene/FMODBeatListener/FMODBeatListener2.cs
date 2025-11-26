@@ -101,6 +101,18 @@ public class FMODBeatListener2 : MonoBehaviour
     // 供整個遊戲使用的全局拍點序號（從 0 開始）
     public int GlobalBeatIndex = -1;
 
+    // ========== 與舊版 Listener API 對齊（給 UI 使用） ==========
+    public int CurrentBeatInBar { get; private set; } = 1;
+    public int CurrentBar { get; private set; } = 1;
+    public int BeatsPerMeasure => timeSigUpper;
+
+    // 用於 BeatUIAnimator 的 (float) 拍點時間
+    public float CurrentBeatTime { get; private set; } = 0f;
+
+    // 每拍秒數
+    public float SecondsPerBeat => 60f / Mathf.Max(1f, currentTempo);
+
+
     public static event Action<int> OnGlobalBeat;          // 例如：斧頭哥布林每 8 拍攻擊
     public static event Action<int, int> OnBarBeat;        // 小節 + 拍
     public static event Action<BeatEventInfo> OnBeatInfo;  // 完整資訊
@@ -366,6 +378,14 @@ public class FMODBeatListener2 : MonoBehaviour
 
             // ★★★ 推進全局拍點（舊版 Listener 也有）
             GlobalBeatIndex++;
+            // 更新目前所在小節資訊
+            CurrentBar = data.bar;
+            CurrentBeatInBar = data.beat;
+
+            // 計算浮動 beat position（單純用 timeline）
+            musicInstance.getTimelinePosition(out int posMsUpdate);
+            CurrentBeatTime = (posMsUpdate / 1000f - firstBeatMusicTime) * (currentTempo / 60f);
+
 
             // ★★★ 廣播與舊版 Listener 相同的事件
             BeatEventInfo info = new BeatEventInfo
