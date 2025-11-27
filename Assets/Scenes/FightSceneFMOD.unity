@@ -5356,7 +5356,7 @@ MonoBehaviour:
   - {fileID: 5615004131614203636, guid: 5e08a6b4a78c12140983c1f1e75c7c69, type: 3}
   prewarmPerDigit: 8
   digitSpacing: 0.8
-  groupOffsetY: 3
+  groupOffsetY: 5
   groupFloatUp: 0.8
   groupLifetime: 0.9
   randomHorizontalJitter: 0.06
@@ -6536,7 +6536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseScale: {x: 3.8549, y: 3.8549, z: 3.8549}
-  peakMultiplier: 1.3
+  peakMultiplier: 1.05
   holdDuration: 0.05
   returnSpeed: 8
 --- !u!1001 &324428585
@@ -34005,7 +34005,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseScale: {x: 3.8549, y: 3.8549, z: 3.8549}
-  peakMultiplier: 1.3
+  peakMultiplier: 1.05
   holdDuration: 0.05
   returnSpeed: 8
 --- !u!114 &1052835934
@@ -68755,14 +68755,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3568043951184588176, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: m_Value
-      value: 0.753
-      objectReference: {fileID: 0}
-    - target: {fileID: 3568043951184588176, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: m_Direction
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3568043951184588176, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
       propertyPath: m_Interactable
       value: 0
       objectReference: {fileID: 0}
@@ -68786,9 +68778,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: TotalHealthBar
       objectReference: {fileID: 0}
-    - target: {fileID: 7823057389869482840, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0.11138916
+    - target: {fileID: 8774348397184648853, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
+      propertyPath: peakMultiplier
+      value: 1.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
