@@ -238,7 +238,7 @@ MonoBehaviour:
   darkKnightPrefab: {fileID: 3663377574313024256, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
   teamManager: {fileID: 589954060}
   checkInterval: 1
-  spawnDelay: 3
+  spawnDelay: 1
   stageCompletePanel: {fileID: 207589537}
   summaryTimeText: {fileID: 125192585}
   summaryComboText: {fileID: 1525363114}
@@ -55986,7 +55986,7 @@ MonoBehaviour:
   perfectWindow: 0.12
   maxJudgeWindow: 0.12
   audioLatencyOffset: 0.03
-  musicStartDelay: 3
+  musicStartDelay: 1
   autoPerfect: 0
   GlobalBeatIndex: -1
 --- !u!1001 &1673237779

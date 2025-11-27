@@ -127,6 +127,6 @@ public class EnemySkillAttack : MonoBehaviour
         // Buff / Debuff
         onHitBuffAction?.Invoke(target);
 
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 }

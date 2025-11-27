@@ -78,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: a34139611b612014ab356ec6cb485b3f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -166,12 +166,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dff8b091bf01c1842982d6b2bb028b57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ETeam: 2
+  thisSlotInfo:
+    PrefabToSpawn: {fileID: 0}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
+  tauntedByObj: {fileID: 0}
+  tauntBeatsRemaining: 0
   anim: {fileID: 8980858215728687347}
   warningPrefab: {fileID: 5361181730533998727, guid: c847ccf11edfa2744921f756e70859cb, type: 3}
   warningOffset: {x: 0, y: 2.4, z: 0}
   attackPrefab: {fileID: 3110076587261334000, guid: 6555a642bc472d045921697f4edd82b9, type: 3}
-  attackOffset: {x: 1.2, y: 0.7, z: 0}
+  attackOffset: {x: 4, y: 3.3, z: 0}
   attackIntervalBeats: 8
+  dashTime: 0.05
+  waitTime: 0.6
+  returnTime: 0.05
+  attackPositionOffset: {x: -2, y: 0, z: 0}
 --- !u!114 &8980858215728687347
 MonoBehaviour:
   m_ObjectHideFlags: 0
