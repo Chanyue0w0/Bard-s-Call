@@ -19,6 +19,12 @@ public class GlobalIndex : MonoBehaviour
     // -------------------------------
     // 玩家統計資料（★新增）
     // -------------------------------
+
+    public static int MaxTotalHP = 200; // 開場總血量
+    public static int CurrentTotalHP = 200; // 當前總血量
+
+    public static int RythmResonanceBuff = 0; // 對拍共鳴臨時加乘
+
     public static float TotalBattleTime = 0f; // 本場戰鬥累積秒數
     public static int MaxCombo = 0;           // 玩家最高連擊數
 

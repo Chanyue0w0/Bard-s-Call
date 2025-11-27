@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 8535338501439863612}
   - component: {fileID: 372741867450944935}
   - component: {fileID: 5903065188219034040}
+  - component: {fileID: -7196742910127215144}
   m_Layer: 7
   m_Name: Bard
   m_TagString: Hero
@@ -276,6 +277,22 @@ MonoBehaviour:
     holdLastFrame: 0
   defaultClipName: Idle
   playDefaultOnStart: 1
+--- !u!114 &-7196742910127215144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6258503229764174105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d22e10ac3d414464c8b5665fdcdb173c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpHeight: 0.5
+  jumpTime: 0.15
+  shakeTime: 0.25
+  shakeStrength: 0.3
 --- !u!1 &8311510172526210414
 GameObject:
   m_ObjectHideFlags: 0

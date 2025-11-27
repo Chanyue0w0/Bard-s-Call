@@ -535,11 +535,20 @@ public class BattleManager : MonoBehaviour
 
         // ★★★ Perfect / Miss 判定（新版） ★★★
         bool perfect = hit && judge == FMODBeatListener2.Judge.Perfect;
-        if (!perfect)
+        // 使用動畫呼叫
+        var anim = attacker.Actor.GetComponent<PressedAnimation>();
+
+        if (perfect)
         {
+            if (anim != null) anim.PlayPerfect();
+        }
+        else
+        {
+            if (anim != null) anim.PlayMiss();
             Debug.Log("Miss！未在節拍上，不觸發攻擊。");
             return;
         }
+
 
         // ★★★ 新 Listener2 的 “四拍循環” 來源（正確） ★★★
         int beatInCycle = listener.CorrectedBeatInCycle;

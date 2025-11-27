@@ -129,6 +129,7 @@ GameObject:
   - component: {fileID: -9000765520436358034}
   - component: {fileID: 6557653212308108786}
   - component: {fileID: 767516820050819641}
+  - component: {fileID: 9163207940900645416}
   m_Layer: 7
   m_Name: Mage
   m_TagString: Hero
@@ -307,3 +308,19 @@ MonoBehaviour:
     holdLastFrame: 0
   defaultClipName: Idle
   playDefaultOnStart: 1
+--- !u!114 &9163207940900645416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8859153221285552973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d22e10ac3d414464c8b5665fdcdb173c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpHeight: 0.5
+  jumpTime: 0.15
+  shakeTime: 0.25
+  shakeStrength: 0.3
