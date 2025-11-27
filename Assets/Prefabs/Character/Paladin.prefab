@@ -165,8 +165,8 @@ MonoBehaviour:
     DamageMultiplier: 10
     FixedDamage: 1
   HeavyAttack:
-    SkillName: 
-    SkillPrefab: {fileID: 8525389730701380064, guid: 7a537c7d3a934dc419618cd7fdee9aa5, type: 3}
+    SkillName: HolyFire
+    SkillPrefab: {fileID: 5937286420890160073, guid: 79552c7774d52584f9d4ae4dc5c5d850, type: 3}
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0
@@ -216,10 +216,22 @@ MonoBehaviour:
     frames:
     - sprite: {fileID: 21300000, guid: 79a0bc26512943949aaa28efcb86538a, type: 3}
       beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
     - sprite: {fileID: 21300000, guid: b8fa46f51a3954944ad1e681f49c7b17, type: 3}
       beatLength: 0.4
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 7e282557193f111419a192917adcb060, type: 3}
       beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
     loop: 1
     holdLastFrame: 0
   defaultClipName: Idle

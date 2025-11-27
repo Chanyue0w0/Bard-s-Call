@@ -193,7 +193,7 @@ MonoBehaviour:
   attackOffset: {x: 4, y: 3.3, z: 0}
   attackIntervalBeats: 8
   dashTime: 0.05
-  waitTime: 0.6
+  waitTime: 0.8
   returnTime: 0.05
   attackPositionOffset: {x: -2, y: 0, z: 0}
 --- !u!114 &8980858215728687347

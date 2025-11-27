@@ -886,32 +886,54 @@ public class BattleManager : MonoBehaviour
             yield break;
         }
 
-        // ---------------------------
-        // ★ 重攻擊（同時發動格檔 + 重攻擊特效）
-        // ---------------------------
-        Debug.Log($"[Paladin 重攻擊] {attacker.UnitName} 格檔 + 嘲諷全體敵人！");
+        // =========================================================
+        // 3. ★★★ Paladin 重攻擊：射出 FireBallSkill（40 傷害）★★★
+        // =========================================================
+        Debug.Log($"[Paladin 重攻擊] {attacker.UnitName} 發動神聖火焰！");
 
-        // 播重攻擊特效
-        //if (charData.HeavyAttack?.SkillPrefab != null)
-        //{
-        //    foreach (var enemy in EnemyTeamInfo)
-        //    {
-        //        if (enemy == null || enemy.Actor == null) continue;
+        // 找首位敵人
+        var firstEnemy = FindNextValidEnemy(0);
+        if (firstEnemy == null || firstEnemy.Actor == null)
+        {
+            Debug.Log("[Paladin 重攻擊] 沒有敵人，取消攻擊。");
+            yield break;
+        }
 
-        //        Instantiate(
-        //            charData.HeavyAttack.SkillPrefab,
-        //            enemy.SlotTransform.position,
-        //            Quaternion.identity
-        //        );
+        // 取出重攻擊技能 prefab（必須為 FireBallSkill）
+        if (charData.HeavyAttack == null || charData.HeavyAttack.SkillPrefab == null)
+        {
+            Debug.LogWarning("[Paladin 重攻擊] HeavyAttack Prefab 未設定！");
+            yield break;
+        }
 
-        //        // 嘲諷 16 拍（或你原本設定的拍數）
-        //        BattleEffectManager.Instance.ApplyTaunt(
-        //            enemy.Actor,
-        //            attacker.Actor,
-        //            16
-        //        );
-        //    }
-        //}
+        GameObject projectilePrefab = charData.HeavyAttack.SkillPrefab;
+
+        // ---------------------------------------------------------
+        // 3-1. 投射物生成位置
+        // ---------------------------------------------------------
+        Vector3 spawnOffset = new Vector3(0f, 0.5f, 0f);
+        Vector3 spawnPos = actor.position + spawnOffset;
+
+        GameObject proj = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
+
+        // ---------------------------------------------------------
+        // 3-2. 套用 FireBallSkill 數值（與弓箭手一致）
+        // ---------------------------------------------------------
+        FireBallSkill fire = proj.GetComponent<FireBallSkill>();
+        if (fire != null)
+        {
+            fire.attacker = attacker;
+            fire.target = firstEnemy;
+            fire.isPerfect = perfect;
+            fire.isHeavyAttack = true;
+
+            // ★ 固定傷害 10 點（你指定的）
+            fire.damage = 10;
+        }
+        else
+        {
+            Debug.LogWarning("[Paladin 重攻擊] HeavyAttack Prefab 裡沒有 FireBallSkill！");
+        }
 
         yield break;
     }

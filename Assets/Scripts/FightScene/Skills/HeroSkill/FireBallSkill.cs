@@ -10,6 +10,7 @@ public class FireBallSkill : MonoBehaviour
     public bool isPerfect;
     public bool isHeavyAttack;
     public int damage = 0;
+    public Vector3 targetPositionOffset;
 
     [Header("UI 設定")]
     public GameObject missTextPrefab;   // UI 上的 MissText prefab
@@ -29,7 +30,7 @@ public class FireBallSkill : MonoBehaviour
 
         if (target != null && target.SlotTransform != null)
         {
-            StartCoroutine(MoveToTarget(target.SlotTransform.position));
+            StartCoroutine(MoveToTarget(target.SlotTransform.position + targetPositionOffset));
         }
         else
         {
