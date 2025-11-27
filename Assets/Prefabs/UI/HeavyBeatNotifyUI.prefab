@@ -29,7 +29,7 @@ RectTransform:
   m_GameObject: {fileID: 5030886368537041734}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5ecd988cc59f3f54dafb0e17b99f25b0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1d818c230b1f606419d5b3a6bc941f47, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseScale: {x: 1, y: 1, z: 1}
+  baseScale: {x: 0.8, y: 0.8, z: 0.8}
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
@@ -107,6 +107,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetImage: {fileID: 7369639355996623999}
   sequence:
-    frames: []
+    frames:
+    - sprite: {fileID: 21300000, guid: 170eda40fef08fd4caf4fee6432820fb, type: 3}
+      beatLength: 0.3
+    - sprite: {fileID: 21300000, guid: 4920304396524c545ad2c11057abc36f, type: 3}
+      beatLength: 0.5
+    - sprite: {fileID: 21300000, guid: 170eda40fef08fd4caf4fee6432820fb, type: 3}
+      beatLength: 0.1
+    - sprite: {fileID: 21300000, guid: 537c05596ba6e4a4aa639faebf6ee65a, type: 3}
+      beatLength: 0.1
+    - sprite: {fileID: 21300000, guid: f8fc23014d868d44ab8a59bc8d2a37f0, type: 3}
+      beatLength: 0.3
+    - sprite: {fileID: 21300000, guid: 793d6776967237247b7b535ae605a668, type: 3}
+      beatLength: 0.5
+    - sprite: {fileID: 21300000, guid: f8fc23014d868d44ab8a59bc8d2a37f0, type: 3}
+      beatLength: 0.1
+    - sprite: {fileID: 21300000, guid: 5e40a6da6196a2c4ba75bcef5bc00913, type: 3}
+      beatLength: 0.1
+    - sprite: {fileID: 21300000, guid: 4d9b812ad5e512c41b7822b822aa68a1, type: 3}
+      beatLength: 0.3
+    - sprite: {fileID: 21300000, guid: 32f4d28490a243c46b9b4201b99e2f85, type: 3}
+      beatLength: 0.5
+    - sprite: {fileID: 21300000, guid: 4d9b812ad5e512c41b7822b822aa68a1, type: 3}
+      beatLength: 0.1
+    - sprite: {fileID: 21300000, guid: 2d7137132cf1fba40b3bcd803b8fb25a, type: 3}
+      beatLength: 0.1
+    - sprite: {fileID: 21300000, guid: 8f8d9672ea7fa2f4fac973db1ddd8d9b, type: 3}
+      beatLength: 0.3
+    - sprite: {fileID: 21300000, guid: f381bf8d14ba52f4ca71ad21ac941f88, type: 3}
+      beatLength: 0.5
+    - sprite: {fileID: 21300000, guid: 8f8d9672ea7fa2f4fac973db1ddd8d9b, type: 3}
+      beatLength: 0.1
+    - sprite: {fileID: 21300000, guid: 1d818c230b1f606419d5b3a6bc941f47, type: 3}
+      beatLength: 0.1
     loop: 1
   applyFirstFrameOnEnable: 1
