@@ -12,18 +12,10 @@ public class BeatSpriteFrame
     public bool triggerWarning = false;
     public bool triggerAttack = false;
 
-    public GameObject warningPrefab;
-    public GameObject attackPrefab;
-
     [Header("事件模式")]
-    public bool triggerOnce = false;       // ★是否只觸發一次（每次 Play 時會重置）
-    [HideInInspector] public bool hasTriggered = false;  // ★內部狀態
-
-    [Header("生成位置偏移（可選）")]
-    public Vector3 spawnOffset = Vector3.zero;
+    public bool triggerOnce = false;
+    [HideInInspector] public bool hasTriggered = false;
 }
-
-
 
 [Serializable]
 public class BeatSpriteClip
@@ -46,10 +38,11 @@ public class BeatSpriteAnimator : MonoBehaviour
 
     private BeatSpriteClip currentClip;
     private int currentFrameIndex = 0;
-    private float accumulatedBeats = 0f;   // 取代 beatsOnThisFrame
+    private float accumulatedBeats = 0f;
     private bool isPlaying = false;
 
     public event Action<string> OnClipFinished;
+    public event Action<BeatSpriteFrame> OnFrameEvent; // ★ 怪物接事件
 
     private Dictionary<string, BeatSpriteClip> clipDict = new Dictionary<string, BeatSpriteClip>();
 
@@ -68,14 +61,14 @@ public class BeatSpriteAnimator : MonoBehaviour
         clipDict.Clear();
         foreach (var clip in clips)
         {
-            if (clip != null && !string.IsNullOrEmpty(clip.clipName))
+            if (!string.IsNullOrEmpty(clip.clipName))
                 clipDict[clip.clipName] = clip;
         }
     }
 
     void OnEnable()
     {
-        FMODBeatListener2.OnBeatDelta_Anim += HandleBeatDelta;  // 改浮點拍點
+        FMODBeatListener2.OnBeatDelta_Anim += HandleBeatDelta;
     }
 
     void OnDisable()
@@ -86,18 +79,11 @@ public class BeatSpriteAnimator : MonoBehaviour
     void Start()
     {
         if (playDefaultOnStart && !string.IsNullOrEmpty(defaultClipName))
-        {
             Play(defaultClipName, true);
-        }
     }
 
-
-    // ======================================================
-    // 核心：使用 Float beatDelta 更新動畫
-    // ======================================================
     private void HandleBeatDelta(float beatDelta)
     {
-        //Debug.Log($"{name} 收到 beatDelta = {beatDelta}");
         if (!isPlaying || currentClip == null)
             return;
 
@@ -116,15 +102,11 @@ public class BeatSpriteAnimator : MonoBehaviour
 
         if (accumulatedBeats >= need)
         {
-            accumulatedBeats -= need; // 保留多餘的拍點，避免掉幀
+            accumulatedBeats -= need;
             AdvanceFrame();
         }
     }
 
-
-    // ======================================================
-    // 換下一幀
-    // ======================================================
     private void AdvanceFrame()
     {
         currentFrameIndex++;
@@ -135,7 +117,6 @@ public class BeatSpriteAnimator : MonoBehaviour
             {
                 currentFrameIndex = 0;
 
-                // ★重置 triggerOnce 狀態
                 foreach (var f in currentClip.frames)
                     f.hasTriggered = false;
 
@@ -164,17 +145,10 @@ public class BeatSpriteAnimator : MonoBehaviour
             ApplyFrame();
         }
 
-
-        // ★新增：套用後執行事件
-        var frame = currentClip.frames[currentFrameIndex];
-        TriggerFrameEvents(frame);
+        // ★ 派發事件給怪物
+        TriggerFrameEvents(currentClip.frames[currentFrameIndex]);
     }
 
-
-
-    // ======================================================
-    // 套用 sprite
-    // ======================================================
     private void ApplyFrame()
     {
         if (currentClip == null ||
@@ -182,10 +156,8 @@ public class BeatSpriteAnimator : MonoBehaviour
             currentClip.frames.Length == 0)
             return;
 
-        currentFrameIndex = Mathf.Clamp(currentFrameIndex, 0, currentClip.frames.Length - 1);
         BeatSpriteFrame frame = currentClip.frames[currentFrameIndex];
-
-        if (frame != null && frame.sprite != null)
+        if (frame.sprite != null)
             spriteRenderer.sprite = frame.sprite;
     }
 
@@ -193,37 +165,18 @@ public class BeatSpriteAnimator : MonoBehaviour
     {
         if (frame == null) return;
 
-        // ★若設定「只觸發一次」且已觸發過 → 直接 return
         if (frame.triggerOnce && frame.hasTriggered)
             return;
 
-        bool triggered = false;
-
-        // 生成警告
-        if (frame.triggerWarning && frame.warningPrefab != null)
+        if (frame.triggerWarning || frame.triggerAttack)
         {
-            Instantiate(frame.warningPrefab, transform.position + frame.spawnOffset, Quaternion.identity);
-            triggered = true;
-        }
+            OnFrameEvent?.Invoke(frame);
 
-        // 生成攻擊特效
-        if (frame.triggerAttack && frame.attackPrefab != null)
-        {
-            Instantiate(frame.attackPrefab, transform.position + frame.spawnOffset, Quaternion.identity);
-            triggered = true;
-        }
-
-        // ★若有事件被觸發 → 標記已觸發
-        if (triggered && frame.triggerOnce)
-        {
-            frame.hasTriggered = true;
+            if (frame.triggerOnce)
+                frame.hasTriggered = true;
         }
     }
 
-
-    // ======================================================
-    // 對外 API
-    // ======================================================
     public void Play(string clipName, bool restartIfSame = true)
     {
         if (!clipDict.TryGetValue(clipName, out var newClip))
@@ -235,7 +188,6 @@ public class BeatSpriteAnimator : MonoBehaviour
         currentClip = newClip;
         currentFrameIndex = 0;
 
-        // ★重置所有 frame 的觸發紀錄
         foreach (var f in currentClip.frames)
             f.hasTriggered = false;
 
@@ -244,20 +196,7 @@ public class BeatSpriteAnimator : MonoBehaviour
         ApplyFrame();
     }
 
-
-
-    public string GetCurrentClipName()
-    {
-        return currentClip != null ? currentClip.clipName : null;
-    }
-
-    public bool IsPlaying()
-    {
-        return isPlaying;
-    }
-
-    public void Stop()
-    {
-        isPlaying = false;
-    }
+    public string GetCurrentClipName() => currentClip?.clipName;
+    public bool IsPlaying() => isPlaying;
+    public void Stop() => isPlaying = false;
 }
