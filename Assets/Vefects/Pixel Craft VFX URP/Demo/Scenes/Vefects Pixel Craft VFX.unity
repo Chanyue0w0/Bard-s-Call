@@ -35269,6 +35269,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: __________ VFX
       objectReference: {fileID: 0}
+    - target: {fileID: 2132515252075486696, guid: d9e3843bcb26d0b4ab84d1e516ff199b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7982687601010835155, guid: d9e3843bcb26d0b4ab84d1e516ff199b, type: 3}
       propertyPath: m_RootOrder
       value: 4

@@ -137,14 +137,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83aebeb4487f9af4587e28f850d85599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CharacterName: Slime
-  ClassType: 5
+  CharacterName: AxeGoblin
+  ClassType: 6
   MaxHP: 140
   HP: 140
   MaxMP: 0
   MP: 0
-  OriginAtk: 10
-  Atk: 10
+  OriginAtk: 40
+  Atk: 40
   NormalAttacks: []
   HeavyAttack:
     SkillName: 
