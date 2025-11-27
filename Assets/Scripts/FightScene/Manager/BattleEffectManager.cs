@@ -16,6 +16,9 @@ public class BattleEffectManager : MonoBehaviour
         Instance = this;
     }
 
+    [Header("玩家統一血條（場景中已有，不要生成）")]
+    public TotalPlayerHealthBarUI playerTotalHPUI;
+
     [Header("共用 Shield 特效（當角色未指定 ShieldEffectPrefab 時使用）")]
     public GameObject shieldVfxPrefab;
     private GameObject[] blockEffects = new GameObject[3];
@@ -250,13 +253,49 @@ public class BattleEffectManager : MonoBehaviour
         }
 
         // =======================================
-        // 一般傷害計算（保留原邏輯）
+        // 一般傷害計算
         // =======================================
-        float multiplier = isPerfect ? 1f : 0f;
         int finalDamage = (overrideDamage >= 0)
             ? overrideDamage
             : Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * (isPerfect ? 1f : 0f)));
 
+        // ===============================
+        // 若是玩家 → 扣全隊共用血量
+        // ===============================
+        if (targetIndex >= 0)
+        {
+            GlobalIndex.CurrentTotalHP = Mathf.Max(
+                0,
+                GlobalIndex.CurrentTotalHP - finalDamage
+            );
+
+            Debug.Log($"【玩家受傷】-{finalDamage} → 全隊剩餘 {GlobalIndex.CurrentTotalHP}/{GlobalIndex.MaxTotalHP}");
+
+            // 更新統一血條 UI
+            playerTotalHPUI.SetHP(GlobalIndex.CurrentTotalHP, GlobalIndex.MaxTotalHP);
+
+            // 顯示傷害數字
+            if (target.Actor != null && DamageNumberManager.Instance != null)
+            {
+                DamageNumberManager.Instance.ShowDamage(target.Actor.transform, finalDamage);
+            }
+
+            // 法師中斷充電
+            var data = target.Actor.GetComponent<CharacterData>();
+            if (data != null && data.ClassType == BattleManager.UnitClass.Mage)
+            {
+                ResetChargeStacks(target);
+                Debug.Log($"【充電中斷】{target.UnitName} 被攻擊 → 清除層數");
+            }
+
+            // 判斷是否全隊死亡
+            BattleManager.Instance.CheckPlayerDefeat();
+            return;
+        }
+
+        // ===============================
+        // 若是敵人 → 使用原本邏輯
+        // ===============================
         target.HP -= finalDamage;
         if (target.HP < 0) target.HP = 0;
 
@@ -266,35 +305,22 @@ public class BattleEffectManager : MonoBehaviour
         if (isPerfect)
             attacker.MP = Mathf.Min(attacker.MaxMP, attacker.MP + 10);
 
-        // 血條更新
-        var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
-        if (hb != null) hb.ForceUpdate();
+        // 敵人血條 UI 更新
+        var enemyHB = target.Actor?.GetComponentInChildren<HealthBarUI>();
+        if (enemyHB != null) enemyHB.ForceUpdate();
 
-        // 顯示傷害數字（非 UI 物件）
+        // 顯示傷害數字
         if (target.Actor != null && DamageNumberManager.Instance != null)
         {
             DamageNumberManager.Instance.ShowDamage(target.Actor.transform, finalDamage);
         }
 
-        // 玩家方或敵方受傷時 → 若是法師則清除充電層
-        if (target.Actor != null)
-        {
-            var data = target.Actor.GetComponent<CharacterData>();
-            if (data != null && data.ClassType == BattleManager.UnitClass.Mage)
-            {
-                ResetChargeStacks(target);
-                Debug.Log($"【充電中斷】{target.UnitName} 受到攻擊，充電歸零");
-            }
-        }
-
-
-        // =======================================
         // 檢查死亡
-        // =======================================
         if (target.HP <= 0)
         {
             HandleUnitDefeated(target);
         }
+
 
         BattleManager.Instance.CheckPlayerDefeat();
 
