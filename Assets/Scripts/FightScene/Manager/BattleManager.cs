@@ -803,39 +803,16 @@ public class BattleManager : MonoBehaviour
         if (beatInCycle != beatsPerMeasure)
         {
             if (target == null) yield break; // 沒敵人就不揮擊
-            Vector3 origin = actor.position;
-            Vector3 targetPoint = target.SlotTransform.position + meleeContactOffset;
-
-            // Dash 前進
-            yield return Dash(actor, origin, targetPoint, dashDuration);
-
-            // 生成普攻特效
-            GameObject attackPrefab = null;
-            if (charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
-                attackPrefab = charData.NormalAttacks[0].SkillPrefab;
-            if (attackPrefab == null) attackPrefab = meleeVfxPrefab;
-
-            if (attackPrefab != null)
-            {
-                var skillObj = Instantiate(attackPrefab, targetPoint, Quaternion.identity);
-                var sword = skillObj.GetComponent<SwordHitSkill>();
-                if (sword != null)
-                {
-                    sword.attacker = attacker;
-                    sword.target = target;
-                    sword.isPerfect = perfect;
-                    sword.isHeavyAttack = false;
-                }
-            }
-
-            yield return new WaitForSeconds(dashStayDuration);
-            yield return Dash(actor, targetPoint, origin, dashDuration);
-            yield break;
+            // **輕攻擊：全隊回復血量 +10**
+            Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復10HP！");
+            BattleEffectManager.Instance.HealTeamWithEffect(10);
         }
-
-        // **重攻擊：全隊回復血量 +10**
-        Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復10HP！");
-        BattleEffectManager.Instance.HealTeamWithEffect(10);
+        else
+        {
+            // **重攻擊：全隊回復血量 +50**
+            Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復20HP！");
+            BattleEffectManager.Instance.HealTeamWithEffect(20);
+        }
 
         yield return null;
     }

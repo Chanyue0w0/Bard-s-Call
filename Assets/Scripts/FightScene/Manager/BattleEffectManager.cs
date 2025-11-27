@@ -446,33 +446,38 @@ public class BattleEffectManager : MonoBehaviour
     // -------------------------
     public void HealTeamWithEffect(int healAmount)
     {
+        // 1. 更新共用血量
+        GlobalIndex.CurrentTotalHP = Mathf.Min(
+            GlobalIndex.MaxTotalHP,
+            GlobalIndex.CurrentTotalHP + healAmount
+        );
+
+        Debug.Log($"【全隊回復】+{healAmount} → 全隊 {GlobalIndex.CurrentTotalHP}/{GlobalIndex.MaxTotalHP}");
+
+        // 2. 更新統一血條 UI
+        if (playerTotalHPUI != null)
+            playerTotalHPUI.SetHP(GlobalIndex.CurrentTotalHP, GlobalIndex.MaxTotalHP);
+
+        // 3. 個別角色顯示回復特效 & 綠色數字
         var team = BattleManager.Instance.CTeamInfo;
         foreach (var ally in team)
         {
             if (ally == null || ally.Actor == null) continue;
 
-            // 回復血量
-            ally.HP = Mathf.Min(ally.MaxHP, ally.HP + healAmount);
-
-            // 更新血條
-            var hb = ally.Actor.GetComponentInChildren<HealthBarUI>();
-            if (hb != null) hb.ForceUpdate();
-
-            // 顯示治療數字（綠色）
+            // 3-1 顯示綠色 +healAmount
             if (DamageNumberManager.Instance != null)
             {
                 DamageNumberManager.Instance.ShowHeal(ally.Actor.transform, healAmount);
             }
 
-
-            // 生成治癒特效
+            // 3-2 生成治癒特效
             if (healVfxPrefab != null)
             {
-                Vector3 healPos = ally.Actor.transform.position; // + Vector3.up * 1.3f
+                Vector3 healPos = ally.Actor.transform.position;
                 GameObject healVfx = Instantiate(healVfxPrefab, healPos, Quaternion.identity);
                 healVfx.transform.SetParent(ally.Actor.transform, worldPositionStays: true);
 
-                // 若特效有 Explosion 腳本則讓它自行管理壽命
+                // Explosion 系統自動管理壽命
                 var exp = healVfx.GetComponent<Explosion>();
                 if (exp != null)
                 {
@@ -484,11 +489,8 @@ public class BattleEffectManager : MonoBehaviour
                     Destroy(healVfx, 1.5f);
                 }
             }
-
-            Debug.Log($"【治癒回復】{ally.UnitName} +{healAmount} HP → {ally.HP}/{ally.MaxHP}");
         }
     }
-
 
     // 手動移除格檔特效（用於破防）
     public void RemoveBlockEffect(GameObject actor)
