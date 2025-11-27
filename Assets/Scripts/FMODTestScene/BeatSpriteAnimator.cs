@@ -6,8 +6,24 @@ using UnityEngine;
 public class BeatSpriteFrame
 {
     public Sprite sprite;
-    public float beatLength = 1f;  // 改為 float，未來可支援 0.5、0.25 拍
+    public float beatLength = 1f;
+
+    [Header("事件設定（可選）")]
+    public bool triggerWarning = false;
+    public bool triggerAttack = false;
+
+    public GameObject warningPrefab;
+    public GameObject attackPrefab;
+
+    [Header("事件模式")]
+    public bool triggerOnce = false;       // ★是否只觸發一次（每次 Play 時會重置）
+    [HideInInspector] public bool hasTriggered = false;  // ★內部狀態
+
+    [Header("生成位置偏移（可選）")]
+    public Vector3 spawnOffset = Vector3.zero;
 }
+
+
 
 [Serializable]
 public class BeatSpriteClip
@@ -118,6 +134,11 @@ public class BeatSpriteAnimator : MonoBehaviour
             if (currentClip.loop)
             {
                 currentFrameIndex = 0;
+
+                // ★重置 triggerOnce 狀態
+                foreach (var f in currentClip.frames)
+                    f.hasTriggered = false;
+
                 ApplyFrame();
             }
             else
@@ -142,7 +163,13 @@ public class BeatSpriteAnimator : MonoBehaviour
         {
             ApplyFrame();
         }
+
+
+        // ★新增：套用後執行事件
+        var frame = currentClip.frames[currentFrameIndex];
+        TriggerFrameEvents(frame);
     }
+
 
 
     // ======================================================
@@ -162,6 +189,37 @@ public class BeatSpriteAnimator : MonoBehaviour
             spriteRenderer.sprite = frame.sprite;
     }
 
+    private void TriggerFrameEvents(BeatSpriteFrame frame)
+    {
+        if (frame == null) return;
+
+        // ★若設定「只觸發一次」且已觸發過 → 直接 return
+        if (frame.triggerOnce && frame.hasTriggered)
+            return;
+
+        bool triggered = false;
+
+        // 生成警告
+        if (frame.triggerWarning && frame.warningPrefab != null)
+        {
+            Instantiate(frame.warningPrefab, transform.position + frame.spawnOffset, Quaternion.identity);
+            triggered = true;
+        }
+
+        // 生成攻擊特效
+        if (frame.triggerAttack && frame.attackPrefab != null)
+        {
+            Instantiate(frame.attackPrefab, transform.position + frame.spawnOffset, Quaternion.identity);
+            triggered = true;
+        }
+
+        // ★若有事件被觸發 → 標記已觸發
+        if (triggered && frame.triggerOnce)
+        {
+            frame.hasTriggered = true;
+        }
+    }
+
 
     // ======================================================
     // 對外 API
@@ -177,12 +235,15 @@ public class BeatSpriteAnimator : MonoBehaviour
         currentClip = newClip;
         currentFrameIndex = 0;
 
-        // 立刻給一點點拍點，避免卡死
-        accumulatedBeats = 0.0001f;
+        // ★重置所有 frame 的觸發紀錄
+        foreach (var f in currentClip.frames)
+            f.hasTriggered = false;
 
+        accumulatedBeats = 0.0001f;
         isPlaying = true;
         ApplyFrame();
     }
+
 
 
     public string GetCurrentClipName()
