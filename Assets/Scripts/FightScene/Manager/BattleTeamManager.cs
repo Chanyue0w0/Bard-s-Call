@@ -19,6 +19,10 @@ public class BattleTeamManager : MonoBehaviour
     public GameObject healthBarPrefab;
     public Canvas uiCanvas;
 
+    [Header("玩家統一血條（場景中已有，不要生成）")]
+    public TotalPlayerHealthBarUI playerTotalHPUI;
+
+
     [Header("重攻擊 UI")]
     public GameObject heavyAttackBarPrefab;
 
@@ -28,13 +32,34 @@ public class BattleTeamManager : MonoBehaviour
         LoadTeamsFromGlobalIndex();
 
         // 原有流程
-        SetupTeam(CTeamInfo, playerPositions);
+        //SetupTeam(CTeamInfo, playerPositions);
+        SetupTeam_Player();
         SetupTeam(EnemyTeamInfo, enemyPositions);
 
         if (BattleManager.Instance != null)
             BattleManager.Instance.LoadTeamData(this);
 
         CreateHeavyAttackBars(CTeamInfo);
+    }
+
+    private void SetupTeam_Player()
+    {
+        SetupTeam(CTeamInfo, playerPositions);
+
+        // ★ 不生成玩家的獨立血條
+        // ★ 由統一血條顯示全隊合計 HP
+        UpdatePlayerTotalHPUI();
+    }
+
+    public void UpdatePlayerTotalHPUI()
+    {
+        if (playerTotalHPUI == null)
+            return;
+
+        playerTotalHPUI.SetHP(
+            GlobalIndex.CurrentTotalHP,
+            GlobalIndex.MaxTotalHP
+        );
     }
 
     private void LoadTeamsFromGlobalIndex()
@@ -119,6 +144,9 @@ public class BattleTeamManager : MonoBehaviour
 
     private void CreateHealthBar(BattleManager.TeamSlotInfo slot)
     {
+        if (slot == null) return;
+        if (IsPlayerSlot(slot)) return;   // ← 自己寫個判斷
+
         if (slot.Actor == null || healthBarPrefab == null || uiCanvas == null)
             return;
 
@@ -131,6 +159,18 @@ public class BattleTeamManager : MonoBehaviour
                 hbUI.Init(slot, headPoint, uiCanvas.worldCamera);
         }
     }
+
+    //判斷是否為玩家角色
+    private bool IsPlayerSlot(BattleManager.TeamSlotInfo slot)
+    {
+        for (int i = 0; i < CTeamInfo.Length; i++)
+        {
+            if (CTeamInfo[i] == slot)
+                return true;
+        }
+        return false;
+    }
+
 
     private void CreateHeavyAttackBars(BattleManager.TeamSlotInfo[] team)
     {
