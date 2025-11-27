@@ -506,15 +506,7 @@ public class BattleEffectManager : MonoBehaviour
             Debug.Log($"【嘲諷指定】{enemyObj.name} 現在鎖定 {paladinObj.name} (持續 {durationBeats} 拍)");
         }
 
-        // ★ 嘲諷特效（顯示在敵人頭上）
-        //if (tauntVfxPrefab != null)
-        //{
-        //    var vfx = Instantiate(tauntVfxPrefab, enemyObj.transform.position + Vector3.up * 2f, Quaternion.identity);
-        //    vfx.transform.SetParent(enemyObj.transform);
-        //}
     }
-
-
 
     // 每拍倒數（請由 BeatManager 呼叫）
     public void TickTauntBeats()
@@ -536,7 +528,5 @@ public class BattleEffectManager : MonoBehaviour
         var data = activeTaunts.Find(t => t.enemyObj == enemyObj);
         return data != null ? data.paladinObj : null;
     }
-
-
-
+    
 }
