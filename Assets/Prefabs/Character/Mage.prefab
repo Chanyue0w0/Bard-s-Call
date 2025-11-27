@@ -227,14 +227,14 @@ MonoBehaviour:
   OriginAtk: 100
   Atk: 100
   NormalAttacks:
-  - SkillName: ElectricChargeGlow
-    SkillPrefab: {fileID: 4941075895699883318, guid: 18c1da0903a688f47af3eb8e8abcb843, type: 3}
+  - SkillName: ElectricStrike
+    SkillPrefab: {fileID: 1352887301582631612, guid: 912b44e80aaba76429c6ec2b72925062, type: 3}
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0
   HeavyAttack:
-    SkillName: ElectricExplosion
-    SkillPrefab: {fileID: 1352887301582631612, guid: 912b44e80aaba76429c6ec2b72925062, type: 3}
+    SkillName: UltLightenungStrike
+    SkillPrefab: {fileID: 7438099246538764141, guid: cdc428e0f62d2e944ac748ebd112d5c0, type: 3}
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0
@@ -300,10 +300,22 @@ MonoBehaviour:
     frames:
     - sprite: {fileID: 21300000, guid: 953ac68274b5816448a8b627ab9620ab, type: 3}
       beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
     - sprite: {fileID: 21300000, guid: a083bced67a509f46883a19ea6a0f30b, type: 3}
       beatLength: 0.4
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 6f11f603222809449b060b6de626f8f2, type: 3}
       beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
     loop: 1
     holdLastFrame: 0
   defaultClipName: Idle

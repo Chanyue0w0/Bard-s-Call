@@ -668,21 +668,50 @@ public class BattleManager : MonoBehaviour
 
         int chargeStacks = BattleEffectManager.Instance.GetChargeStacks(attacker);
 
+        // === Damage Matrix（依照 0~6 層） ===
+        int[] damageMatrix = new int[] { 10, 20, 30, 50, 70, 90, 120 };
+        int clampedStack = Mathf.Clamp(chargeStacks, 0, damageMatrix.Length - 1);
+        int heavyDamage = damageMatrix[clampedStack];
+
         // === 第四拍：重攻擊 ===
         if (beatInCycle == beatsPerMeasure)
         {
-            if (chargeStacks <= 0)
+            Vector2 spawnPos = enemyPositions[1].position;
+
+            GameObject skillObj = Instantiate(charData.HeavyAttack.SkillPrefab, spawnPos, Quaternion.identity);
+            Debug.Log($"[Fever-Mage] 雷電 MultiStrikeSkill 生成於敵方第2位置！");
+
+            // 設定 MultiStrikeSkill 屬性
+            MultiStrikeSkill skill = skillObj.GetComponent<MultiStrikeSkill>();
+            if (skill != null)
             {
-                Debug.Log("[法師重攻擊] 無充能層，攻擊無效。");
-                yield break;
+                skill.attacker = attacker;
+
+                // 加入全體敵人為目標
+                List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
+                foreach (var enemy in EnemyTeamInfo)
+                {
+                    if (enemy != null && enemy.Actor != null && enemy.HP > 0)
+                        allEnemies.Add(enemy);
+                }
+
+                skill.targets = allEnemies;
+                skill.isPerfect = true;
+                skill.isHeavyAttack = true;
+                skill.damage = heavyDamage;   // ★ 使用矩陣 damage
             }
 
-            Debug.Log($"[法師重攻擊] 消耗 {chargeStacks} 層充電。");
+            BattleEffectManager.Instance.ResetChargeStacks(attacker);
 
-            // 若仍有敵人，正常生成重攻擊特效
-            if (target != null && charData.HeavyAttack?.SkillPrefab != null)
+            yield break;
+        }
+
+        // === 普通攻擊 ===
+        else
+        {
+            if (target != null && charData.NormalAttacks != null)
             {
-                var heavy = Instantiate(charData.HeavyAttack.SkillPrefab, target.SlotTransform.position, Quaternion.identity);
+                var heavy = Instantiate(charData.NormalAttacks[0].SkillPrefab, target.Actor.transform.position, Quaternion.identity);
                 var skill = heavy.GetComponent<FireBallSkill>();
                 if (skill != null)
                 {
@@ -690,44 +719,19 @@ public class BattleManager : MonoBehaviour
                     skill.target = target;
                     skill.isPerfect = perfect;
                     skill.isHeavyAttack = true;
-                    skill.damage = chargeStacks * 30;
+                    skill.damage = 10;
                 }
 
-                // 計算傷害
-                //int damage = chargeStacks * 30;
-                //target.HP -= damage;
-                //if (target.HP < 0) target.HP = 0;
+                // 增加疊層 & 特效
+                BattleEffectManager.Instance.AddChargeStack(attacker);
 
-                var hb = target.Actor?.GetComponentInChildren<HealthBarUI>();
-                if (hb != null) hb.ForceUpdate();
-            }
-            else
-            {
-                Debug.Log("[法師重攻擊] 無敵人存在，僅釋放能量特效。");
-            }
-
-            // 清除充能層
-            BattleEffectManager.Instance.ResetChargeStacks(attacker);
-            yield break;
-        }
-
-        // === 普通攻擊：無論有無敵人都能充能 ===
-        Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
-
-        // 生成亮光特效
-        if (charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
-        {
-            var chargeEffect = charData.NormalAttacks[0].SkillPrefab;
-            if (chargeEffect != null)
-            {
-                Vector3 spawnPos = actor.position;
-                Instantiate(chargeEffect, spawnPos, Quaternion.identity);
+                Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
             }
         }
 
-        BattleEffectManager.Instance.AddChargeStack(attacker);
         yield return null;
     }
+
 
     // --------------------------------------------------
     // Ranger 攻擊邏輯
@@ -820,12 +824,7 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     // Paladin 攻擊邏輯（輕攻擊 + 重攻擊）
     // --------------------------------------------------
-    private IEnumerator HandlePaladinAttack(
-    TeamSlotInfo attacker,
-    TeamSlotInfo target,
-    int beatInCycle,
-    int beatsPerMeasure,
-    bool perfect)
+    private IEnumerator HandlePaladinAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, int beatsPerMeasure, bool perfect)
     {
         var actor = attacker.Actor.transform;
         var charData = attacker.Actor.GetComponent<CharacterData>();
