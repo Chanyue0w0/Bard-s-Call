@@ -5356,7 +5356,7 @@ MonoBehaviour:
   - {fileID: 5615004131614203636, guid: 5e08a6b4a78c12140983c1f1e75c7c69, type: 3}
   prewarmPerDigit: 8
   digitSpacing: 0.8
-  groupOffsetY: 1.4
+  groupOffsetY: 3
   groupFloatUp: 0.8
   groupLifetime: 0.9
   randomHorizontalJitter: 0.06
