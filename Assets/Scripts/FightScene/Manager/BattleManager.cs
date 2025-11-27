@@ -1124,14 +1124,17 @@ public class BattleManager : MonoBehaviour
         if (isBattleEnded) return;
 
         bool allDead = true;
-        foreach (var slot in CTeamInfo)
-        {
-            if (slot != null && slot.Actor != null && slot.HP > 0)
-            {
-                allDead = false;
-                break;
-            }
-        }
+
+        if (GlobalIndex.CurrentTotalHP > 0)
+            allDead = false;
+        //foreach (var slot in CTeamInfo)
+        //{
+        //    if (slot != null && slot.Actor != null && slot.HP > 0)
+        //    {
+        //        allDead = false;
+        //        break;
+        //    }
+        //}
 
         if (allDead)
         {
