@@ -189,30 +189,30 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     private void OnFeverUltimate()
     {
-        if (FeverManager.Instance == null) return;
+        //if (FeverManager.Instance == null) return;
 
-        // 使用新的 FMODBeatJudge
-        if (FMODBeatJudge.Instance == null)
-        {
-            Debug.LogWarning("[BattleManager] FMODBeatJudge.Instance 為 null，無法判定對拍！");
-            return;
-        }
+        //// 使用新的 FMODBeatListener2
+        //if (FMODBeatListener2.Instance == null)
+        //{
+        //    Debug.LogWarning("[BattleManager] FMODBeatListener2.Instance 為 null，無法判定對拍！");
+        //    return;
+        //}
 
-        bool perfect = FMODBeatJudge.Instance.IsOnBeat();
-        if (!perfect)
-        {
-            Debug.Log("[BattleManager] Fever大招 Miss，未在節拍上，不觸發。");
-            return;
-        }
+        //bool perfect = FMODBeatListener2.Instance.IsOnBeat();
+        //if (!perfect)
+        //{
+        //    Debug.Log("[BattleManager] Fever大招 Miss，未在節拍上，不觸發。");
+        //    return;
+        //}
 
-        if (FeverManager.Instance.currentFever < FeverManager.Instance.feverMax)
-        {
-            Debug.Log("[BattleManager] Fever未滿，無法啟動大招。");
-            return;
-        }
+        //if (FeverManager.Instance.currentFever < FeverManager.Instance.feverMax)
+        //{
+        //    Debug.Log("[BattleManager] Fever未滿，無法啟動大招。");
+        //    return;
+        //}
 
-        Debug.Log("[BattleManager] 對拍成功且Fever滿值，啟動全隊大招！");
-        StartCoroutine(FeverManager.Instance.HandleFeverUltimateSequence());
+        //Debug.Log("[BattleManager] 對拍成功且Fever滿值，啟動全隊大招！");
+        //StartCoroutine(FeverManager.Instance.HandleFeverUltimateSequence());
     }
 
     // --------------------------------------------------
@@ -519,29 +519,42 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        if (FMODBeatJudge.Instance == null)
+        var listener = FMODBeatListener2.Instance;
+        if (listener == null)
         {
-            Debug.LogWarning("[BattleManager] FMODBeatJudge.Instance 為 null，無法判定對拍！");
+            Debug.LogWarning("[BattleManager] Listener2 尚未初始化，無法判定對拍！");
             return;
         }
 
-        bool perfect = FMODBeatJudge.Instance.IsOnBeat();
+        // ★★★ 使用新版 Listener2 的 IsOnBeat() (3 個 out) ★★★
+        bool hit = listener.IsOnBeat(
+            out FMODBeatListener2.Judge judge,
+            out int nearestBeatIndex,
+            out float deltaSec
+        );
+
+        // ★★★ Perfect / Miss 判定（新版） ★★★
+        bool perfect = hit && judge == FMODBeatListener2.Judge.Perfect;
         if (!perfect)
         {
             Debug.Log("Miss！未在節拍上，不觸發攻擊。");
             return;
         }
 
+        // ★★★ 新 Listener2 的 “四拍循環” 來源（正確） ★★★
+        int beatInCycle = listener.CorrectedBeatInCycle;
+
+        // ★★★ 一小節拍數（通常是 4） ★★★
+        int beatsPerMeasure = listener.BeatsPerMeasure;
+
         var target = FindEnemyByClass(attacker.ClassType);
-        int beatInCycle = FMODBeatListener.CurrentBeatInBar;
-        int beatsPerMeasure = FMODBeatListener.BeatsPerMeasure;
 
         // ------------------------------------------------------------
         // 特例處理：即使沒有敵人也能發動的技能
         // ------------------------------------------------------------
         if (target == null)
         {
-            // 法師普攻：沒敵人仍可充能
+            // 法師普攻：無敵人仍能充能（非重拍）
             if (attacker.ClassType == UnitClass.Mage && beatInCycle != beatsPerMeasure)
             {
                 Debug.Log("[特例] 法師普攻在無敵人時仍可充能");
@@ -549,7 +562,7 @@ public class BattleManager : MonoBehaviour
                 return;
             }
 
-            // 吟遊詩人重攻擊：沒敵人仍可治癒全隊
+            // 吟遊詩人重拍：無敵人也能治癒
             if (attacker.ClassType == UnitClass.Bard && beatInCycle == beatsPerMeasure)
             {
                 Debug.Log("[特例] 吟遊詩人重攻擊在無敵人時仍可施放治癒");
@@ -557,7 +570,7 @@ public class BattleManager : MonoBehaviour
                 return;
             }
 
-            // 其他角色若沒目標就不攻擊
+            // 其他角色無敵人 → 不攻擊
             return;
         }
 
@@ -580,6 +593,7 @@ public class BattleManager : MonoBehaviour
         else
             StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
     }
+
 
 
     private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle,int beatsPerMeasure, bool perfect)
@@ -886,33 +900,33 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     private void OnBlockKey(int index)
     {
-        if (_isActionLocked) return;
-        if (index < 0 || index >= CTeamInfo.Length) return;
-        var slot = CTeamInfo[index];
-        if (slot == null || slot.Actor == null) return;
+        //if (_isActionLocked) return;
+        //if (index < 0 || index >= CTeamInfo.Length) return;
+        //var slot = CTeamInfo[index];
+        //if (slot == null || slot.Actor == null) return;
 
-        if (FMODBeatJudge.Instance == null)
-        {
-            Debug.LogWarning("[BattleManager] FMODBeatJudge.Instance 為 null，無法判定格檔對拍！");
-            return;
-        }
+        //if (FMODBeatListener2.Instance == null)
+        //{
+        //    Debug.LogWarning("[BattleManager] FMODBeatListener2.Instance 為 null，無法判定格檔對拍！");
+        //    return;
+        //}
 
-        bool perfect = FMODBeatJudge.Instance.IsOnBeat();
-        if (!perfect)
-        {
-            Debug.Log("Miss！格檔未在節拍上。");
-            return;
-        }
+        //bool perfect = FMODBeatListener2.Instance.IsOnBeat();
+        //if (!perfect)
+        //{
+        //    Debug.Log("Miss！格檔未在節拍上。");
+        //    return;
+        //}
 
-        var charData = slot.Actor.GetComponent<CharacterData>();
-        if (charData == null) return;
+        //var charData = slot.Actor.GetComponent<CharacterData>();
+        //if (charData == null) return;
 
-        BattleEffectManager.Instance.ActivateBlock(
-            index,
-            BeatManager.Instance.beatTravelTime,   // 這個之後也要改成 FMOD 的時間
-            charData,
-            slot.Actor
-        );
+        //BattleEffectManager.Instance.ActivateBlock(
+        //    index,
+        //    BeatManager.Instance.beatTravelTime,   // 這個之後也要改成 FMOD 的時間
+        //    charData,
+        //    slot.Actor
+        //);
     }
 
     private void ResetAllComboStates()
