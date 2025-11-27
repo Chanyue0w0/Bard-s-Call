@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class CampSceneManager : MonoBehaviour
 {
     [Header("戰鬥場景名稱")]
-    public string fightSceneName = "FightScene";
+    public string fightSceneName = "FightSceneFMOD";
 
     [Header("關卡選擇面板")]
     public GameObject levelChoosePanel;
@@ -63,6 +63,10 @@ public class CampSceneManager : MonoBehaviour
 
     private void LoadFightScene()
     {
+        GlobalIndex.CurrentTotalHP = 200;
+        GlobalIndex.MaxTotalHP = 200;
+        GlobalIndex.RythmResonanceBuff = 0; // 對拍共鳴臨時加乘
+
         Debug.Log("切換至戰鬥場景：" + fightSceneName);
         SceneManager.LoadScene(fightSceneName);
     }

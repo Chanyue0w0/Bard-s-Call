@@ -42,10 +42,10 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638998598632513856
+  lastModified: 638999025656636935
   FileSizes:
   - Name: Desktop
-    Value: 918
+    Value: 984
   Exists: 1
 --- !u!114 &-579768070649717542
 MonoBehaviour:
@@ -94,12 +94,13 @@ MonoBehaviour:
   - {fileID: -7370040820053357967}
   - {fileID: 807386294593801694}
   - {fileID: 5156717331999112038}
+  - {fileID: 8244820963817337318}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6828801144302610801}
   StringsBanks:
   - {fileID: -2384467188881039204}
-  cacheTime: 638998598632513856
+  cacheTime: 638999025656636935
   cacheVersion: 131621
 --- !u!114 &807386294593801694
 MonoBehaviour:
@@ -170,8 +171,35 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638998598632498305
+  lastModified: 638999025656621736
   FileSizes:
   - Name: Desktop
-    Value: 3586016
+    Value: 4640928
   Exists: 1
+--- !u!114 &8244820963817337318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BnB_Camp_soundtrack_01(full)
+  m_EditorClassIdentifier: 
+  Path: event:/BnB_Camp_soundtrack_01(full)
+  Guid:
+    Data1: -1305083262
+    Data2: 1156427069
+    Data3: -1987403342
+    Data4: -1375513600
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 103019
