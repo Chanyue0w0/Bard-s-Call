@@ -843,64 +843,77 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     // Paladin 攻擊邏輯（輕攻擊 + 重攻擊）
     // --------------------------------------------------
-    private IEnumerator HandlePaladinAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, int beatsPerMeasure, bool perfect)
+    private IEnumerator HandlePaladinAttack(
+    TeamSlotInfo attacker,
+    TeamSlotInfo target,
+    int beatInCycle,
+    int beatsPerMeasure,
+    bool perfect)
     {
         var actor = attacker.Actor.transform;
         var charData = attacker.Actor.GetComponent<CharacterData>();
         if (charData == null) yield break;
 
-        // === 第四拍：重攻擊 ===
-        if (beatInCycle == beatsPerMeasure)
+        int index = System.Array.FindIndex(CTeamInfo, t => t == attacker);
+
+        // ---------------------------
+        // ★ 第一步：所有 Paladin 攻擊 → 先格檔一拍
+        // ---------------------------
+        BattleEffectManager.Instance.ActivateBlock(
+            index,
+            0.9f, //BeatManager.Instance.beatTravelTime
+            charData,
+            attacker.Actor
+        );
+
+        // *延遲 0.05 秒讓格檔特效確實生成（安全做法）
+        yield return new WaitForSeconds(0.05f);
+
+        // ---------------------------
+        // ★ 第二步：判斷 輕攻擊 / 重攻擊
+        // ---------------------------
+        bool isHeavy = (beatInCycle == beatsPerMeasure);
+
+        if (!isHeavy)
         {
-            Debug.Log($"[聖騎士重攻擊] {attacker.UnitName} 嘲諷全體敵人！");
-            if (charData.HeavyAttack?.SkillPrefab != null)
-            {
-                foreach (var enemy in EnemyTeamInfo)
-                {
-                    if (enemy == null || enemy.Actor == null) continue;
+            // ---------------------------
+            // ★ 輕攻擊 → 只有格檔，不做任何攻擊行為
+            // ---------------------------
+            Debug.Log($"[Paladin 輕攻擊格檔] {attacker.UnitName} 格檔 1 拍。");
 
-                    // 在敵方位置生成 Paladin 的重攻擊特效
-                    Instantiate(charData.HeavyAttack.SkillPrefab, enemy.SlotTransform.position, Quaternion.identity);
+            // 可考慮播一個防禦動畫：actor.GetComponent<PressedAnimation>()?.PlayPerfect();
 
-                    // 套用嘲諷效果（假設 ApplyTaunt 仍為有效方法）
-                    BattleEffectManager.Instance.ApplyTaunt(enemy.Actor, attacker.Actor, 16);
-                }
-            }
             yield break;
         }
 
-        // === 普通攻擊（不附帶嘲諷） ===
-        if (attacker == null || target == null) yield break;
-        Vector3 origin = actor.position;
-        Vector3 targetPoint = target.SlotTransform.position + meleeContactOffset;
+        // ---------------------------
+        // ★ 重攻擊（同時發動格檔 + 重攻擊特效）
+        // ---------------------------
+        Debug.Log($"[Paladin 重攻擊] {attacker.UnitName} 格檔 + 嘲諷全體敵人！");
 
-        // Dash 前進
-        yield return Dash(actor, origin, targetPoint, dashDuration);
+        // 播重攻擊特效
+        //if (charData.HeavyAttack?.SkillPrefab != null)
+        //{
+        //    foreach (var enemy in EnemyTeamInfo)
+        //    {
+        //        if (enemy == null || enemy.Actor == null) continue;
 
-        // 普攻特效
-        GameObject attackPrefab = null;
-        if (charData.NormalAttacks != null && charData.NormalAttacks.Count > 0)
-            attackPrefab = charData.NormalAttacks[0].SkillPrefab;
-        if (attackPrefab == null) attackPrefab = meleeVfxPrefab;
+        //        Instantiate(
+        //            charData.HeavyAttack.SkillPrefab,
+        //            enemy.SlotTransform.position,
+        //            Quaternion.identity
+        //        );
 
-        if (attackPrefab != null)
-        {
-            var vfx = Instantiate(attackPrefab, targetPoint, Quaternion.identity);
-            var sword = vfx.GetComponent<SwordHitSkill>();
-            if (sword != null)
-            {
-                sword.attacker = attacker;
-                sword.target = target;
-                sword.isPerfect = perfect;
-                sword.isHeavyAttack = false;
-            }
-        }
+        //        // 嘲諷 16 拍（或你原本設定的拍數）
+        //        BattleEffectManager.Instance.ApplyTaunt(
+        //            enemy.Actor,
+        //            attacker.Actor,
+        //            16
+        //        );
+        //    }
+        //}
 
-        // 傷害計算（沿用既有邏輯）
-        //BattleEffectManager.Instance.OnHit(attacker, target, perfect);
-
-        yield return new WaitForSeconds(dashStayDuration);
-        yield return Dash(actor, targetPoint, origin, dashDuration);
+        yield break;
     }
 
 

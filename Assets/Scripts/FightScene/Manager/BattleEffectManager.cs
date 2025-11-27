@@ -130,7 +130,7 @@ public class BattleEffectManager : MonoBehaviour
     }
 
 
-    public void ActivateBlock(int index, float duration, CharacterData charData, GameObject actor)
+    public void ActivateBlock(int index, float beatDuration, CharacterData charData, GameObject actor)
     {
         if (index < 0 || index >= isBlocking.Length) return;
 
@@ -148,47 +148,75 @@ public class BattleEffectManager : MonoBehaviour
             blockEffects[index] = null;
         }
 
-        // 以拍為基準時間（略短於一拍，避免跨拍）
-        float beatTime = BeatManager.Instance != null ? BeatManager.Instance.beatTravelTime : 0.5f;
-        float adjustedDuration = Mathf.Min(duration, beatTime * 0.9f);
+        // ===========================================
+        // ★ 核心更新：改用 FMODBeatListener2
+        // ===========================================
+        float secondsPerBeat = 0.5f;
+
+        if (FMODBeatListener2.Instance != null)
+            secondsPerBeat = FMODBeatListener2.Instance.SecondsPerBeat;
+
+        // beatDuration 是「幾拍」
+        float durationSec = beatDuration * secondsPerBeat;
+
+        // 額外保護（避免跨拍過長）
+        float adjustedDuration = durationSec * 0.95f;
 
         blockCoroutines[index] = StartCoroutine(BlockRoutine(index, adjustedDuration, charData, actor));
     }
+
 
     private IEnumerator BlockRoutine(int index, float duration, CharacterData charData, GameObject actor)
     {
         isBlocking[index] = true;
         Debug.Log($"【格檔啟動】角色 {actor.name} 進入無敵狀態 ({duration:F2}s)");
 
-        // 取得生成位置
-        Vector3 spawnPos = BattleManager.Instance != null && index < BattleManager.Instance.CTeamInfo.Length
-            ? BattleManager.Instance.CTeamInfo[index].SlotTransform.position
-            : actor.transform.position;
+        // -----------------------------
+        // 1. 生成位置（改用角色座標）
+        // -----------------------------
+        Vector3 spawnPos = actor.transform.position;
+        Vector3 offset = new Vector3(0f, 0f, 0f);
+        spawnPos += offset;
 
-        spawnPos += Vector3.up * 1.3f; // 特效上移
-
-        // 生成特效
+        // -----------------------------
+        // 2. 選擇特效
+        // -----------------------------
         GameObject effectPrefab = (charData != null && charData.ShieldEffectPrefab != null)
             ? charData.ShieldEffectPrefab
             : shieldVfxPrefab;
 
         if (effectPrefab != null)
-            blockEffects[index] = Instantiate(effectPrefab, spawnPos, Quaternion.identity);
+        {
+            // -----------------------------
+            // ★★★ 生成後立刻 SetParent(actor)
+            // -----------------------------
+            GameObject effectObj = Instantiate(effectPrefab, spawnPos, Quaternion.identity);
 
-        // 等待結束
+            effectObj.transform.SetParent(actor.transform, worldPositionStays: true);
+
+            // 確保特效位置永遠對齊角色
+            effectObj.transform.localPosition = offset;
+
+            blockEffects[index] = effectObj;
+        }
+
+        // -----------------------------
+        // 3. 持續 duration 秒後結束
+        // -----------------------------
         yield return new WaitForSeconds(duration);
 
-        // 結束格檔
         isBlocking[index] = false;
+
         if (blockEffects[index] != null)
         {
             Destroy(blockEffects[index]);
             blockEffects[index] = null;
         }
 
-        blockCoroutines[index] = null; // 清空紀錄
+        blockCoroutines[index] = null;
         Debug.Log($"【格檔結束】角色 {actor.name} 恢復可受傷");
     }
+
 
     // =======================
     // 傷害判定（含重攻擊判定與 ShieldGoblin 破防邏輯）
