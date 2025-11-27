@@ -22,6 +22,8 @@ public class BattleEffectManager : MonoBehaviour
     [Header("共用 Shield 特效（當角色未指定 ShieldEffectPrefab 時使用）")]
     public GameObject shieldVfxPrefab;
     private GameObject[] blockEffects = new GameObject[3];
+    [Header("格檔成功特效")]
+    public GameObject blockSuccessVfxPrefab;
 
     [Header("Priest 回復特效")]
     public GameObject healVfxPrefab;
@@ -218,6 +220,7 @@ public class BattleEffectManager : MonoBehaviour
     }
 
 
+
     // =======================
     // 傷害判定（含重攻擊判定與 ShieldGoblin 破防邏輯）
     // =======================
@@ -275,6 +278,15 @@ public class BattleEffectManager : MonoBehaviour
         int targetIndex = System.Array.FindIndex(BattleManager.Instance.CTeamInfo, t => t == target);
         if (targetIndex >= 0 && isBlocking[targetIndex])
         {
+            Vector3 spawnPos = target.Actor.transform.position;
+            Vector3 offset = new Vector3(0f, 1.0f, 0f); // 可調整高度
+
+            GameObject fx = Instantiate(blockSuccessVfxPrefab, spawnPos + offset, Quaternion.identity);
+
+            // 讓特效跟著角色移動
+            fx.transform.SetParent(target.Actor.transform, worldPositionStays: true);
+            fx.transform.localPosition = offset;
+
             VibrationManager.Instance.Vibrate("Block");
             Debug.Log($"【格檔成功】{target.UnitName} 格檔 {attacker.UnitName} 的攻擊！");
             return;
