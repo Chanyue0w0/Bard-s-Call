@@ -262,7 +262,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -0.11138916, y: 0}
+  m_AnchoredPosition: {x: 0.11138916, y: 0}
   m_SizeDelta: {x: -10.2228, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6872593940623200489
@@ -275,7 +275,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3008806576873534768}
   - component: {fileID: 3568043951184588176}
-  - component: {fileID: 2294693876696730450}
+  - component: {fileID: 5044766107964702005}
   m_Layer: 5
   m_Name: TotalHealthBar
   m_TagString: Untagged
@@ -348,15 +348,15 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8967052988514289813}
   m_FillRect: {fileID: 2124985997873862645}
   m_HandleRect: {fileID: 0}
-  m_Direction: 0
+  m_Direction: 1
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.753
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2294693876696730450
+--- !u!114 &5044766107964702005
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -365,7 +365,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6872593940623200489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d82002089a77ba94faa8c5a362510338, type: 3}
+  m_Script: {fileID: 11500000, guid: 1fc6b7fa80026a444a6e900ba6fce7f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 3568043951184588176}
