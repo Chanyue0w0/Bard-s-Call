@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 1863276719008734951}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.71, y: -0.06, z: 0}
-  m_LocalScale: {x: 1.1416149, y: 0.5178289, z: 1.1416149}
+  m_LocalPosition: {x: -0.18, y: 0.15, z: 0}
+  m_LocalScale: {x: 0.79768103, y: 0.36182278, z: 0.79768103}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1725950162258855013}
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 07caf3d1930bab14aa8f6dcdf2db871a, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.5411765}
   m_FlipX: 0
@@ -115,7 +115,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3842641651606749929}
@@ -163,7 +163,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 4e21057899bf23d4a98d0093b858a00b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0c8822aef1413d441942dcb1029356fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -257,8 +257,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterName: ShieldGoblin
   ClassType: 5
-  MaxHP: 180
-  HP: 180
+  MaxHP: 700
+  HP: 700
   MaxMP: 0
   MP: 0
   OriginAtk: 0
@@ -313,7 +313,7 @@ Transform:
   m_GameObject: {fileID: 6655271926595468758}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.83, y: 6, z: 0}
+  m_LocalPosition: {x: -0.83, y: 3.44, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

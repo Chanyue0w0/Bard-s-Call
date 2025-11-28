@@ -254,12 +254,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterName: AxeGoblin
   ClassType: 6
-  MaxHP: 500
-  HP: 500
+  MaxHP: 1200
+  HP: 1200
   MaxMP: 0
   MP: 0
-  OriginAtk: 40
-  Atk: 40
+  OriginAtk: 100
+  Atk: 100
   NormalAttacks: []
   HeavyAttack:
     SkillName: 
