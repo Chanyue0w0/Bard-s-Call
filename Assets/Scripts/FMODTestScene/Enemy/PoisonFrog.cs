@@ -148,7 +148,7 @@ public class PoisonFrog : EnemyBase
             travelTime: 0.2f,
             isHeavyAttack: false,
             spawnExplosion: true,
-            buffAction: null
+            buffAction: (t) => BattleEffectManager.Instance.ApplyPoison(t, 5, 8)
         );
     }
 

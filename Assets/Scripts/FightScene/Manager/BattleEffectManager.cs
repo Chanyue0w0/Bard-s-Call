@@ -47,6 +47,15 @@ public class BattleEffectManager : MonoBehaviour
     // -------------------------
     private Dictionary<BattleManager.TeamSlotInfo, int> mageChargeStacks = new Dictionary<BattleManager.TeamSlotInfo, int>();
 
+    private class PoisonInfo
+    {
+        public BattleManager.TeamSlotInfo target;
+        public int damagePerBeat;
+        public int remainingBeats;
+    }
+
+    private List<PoisonInfo> activePoisons = new List<PoisonInfo>();
+
     public int GetChargeStacks(BattleManager.TeamSlotInfo mage)
     {
         if (mage == null) return 0;
@@ -226,7 +235,9 @@ public class BattleEffectManager : MonoBehaviour
     // =======================
     public void OnHit(BattleManager.TeamSlotInfo attacker, BattleManager.TeamSlotInfo target, bool isPerfect, bool isHeavyAttack = false, int overrideDamage = -1)
     {
-        if (attacker == null || target == null) return;
+        if (target == null) return;
+        // attacker 為 null 表示「環境傷害」或「狀態效果」，應允許繼續執行
+
 
         // =======================================
         // ShieldGoblin 永久防禦邏輯
@@ -364,6 +375,60 @@ public class BattleEffectManager : MonoBehaviour
 
         BattleManager.Instance.CheckPlayerDefeat();
 
+    }
+
+    public void ApplyPoison(BattleManager.TeamSlotInfo target, int damagePerBeat, int durationBeats)
+    {
+        if (target == null) return;
+
+        // 若已有毒，刷新持續拍
+        var existing = activePoisons.Find(p => p.target == target);
+        if (existing != null)
+        {
+            existing.remainingBeats = durationBeats;
+            Debug.Log($"【中毒刷新】{target.UnitName}：再次中毒，持續 {durationBeats} 拍");
+            return;
+        }
+
+        // 新增一個中毒
+        activePoisons.Add(new PoisonInfo
+        {
+            target = target,
+            damagePerBeat = damagePerBeat,
+            remainingBeats = durationBeats
+        });
+
+        Debug.Log($"【中毒施加】{target.UnitName}：每拍 {damagePerBeat}，持續 {durationBeats} 拍");
+    }
+
+    public void TickPoison()
+    {
+        for (int i = activePoisons.Count - 1; i >= 0; i--)
+        {
+            var p = activePoisons[i];
+            if (p.target == null || p.target.Actor == null)
+            {
+                activePoisons.RemoveAt(i);
+                continue;
+            }
+
+            // 扣血（使用 OnHit 會觸發所有 UI/傷害效果）
+            OnHit(
+                attacker: null,               // 毒不算攻擊者
+                target: p.target,
+                isPerfect: true,              // 不需要 Perfect
+                isHeavyAttack: false,
+                overrideDamage: p.damagePerBeat
+            );
+
+            p.remainingBeats--;
+
+            if (p.remainingBeats <= 0)
+            {
+                Debug.Log($"【中毒結束】{p.target.UnitName}");
+                activePoisons.RemoveAt(i);
+            }
+        }
     }
 
 

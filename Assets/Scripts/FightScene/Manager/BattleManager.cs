@@ -148,7 +148,8 @@ public class BattleManager : MonoBehaviour
         blockP2Handler = ctx => OnBlockKey(1);
         blockP3Handler = ctx => OnBlockKey(2);
         feverUltHandler = ctx => OnFeverUltimate();
-        
+
+        FMODBeatListener2.OnGlobalBeat += HandleBeatEffects; // ★ 新增
 
         if (actionAttackP1 != null) { actionAttackP1.action.started += attackP1Handler; actionAttackP1.action.Enable(); }
         if (actionAttackP2 != null) { actionAttackP2.action.started += attackP2Handler; actionAttackP2.action.Enable(); }
@@ -168,6 +169,15 @@ public class BattleManager : MonoBehaviour
         if (actionBlockP2 != null) actionBlockP2.action.started -= blockP2Handler;
         if (actionBlockP3 != null) actionBlockP3.action.started -= blockP3Handler;
         if (actionFeverUltimate != null) { actionFeverUltimate.action.started -= feverUltHandler;}
+
+        FMODBeatListener2.OnGlobalBeat -= HandleBeatEffects; // ★ 新增
+    }
+
+    //聆聽Beat，提供每拍效果偵測
+    private void HandleBeatEffects(int beat)
+    {
+        BattleEffectManager.Instance.TickPoison();
+        BattleEffectManager.Instance.TickTauntBeats(); // 可選
     }
 
     // --------------------------------------------------
