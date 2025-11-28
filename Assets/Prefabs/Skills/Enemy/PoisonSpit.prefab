@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 685e98c94117cde43a011c10d6bf76d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitToDestroy: 1
   explosionPrefab: {fileID: 1923612589021624723, guid: fcf5febfe05d8f7499d7c3a0a090d840, type: 3}
 --- !u!61 &1340908269232564038
 BoxCollider2D:
@@ -9790,7 +9791,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0

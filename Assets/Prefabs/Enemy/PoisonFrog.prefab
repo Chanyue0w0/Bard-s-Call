@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5935473392489453622}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.54, y: -0.15, z: 0}
+  m_LocalPosition: {x: 0.29, y: 0.23, z: 0}
   m_LocalScale: {x: 1.074018, y: 0.48716745, z: 1.074018}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -109,7 +109,7 @@ Transform:
   m_GameObject: {fileID: 6018437338759827169}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.63, y: 8.26, z: 0}
+  m_LocalPosition: {x: -0.63, y: 4.14, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 555128642403916109}
   - component: {fileID: 720920468520826895}
   - component: {fileID: 1430913645195655270}
-  - component: {fileID: 391050123146848033}
+  - component: {fileID: 5078313423262643768}
   - component: {fileID: 1268902497537728516}
   m_Layer: 8
   m_Name: PoisonFrog
@@ -269,7 +269,7 @@ MonoBehaviour:
     FixedDamage: 0
   Skills: []
   ShieldEffectPrefab: {fileID: 0}
---- !u!114 &391050123146848033
+--- !u!114 &5078313423262643768
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -278,7 +278,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7851229232848655062}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dff8b091bf01c1842982d6b2bb028b57, type: 3}
+  m_Script: {fileID: 11500000, guid: 0284e198fb0f55240be3d7e112a76087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ETeam: 2
@@ -304,13 +304,11 @@ MonoBehaviour:
   anim: {fileID: 1268902497537728516}
   warningPrefab: {fileID: 5361181730533998727, guid: c847ccf11edfa2744921f756e70859cb, type: 3}
   warningOffset: {x: 0, y: 2.4, z: 0}
-  attackPrefab: {fileID: 4801402102386786827, guid: c8570cdc750f7214fb9bcbb96bab7afa, type: 3}
-  attackOffset: {x: 4, y: 3.3, z: 0}
-  attackIntervalBeats: 8
-  dashTime: 0.05
-  waitTime: 0.8
-  returnTime: 0.05
-  attackPositionOffset: {x: -2, y: 0, z: 0}
+  poisonBubblePrefab: {fileID: 4801402102386786827, guid: c8570cdc750f7214fb9bcbb96bab7afa, type: 3}
+  poisonBubbleOffset: {x: 1, y: 2, z: 0}
+  explosionPrefab: {fileID: 1923612589021624723, guid: fcf5febfe05d8f7499d7c3a0a090d840, type: 3}
+  explosionOffset: {x: 1, y: 2, z: 0}
+  attackIntervalBeats: 12
 --- !u!114 &1268902497537728516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,14 +325,14 @@ MonoBehaviour:
   clips:
   - clipName: Idle
     frames:
-    - sprite: {fileID: 21300000, guid: 39fb1a399bb3fbd43b4ac88234b6c14a, type: 3}
-      beatLength: 0.3
+    - sprite: {fileID: 21300000, guid: 99b3e43de9e32cd4bbfc33ea31e1f520, type: 3}
+      beatLength: 1
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
       hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 99b3e43de9e32cd4bbfc33ea31e1f520, type: 3}
-      beatLength: 0.4
+    - sprite: {fileID: 21300000, guid: 39fb1a399bb3fbd43b4ac88234b6c14a, type: 3}
+      beatLength: 1
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
@@ -369,8 +367,8 @@ MonoBehaviour:
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 43724d7bf48e7ac479190635cf9e5187, type: 3}
       beatLength: 1
-      triggerWarning: 0
-      triggerAttack: 1
+      triggerWarning: 1
+      triggerAttack: 0
       triggerOnce: 1
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 9210ce2eb07b4c947a08b7524c3a8b9a, type: 3}

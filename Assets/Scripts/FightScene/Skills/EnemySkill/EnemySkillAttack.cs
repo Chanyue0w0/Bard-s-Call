@@ -3,7 +3,12 @@ using System.Collections;
 
 public class EnemySkillAttack : MonoBehaviour
 {
-    // 運作所需資訊（由敵人呼叫 Init()）
+    // ===========================
+    // 新增可調整的 Hit 後是否 Destroy
+    // ===========================
+    [Header("命中後是否自動銷毀")]
+    public bool hitToDestroy = false;   // 預設 false
+
     protected BattleManager.TeamSlotInfo attacker;
     protected BattleManager.TeamSlotInfo target;
 
@@ -16,14 +21,13 @@ public class EnemySkillAttack : MonoBehaviour
     [Header("特效")]
     public GameObject explosionPrefab;
 
-    // 你未來用於 Buff / Debuff 的資料結構（可擴充）
     protected System.Action<BattleManager.TeamSlotInfo> onHitBuffAction;
 
-    private bool hasArrived = false;  // 避免重複觸發
+    private bool hasArrived = false;
 
 
     // ================================
-    // 對外初始化（敵人呼叫）
+    // Init
     // ================================
     public void Init(
         BattleManager.TeamSlotInfo attacker,
@@ -41,7 +45,6 @@ public class EnemySkillAttack : MonoBehaviour
         this.travelTime = travelTime;
         this.isHeavyAttack = isHeavyAttack;
         this.spawnExplosion = spawnExplosion;
-
         this.onHitBuffAction = buffAction;
     }
 
@@ -55,20 +58,12 @@ public class EnemySkillAttack : MonoBehaviour
         }
 
         if (travelTime > 0f)
-        {
             StartCoroutine(MoveToTarget(target.SlotTransform.position));
-        }
         else
-        {
-            // 近戰：瞬間移動到目標
             transform.position = target.SlotTransform.position;
-        }
     }
 
 
-    // ================================
-    // 投射物移動（遠程技能）
-    // ================================
     private IEnumerator MoveToTarget(Vector3 targetPos)
     {
         Vector3 start = transform.position;
@@ -87,46 +82,45 @@ public class EnemySkillAttack : MonoBehaviour
     }
 
 
-    // ================================
-    // Trigger 判定傷害（近戰或遠程都可用）
-    // ================================
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (hasArrived == false) return;  // 確保不是飛途中誤撞
+        if (!hasArrived) return;
         if (target == null || target.Actor == null) return;
 
         if (other.gameObject == target.Actor)
-        {
             TriggerHit();
-        }
     }
 
 
     // ================================
-    // 統一處理命中事件
+    // Trigger Hit
     // ================================
     private void TriggerHit()
     {
         if (target == null)
         {
-            Destroy(gameObject);
+            //if (hitToDestroy) Destroy(gameObject);
             return;
         }
 
         Vector3 pos = target.SlotTransform.position;
 
-        // 生成爆炸
+        // 爆炸
         if (spawnExplosion && explosionPrefab != null)
-        {
             Instantiate(explosionPrefab, pos, Quaternion.identity);
-        }
 
-        // 傷害流程
+        // 傷害
         BattleEffectManager.Instance.OnHit(attacker, target, true, isHeavyAttack, damage);
 
-        // Buff / Debuff
+        // Buff
         onHitBuffAction?.Invoke(target);
 
-        //Destroy(gameObject);
+        // ===========================
+        // ★ 新增：是否命中後 destroy ★
+        // ===========================
+        if (hitToDestroy)
+        {
+            Destroy(gameObject);
+        }
     }
 }
