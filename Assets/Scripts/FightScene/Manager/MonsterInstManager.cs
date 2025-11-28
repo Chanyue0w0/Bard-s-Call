@@ -9,11 +9,11 @@ public class MonsterInstManager : MonoBehaviour
 
     [Header("怪物 Prefabs")]
     public GameObject axeGoblinPrefab;
-    public GameObject shieldGoblinPrefab;
+    //public GameObject shieldGoblinPrefab;
     public GameObject mageGoblinPrefab;
     public GameObject poisonFrogPrefab;
-    public GameObject orcPrefab;
-    public GameObject darkKnightPrefab;
+    //public GameObject orcPrefab;
+    //public GameObject darkKnightPrefab;
 
     [Header("關聯組件")]
     public BattleTeamManager teamManager;
@@ -159,11 +159,11 @@ public class MonsterInstManager : MonoBehaviour
     {
         List<GameObject> monsterPool = new List<GameObject>()
         {
-            shieldGoblinPrefab,
+            //shieldGoblinPrefab,
             axeGoblinPrefab,
             mageGoblinPrefab,
-            poisonFrogPrefab,
-            orcPrefab
+            //poisonFrogPrefab,
+            //orcPrefab
         };
 
         // 從第一個位置開始依序填入
@@ -174,18 +174,19 @@ public class MonsterInstManager : MonoBehaviour
             switch (stage)
             {
                 case 1:
-                    //teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
                     //teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;
-                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = mageGoblinPrefab;
+                    //teamManager.EnemyTeamInfo[0].PrefabToSpawn = mageGoblinPrefab;
                     break;
                 case 2:
-                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
+                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
+                    //teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
                     break;
                 case 3:
-                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = mageGoblinPrefab;
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
+                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
                     break;
                 case 4:
-                case 5:
                     for (int i = 0; i < 2 && slots.Count > 0; i++)
                     {
                         int slotIndex = slots[0];
@@ -193,6 +194,9 @@ public class MonsterInstManager : MonoBehaviour
                         var prefab = monsterPool[Random.Range(0, monsterPool.Count)];
                         teamManager.EnemyTeamInfo[slotIndex].PrefabToSpawn = prefab;
                     }
+                    break;
+                case 5:
+                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;
                     break;
             }
         }
@@ -211,7 +215,9 @@ public class MonsterInstManager : MonoBehaviour
             }
             else if (stage == 6)
             {
-                teamManager.EnemyTeamInfo[0].PrefabToSpawn = darkKnightPrefab;
+                teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
+                teamManager.EnemyTeamInfo[1].PrefabToSpawn = mageGoblinPrefab;
+                teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
             }
         }
     }
