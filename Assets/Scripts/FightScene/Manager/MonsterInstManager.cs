@@ -11,6 +11,8 @@ public class MonsterInstManager : MonoBehaviour
     public GameObject axeGoblinPrefab;
     public GameObject shieldGoblinPrefab;
     public GameObject mageGoblinPrefab;
+    public GameObject poisonFrogPrefab;
+    public GameObject orcPrefab;
     public GameObject darkKnightPrefab;
 
     [Header("關聯組件")]
@@ -159,7 +161,9 @@ public class MonsterInstManager : MonoBehaviour
         {
             shieldGoblinPrefab,
             axeGoblinPrefab,
-            mageGoblinPrefab
+            mageGoblinPrefab,
+            poisonFrogPrefab,
+            orcPrefab
         };
 
         // 從第一個位置開始依序填入
@@ -173,7 +177,7 @@ public class MonsterInstManager : MonoBehaviour
                     teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
                     break;
                 case 2:
-                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = poisonFrogPrefab;
                     break;
                 case 3:
                     teamManager.EnemyTeamInfo[0].PrefabToSpawn = mageGoblinPrefab;
