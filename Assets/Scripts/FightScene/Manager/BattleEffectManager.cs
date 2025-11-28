@@ -1,22 +1,14 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class BattleEffectManager : MonoBehaviour
 {
     public static BattleEffectManager Instance { get; private set; }
 
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
-
     [Header("玩家統一血條（場景中已有，不要生成）")]
+    public Image playerTotalHPUI_filledImg;
     public TotalPlayerHealthBarUI playerTotalHPUI;
 
     [Header("共用 Shield 特效（當角色未指定 ShieldEffectPrefab 時使用）")]
@@ -47,6 +39,16 @@ public class BattleEffectManager : MonoBehaviour
     // -------------------------
     private Dictionary<BattleManager.TeamSlotInfo, int> mageChargeStacks = new Dictionary<BattleManager.TeamSlotInfo, int>();
 
+    // ======================
+    // 中毒 UI 顏色系統
+    // ======================
+    [Header("中毒 UI 顏色設定")]
+    public Color poisonColor = new Color(0.7f, 0.2f, 0.9f); // 紫色
+
+    private Color baseHPColor; // 原始顏色
+    private bool isPoisonUIRoutineRunning = false;
+    private Coroutine poisonUICoroutine = null;
+
     private class PoisonInfo
     {
         public BattleManager.TeamSlotInfo target;
@@ -55,6 +57,19 @@ public class BattleEffectManager : MonoBehaviour
     }
 
     private List<PoisonInfo> activePoisons = new List<PoisonInfo>();
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
+        if (playerTotalHPUI_filledImg != null)
+            baseHPColor = playerTotalHPUI_filledImg.color;
+    }
 
     public int GetChargeStacks(BattleManager.TeamSlotInfo mage)
     {
@@ -398,11 +413,22 @@ public class BattleEffectManager : MonoBehaviour
             remainingBeats = durationBeats
         });
 
+        // ★ 啟動 UI 中毒顏色協程（若沒有啟動）
+        if (!isPoisonUIRoutineRunning)
+        {
+            poisonUICoroutine = StartCoroutine(PoisonColorRoutine());
+            isPoisonUIRoutineRunning = true;
+        }
+
         Debug.Log($"【中毒施加】{target.UnitName}：每拍 {damagePerBeat}，持續 {durationBeats} 拍");
     }
 
     public void TickPoison()
     {
+        // ★ 只有中毒時才閃紫色
+        if (activePoisons.Count > 0)
+            PoisonFlashOnce();
+
         for (int i = activePoisons.Count - 1; i >= 0; i--)
         {
             var p = activePoisons[i];
@@ -431,6 +457,51 @@ public class BattleEffectManager : MonoBehaviour
         }
     }
 
+    private IEnumerator PoisonColorRoutine()
+    {
+        // 持續等待直到全部中毒消失
+        while (activePoisons.Count > 0)
+            yield return null;
+
+        // 所有毒解除 → 恢復原色
+        if (playerTotalHPUI_filledImg != null)
+            playerTotalHPUI_filledImg.color = baseHPColor;
+
+        isPoisonUIRoutineRunning = false;
+        poisonUICoroutine = null;
+    }
+
+
+    private void PoisonFlashOnce()
+    {
+        if (playerTotalHPUI_filledImg == null) return;
+
+        // 每拍：從 base → purple → base
+        StartCoroutine(FadeOnceRoutine());
+    }
+
+    private IEnumerator FadeOnceRoutine()
+    {
+        float t = 0f;
+        float duration = 0.15f;
+
+        // base -> purple
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            playerTotalHPUI_filledImg.color = Color.Lerp(baseHPColor, poisonColor, t);
+            yield return null;
+        }
+
+        // purple -> base
+        t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            playerTotalHPUI_filledImg.color = Color.Lerp(poisonColor, baseHPColor, t);
+            yield return null;
+        }
+    }
 
     private void HandleUnitDefeated(BattleManager.TeamSlotInfo target)
     {

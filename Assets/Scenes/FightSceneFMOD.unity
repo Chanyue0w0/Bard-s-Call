@@ -5409,6 +5409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 581455879ffaebb43a6835bf39098d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerTotalHPUI_filledImg: {fileID: 752866696}
   playerTotalHPUI: {fileID: 4455289404305869504}
   shieldVfxPrefab: {fileID: 6759902882087295716, guid: 7ef62f028474402449bfc0e7a25b32f6, type: 3}
   blockSuccessVfxPrefab: {fileID: 5540595814164879099, guid: f90a95e1f8ed578428ac3aec43471047, type: 3}
@@ -5416,6 +5417,7 @@ MonoBehaviour:
   isHeavyAttack: 0
   tauntVfxPrefab: {fileID: 1706224664778853816, guid: a86e1a8bdd3a39b4fbafa6298302f385, type: 3}
   mageChargeVfxPrefab: {fileID: 6655016724648331359, guid: ba2e95d09b1644b408a54b98b37746fa, type: 3}
+  poisonColor: {r: 0.7, g: 0.2, b: 0.9, a: 1}
 --- !u!1 &125192583
 GameObject:
   m_ObjectHideFlags: 0
@@ -28131,6 +28133,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5844688300971100990, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
   m_PrefabInstance: {fileID: 7448186229776027132}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &752866696 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2939371516262811841, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
+  m_PrefabInstance: {fileID: 8193060171871770197}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &762947546
 GameObject:
   m_ObjectHideFlags: 0
@@ -68923,6 +68936,18 @@ PrefabInstance:
     - target: {fileID: 2124985997873862645, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2939371516262811841, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
+      propertyPath: m_Color.b
+      value: 0.0919299
+      objectReference: {fileID: 0}
+    - target: {fileID: 2939371516262811841, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
+      propertyPath: m_Color.g
+      value: 0.011764705
+      objectReference: {fileID: 0}
+    - target: {fileID: 2939371516262811841, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3008806576873534768, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
       propertyPath: m_Pivot.x
