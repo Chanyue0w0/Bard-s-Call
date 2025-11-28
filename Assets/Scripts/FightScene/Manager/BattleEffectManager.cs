@@ -365,6 +365,11 @@ public class BattleEffectManager : MonoBehaviour
         target.HP -= finalDamage;
         if (target.HP < 0) target.HP = 0;
 
+        // ★★★ 新增：通知敵人受傷 ★★★
+        var enemyBase = target.Actor.GetComponent<EnemyBase>();
+        if (enemyBase != null)
+            enemyBase.OnDamaged(finalDamage, isHeavyAttack);
+
         Debug.Log($"{attacker.UnitName} 命中 {target.UnitName}，傷害={finalDamage} 剩餘HP={target.HP} (Perfect={isPerfect})");
 
         // Perfect 回魔

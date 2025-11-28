@@ -6,7 +6,6 @@ public abstract class EnemyBase : MonoBehaviour
     protected int slotIndex = -1;
     protected bool forceMove = false;
 
-    // ★ Fever 狀態
     protected bool isFeverLock = false;
     protected float feverBeatsRemaining = 0f;
 
@@ -21,14 +20,36 @@ public abstract class EnemyBase : MonoBehaviour
     [HideInInspector] public GameObject tauntedByObj;
     [HideInInspector] public float tauntBeatsRemaining = 0f;
 
+    // ------------------------------
+    // ★ SpriteRenderer 與受擊動畫
+    // ------------------------------
+    private SpriteRenderer spr;          // 主渲染器
+    private Color originalColor;         // 初始顏色
+    private Coroutine hitFlashRoutine;   // 避免重複疊加
+
+    // 顏色參數
+    private readonly Color flashColor = new Color(1f, 0.3f, 0.3f); // 淡紅色
+    private readonly float hitFlashDuration = 0.5f;               // 總時長 0.5 秒
 
     protected virtual void Awake()
     {
         if (ETeam == BattleManager.ETeam.None)
             ETeam = BattleManager.ETeam.Enemy;
 
-        // ★ 監聽 FeverManager 事件
         FeverManager.OnFeverUltStart += HandleFeverStart;
+
+        // -----------------------
+        // ★ 自動抓 SpriteRenderer
+        // -----------------------
+        spr = GetComponentInChildren<SpriteRenderer>();
+        if (spr != null)
+        {
+            originalColor = spr.color;
+        }
+        else
+        {
+            Debug.LogWarning($"{name} 找不到 SpriteRenderer（受擊閃紅效果將不啟用）");
+        }
     }
 
     protected virtual void OnDestroy()
@@ -36,18 +57,13 @@ public abstract class EnemyBase : MonoBehaviour
         FeverManager.OnFeverUltStart -= HandleFeverStart;
     }
 
-    // --------------------------------------------------
-    // 延遲 Slot 指派（供 BattleTeamManager 呼叫）
-    // --------------------------------------------------
     public IEnumerator DelayAssignSlot()
     {
-        // 避免在 Instantiate 當下取不到 BattleManager
         yield return new WaitForSeconds(0.05f);
 
         var bm = BattleManager.Instance;
         if (bm == null) yield break;
 
-        // 嘗試尋找自身的 TeamSlot
         for (int i = 0; i < bm.EnemyTeamInfo.Length; i++)
         {
             var info = bm.EnemyTeamInfo[i];
@@ -63,9 +79,6 @@ public abstract class EnemyBase : MonoBehaviour
         }
     }
 
-    // --------------------------------------------------
-    // 外部設定自身 Slot（供 BattleTeamManager 呼叫）
-    // --------------------------------------------------
     public void AssignSelfSlot(BattleManager.TeamSlotInfo slot)
     {
         selfSlot = slot;
@@ -87,7 +100,7 @@ public abstract class EnemyBase : MonoBehaviour
             }
         }
 
-        // ★ Fever 鎖定倒數
+        // Fever鎖定
         if (isFeverLock)
         {
             float beatTime = (BeatManager.Instance != null) ? 60f / BeatManager.Instance.bpm : 0.4f;
@@ -101,10 +114,57 @@ public abstract class EnemyBase : MonoBehaviour
         }
     }
 
-    // ★ Fever事件處理：所有敵人共用
+    // ==================================================
+    // ★★★ 受傷事件（所有敵人共用） ★★★
+    // ==================================================
+    public virtual void OnDamaged(int dmg, bool isHeavy)
+    {
+        Debug.Log($"{name} 受傷！ dmg={dmg}");
+
+        if (spr == null) return;
+
+        // 若正在跑受擊動畫 → 取消重跑
+        if (hitFlashRoutine != null)
+            StopCoroutine(hitFlashRoutine);
+
+        hitFlashRoutine = StartCoroutine(HitFlashRoutine());
+    }
+
+    private IEnumerator HitFlashRoutine()
+    {
+        float half = hitFlashDuration * 0.5f;
+        float t = 0f;
+
+        // -----------------------------
+        // 原色 → 淡紅色
+        // -----------------------------
+        while (t < half)
+        {
+            t += Time.deltaTime;
+            float lerp = t / half;
+            spr.color = Color.Lerp(originalColor, flashColor, lerp);
+            yield return null;
+        }
+
+        t = 0f;
+
+        // -----------------------------
+        // 淡紅色 → 原色
+        // -----------------------------
+        while (t < half)
+        {
+            t += Time.deltaTime;
+            float lerp = t / half;
+            spr.color = Color.Lerp(flashColor, originalColor, lerp);
+            yield return null;
+        }
+
+        spr.color = originalColor;
+        hitFlashRoutine = null;
+    }
+
     private void HandleFeverStart(int durationBeats)
     {
-        // 若物件已被銷毀或失效，直接略過
         if (this == null || gameObject == null) return;
 
         isFeverLock = true;
@@ -113,7 +173,5 @@ public abstract class EnemyBase : MonoBehaviour
         Debug.Log($"【Fever鎖定】{name} 停止行動 {durationBeats} 拍");
     }
 
-
     public bool IsFeverLocked() => isFeverLock;
-
 }
