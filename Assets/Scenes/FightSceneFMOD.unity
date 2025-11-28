@@ -233,11 +233,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axeGoblinPrefab: {fileID: 2850400381512628172, guid: 4c8702a21d5b5c943b347992ba68d17f, type: 3}
-  shieldGoblinPrefab: {fileID: 3637990080320469891, guid: d0b076231aa6a0f4fb965f3bef29c227, type: 3}
   mageGoblinPrefab: {fileID: 5150830981652259710, guid: 7aeb72abcfca02c4599cf721d5632064, type: 3}
   poisonFrogPrefab: {fileID: 7851229232848655062, guid: 5be26d3f0ba5d4a45bed6ffdb842afc1, type: 3}
-  orcPrefab: {fileID: 5608500958824098529, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
-  darkKnightPrefab: {fileID: 3663377574313024256, guid: e8ec6f8a9d656084c96c2be7a4ce9373, type: 3}
   teamManager: {fileID: 589954060}
   checkInterval: 1
   spawnDelay: 1
@@ -56177,6 +56174,8 @@ MonoBehaviour:
   musicStartDelay: 1
   autoPerfect: 0
   GlobalBeatIndex: -1
+  comboResetTime: 3
+  comboText: {fileID: 1914947629}
 --- !u!1001 &1673237779
 PrefabInstance:
   m_ObjectHideFlags: 0

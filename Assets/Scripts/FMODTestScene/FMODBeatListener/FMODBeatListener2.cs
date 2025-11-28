@@ -4,6 +4,7 @@ using FMOD.Studio;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Collections;
 
 public class FMODBeatListener2 : MonoBehaviour
 {
@@ -83,6 +84,14 @@ public class FMODBeatListener2 : MonoBehaviour
 
     // 每拍秒數
     public float SecondsPerBeat => 60f / Mathf.Max(1f, currentTempo);
+
+    // ========== Combo 系統 ==========
+    private int comboCount = 0;
+    private float lastHitTime = 0f;
+    [SerializeField] private float comboResetTime = 3f;
+
+    [SerializeField] private UnityEngine.UI.Text comboText;   // 若有 UI 顯示，可拖進來
+    private Coroutine comboTimerCoroutine;
 
 
     public static event Action<int> OnGlobalBeat;          // 例如：斧頭哥布林每 8 拍攻擊
@@ -622,9 +631,11 @@ public class FMODBeatListener2 : MonoBehaviour
             // 播放特效與音效
             SpawnPerfectEffect();
 
+            // ★★★ Perfect → Combo 系統
+            RegisterBeatResult(true);
+
             return true;
         }
-
         else
         {
             SpawnMissText();
@@ -672,6 +683,53 @@ public class FMODBeatListener2 : MonoBehaviour
         }
 
         Destroy(obj, 0.3f);
+    }
+
+
+    // ============================================================
+    // Combo 系統（沿用 BeatJudge 行為）
+    // ============================================================
+    private void RegisterBeatResult(bool isPerfect)
+    {
+        if (isPerfect)
+        {
+            comboCount++;
+            lastHitTime = Time.time;
+            UpdateComboUI();
+
+            // ★ 更新最大連擊
+            if (comboCount > GlobalIndex.MaxCombo)
+                GlobalIndex.MaxCombo = comboCount;
+
+            if (comboTimerCoroutine != null)
+                StopCoroutine(comboTimerCoroutine);
+
+            comboTimerCoroutine = StartCoroutine(ComboTimeout());
+        }
+        else
+        {
+            ResetCombo();
+        }
+    }
+
+    private IEnumerator ComboTimeout()
+    {
+        yield return new WaitForSeconds(comboResetTime);
+
+        if (Time.time - lastHitTime >= comboResetTime)
+            ResetCombo();
+    }
+
+    private void ResetCombo()
+    {
+        comboCount = 0;
+        UpdateComboUI();
+    }
+
+    private void UpdateComboUI()
+    {
+        if (comboText == null) return;
+        comboText.text = comboCount > 0 ? comboCount.ToString() : "";
     }
 
 }
