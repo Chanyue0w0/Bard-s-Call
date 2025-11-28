@@ -39,6 +39,17 @@ public class BattleEffectManager : MonoBehaviour
     // -------------------------
     private Dictionary<BattleManager.TeamSlotInfo, int> mageChargeStacks = new Dictionary<BattleManager.TeamSlotInfo, int>();
 
+    // -------------------------
+    // HolyEffect（對拍共鳴 BUFF）
+    // -------------------------
+    [Header("Holy Effect（對拍共鳴 BUFF）")]
+    public GameObject holyEffectPrefab; // Holy 特效 Prefab
+
+    private bool isHolyActive = false;
+    private int holyRemainingBeats = 0;
+    private List<GameObject> activeHolyEffects = new List<GameObject>();
+
+
     // ======================
     // 中毒 UI 顏色系統
     // ======================
@@ -315,6 +326,10 @@ public class BattleEffectManager : MonoBehaviour
 
             VibrationManager.Instance.Vibrate("Block");
             Debug.Log($"【格檔成功】{target.UnitName} 格檔 {attacker.UnitName} 的攻擊！");
+
+            // ★★★★★ HolyEffect：玩家格檔成功 → 啟動對拍共鳴
+            ActivateHolyEffect();
+
             return;
         }
 
@@ -396,6 +411,98 @@ public class BattleEffectManager : MonoBehaviour
         BattleManager.Instance.CheckPlayerDefeat();
 
     }
+
+    // ======================================================
+    // HolyEffect 系統（格檔成功時啟動）
+    // ======================================================
+
+    public void ActivateHolyEffect()
+    {
+        int durationBeats = 4;
+
+        // 若已啟動 → 只刷新持續拍
+        if (isHolyActive)
+        {
+            holyRemainingBeats = durationBeats;
+            Debug.Log("【HolyEffect 刷新】持續拍已更新為 4 拍");
+            return;
+        }
+
+        isHolyActive = true;
+        holyRemainingBeats = durationBeats;
+
+        // 設定對拍共鳴加乘
+        GlobalIndex.RythmResonanceBuff = 10;
+        Debug.Log("【HolyEffect 啟動】全隊獲得 對拍共鳴 +10 持續 4 拍");
+
+        // 生成 Holy 特效（每位角色腳下）
+        SpawnHolyEffectsForTeam();
+    }
+
+
+    // 生成全隊 Holy 特效
+    private void SpawnHolyEffectsForTeam()
+    {
+        ClearHolyEffects();
+
+        var team = BattleManager.Instance.CTeamInfo;
+        foreach (var ally in team)
+        {
+            if (ally == null || ally.Actor == null) continue;
+
+            Vector3 pos = ally.Actor.transform.position;
+
+            if (holyEffectPrefab != null)
+            {
+                GameObject fx = Instantiate(holyEffectPrefab, pos, Quaternion.identity);
+
+                fx.transform.SetParent(ally.Actor.transform, worldPositionStays: true);
+
+                // ★★★★★ 加這行，一定要重設位置 ★★★★★
+                fx.transform.localPosition = Vector3.zero;
+
+                activeHolyEffects.Add(fx);
+            }
+        }
+    }
+
+
+    // 每拍倒數 → 由 BeatManager 每拍呼叫
+    public void TickHolyEffect()
+    {
+        if (!isHolyActive) return;
+
+        holyRemainingBeats--;
+
+        if (holyRemainingBeats <= 0)
+        {
+            EndHolyEffect();
+        }
+    }
+
+
+    // HolyEffect 結束
+    private void EndHolyEffect()
+    {
+        isHolyActive = false;
+        GlobalIndex.RythmResonanceBuff = 0;
+
+        ClearHolyEffects();
+
+        Debug.Log("【HolyEffect 結束】對拍共鳴加乘移除");
+    }
+
+
+    private void ClearHolyEffects()
+    {
+        foreach (var fx in activeHolyEffects)
+        {
+            if (fx != null)
+                Destroy(fx);
+        }
+        activeHolyEffects.Clear();
+    }
+
 
     public void ApplyPoison(BattleManager.TeamSlotInfo target, int damagePerBeat, int durationBeats)
     {

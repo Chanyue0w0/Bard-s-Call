@@ -21,6 +21,8 @@ public class Explosion : MonoBehaviour
 
     private void Start()
     {
+        // ッ环街ㄓ常穝﹍て
+        isInitialized = false;
         // 璝ゼパ场㊣ Initialize()笆箇砞把计币笆
         if (!isInitialized)
         {
@@ -74,7 +76,6 @@ public class Explosion : MonoBehaviour
             StopCoroutine(lifeRoutine);
             lifeRoutine = null;
         }
-        isInitialized = false;
     }
 
     // =========================================================

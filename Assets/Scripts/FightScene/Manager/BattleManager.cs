@@ -144,9 +144,9 @@ public class BattleManager : MonoBehaviour
         attackP1Handler = ctx => OnAttackKey(0);
         attackP2Handler = ctx => OnAttackKey(1);
         attackP3Handler = ctx => OnAttackKey(2);
-        blockP1Handler = ctx => OnBlockKey(0);
-        blockP2Handler = ctx => OnBlockKey(1);
-        blockP3Handler = ctx => OnBlockKey(2);
+        //blockP1Handler = ctx => OnBlockKey(0);
+        //blockP2Handler = ctx => OnBlockKey(1);
+        //blockP3Handler = ctx => OnBlockKey(2);
         feverUltHandler = ctx => OnFeverUltimate();
 
         FMODBeatListener2.OnGlobalBeat += HandleBeatEffects; // ★ 新增
@@ -178,6 +178,8 @@ public class BattleManager : MonoBehaviour
     {
         BattleEffectManager.Instance.TickPoison();
         BattleEffectManager.Instance.TickTauntBeats(); // 可選
+        BattleEffectManager.Instance.TickHolyEffect();
+
     }
 
     // --------------------------------------------------
@@ -681,7 +683,7 @@ public class BattleManager : MonoBehaviour
         // === Damage Matrix（依照 0~6 層） ===
         int[] damageMatrix = new int[] { 10, 20, 30, 50, 70, 90, 120 };
         int clampedStack = Mathf.Clamp(chargeStacks, 0, damageMatrix.Length - 1);
-        int heavyDamage = damageMatrix[clampedStack];
+        int heavyDamage = damageMatrix[clampedStack] + GlobalIndex.RythmResonanceBuff;
 
         // === 第四拍：重攻擊 ===
         if (beatInCycle == beatsPerMeasure)
@@ -729,7 +731,7 @@ public class BattleManager : MonoBehaviour
                     skill.target = target;
                     skill.isPerfect = perfect;
                     skill.isHeavyAttack = true;
-                    skill.damage = 10;
+                    skill.damage = 10 + GlobalIndex.RythmResonanceBuff;
                 }
 
                 // 增加疊層 & 特效
@@ -819,13 +821,13 @@ public class BattleManager : MonoBehaviour
             if (target == null) yield break; // 沒敵人就不揮擊
             // **輕攻擊：全隊回復血量 +10**
             Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復10HP！");
-            BattleEffectManager.Instance.HealTeamWithEffect(10);
+            BattleEffectManager.Instance.HealTeamWithEffect(10 + GlobalIndex.RythmResonanceBuff);
         }
         else
         {
             // **重攻擊：全隊回復血量 +50**
             Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復20HP！");
-            BattleEffectManager.Instance.HealTeamWithEffect(20);
+            BattleEffectManager.Instance.HealTeamWithEffect(20 + GlobalIndex.RythmResonanceBuff);
         }
 
         yield return null;
@@ -871,56 +873,58 @@ public class BattleManager : MonoBehaviour
 
             yield break;
         }
-
-        // =========================================================
-        // 3. ★★★ Paladin 重攻擊：射出 FireBallSkill（40 傷害）★★★
-        // =========================================================
-        Debug.Log($"[Paladin 重攻擊] {attacker.UnitName} 發動神聖火焰！");
-
-        // 找首位敵人
-        var firstEnemy = FindNextValidEnemy(0);
-        if (firstEnemy == null || firstEnemy.Actor == null)
-        {
-            Debug.Log("[Paladin 重攻擊] 沒有敵人，取消攻擊。");
-            yield break;
-        }
-
-        // 取出重攻擊技能 prefab（必須為 FireBallSkill）
-        if (charData.HeavyAttack == null || charData.HeavyAttack.SkillPrefab == null)
-        {
-            Debug.LogWarning("[Paladin 重攻擊] HeavyAttack Prefab 未設定！");
-            yield break;
-        }
-
-        GameObject projectilePrefab = charData.HeavyAttack.SkillPrefab;
-
-        // ---------------------------------------------------------
-        // 3-1. 投射物生成位置
-        // ---------------------------------------------------------
-        Vector3 spawnOffset = new Vector3(0f, 0.5f, 0f);
-        Vector3 spawnPos = actor.position + spawnOffset;
-
-        GameObject proj = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
-
-        // ---------------------------------------------------------
-        // 3-2. 套用 FireBallSkill 數值（與弓箭手一致）
-        // ---------------------------------------------------------
-        FireBallSkill fire = proj.GetComponent<FireBallSkill>();
-        if (fire != null)
-        {
-            fire.attacker = attacker;
-            fire.target = firstEnemy;
-            fire.isPerfect = perfect;
-            fire.isHeavyAttack = true;
-
-            // ★ 固定傷害 10 點（你指定的）
-            fire.damage = 10;
-        }
         else
         {
-            Debug.LogWarning("[Paladin 重攻擊] HeavyAttack Prefab 裡沒有 FireBallSkill！");
-        }
+            // =========================================================
+            // 3. ★★★ Paladin 重攻擊：射出 FireBallSkill（40 傷害）★★★
+            // =========================================================
+            //Debug.Log($"[Paladin 重攻擊] {attacker.UnitName} 發動神聖火焰！");
 
+            //// 找首位敵人
+            //var firstEnemy = FindNextValidEnemy(0);
+            //if (firstEnemy == null || firstEnemy.Actor == null)
+            //{
+            //    Debug.Log("[Paladin 重攻擊] 沒有敵人，取消攻擊。");
+            //    yield break;
+            //}
+
+            //// 取出重攻擊技能 prefab（必須為 FireBallSkill）
+            //if (charData.HeavyAttack == null || charData.HeavyAttack.SkillPrefab == null)
+            //{
+            //    Debug.LogWarning("[Paladin 重攻擊] HeavyAttack Prefab 未設定！");
+            //    yield break;
+            //}
+
+            //GameObject projectilePrefab = charData.HeavyAttack.SkillPrefab;
+
+            //// ---------------------------------------------------------
+            //// 3-1. 投射物生成位置
+            //// ---------------------------------------------------------
+            //Vector3 spawnOffset = new Vector3(0f, 0.5f, 0f);
+            //Vector3 spawnPos = actor.position + spawnOffset;
+
+            //GameObject proj = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
+
+            //// ---------------------------------------------------------
+            //// 3-2. 套用 FireBallSkill 數值（與弓箭手一致）
+            //// ---------------------------------------------------------
+            //FireBallSkill fire = proj.GetComponent<FireBallSkill>();
+            //if (fire != null)
+            //{
+            //    fire.attacker = attacker;
+            //    fire.target = firstEnemy;
+            //    fire.isPerfect = perfect;
+            //    fire.isHeavyAttack = true;
+
+            //    // ★ 固定傷害 10 點（你指定的）
+            //    fire.damage = 10;
+            //}
+            //else
+            //{
+            //    Debug.LogWarning("[Paladin 重攻擊] HeavyAttack Prefab 裡沒有 FireBallSkill！");
+            //}
+        }
+        
         yield break;
     }
 
@@ -928,36 +932,36 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     // 格檔
     // --------------------------------------------------
-    private void OnBlockKey(int index)
-    {
-        //if (_isActionLocked) return;
-        //if (index < 0 || index >= CTeamInfo.Length) return;
-        //var slot = CTeamInfo[index];
-        //if (slot == null || slot.Actor == null) return;
+    //private void OnBlockKey(int index)
+    //{
+    //    //if (_isActionLocked) return;
+    //    //if (index < 0 || index >= CTeamInfo.Length) return;
+    //    //var slot = CTeamInfo[index];
+    //    //if (slot == null || slot.Actor == null) return;
 
-        //if (FMODBeatListener2.Instance == null)
-        //{
-        //    Debug.LogWarning("[BattleManager] FMODBeatListener2.Instance 為 null，無法判定格檔對拍！");
-        //    return;
-        //}
+    //    //if (FMODBeatListener2.Instance == null)
+    //    //{
+    //    //    Debug.LogWarning("[BattleManager] FMODBeatListener2.Instance 為 null，無法判定格檔對拍！");
+    //    //    return;
+    //    //}
 
-        //bool perfect = FMODBeatListener2.Instance.IsOnBeat();
-        //if (!perfect)
-        //{
-        //    Debug.Log("Miss！格檔未在節拍上。");
-        //    return;
-        //}
+    //    //bool perfect = FMODBeatListener2.Instance.IsOnBeat();
+    //    //if (!perfect)
+    //    //{
+    //    //    Debug.Log("Miss！格檔未在節拍上。");
+    //    //    return;
+    //    //}
 
-        //var charData = slot.Actor.GetComponent<CharacterData>();
-        //if (charData == null) return;
+    //    //var charData = slot.Actor.GetComponent<CharacterData>();
+    //    //if (charData == null) return;
 
-        //BattleEffectManager.Instance.ActivateBlock(
-        //    index,
-        //    BeatManager.Instance.beatTravelTime,   // 這個之後也要改成 FMOD 的時間
-        //    charData,
-        //    slot.Actor
-        //);
-    }
+    //    //BattleEffectManager.Instance.ActivateBlock(
+    //    //    index,
+    //    //    BeatManager.Instance.beatTravelTime,   // 這個之後也要改成 FMOD 的時間
+    //    //    charData,
+    //    //    slot.Actor
+    //    //);
+    //}
 
     private void ResetAllComboStates()
     {
