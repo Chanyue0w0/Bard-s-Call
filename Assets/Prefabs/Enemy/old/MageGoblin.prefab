@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5150830981652259710
+--- !u!1 &1071723761893033997
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,12 +8,12 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8155799562213545374}
-  - component: {fileID: 687602477524510419}
-  - component: {fileID: 7161522815897687129}
-  - component: {fileID: 1976010110006259577}
-  - component: {fileID: 3616260895985388832}
-  - component: {fileID: 8240267252144835965}
+  - component: {fileID: 2220240296281760963}
+  - component: {fileID: 5581133142306338822}
+  - component: {fileID: 3962116047297539693}
+  - component: {fileID: 7695334179351412989}
+  - component: {fileID: 5232348094153654182}
+  - component: {fileID: 2688132941366835414}
   m_Layer: 8
   m_Name: MageGoblin
   m_TagString: Enemy
@@ -21,30 +21,30 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8155799562213545374
+--- !u!4 &2220240296281760963
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5150830981652259710}
+  m_GameObject: {fileID: 1071723761893033997}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.14, y: -1.53, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2171638604875323410}
-  - {fileID: 4495057946272970356}
+  - {fileID: 6131058246024659457}
+  - {fileID: 8881037437035597874}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &687602477524510419
+--- !u!212 &5581133142306338822
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5150830981652259710}
+  m_GameObject: {fileID: 1071723761893033997}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -78,8 +78,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: 07a90f36a58fc8e4c8fdbbf782441fde, type: 3}
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 21300000, guid: 0dd4e86fb9d1a6a4581d1efc398d2c64, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -90,13 +90,13 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &7161522815897687129
+--- !u!58 &3962116047297539693
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5150830981652259710}
+  m_GameObject: {fileID: 1071723761893033997}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -122,45 +122,16 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.5616578, y: 1.9388585}
+  m_Offset: {x: -0.27801853, y: 1.9388573}
   serializedVersion: 2
-  m_Radius: 1.5587994
---- !u!114 &1976010110006259577
+  m_Radius: 2.00497
+--- !u!114 &7695334179351412989
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5150830981652259710}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83aebeb4487f9af4587e28f850d85599, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CharacterName: AxeGoblin
-  ClassType: 6
-  MaxHP: 400
-  HP: 400
-  MaxMP: 0
-  MP: 0
-  OriginAtk: 40
-  Atk: 40
-  NormalAttacks: []
-  HeavyAttack:
-    SkillName: 
-    SkillPrefab: {fileID: 0}
-    MPCost: 0
-    DamageMultiplier: 1
-    FixedDamage: 0
-  Skills: []
-  ShieldEffectPrefab: {fileID: 0}
---- !u!114 &3616260895985388832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5150830981652259710}
+  m_GameObject: {fileID: 1071723761893033997}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f0caf23434d6954d8006c688374509f, type: 3}
@@ -186,109 +157,65 @@ MonoBehaviour:
     AssignedKeyIndex: 0
   tauntedByObj: {fileID: 0}
   tauntBeatsRemaining: 0
-  anim: {fileID: 8240267252144835965}
-  warningPrefab: {fileID: 5361181730533998727, guid: c847ccf11edfa2744921f756e70859cb, type: 3}
-  warningOffset: {x: 0, y: 2.4, z: 0}
-  magicBallPrefab: {fileID: 474696798350728591, guid: fd99b46c176eec64ca848b479d389fe8, type: 3}
-  magicBallOffset: {x: 0, y: 2.4, z: 0}
-  attackIntervalBeats: 12
---- !u!114 &8240267252144835965
+  baseScale: {x: 0.4, y: 0.4, z: 0.4}
+  peakMultiplier: 1.25
+  holdDuration: 0.05
+  returnSpeed: 8
+  attackDamage: 20
+  actionLockDuration: 0.5
+  attackBeatsInterval: 8
+  warningBeats: 2
+  fireBallPrefab: {fileID: 2864930942258562462, guid: 9058b50fda0864e408446c4267772020, type: 3}
+  firePoint: {fileID: 0}
+  warningColor: {r: 1, g: 0, b: 0, a: 1}
+  targetWarningPrefab: {fileID: 2890410290338222890, guid: 552a24d6ec52aa045a3d3beaccc5ca07, type: 3}
+  tauntVfxPrefab: {fileID: 1706224664778853816, guid: a86e1a8bdd3a39b4fbafa6298302f385, type: 3}
+--- !u!114 &5232348094153654182
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5150830981652259710}
+  m_GameObject: {fileID: 1071723761893033997}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5268661f352c40b48a441c646753e826, type: 3}
+  m_Script: {fileID: 11500000, guid: 83aebeb4487f9af4587e28f850d85599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 687602477524510419}
-  clips:
-  - clipName: Idle
-    frames:
-    - sprite: {fileID: 21300000, guid: 07a90f36a58fc8e4c8fdbbf782441fde, type: 3}
-      beatLength: 0.3
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: b9fdc5da4825eb94aaa4a02c2a4875ff, type: 3}
-      beatLength: 0.4
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 07a90f36a58fc8e4c8fdbbf782441fde, type: 3}
-      beatLength: 0.3
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    loop: 1
-    holdLastFrame: 0
-  - clipName: Attack
-    frames:
-    - sprite: {fileID: 21300000, guid: 31a23a0a379b2e343b8fdfc6509b90e1, type: 3}
-      beatLength: 0.5
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 63068ce6d4f5ccd4daee16ca8fc2d124, type: 3}
-      beatLength: 0.5
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 0521c2d8d4e5f4c4db27a8b087e4f71e, type: 3}
-      beatLength: 0.5
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 6576c4834003d8d4fb5b87adbc2820f9, type: 3}
-      beatLength: 0.5
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 0521c2d8d4e5f4c4db27a8b087e4f71e, type: 3}
-      beatLength: 1
-      triggerWarning: 1
-      triggerAttack: 0
-      triggerOnce: 1
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: ec392fa0beb4b9e49bf4701d2d8c9fbd, type: 3}
-      beatLength: 1
-      triggerWarning: 0
-      triggerAttack: 1
-      triggerOnce: 1
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 0521c2d8d4e5f4c4db27a8b087e4f71e, type: 3}
-      beatLength: 1
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 6576c4834003d8d4fb5b87adbc2820f9, type: 3}
-      beatLength: 1
-      triggerWarning: 1
-      triggerAttack: 0
-      triggerOnce: 1
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: ec392fa0beb4b9e49bf4701d2d8c9fbd, type: 3}
-      beatLength: 1
-      triggerWarning: 0
-      triggerAttack: 1
-      triggerOnce: 1
-      hasTriggered: 0
-    loop: 0
-    holdLastFrame: 0
-  defaultClipName: Idle
-  playDefaultOnStart: 1
---- !u!1 &6290919744240052436
+  CharacterName: ShieldGoblin
+  ClassType: 5
+  MaxHP: 90
+  HP: 90
+  MaxMP: 0
+  MP: 0
+  OriginAtk: 10
+  Atk: 10
+  NormalAttacks: []
+  HeavyAttack:
+    SkillName: 
+    SkillPrefab: {fileID: 0}
+    MPCost: 0
+    DamageMultiplier: 1
+    FixedDamage: 0
+  Skills: []
+  ShieldEffectPrefab: {fileID: 7125099269266668700, guid: 3797ab3f5e2aa6148869788f506a8635, type: 3}
+--- !u!114 &2688132941366835414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1071723761893033997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseScale: {x: 0.5, y: 0.5, z: 0.5}
+  peakMultiplier: 1.2
+  holdDuration: 0.05
+  returnSpeed: 8
+--- !u!1 &5082584059424098393
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -296,8 +223,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4495057946272970356}
-  - component: {fileID: 6746647791271909059}
+  - component: {fileID: 8881037437035597874}
+  - component: {fileID: 5098115764909172295}
   m_Layer: 7
   m_Name: ShadowTemp
   m_TagString: Untagged
@@ -305,28 +232,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4495057946272970356
+--- !u!4 &8881037437035597874
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6290919744240052436}
+  m_GameObject: {fileID: 5082584059424098393}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.54, y: 0.2, z: 0}
-  m_LocalScale: {x: 0.80061597, y: 0.3631541, z: 0.80061597}
+  m_LocalPosition: {x: -0.21, y: 0.22, z: 0}
+  m_LocalScale: {x: 1.1837257, y: 0.5369301, z: 1.1837257}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8155799562213545374}
+  m_Father: {fileID: 2220240296281760963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &6746647791271909059
+--- !u!212 &5098115764909172295
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6290919744240052436}
+  m_GameObject: {fileID: 5082584059424098393}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -372,7 +299,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &8993828760464333932
+--- !u!1 &6289563946678125846
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -380,7 +307,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2171638604875323410}
+  - component: {fileID: 6131058246024659457}
   m_Layer: 8
   m_Name: HeadPoint
   m_TagString: Untagged
@@ -388,18 +315,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2171638604875323410
+--- !u!4 &6131058246024659457
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8993828760464333932}
+  m_GameObject: {fileID: 6289563946678125846}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.63, y: 8.26, z: 0}
+  m_LocalPosition: {x: -0.27, y: 6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8155799562213545374}
+  m_Father: {fileID: 2220240296281760963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
