@@ -1,6 +1,30 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7370040820053357967
+--- !u!114 &-9042979533456799273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Fade
+  m_EditorClassIdentifier: 
+  Name: Fade
+  StudioPath: parameter:/Fade
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 1054254998
+    data2: 1270778798
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &-8281970883996706294
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,9 +34,90 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/castanets
+  m_Name: event:/SoundEffects/InCombat/Elvin_Fever1
   m_EditorClassIdentifier: 
-  Path: event:/castanets
+  Path: event:/SoundEffects/InCombat/Elvin_Fever1
+  Guid:
+    Data1: -1344601670
+    Data2: 1147272599
+    Data3: -1265541988
+    Data4: 768133308
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 10738
+--- !u!114 &-7267743059909281153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Combat 02(test)/SpeedUp
+  m_EditorClassIdentifier: 
+  Name: SpeedUp
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2561566142
+    data2: 2280091049
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &-7072112645868688054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Combat soundtracks/Combat 02(test)
+  m_EditorClassIdentifier: 
+  Path: event:/Combat soundtracks/Combat 02(test)
+  Guid:
+    Data1: 434358626
+    Data2: 1134784875
+    Data3: -2056539502
+    Data4: 52063315
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -7267743059909281153}
+  - {fileID: -1499259642711051566}
+  - {fileID: 4077927675578896473}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 73239
+--- !u!114 &-6944071819249771989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/castanets
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/castanets
   Guid:
     Data1: 950292341
     Data2: 1178528322
@@ -27,6 +132,238 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 34
+--- !u!114 &-6820245803118602507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/InCombat/Rethys_Spell
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/InCombat/Rethys_Spell
+  Guid:
+    Data1: -265433386
+    Data2: 1273129986
+    Data3: -1602043002
+    Data4: -433820367
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1000
+--- !u!114 &-6458779747416126282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/SpeedUp
+  m_EditorClassIdentifier: 
+  Name: SpeedUp
+  StudioPath: parameter:/SpeedUp
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2561566142
+    data2: 2280091049
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &-6389526044575921169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/InCombat/Paladin_NormalParry
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/InCombat/Paladin_NormalParry
+  Guid:
+    Data1: -1013083086
+    Data2: 1126134718
+    Data3: 1976306090
+    Data4: 1264960282
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 500
+--- !u!114 &-6382104013058297563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/InCombat/AxeGoblin_NormalAttack
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/InCombat/AxeGoblin_NormalAttack
+  Guid:
+    Data1: 14085547
+    Data2: 1096907797
+    Data3: 566576282
+    Data4: -121142235
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 250
+--- !u!114 &-5702172602962066140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Combat soundtracks/Combat 01(Ver2)
+  m_EditorClassIdentifier: 
+  Path: event:/Combat soundtracks/Combat 01(Ver2)
+  Guid:
+    Data1: 674071543
+    Data2: 1148673503
+    Data3: 1045085628
+    Data4: -886273377
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 8969018651816513012}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 164338
+--- !u!114 &-5160720021122674706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Combat soundtracks/Boss_EyesFromAbyss
+  m_EditorClassIdentifier: 
+  Path: event:/Combat soundtracks/Boss_EyesFromAbyss
+  Guid:
+    Data1: -1512706733
+    Data2: 1273582535
+    Data3: -1192642128
+    Data4: -2143780212
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4515316486625746658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/TrackUpgrade
+  m_EditorClassIdentifier: 
+  Name: TrackUpgrade
+  StudioPath: parameter:/TrackUpgrade
+  Min: 0
+  Max: 3
+  Default: 0
+  ID:
+    data1: 1954543863
+    data2: 2348278589
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &-4010524670969239735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Track01_Under the starry sky/Rethys_Singing
+  m_EditorClassIdentifier: 
+  Name: Rethys_Singing
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3444441535
+    data2: 522380165
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-3413361900623884666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Track01_Under the starry sky/Elvin_Singing
+  m_EditorClassIdentifier: 
+  Name: Elvin_Singing
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3789758227
+    data2: 2476136529
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-2384467188881039204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,12 +379,12 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638999025656636935
+  lastModified: 639000543720000000
   FileSizes:
   - Name: Desktop
-    Value: 984
+    Value: 1874
   Exists: 1
---- !u!114 &-579768070649717542
+--- !u!114 &-2053334069037838640
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,23 +394,99 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/BnB_Combat1_LoopAB
+  m_Name: event:/SoundEffects/InCombat/Bard_NormalHeal
   m_EditorClassIdentifier: 
-  Path: event:/BnB_Combat1_LoopAB
+  Path: event:/SoundEffects/InCombat/Bard_NormalHeal
   Guid:
-    Data1: -134592702
-    Data2: 1142622056
-    Data3: -617991272
-    Data4: 1802796627
+    Data1: 1239655239
+    Data2: 1205015726
+    Data3: 1673854602
+    Data4: 1829034111
   Banks:
   - {fileID: 6828801144302610801}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 146354
+  Length: 500
+--- !u!114 &-1614427182467182393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Track01_Under the starry sky/StoryMode
+  m_EditorClassIdentifier: 
+  Name: StoryMode
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 150563050
+    data2: 3413159415
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-1499259642711051566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Combat 02(test)/Fade
+  m_EditorClassIdentifier: 
+  Name: Fade
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 1054254998
+    data2: 1270778798
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &-945803733150903583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/InCombat/Rethys_NormalAttack
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/InCombat/Rethys_NormalAttack
+  Guid:
+    Data1: -1362379364
+    Data2: 1189858603
+    Data3: -2066719311
+    Data4: -1462309100
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 2859834962261252091}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 500
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,19 +503,102 @@ MonoBehaviour:
   - {fileID: -2384467188881039204}
   - {fileID: 6828801144302610801}
   EditorEvents:
-  - {fileID: -579768070649717542}
-  - {fileID: -7370040820053357967}
-  - {fileID: 807386294593801694}
-  - {fileID: 5156717331999112038}
-  - {fileID: 8244820963817337318}
-  EditorParameters: []
+  - {fileID: -6389526044575921169}
+  - {fileID: -2053334069037838640}
+  - {fileID: -5160720021122674706}
+  - {fileID: -7072112645868688054}
+  - {fileID: 7711974535112223974}
+  - {fileID: -6944071819249771989}
+  - {fileID: -945803733150903583}
+  - {fileID: 3959987825764264012}
+  - {fileID: -6382104013058297563}
+  - {fileID: -8281970883996706294}
+  - {fileID: 3760201016225271319}
+  - {fileID: -6820245803118602507}
+  - {fileID: -5702172602962066140}
+  EditorParameters:
+  - {fileID: -9042979533456799273}
+  - {fileID: -6458779747416126282}
+  - {fileID: -4515316486625746658}
   MasterBanks:
   - {fileID: 6828801144302610801}
   StringsBanks:
   - {fileID: -2384467188881039204}
-  cacheTime: 638999025656636935
+  cacheTime: 639000543720000000
   cacheVersion: 131621
---- !u!114 &807386294593801694
+--- !u!114 &2859834962261252091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Rethys_NormalAttack/ChargeLevel
+  m_EditorClassIdentifier: 
+  Name: ChargeLevel
+  StudioPath: 
+  Min: 0
+  Max: 6
+  Default: 0
+  ID:
+    data1: 3184210469
+    data2: 1770762347
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &3159140537950758691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Track01_Under the starry sky/Fade
+  m_EditorClassIdentifier: 
+  Name: Fade
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 1054254998
+    data2: 1270778798
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &3505315685561074207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Track01_Under the starry sky/Lion_Singing
+  m_EditorClassIdentifier: 
+  Name: Lion_Singing
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1945021685
+    data2: 3842571557
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &3760201016225271319
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -112,24 +608,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/BnB_Combat1(Ver2)
+  m_Name: event:/SoundEffects/InCombat/Bard_Spell
   m_EditorClassIdentifier: 
-  Path: event:/BnB_Combat1(Ver2)
+  Path: event:/SoundEffects/InCombat/Bard_Spell
   Guid:
-    Data1: -164559263
-    Data2: 1128257918
-    Data3: -1420859206
-    Data4: -439808027
+    Data1: 25371841
+    Data2: 1155334362
+    Data3: 2072062350
+    Data4: -1039363940
   Banks:
   - {fileID: 6828801144302610801}
-  IsStream: 1
+  IsStream: 0
   Is3D: 0
-  IsOneShot: 0
+  IsOneShot: 1
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 127502
---- !u!114 &5156717331999112038
+  Length: 1375
+--- !u!114 &3959987825764264012
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,14 +635,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/BnB_Combat1(Ver2)TestLoop
+  m_Name: event:/Combat soundtracks/Combat 01
   m_EditorClassIdentifier: 
-  Path: event:/BnB_Combat1(Ver2)TestLoop
+  Path: event:/Combat soundtracks/Combat 01
   Guid:
-    Data1: -942448395
-    Data2: 1194571955
-    Data3: 714199448
-    Data4: 58560230
+    Data1: -1728121694
+    Data2: 1240045944
+    Data3: -223885665
+    Data4: 1811423449
   Banks:
   - {fileID: 6828801144302610801}
   IsStream: 1
@@ -155,7 +651,31 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 127502
+  Length: 246880
+--- !u!114 &4077927675578896473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Combat 02(test)/TrackUpgrade
+  m_EditorClassIdentifier: 
+  Name: TrackUpgrade
+  StudioPath: 
+  Min: 0
+  Max: 3
+  Default: 0
+  ID:
+    data1: 1954543863
+    data2: 2348278589
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
 --- !u!114 &6828801144302610801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,12 +691,12 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638999025656621736
+  lastModified: 639000543720000000
   FileSizes:
   - Name: Desktop
-    Value: 4640928
+    Value: 11066208
   Exists: 1
---- !u!114 &8244820963817337318
+--- !u!114 &7711974535112223974
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -186,20 +706,49 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/BnB_Camp_soundtrack_01(full)
+  m_Name: event:/Camp soundtracks/Track01_Under the starry sky
   m_EditorClassIdentifier: 
-  Path: event:/BnB_Camp_soundtrack_01(full)
+  Path: event:/Camp soundtracks/Track01_Under the starry sky
   Guid:
-    Data1: -1305083262
-    Data2: 1156427069
-    Data3: -1987403342
-    Data4: -1375513600
+    Data1: 1601248611
+    Data2: 1222510140
+    Data3: 757188253
+    Data4: 2106030052
   Banks:
   - {fileID: 6828801144302610801}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
-  Parameters: []
+  Parameters:
+  - {fileID: -4010524670969239735}
+  - {fileID: 3159140537950758691}
+  - {fileID: 3505315685561074207}
+  - {fileID: -1614427182467182393}
+  - {fileID: -3413361900623884666}
   MinDistance: 1
   MaxDistance: 20
-  Length: 103019
+  Length: 108000
+--- !u!114 &8969018651816513012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Combat 01(Ver2)/FeverTime
+  m_EditorClassIdentifier: 
+  Name: FeverTime
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1053951074
+    data2: 953130862
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
