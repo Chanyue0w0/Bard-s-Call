@@ -56,7 +56,7 @@
 			<destination>{0481fccc-39f7-4a77-9691-b23f1dac3878}</destination>
 		</relationship>
 		<relationship name="output">
-			<destination>{56b157d7-e17d-4b5b-8586-5a031fef54a5}</destination>
+			<destination>{24e00d36-6ffd-4772-b0f8-e87c331d6d7d}</destination>
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{fd0d2db3-0835-4fe7-8e74-d2c453642237}" />
@@ -161,7 +161,7 @@
 	<object class="MixerBusFader" id="{82ec83cd-a871-4253-8556-4a2fc3a7ab8c}" />
 	<object class="MultibandEqEffect" id="{f3f64813-55d1-494f-a379-bf535093946a}">
 		<property name="frequencyA">
-			<value>21999.9902</value>
+			<value>17883.0039</value>
 		</property>
 		<property name="qualityA">
 			<value>0.100000001</value>
@@ -180,7 +180,7 @@
 	</object>
 	<object class="AutomationPoint" id="{4987de6f-aab3-4d7a-8c23-7e4ec334ffd1}">
 		<property name="position">
-			<value>0.036945812807881777</value>
+			<value>0.036945812807881784</value>
 		</property>
 		<property name="value">
 			<value>1</value>
