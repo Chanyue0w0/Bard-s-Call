@@ -187,16 +187,10 @@ public class MonsterInstManager : MonoBehaviour
                     teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
                     break;
                 case 4:
-                    for (int i = 0; i < 2 && slots.Count > 0; i++)
-                    {
-                        int slotIndex = slots[0];
-                        slots.RemoveAt(0);
-                        var prefab = monsterPool[Random.Range(0, monsterPool.Count)];
-                        teamManager.EnemyTeamInfo[slotIndex].PrefabToSpawn = prefab;
-                    }
+                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;
                     break;
                 case 5:
-                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;
+                    
                     break;
             }
         }
