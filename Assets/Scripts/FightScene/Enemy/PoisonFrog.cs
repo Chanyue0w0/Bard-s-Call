@@ -82,8 +82,6 @@ public class PoisonFrog : EnemyBase
             anim.Play("Attack", true);
     }
 
-
-
     // ======================
     // Animation Frame Events
     // ======================
@@ -108,8 +106,6 @@ public class PoisonFrog : EnemyBase
             SpawnExplosion();   // ★ Frog 專屬行為：吐泡同時自身爆炸（小特效）
         }
     }
-
-
 
     // ======================
     // 產生毒泡（使用 EnemySkillAttack）

@@ -211,7 +211,7 @@ public class MonsterInstManager : MonoBehaviour
             {
                 teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
                 teamManager.EnemyTeamInfo[1].PrefabToSpawn = mageGoblinPrefab;
-                teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
+                teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;
             }
         }
     }

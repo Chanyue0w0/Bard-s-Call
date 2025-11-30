@@ -6672,7 +6672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3637990080320469891, guid: d0b076231aa6a0f4fb965f3bef29c227, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3842641651606749929, guid: d0b076231aa6a0f4fb965f3bef29c227, type: 3}
       propertyPath: m_LocalPosition.y
@@ -67946,7 +67946,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4748681987041982144, guid: b2f82ca166065bf47b9dfc36dcbee0f8, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7795210345721637939, guid: b2f82ca166065bf47b9dfc36dcbee0f8, type: 3}
       propertyPath: m_RootOrder
@@ -68852,9 +68852,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Orc
       objectReference: {fileID: 0}
-    - target: {fileID: 5608500958824098529, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 6013855620565617397, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
+      propertyPath: clips.Array.data[0].loop
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

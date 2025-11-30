@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 7409927436515639361}
   - component: {fileID: 2082435188175359541}
   - component: {fileID: 8512920936193360753}
-  - component: {fileID: 4821754155231326476}
+  - component: {fileID: 4274965349200880878}
   m_Layer: 8
   m_Name: ShieldGoblin
   m_TagString: Enemy
@@ -163,7 +163,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 0c8822aef1413d441942dcb1029356fa, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2b72e1878b6efb847a57be1050ec07c0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -272,7 +272,7 @@ MonoBehaviour:
     FixedDamage: 0
   Skills: []
   ShieldEffectPrefab: {fileID: 7125099269266668700, guid: 3797ab3f5e2aa6148869788f506a8635, type: 3}
---- !u!114 &4821754155231326476
+--- !u!114 &4274965349200880878
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -281,13 +281,91 @@ MonoBehaviour:
   m_GameObject: {fileID: 3637990080320469891}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
+  m_Script: {fileID: 11500000, guid: 5268661f352c40b48a441c646753e826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseScale: {x: 0.4, y: 0.4, z: 0.4}
-  peakMultiplier: 1.2
-  holdDuration: 0.05
-  returnSpeed: 8
+  spriteRenderer: {fileID: 7401956135385321940}
+  clips:
+  - clipName: Idle
+    frames:
+    - sprite: {fileID: 21300000, guid: 2b72e1878b6efb847a57be1050ec07c0, type: 3}
+      beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: f79c2dfd742910041b649f8a2371e836, type: 3}
+      beatLength: 0.4
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 2b72e1878b6efb847a57be1050ec07c0, type: 3}
+      beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 1
+    holdLastFrame: 0
+  - clipName: HoldShield
+    frames:
+    - sprite: {fileID: 21300000, guid: 0c8822aef1413d441942dcb1029356fa, type: 3}
+      beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 9dfe170df3d1b894d8da0dc772263ce9, type: 3}
+      beatLength: 0.4
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 0c8822aef1413d441942dcb1029356fa, type: 3}
+      beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 0
+    holdLastFrame: 0
+  - clipName: Attack
+    frames:
+    - sprite: {fileID: 21300000, guid: 78c1e3925d926a4408da958361a8d816, type: 3}
+      beatLength: 1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 78c1e3925d926a4408da958361a8d816, type: 3}
+      beatLength: 1
+      triggerWarning: 1
+      triggerAttack: 0
+      triggerOnce: 1
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 24572d0416d2c764cb21e32a3c3a7260, type: 3}
+      beatLength: 1
+      triggerWarning: 0
+      triggerAttack: 1
+      triggerOnce: 1
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 24572d0416d2c764cb21e32a3c3a7260, type: 3}
+      beatLength: 1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 33f6c86e94de78c49a789ac6fa073868, type: 3}
+      beatLength: 1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 0
+    holdLastFrame: 0
+  defaultClipName: Idle
+  playDefaultOnStart: 1
 --- !u!1 &6655271926595468758
 GameObject:
   m_ObjectHideFlags: 0
