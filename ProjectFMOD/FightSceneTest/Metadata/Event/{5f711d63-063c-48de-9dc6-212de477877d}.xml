@@ -546,11 +546,8 @@
 	</object>
 	<object class="MixerBusFader" id="{0545a111-f1df-45bf-8f9d-1d1d77615e0d}" />
 	<object class="GainEffect" id="{96fe548c-8805-435f-87c4-91f5360dccc4}">
-		<property name="bypass">
-			<value>true</value>
-		</property>
 		<property name="gain">
-			<value>-14</value>
+			<value>-2.5</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{9c04103c-5db2-426f-9efc-fc43ccfd6b39}" />
