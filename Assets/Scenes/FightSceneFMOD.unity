@@ -69172,10 +69172,6 @@ PrefabInstance:
       propertyPath: m_Color.g
       value: 0.011764705
       objectReference: {fileID: 0}
-    - target: {fileID: 2939371516262811841, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3008806576873534768, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -69256,29 +69252,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3568043951184588176, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: m_Interactable
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3568043951184588176, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: m_Colors.m_DisabledColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3568043951184588176, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: m_Colors.m_DisabledColor.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3568043951184588176, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: m_Colors.m_DisabledColor.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3568043951184588176, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: m_Colors.m_DisabledColor.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6872593940623200489, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
       propertyPath: m_Name
       value: TotalHealthBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 8774348397184648853, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8774348397184648853, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
       propertyPath: peakMultiplier
