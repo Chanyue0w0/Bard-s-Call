@@ -10018,7 +10018,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitToDestroy: 0
   returnToOrigin: 1
-  returnBeats: 1.6
+  returnBeats: 0.5
   explosionPrefab: {fileID: 893806690187975615, guid: da0691a27937e9443a41483ab99209fb, type: 3}
 --- !u!61 &2321812442447240142
 BoxCollider2D:
