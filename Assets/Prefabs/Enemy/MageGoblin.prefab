@@ -139,8 +139,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterName: AxeGoblin
   ClassType: 6
-  MaxHP: 400
-  HP: 400
+  MaxHP: 300
+  HP: 300
   MaxMP: 0
   MP: 0
   OriginAtk: 40

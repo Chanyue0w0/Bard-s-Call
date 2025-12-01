@@ -242,10 +242,12 @@ MonoBehaviour:
   tauntedByObj: {fileID: 0}
   tauntBeatsRemaining: 0
   anim: {fileID: 4274965349200880878}
+  warningPrefab: {fileID: 5361181730533998727, guid: c847ccf11edfa2744921f756e70859cb, type: 3}
+  warningOffset: {x: 0, y: 2.4, z: 0}
   blockVfxPrefab: {fileID: 0}
   blockVfxOffset: {x: 0, y: 0, z: 0}
-  attackPrefab: {fileID: 0}
-  attackOffset: {x: 0, y: 0, z: 0}
+  attackPrefab: {fileID: 6081551008134760909, guid: c7792ac1277cd834493a3e82d933a8f4, type: 3}
+  attackOffset: {x: 0, y: 0.6, z: 0}
   minIntervalBeats: 8
   maxIntervalBeats: 10
   isBlocking: 0
@@ -263,8 +265,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterName: ShieldGoblin
   ClassType: 5
-  MaxHP: 700
-  HP: 700
+  MaxHP: 300
+  HP: 300
   MaxMP: 0
   MP: 0
   OriginAtk: 0
@@ -317,19 +319,25 @@ MonoBehaviour:
   - clipName: Block
     frames:
     - sprite: {fileID: 21300000, guid: 0c8822aef1413d441942dcb1029356fa, type: 3}
-      beatLength: 0.3
+      beatLength: 1
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 9dfe170df3d1b894d8da0dc772263ce9, type: 3}
-      beatLength: 0.4
+      beatLength: 1
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 0c8822aef1413d441942dcb1029356fa, type: 3}
-      beatLength: 0.3
+      beatLength: 1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 9dfe170df3d1b894d8da0dc772263ce9, type: 3}
+      beatLength: 1
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0

@@ -5,6 +5,10 @@ public class ShieldGoblin : EnemyBase
 {
     public BeatSpriteAnimator anim;
 
+    [Header("警告特效 Prefab")]
+    public GameObject warningPrefab;
+    public Vector3 warningOffset;
+
     [Header("格擋特效 Prefab")]
     public GameObject blockVfxPrefab;
     public Vector3 blockVfxOffset;
@@ -44,7 +48,6 @@ public class ShieldGoblin : EnemyBase
     {
         FMODBeatListener2.OnGlobalBeat += HandleBeat;
 
-        // 一開始先決定下一次攻擊時間
         int now = FMODBeatListener2.Instance.GlobalBeatIndex;
         nextAttackBeat = now + Random.Range(minIntervalBeats, maxIntervalBeats + 1);
 
@@ -70,9 +73,8 @@ public class ShieldGoblin : EnemyBase
         // ----------- 若正在格檔中：維持兩拍後攻擊 -----------
         if (isBlocking)
         {
-            if (globalBeat - blockStartBeat >= 2)
+            if (globalBeat - blockStartBeat >= 4)
             {
-                // 終止格檔 → 進入攻擊
                 isBlocking = false;
                 RemoveBlockEffect();
                 DoAttack();
@@ -95,17 +97,16 @@ public class ShieldGoblin : EnemyBase
         isBlocking = true;
         blockStartBeat = globalBeat;
 
-        // 進入格檔動畫
         if (anim != null)
             anim.Play("Block", true);
 
+        // BattleEffectManager 的敵人格擋
         BattleEffectManager.Instance.ActivateEnemyBlock(
             this.gameObject,
             charData,
-            2   // 兩拍
+            4
         );
 
-        // 顯示格檔特效
         ShowBlockEffect();
     }
 
@@ -119,15 +120,11 @@ public class ShieldGoblin : EnemyBase
                 Quaternion.identity
             );
         }
-
-        // BattleEffectManager也有格檔 UI / 特效，可一起補強
-        //BattleEffectManager.Instance?.ShowBlockSuccessVFX(slotIndex: thisSlotInfo.SlotIndex);
     }
 
     private void RemoveBlockEffect()
     {
-        // 若你有持續型特效可在此關閉
-        // 目前為一次性 VFX 故不處理
+        // 若使用 ActivateEnemyBlock → BattleEffectManager 已處理特效的移除
     }
 
     // ======================
@@ -138,7 +135,6 @@ public class ShieldGoblin : EnemyBase
         if (anim != null)
             anim.Play("Attack", true);
 
-        // 執行完攻擊後 → 再決定下一次攻擊時間
         int now = FMODBeatListener2.Instance.GlobalBeatIndex;
         nextAttackBeat = now + Random.Range(minIntervalBeats, maxIntervalBeats + 1);
     }
@@ -150,10 +146,29 @@ public class ShieldGoblin : EnemyBase
     {
         if (IsFeverLocked()) return;
 
+        // ---------- Warning（與 MageGoblin 相同） ----------
+        if (frame.triggerWarning && warningPrefab != null)
+        {
+            SpawnWarning();
+        }
+
+        // ---------- Attack ----------
         if (frame.triggerAttack)
         {
             SpawnAttackSkill();
         }
+    }
+
+    // ======================
+    // Spawn Warning (MageGoblin 同版)
+    // ======================
+    private void SpawnWarning()
+    {
+        Instantiate(
+            warningPrefab,
+            transform.position + warningOffset,
+            Quaternion.identity
+        );
     }
 
     // ======================
@@ -178,7 +193,7 @@ public class ShieldGoblin : EnemyBase
             return;
         }
 
-        int damage = 20; // 盾哥可自行調整攻擊力
+        int damage = 20;
 
         var target = BattleManager.Instance.CTeamInfo[0];
         var attackerSlot = thisSlotInfo != null ? thisSlotInfo : selfSlot;
