@@ -184,8 +184,8 @@ public class MonsterInstManager : MonoBehaviour
                     //teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
                     break;
                 case 3:
-                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
-                    teamManager.EnemyTeamInfo[1].PrefabToSpawn = shieldGoblinPrefab;
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
+                    teamManager.EnemyTeamInfo[1].PrefabToSpawn = axeGoblinPrefab;
                     teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
                     break;
                 case 4:
