@@ -17,6 +17,12 @@ public class BattleEffectManager : MonoBehaviour
     [Header("格檔成功特效")]
     public GameObject blockSuccessVfxPrefab;
 
+    [Header("敵方格擋管理")] 
+    private Dictionary<GameObject, bool> enemyBlocking = new();
+    private Dictionary<GameObject, Coroutine> enemyBlockCoroutines = new();
+    private Dictionary<GameObject, GameObject> enemyBlockEffects = new();
+
+
     [Header("Priest 回復特效")]
     public GameObject healVfxPrefab;
 
@@ -254,6 +260,46 @@ public class BattleEffectManager : MonoBehaviour
         Debug.Log($"【格檔結束】角色 {actor.name} 恢復可受傷");
     }
 
+    public void ActivateEnemyBlock(GameObject enemyObj, CharacterData charData, float durationBeats)
+    {
+        if (enemyObj == null) return;
+
+        // 1. 註冊
+        if (!enemyBlocking.ContainsKey(enemyObj))
+            enemyBlocking[enemyObj] = true;
+
+        // 2. 特效
+        Vector3 pos = enemyObj.transform.position;
+        GameObject fxPrefab = charData != null && charData.ShieldEffectPrefab != null
+            ? charData.ShieldEffectPrefab
+            : shieldVfxPrefab;
+
+        GameObject fx = Instantiate(fxPrefab, pos, Quaternion.identity);
+        fx.transform.SetParent(enemyObj.transform, worldPositionStays: true);
+
+        enemyBlockEffects[enemyObj] = fx;
+
+        // 3. 持續時間（算拍）
+        float sec = FMODBeatListener2.Instance.SecondsPerBeat * durationBeats;
+        if (enemyBlockCoroutines.ContainsKey(enemyObj) && enemyBlockCoroutines[enemyObj] != null)
+            StopCoroutine(enemyBlockCoroutines[enemyObj]);
+
+        enemyBlockCoroutines[enemyObj] = StartCoroutine(EnemyBlockRoutine(enemyObj, sec));
+    }
+
+    private IEnumerator EnemyBlockRoutine(GameObject enemyObj, float sec)
+    {
+        yield return new WaitForSeconds(sec);
+
+        // 關閉格擋
+        enemyBlocking[enemyObj] = false;
+
+        if (enemyBlockEffects.ContainsKey(enemyObj) && enemyBlockEffects[enemyObj] != null)
+            Destroy(enemyBlockEffects[enemyObj]);
+
+        enemyBlockEffects.Remove(enemyObj);
+        enemyBlockCoroutines.Remove(enemyObj);
+    }
 
 
     // =======================
@@ -270,25 +316,13 @@ public class BattleEffectManager : MonoBehaviour
         // =======================================
         if (target.Actor != null)
         {
-            var goblin = target.Actor.GetComponent<ShieldGoblin>();
-            if (goblin != null)
+            var shieldGoblin = target.Actor.GetComponent<ShieldGoblin>();
+            if (shieldGoblin != null && shieldGoblin.isBlocking)
             {
-                // 若格檔中且未破防
-                if (goblin.IsBlocking())
-                {
-                    // 若是重攻擊 → 破防
-                    if (isHeavyAttack)
-                    {
-                        goblin.BreakShield();
-                        Debug.Log($"【破防成功】{attacker.UnitName} 的重攻擊打破 {target.UnitName} 的防禦！");
-                    }
-                    else
-                    {
-                        Debug.Log($"【格檔成功】{target.UnitName} 擋下 {attacker.UnitName} 的攻擊！");
-                        return; // 不受傷害
-                    }
-                }
+                Debug.Log("【敵方格擋成功】");
+                return;  // 不受傷
             }
+
             var darkKnight = target.Actor.GetComponent<DarkLongSwordKnight>();
             if (darkKnight != null)
             {
