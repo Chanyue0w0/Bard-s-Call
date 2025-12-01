@@ -16,6 +16,12 @@ public class AxeGoblin : EnemyBase
     [Header("攻擊間隔（拍）")]
     public int attackIntervalBeats = 8;
 
+    [Header("攻擊頻率")]
+    private int nextAttackBeat = -999;
+    public int minAttackBeats = 6;
+    public int maxAttackBeats = 10;
+
+
     [Header("衝刺 / 回歸設定")]
     public float dashTime = 0.05f;
     public float waitTime = 1.0f;
@@ -31,7 +37,6 @@ public class AxeGoblin : EnemyBase
 
     private Vector3 originalPos;  // 用於回歸初始位置
     private bool isMoving = false;
-
 
     // ======================
     // Awake
@@ -57,6 +62,8 @@ public class AxeGoblin : EnemyBase
 
         lastAttackBeat = FMODBeatListener2.Instance.GlobalBeatIndex;
 
+        nextAttackBeat = lastAttackBeat + Random.Range(minAttackBeats, maxAttackBeats + 1);
+
         if (anim != null)
             anim.OnFrameEvent += HandleAnimEvent;
     }
@@ -72,15 +79,32 @@ public class AxeGoblin : EnemyBase
     // ======================
     // Beat
     // ======================
+    //private void HandleBeat(int globalBeat)
+    //{
+    //    if (IsFeverLocked()) return;   // Fever 期間不攻擊
+    //    if (isMoving) return;          // 正在衝刺/回歸中不可重複攻擊
+
+    //    if (globalBeat - lastAttackBeat >= attackIntervalBeats)
+    //    {
+    //        lastAttackBeat = globalBeat;
+    //        DoAttack();
+    //    }
+    //}
+
+    // ======================
+    // Beat
+    // ======================
     private void HandleBeat(int globalBeat)
     {
-        if (IsFeverLocked()) return;   // Fever 期間不攻擊
-        if (isMoving) return;          // 正在衝刺/回歸中不可重複攻擊
+        if (IsFeverLocked()) return;
+        if (isMoving) return;
 
-        if (globalBeat - lastAttackBeat >= attackIntervalBeats)
+        if (globalBeat >= nextAttackBeat)
         {
-            lastAttackBeat = globalBeat;
             DoAttack();
+
+            // ★ 攻擊完抽下一次等待拍數
+            nextAttackBeat = globalBeat + Random.Range(minAttackBeats, maxAttackBeats + 1);
         }
     }
 
