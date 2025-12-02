@@ -194,6 +194,8 @@ public class BeatSpriteAnimator : MonoBehaviour
         accumulatedBeats = 0.0001f;
         isPlaying = true;
         ApplyFrame();
+        // ★★★ 修正：補觸發第一格事件
+        TriggerFrameEvents(currentClip.frames[currentFrameIndex]);
     }
 
     public string GetCurrentClipName() => currentClip?.clipName;

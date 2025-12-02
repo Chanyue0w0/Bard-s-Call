@@ -193,7 +193,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 3a1e11823b8caa447b057acf523f22e4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -252,6 +252,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20cdf14868cfb5b4fb41c7756671d840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ETeam: 2
+  thisSlotInfo:
+    PrefabToSpawn: {fileID: 0}
+    UnitName: 
+    Actor: {fileID: 0}
+    SlotTransform: {fileID: 0}
+    ClassType: 0
+    MaxHP: 100
+    HP: 100
+    MaxMP: 100
+    MP: 0
+    OriginAtk: 10
+    Atk: 10
+    SkillNames: []
+    SkillPrefabs: []
+    NormalAttackNames: []
+    NormalAttackPrefabs: []
+    AssignedKeyIndex: 0
+  tauntedByObj: {fileID: 0}
+  tauntBeatsRemaining: 0
+  anim: {fileID: 6013855620565617397}
+  warningPrefab: {fileID: 5361181730533998727, guid: c847ccf11edfa2744921f756e70859cb, type: 3}
+  warningOffset: {x: 0, y: 3, z: 0}
+  attackPrefab: {fileID: 2768447552128555372, guid: 33e67317395cb3e48914fdb216c281d2, type: 3}
+  attackOffset: {x: 0, y: 0, z: 0}
+  chargeVfxPrefab: {fileID: 4887214813510195486, guid: 1de527994e8fc4142876eabcdf38ae51, type: 3}
+  chargeVfxOffset: {x: 0, y: 1, z: 0}
+  minAttackBeats: 10
+  maxAttackBeats: 15
+  chargeBeats: 5
+  stunBeats: 3
+  chargeInterruptDamageThreshold: 90
+  dashTime: 0.05
+  waitTime: 1
+  returnTime: 0.05
+  attackPositionOffset: {x: -2, y: 0, z: 0}
 --- !u!114 &1258214059572530574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,107 +356,53 @@ MonoBehaviour:
   - clipName: Charge
     frames:
     - sprite: {fileID: 21300000, guid: a2743451fceda8d468f4a945cc880e40, type: 3}
-      beatLength: 1
+      beatLength: 0.25
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: b55b368a42af536479ddc83f035dc03a, type: 3}
-      beatLength: 1
+      beatLength: 0.25
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 99f5e905935fdc84b80be836bb6ffbc8, type: 3}
-      beatLength: 1
+      beatLength: 0.25
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 32eb66907ff29914f9414ea968b4a1c1, type: 3}
-      beatLength: 1
+      beatLength: 0.25
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
       hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 99f5e905935fdc84b80be836bb6ffbc8, type: 3}
-      beatLength: 1
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    loop: 0
+    loop: 1
     holdLastFrame: 0
   - clipName: Attack
     frames:
-    - sprite: {fileID: 0}
-      beatLength: 0.25
+    - sprite: {fileID: 21300000, guid: f458778ae229702458d040a0c2abc28a, type: 3}
+      beatLength: 1
       triggerWarning: 1
       triggerAttack: 0
-      triggerOnce: 0
+      triggerOnce: 1
       hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 66434b3f8e67a1348a8225ea74ebaef3, type: 3}
-      beatLength: 0.25
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 9e6fd369506aba849a796fb0fae7a254, type: 3}
-      beatLength: 0.25
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: f458778ae229702458d040a0c2abc28a, type: 3}
-      beatLength: 0.25
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: f42a7b6c59619fc4cb6a535e5743dbb8, type: 3}
-      beatLength: 0.25
+    - sprite: {fileID: 21300000, guid: 59f585b3dca79054f8682ede72986d7f, type: 3}
+      beatLength: 1
       triggerWarning: 0
       triggerAttack: 1
       triggerOnce: 1
       hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 2e4416ed17b5e854396cfbd620d7acef, type: 3}
-      beatLength: 0.25
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 59f585b3dca79054f8682ede72986d7f, type: 3}
-      beatLength: 0.25
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 6244bc75b4185954eb41a3bf3787d808, type: 3}
-      beatLength: 0.25
+      beatLength: 0.5
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 0433f104812e3e047b5760e678b9a425, type: 3}
-      beatLength: 0.25
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: a0b9c09fc5b23c14eb72100f81a74601, type: 3}
-      beatLength: 0.25
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 3a13e51a0079071439c50c3f1fbf2f8d, type: 3}
-      beatLength: 0.25
-      triggerWarning: 0
-      triggerAttack: 0
-      triggerOnce: 0
-      hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 42a5c4de0c67e354d986ddff124e45b1, type: 3}
-      beatLength: 0.25
+      beatLength: 0.5
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0

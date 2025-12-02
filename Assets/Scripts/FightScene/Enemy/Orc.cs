@@ -1,18 +1,342 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
-public class Orc : MonoBehaviour
+public class Orc : EnemyBase
 {
-    // Start is called before the first frame update
-    void Start()
+    public BeatSpriteAnimator anim;
+
+    [Header("警告特效")]
+    public GameObject warningPrefab;
+    public Vector3 warningOffset;
+
+    [Header("攻擊特效（技能 Prefab）")]
+    public GameObject attackPrefab;
+    public Vector3 attackOffset;
+
+    [Header("充能特效")]
+    public GameObject chargeVfxPrefab;
+    public Vector3 chargeVfxOffset;
+    private GameObject currentChargeVfx;
+
+    [Header("攻擊頻率（距離上一次攻擊啟動的拍數）")]
+    public int minAttackBeats = 10;
+    public int maxAttackBeats = 15;
+    private int nextAttackBeat = -999;
+
+    [Header("Charge / 暈眩設定")]
+    public int chargeBeats = 5;
+    public int stunBeats = 3;
+    public int chargeInterruptDamageThreshold = 50;
+
+    [Header("衝刺 / 回歸設定")]
+    public float dashTime = 0.05f;
+    public float waitTime = 1.0f;
+    public float returnTime = 0.05f;
+
+    [Header("衝刺目標位置調整")]
+    public Vector3 attackPositionOffset = Vector3.zero;
+
+    // 狀態
+    private CharacterData charData;
+    private bool isMoving = false;
+    private Vector3 originalPos;
+
+    private bool isCharging = false;
+    private int chargeStartBeat = -1;
+    private int damageAccumDuringCharge = 0;
+
+    private bool isStunned = false;
+    private int stunEndBeat = -1;
+
+    // ======================
+    // Awake
+    // ======================
+    protected override void Awake()
     {
-        
+        base.Awake();
+        charData = GetComponent<CharacterData>();
+
+        if (charData == null)
+            Debug.LogWarning($"{name} 找不到 CharacterData");
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Reset()
     {
-        
+        if (anim == null)
+            anim = GetComponent<BeatSpriteAnimator>();
+    }
+
+    // ======================
+    // Enable / Disable
+    // ======================
+    private void OnEnable()
+    {
+        FMODBeatListener2.OnGlobalBeat += HandleBeat;
+
+        int currentBeat = FMODBeatListener2.Instance != null
+            ? FMODBeatListener2.Instance.GlobalBeatIndex
+            : 0;
+
+        nextAttackBeat = currentBeat + Random.Range(minAttackBeats, maxAttackBeats + 1);
+
+        if (anim != null)
+            anim.OnFrameEvent += HandleAnimEvent;
+    }
+
+    private void OnDisable()
+    {
+        FMODBeatListener2.OnGlobalBeat -= HandleBeat;
+
+        if (anim != null)
+            anim.OnFrameEvent -= HandleAnimEvent;
+    }
+
+    // ======================
+    // Beat
+    // ======================
+    private void HandleBeat(int globalBeat)
+    {
+        if (IsFeverLocked()) return;
+        if (isMoving) return;
+
+        // 暈眩中
+        if (isStunned)
+        {
+            if (globalBeat >= stunEndBeat)
+                ExitStun();
+            return;
+        }
+
+        // Charge 中
+        if (isCharging)
+        {
+            if (globalBeat - chargeStartBeat >= chargeBeats)
+                FinishChargeAndStartAttack();
+            return;
+        }
+
+        // 普通狀態 → 看是否要開始 Charge
+        if (globalBeat >= nextAttackBeat)
+        {
+            StartCharge(globalBeat);
+
+            nextAttackBeat = globalBeat + Random.Range(minAttackBeats, maxAttackBeats + 1);
+        }
+    }
+
+    // ======================
+    // Charge 流程
+    // ======================
+    private void StartCharge(int startBeat)
+    {
+        if (isCharging || isStunned) return;
+
+        isCharging = true;
+        chargeStartBeat = startBeat;
+        damageAccumDuringCharge = 0;
+
+        if (anim != null)
+            anim.Play("Charge", true);
+
+        if (chargeVfxPrefab != null)
+        {
+            currentChargeVfx = Instantiate(
+                chargeVfxPrefab,
+                transform.position + chargeVfxOffset,
+                Quaternion.identity
+            );
+            currentChargeVfx.transform.SetParent(transform, true);
+        }
+    }
+
+    private void FinishChargeAndStartAttack()
+    {
+        isCharging = false;
+        chargeStartBeat = -1;
+        damageAccumDuringCharge = 0;
+
+        if (currentChargeVfx != null)
+            Destroy(currentChargeVfx);
+
+        DoAttack();
+    }
+
+    private void InterruptChargeAndStun()
+    {
+        if (!isCharging) return;
+
+        isCharging = false;
+        damageAccumDuringCharge = 0;
+
+        if (currentChargeVfx != null)
+            Destroy(currentChargeVfx);
+
+        isStunned = true;
+
+        int currentBeat = FMODBeatListener2.Instance != null
+            ? FMODBeatListener2.Instance.GlobalBeatIndex
+            : 0;
+
+        stunEndBeat = currentBeat + stunBeats;
+
+        if (anim != null)
+            anim.Play("Idle", true);
+    }
+
+    private void ExitStun()
+    {
+        isStunned = false;
+        stunEndBeat = -1;
+
+        if (anim != null)
+            anim.Play("Idle", true);
+    }
+
+    // ======================
+    // EnemyBase → BattleEffectManager 會呼叫
+    // ======================
+    public override void OnDamaged(int damage, bool isHeavyAttack)
+    {
+        base.OnDamaged(damage, isHeavyAttack);
+
+        if (isCharging && !isStunned)
+        {
+            damageAccumDuringCharge += damage;
+
+            if (damageAccumDuringCharge >= chargeInterruptDamageThreshold)
+            {
+                InterruptChargeAndStun();
+            }
+        }
+    }
+
+    // ======================
+    // Attack 動畫啟動
+    // ======================
+    private void DoAttack()
+    {
+        if (IsFeverLocked()) return;
+
+        if (anim != null)
+            anim.Play("Attack", true);
+    }
+
+    // ======================
+    // Animation Event
+    // ======================
+    private void HandleAnimEvent(BeatSpriteFrame frame)
+    {
+        if (IsFeverLocked()) return;
+        if (isStunned) return;
+
+        // Warning 特效
+        if (frame.triggerWarning && warningPrefab != null)
+        {
+            Instantiate(
+                warningPrefab,
+                transform.position + warningOffset,
+                Quaternion.identity
+            );
+        }
+
+        // Attack 特效 & 衝刺
+        if (frame.triggerAttack)
+        {
+            SpawnAttackSkill();
+            StartCoroutine(AttackMovementFlow());
+        }
+    }
+
+    // ======================
+    // 產生技能
+    // ======================
+    private void SpawnAttackSkill()
+    {
+        if (attackPrefab == null) return;
+
+        GameObject go = Instantiate(
+            attackPrefab,
+            transform.position,
+            Quaternion.identity
+        );
+
+        go.transform.SetParent(this.transform, true);
+        go.transform.localPosition = attackOffset;
+
+        EnemySkillAttack skill = go.GetComponent<EnemySkillAttack>();
+        if (skill == null)
+        {
+            Debug.LogError($"技能 {attackPrefab.name} 缺少 EnemySkillAttack！");
+            return;
+        }
+
+        int atk = (charData != null) ? charData.Atk : 1;
+        var target = BattleManager.Instance.CTeamInfo[0];
+        var attackerSlot = thisSlotInfo != null ? thisSlotInfo : selfSlot;
+
+        skill.Init(
+            attacker: attackerSlot,
+            target: target,
+            damage: atk,
+            travelTime: 0.12f,
+            isHeavyAttack: false,
+            spawnExplosion: true,
+            buffAction: null
+        );
+    }
+
+    // ======================
+    // 衝刺 → 等待 → 回歸
+    // ======================
+    private IEnumerator AttackMovementFlow()
+    {
+        if (isMoving) yield break;
+        if (IsFeverLocked()) yield break;
+        if (isStunned) yield break;
+
+        isMoving = true;
+
+        var target = BattleManager.Instance.CTeamInfo[0];
+        if (target == null || target.Actor == null)
+        {
+            isMoving = false;
+            yield break;
+        }
+
+        originalPos = transform.position;
+        Vector3 targetPos = target.Actor.transform.position + attackPositionOffset;
+
+        // Step 1: 衝刺
+        yield return MoveToPosition(targetPos, dashTime);
+
+        // Step 2: 等待
+        yield return new WaitForSeconds(waitTime);
+
+        // Step 3: 回歸
+        yield return MoveToPosition(originalPos, returnTime);
+
+        isMoving = false;
+    }
+
+    // ======================
+    // Lerp 移動
+    // ======================
+    private IEnumerator MoveToPosition(Vector3 targetPos, float duration)
+    {
+        Vector3 start = transform.position;
+        float t = 0f;
+
+        while (t < duration)
+        {
+            if (IsFeverLocked()) yield break;
+            if (isStunned) yield break;
+
+            t += Time.deltaTime;
+            float lerp = Mathf.Clamp01(t / duration);
+            transform.position = Vector3.Lerp(start, targetPos, lerp);
+            yield return null;
+        }
+
+        transform.position = targetPos;
     }
 }

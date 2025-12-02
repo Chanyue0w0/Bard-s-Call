@@ -29119,15 +29119,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7795210345721637939, guid: 6cfcd8af9b39ca5429656ad608b119d1, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7795210345721637939, guid: 6cfcd8af9b39ca5429656ad608b119d1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7795210345721637939, guid: 6cfcd8af9b39ca5429656ad608b119d1, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7795210345721637939, guid: 6cfcd8af9b39ca5429656ad608b119d1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -68985,6 +68985,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RoarShockwave
       objectReference: {fileID: 0}
+    - target: {fileID: 6630973802063736916, guid: 5fc8f0883ae25b14b91f189ecf5eb64c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -69208,11 +69212,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2979647911404220722, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.92
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2979647911404220722, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.38
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2979647911404220722, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
       propertyPath: m_LocalPosition.z
@@ -69249,6 +69253,42 @@ PrefabInstance:
     - target: {fileID: 5608500958824098529, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
       propertyPath: m_Name
       value: Orc
+      objectReference: {fileID: 0}
+    - target: {fileID: 5608500958824098529, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013855620565617397, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
+      propertyPath: clips.Array.data[2].frames.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013855620565617397, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
+      propertyPath: clips.Array.data[2].frames.Array.data[1].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 59f585b3dca79054f8682ede72986d7f, type: 3}
+    - target: {fileID: 6013855620565617397, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
+      propertyPath: clips.Array.data[2].frames.Array.data[2].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6244bc75b4185954eb41a3bf3787d808, type: 3}
+    - target: {fileID: 6013855620565617397, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
+      propertyPath: clips.Array.data[2].frames.Array.data[3].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0433f104812e3e047b5760e678b9a425, type: 3}
+    - target: {fileID: 6013855620565617397, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
+      propertyPath: clips.Array.data[2].frames.Array.data[2].beatLength
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013855620565617397, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
+      propertyPath: clips.Array.data[2].frames.Array.data[3].beatLength
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013855620565617397, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
+      propertyPath: clips.Array.data[2].frames.Array.data[1].triggerOnce
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013855620565617397, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
+      propertyPath: clips.Array.data[2].frames.Array.data[1].triggerAttack
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -69550,6 +69590,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: OnHitPixelVFX(Orange)
       objectReference: {fileID: 0}
+    - target: {fileID: 745852391747079010, guid: f6d54d1de855cf14aaf0e73529f2ad9d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2890593319246473869, guid: f6d54d1de855cf14aaf0e73529f2ad9d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -69588,6 +69632,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2890593319246473869, guid: f6d54d1de855cf14aaf0e73529f2ad9d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5653534565955933746, guid: f6d54d1de855cf14aaf0e73529f2ad9d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5653534565955933746, guid: f6d54d1de855cf14aaf0e73529f2ad9d, type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
