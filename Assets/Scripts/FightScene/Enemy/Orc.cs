@@ -36,6 +36,11 @@ public class Orc : EnemyBase
     [Header("衝刺目標位置調整")]
     public Vector3 attackPositionOffset = Vector3.zero;
 
+    [Header("Charge UI")]
+    public Transform chargePoint;        // Orc 身上的定位點 (子物件)
+    public GameObject chargeBarPrefab;   // UI Prefab
+    private ChargeBarUI chargeBarUI;     // 動態生成出來的 UI
+
     // 狀態
     private CharacterData charData;
     private bool isMoving = false;
@@ -64,6 +69,29 @@ public class Orc : EnemyBase
     {
         if (anim == null)
             anim = GetComponent<BeatSpriteAnimator>();
+    }
+
+    private void Start()
+    {
+        // ★ 動態 UI 生成
+        if (chargeBarPrefab != null && chargePoint != null)
+        {
+            var canvas = FindObjectOfType<Canvas>();
+
+            GameObject uiObj = Instantiate(chargeBarPrefab, canvas.transform);
+
+            chargeBarUI = uiObj.GetComponent<ChargeBarUI>();
+            if (chargeBarUI == null)
+            {
+                Debug.LogError("ChargeBarPrefab 缺少 ChargeBarUI 腳本！");
+                return;
+            }
+
+            chargeBarUI.worldFollowTarget = chargePoint;
+            chargeBarUI.worldOffset = Vector3.zero;
+
+            chargeBarUI.SetActive(false);
+        }
     }
 
     // ======================
@@ -138,6 +166,13 @@ public class Orc : EnemyBase
         if (anim != null)
             anim.Play("Charge", true);
 
+        // Charge 開始時條是滿的（1）
+        if (chargeBarUI != null)
+        {
+            chargeBarUI.SetActive(true);
+            chargeBarUI.SetValue(1f);
+        }
+
         if (chargeVfxPrefab != null)
         {
             currentChargeVfx = Instantiate(
@@ -155,6 +190,11 @@ public class Orc : EnemyBase
         chargeStartBeat = -1;
         damageAccumDuringCharge = 0;
 
+        if (chargeBarUI != null)
+        {
+            chargeBarUI.SetActive(false);
+        }
+
         if (currentChargeVfx != null)
             Destroy(currentChargeVfx);
 
@@ -164,6 +204,13 @@ public class Orc : EnemyBase
     private void InterruptChargeAndStun()
     {
         if (!isCharging) return;
+
+        if (chargeBarUI != null)
+        {
+            // 可視需要，可設為 0 再關閉
+            chargeBarUI.SetValue(0f);
+            chargeBarUI.SetActive(false);
+        }
 
         isCharging = false;
         damageAccumDuringCharge = 0;
@@ -203,12 +250,19 @@ public class Orc : EnemyBase
         {
             damageAccumDuringCharge += damage;
 
+            if (chargeBarUI != null)
+            {
+                float remain = 1f - (float)damageAccumDuringCharge / chargeInterruptDamageThreshold;
+                chargeBarUI.SetValue(remain);
+            }
+
             if (damageAccumDuringCharge >= chargeInterruptDamageThreshold)
             {
                 InterruptChargeAndStun();
             }
         }
     }
+
 
     // ======================
     // Attack 動畫啟動

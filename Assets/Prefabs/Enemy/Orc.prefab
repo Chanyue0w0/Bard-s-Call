@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2979647911404220722}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1448619356940137575
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 300072497920405843}
+  m_Layer: 8
+  m_Name: ChargePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &300072497920405843
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448619356940137575}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.01, y: 4.54, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2979647911404220722}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5066106411842646519
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,6 +181,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6357998130191819164}
+  - {fileID: 300072497920405843}
   - {fileID: 656534481805330591}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -283,11 +315,13 @@ MonoBehaviour:
   maxAttackBeats: 15
   chargeBeats: 5
   stunBeats: 3
-  chargeInterruptDamageThreshold: 90
+  chargeInterruptDamageThreshold: 80
   dashTime: 0.05
   waitTime: 1
   returnTime: 0.05
   attackPositionOffset: {x: -2, y: 0, z: 0}
+  chargePoint: {fileID: 300072497920405843}
+  chargeBarPrefab: {fileID: 4455289404318607837, guid: f00b2ba087e6ae94eb8883516498ac58, type: 3}
 --- !u!114 &1258214059572530574
 MonoBehaviour:
   m_ObjectHideFlags: 0
