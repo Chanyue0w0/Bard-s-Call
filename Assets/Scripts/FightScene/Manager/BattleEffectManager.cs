@@ -29,6 +29,7 @@ public class BattleEffectManager : MonoBehaviour
     // 每位角色的格檔狀態與協程追蹤
     private bool[] isBlocking = new bool[3];
     private Coroutine[] blockCoroutines = new Coroutine[3];
+    private bool[] isHeavyBlocking = new bool[3];
 
     public bool isHeavyAttack = false;
 
@@ -173,9 +174,11 @@ public class BattleEffectManager : MonoBehaviour
     }
 
 
-    public void ActivateBlock(int index, float beatDuration, CharacterData charData, GameObject actor)
+    public void ActivateBlock(int index, float beatDuration, CharacterData charData, GameObject actor, bool isHeavyBlock)
     {
         if (index < 0 || index >= isBlocking.Length) return;
+
+        isHeavyBlocking[index] = isHeavyBlock;
 
         // 若已有格檔 → 先停止舊的
         if (blockCoroutines[index] != null)
@@ -344,26 +347,66 @@ public class BattleEffectManager : MonoBehaviour
         }
 
         // =======================================
-        // 玩家方格檔判定（原有機制）
+        // 玩家方格檔判定（含 Paladin 輕拍/重拍邏輯）
         // =======================================
         int targetIndex = System.Array.FindIndex(BattleManager.Instance.CTeamInfo, t => t == target);
+
         if (targetIndex >= 0 && isBlocking[targetIndex])
         {
-            Vector3 spawnPos = target.Actor.transform.position;
-            Vector3 offset = new Vector3(0f, 1.0f, 0f); // 可調整高度
+            var data = target.Actor.GetComponent<CharacterData>();
+            bool isPaladin = (data != null && data.ClassType == BattleManager.UnitClass.Paladin);
 
-            GameObject fx = Instantiate(blockSuccessVfxPrefab, spawnPos + offset, Quaternion.identity);
+            // --- 取出完整傷害（後面敵人/玩家分支要用）---
+            int rawDamage = (overrideDamage >= 0)
+                ? overrideDamage
+                : Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * (isPerfect ? 1f : 0f)));
 
-            // 讓特效跟著角色移動
-            fx.transform.SetParent(target.Actor.transform, worldPositionStays: true);
-            fx.transform.localPosition = offset;
+            // ----------- Paladin 特殊格檔 -----------
+            if (isPaladin)
+            {
+                bool heavyBlock = isHeavyBlocking[targetIndex];
 
-            VibrationManager.Instance.Vibrate("Block");
-            Debug.Log($"【格檔成功】{target.UnitName} 格檔 {attacker.UnitName} 的攻擊！");
+                if (heavyBlock)
+                {
+                    // ==============================
+                    // ★ 重拍格檔 → 完全免傷
+                    // ==============================
+                    ShowBlockEffectPaladin(target);
+                    ActivateHolyEffect();
+                    Debug.Log("【Paladin 重拍格檔】100% 免傷");
+                    return;
+                }
+                else
+                {
+                    // ==============================
+                    // ★ 輕拍格檔 → 扣 30% 傷害
+                    // ==============================
+                    int reducedDamage = Mathf.RoundToInt(rawDamage * 0.3f); // 只吃 30% 傷害
 
-            // ★★★★★ HolyEffect：玩家格檔成功 → 啟動對拍共鳴
+                    ShowBlockEffectPaladin(target);
+                    ActivateHolyEffect();
+                    Debug.Log($"【Paladin 輕拍格檔】受到 {reducedDamage} 傷害（70% 減傷）");
+
+                    // ===== 套用傷害至隊伍血條（完全沿用原本 OnHit 流程）=====
+                    GlobalIndex.CurrentTotalHP = Mathf.Max(0, GlobalIndex.CurrentTotalHP - reducedDamage);
+                    playerTotalHPUI.SetHP(GlobalIndex.CurrentTotalHP, GlobalIndex.MaxTotalHP);
+
+                    if (DamageNumberManager.Instance != null)
+                        DamageNumberManager.Instance.ShowDamage(target.Actor.transform, reducedDamage);
+
+                    // Mage 被攻擊 → 中斷充電
+                    if (data.ClassType == BattleManager.UnitClass.Mage)
+                        ResetChargeStacks(target);
+
+                    BattleManager.Instance.CheckPlayerDefeat();
+                    return;
+                }
+            }
+
+            // ----------- 其他職業：沿用舊版完全格檔 -----------
+            ShowBlockEffectPaladin(target);
             ActivateHolyEffect();
-
+            Debug.Log($"【格檔成功】{target.UnitName} 擋下 {attacker?.UnitName} 的攻擊！");
             return;
         }
 
@@ -445,6 +488,19 @@ public class BattleEffectManager : MonoBehaviour
         BattleManager.Instance.CheckPlayerDefeat();
 
     }
+
+    private void ShowBlockEffectPaladin(BattleManager.TeamSlotInfo target)
+    {
+        Vector3 spawnPos = target.Actor.transform.position;
+        Vector3 offset = new Vector3(0f, 1.0f, 0f);
+
+        GameObject fx = Instantiate(blockSuccessVfxPrefab, spawnPos + offset, Quaternion.identity);
+        fx.transform.SetParent(target.Actor.transform, worldPositionStays: true);
+        fx.transform.localPosition = offset;
+
+        VibrationManager.Instance.Vibrate("Block");
+    }
+
 
     // ======================================================
     // HolyEffect 系統（格檔成功時啟動）

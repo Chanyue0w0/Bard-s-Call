@@ -841,15 +841,19 @@ public class BattleManager : MonoBehaviour
 
         int index = System.Array.FindIndex(CTeamInfo, t => t == attacker);
 
+        bool isHeavy = (beatInCycle == beatsPerMeasure);
+
         // ---------------------------
         // ★ 第一步：所有 Paladin 攻擊 → 先格檔一拍
         // ---------------------------
         BattleEffectManager.Instance.ActivateBlock(
             index,
-            0.9f, //BeatManager.Instance.beatTravelTime
+            0.9f,
             charData,
-            attacker.Actor
+            attacker.Actor,
+            isHeavy //  ★ 傳進 BattleEffectManager
         );
+
 
         // *延遲 0.05 秒讓格檔特效確實生成（安全做法）
         yield return new WaitForSeconds(0.05f);
@@ -857,7 +861,6 @@ public class BattleManager : MonoBehaviour
         // ---------------------------
         // ★ 第二步：判斷 輕攻擊 / 重攻擊
         // ---------------------------
-        bool isHeavy = (beatInCycle == beatsPerMeasure);
 
         if (!isHeavy)
         {
