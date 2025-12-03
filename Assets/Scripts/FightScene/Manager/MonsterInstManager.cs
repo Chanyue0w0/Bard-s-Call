@@ -174,9 +174,9 @@ public class MonsterInstManager : MonoBehaviour
             switch (stage)
             {
                 case 1:
-                    //teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
                     //teamManager.EnemyTeamInfo[1].PrefabToSpawn = shieldGoblinPrefab;
-                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;
+                    //teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;
                     //teamManager.EnemyTeamInfo[0].PrefabToSpawn = mageGoblinPrefab;
                     //teamManager.EnemyTeamInfo[0].PrefabToSpawn = orcPrefab;
                     break;

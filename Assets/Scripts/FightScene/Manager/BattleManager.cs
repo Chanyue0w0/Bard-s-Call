@@ -119,9 +119,9 @@ public class BattleManager : MonoBehaviour
     private System.Action<InputAction.CallbackContext> attackP1Handler;
     private System.Action<InputAction.CallbackContext> attackP2Handler;
     private System.Action<InputAction.CallbackContext> attackP3Handler;
-    private System.Action<InputAction.CallbackContext> blockP1Handler;
-    private System.Action<InputAction.CallbackContext> blockP2Handler;
-    private System.Action<InputAction.CallbackContext> blockP3Handler;
+    //private System.Action<InputAction.CallbackContext> blockP1Handler;
+    //private System.Action<InputAction.CallbackContext> blockP2Handler;
+    //private System.Action<InputAction.CallbackContext> blockP3Handler;
 
     private void Awake()
     {
@@ -154,9 +154,9 @@ public class BattleManager : MonoBehaviour
         if (actionAttackP1 != null) { actionAttackP1.action.started += attackP1Handler; actionAttackP1.action.Enable(); }
         if (actionAttackP2 != null) { actionAttackP2.action.started += attackP2Handler; actionAttackP2.action.Enable(); }
         if (actionAttackP3 != null) { actionAttackP3.action.started += attackP3Handler; actionAttackP3.action.Enable(); }
-        if (actionBlockP1 != null) { actionBlockP1.action.started += blockP1Handler; actionBlockP1.action.Enable(); }
-        if (actionBlockP2 != null) { actionBlockP2.action.started += blockP2Handler; actionBlockP2.action.Enable(); }
-        if (actionBlockP3 != null) { actionBlockP3.action.started += blockP3Handler; actionBlockP3.action.Enable(); }
+        //if (actionBlockP1 != null) { actionBlockP1.action.started += blockP1Handler; actionBlockP1.action.Enable(); }
+        //if (actionBlockP2 != null) { actionBlockP2.action.started += blockP2Handler; actionBlockP2.action.Enable(); }
+        //if (actionBlockP3 != null) { actionBlockP3.action.started += blockP3Handler; actionBlockP3.action.Enable(); }
         if (actionFeverUltimate != null) { actionFeverUltimate.action.started += feverUltHandler; actionFeverUltimate.action.Enable(); }
     }
 
@@ -165,9 +165,9 @@ public class BattleManager : MonoBehaviour
         if (actionAttackP1 != null) actionAttackP1.action.started -= attackP1Handler;
         if (actionAttackP2 != null) actionAttackP2.action.started -= attackP2Handler;
         if (actionAttackP3 != null) actionAttackP3.action.started -= attackP3Handler;
-        if (actionBlockP1 != null) actionBlockP1.action.started -= blockP1Handler;
-        if (actionBlockP2 != null) actionBlockP2.action.started -= blockP2Handler;
-        if (actionBlockP3 != null) actionBlockP3.action.started -= blockP3Handler;
+        //if (actionBlockP1 != null) actionBlockP1.action.started -= blockP1Handler;
+        //if (actionBlockP2 != null) actionBlockP2.action.started -= blockP2Handler;
+        //if (actionBlockP3 != null) actionBlockP3.action.started -= blockP3Handler;
         if (actionFeverUltimate != null) { actionFeverUltimate.action.started -= feverUltHandler;}
 
         FMODBeatListener2.OnGlobalBeat -= HandleBeatEffects; // ★ 新增
@@ -584,7 +584,7 @@ public class BattleManager : MonoBehaviour
             }
 
             // 吟遊詩人重拍：無敵人也能治癒
-            if (attacker.ClassType == UnitClass.Bard && beatInCycle == beatsPerMeasure)
+            if (attacker.ClassType == UnitClass.Bard)
             {
                 Debug.Log("[特例] 吟遊詩人重攻擊在無敵人時仍可施放治癒");
                 StartCoroutine(HandleBardAttack(attacker, null, beatInCycle, beatsPerMeasure, perfect));
@@ -723,8 +723,8 @@ public class BattleManager : MonoBehaviour
         {
             if (target != null && charData.NormalAttacks != null)
             {
-                var heavy = Instantiate(charData.NormalAttacks[0].SkillPrefab, target.Actor.transform.position, Quaternion.identity);
-                var skill = heavy.GetComponent<FireBallSkill>();
+                var normal = Instantiate(charData.NormalAttacks[0].SkillPrefab, target.Actor.transform.position, Quaternion.identity);
+                var skill = normal.GetComponent<FireBallSkill>();
                 if (skill != null)
                 {
                     skill.attacker = attacker;
@@ -733,12 +733,10 @@ public class BattleManager : MonoBehaviour
                     skill.isHeavyAttack = true;
                     skill.damage = 10 + GlobalIndex.RythmResonanceBuff;
                 }
-
-                // 增加疊層 & 特效
-                BattleEffectManager.Instance.AddChargeStack(attacker);
-
-                Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
             }
+            // 增加疊層 & 特效
+            BattleEffectManager.Instance.AddChargeStack(attacker);
+            Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
         }
 
         yield return null;
@@ -818,7 +816,6 @@ public class BattleManager : MonoBehaviour
         // **普通攻擊：需要敵人存在**
         if (beatInCycle != beatsPerMeasure)
         {
-            if (target == null) yield break; // 沒敵人就不揮擊
             // **輕攻擊：全隊回復血量 +10**
             Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復10HP！");
             BattleEffectManager.Instance.HealTeamWithEffect(10 + GlobalIndex.RythmResonanceBuff);
