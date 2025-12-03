@@ -20,6 +20,13 @@ public class PoisonFrog : EnemyBase
     [Header("攻擊間隔（拍）")]
     public int attackIntervalBeats = 6;
 
+    [Header("攻擊頻率")]
+    public int minAttackBeats = 8;
+    public int maxAttackBeats = 10;
+
+    private int nextAttackBeat = -999;
+
+
     private int lastAttackBeat = -999;
 
     private CharacterData charData;
@@ -46,11 +53,16 @@ public class PoisonFrog : EnemyBase
     private void OnEnable()
     {
         FMODBeatListener2.OnGlobalBeat += HandleBeat;
+
         lastAttackBeat = FMODBeatListener2.Instance.GlobalBeatIndex;
+
+        // ★ 新增：第一次攻擊時間
+        nextAttackBeat = lastAttackBeat + Random.Range(minAttackBeats, maxAttackBeats + 1);
 
         if (anim != null)
             anim.OnFrameEvent += HandleAnimEvent;
     }
+
 
     private void OnDisable()
     {
@@ -69,12 +81,16 @@ public class PoisonFrog : EnemyBase
     {
         if (IsFeverLocked()) return;
 
-        if (globalBeat - lastAttackBeat >= attackIntervalBeats)
+        // ★ 取代原本固定 attackIntervalBeats 的寫法
+        if (globalBeat >= nextAttackBeat)
         {
-            lastAttackBeat = globalBeat;
             DoAttack();
+
+            // ★ 攻擊後抽下一次攻擊拍數
+            nextAttackBeat = globalBeat + Random.Range(minAttackBeats, maxAttackBeats + 1);
         }
     }
+
 
     public void DoAttack()
     {
