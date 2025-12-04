@@ -323,8 +323,18 @@ public class BattleEffectManager : MonoBehaviour
             if (shieldGoblin != null && shieldGoblin.isBlocking)
             {
                 Debug.Log("【敵方格擋成功】");
-                return;  // 不受傷
+
+                // ★ 顯示格擋的原始傷害（藍色數字）
+                if (DamageNumberManager.Instance != null && attacker != null)
+                {
+                    int rawDamage = Mathf.RoundToInt(overrideDamage * 0.3f); //格檔70%傷害
+
+                    DamageNumberManager.Instance.ShowBlocked(target.Actor.transform, rawDamage);
+                }
+
+                return;
             }
+
 
             var darkKnight = target.Actor.GetComponent<DarkLongSwordKnight>();
             if (darkKnight != null)
@@ -374,6 +384,10 @@ public class BattleEffectManager : MonoBehaviour
                     ShowBlockEffectPaladin(target);
                     //ActivateHolyEffect();
                     Debug.Log("【Paladin 重拍格檔】100% 免傷");
+
+                    // ★ 顯示被格擋後的 0 點傷害 
+                    DamageNumberManager.Instance.ShowBlocked(target.Actor.transform, 0);
+
                     return;
                 }
                 else
