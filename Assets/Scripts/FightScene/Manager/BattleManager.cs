@@ -100,6 +100,12 @@ public class BattleManager : MonoBehaviour
     public GameObject magicUseAuraPrefab;
     public float vfxLifetime = 1.5f;
 
+    [Header("Heavy Beat Expression VFX (三位玩家預設於場景 重拍提示特效)")]
+    public GameObject heavyBeatVFX_P1;
+    public GameObject heavyBeatVFX_P2;
+    public GameObject heavyBeatVFX_P3;
+
+
     [Header("Fever 大招展示位置")]
     public Transform feverUltShowingPoint;
 
@@ -568,6 +574,23 @@ public class BattleManager : MonoBehaviour
         // ★★★ 一小節拍數（通常是 4） ★★★
         int beatsPerMeasure = listener.BeatsPerMeasure;
 
+        // Heavy Beat (通常為第 beatsPerMeasure 拍)
+        bool isHeavyBeat = (beatInCycle == beatsPerMeasure);
+
+        // P1 P2 P3 對應的 VFX
+        GameObject heavyVfx = null;
+        switch (index)
+        {
+            case 0: heavyVfx = heavyBeatVFX_P1; break;
+            case 1: heavyVfx = heavyBeatVFX_P2; break;
+            case 2: heavyVfx = heavyBeatVFX_P3; break;
+        }
+
+        if (perfect && isHeavyBeat && heavyVfx != null)
+        {
+            StartCoroutine(PlayHeavyBeatVFX(heavyVfx));
+        }
+
         var target = FindEnemyByClass(attacker.ClassType);
 
         // ------------------------------------------------------------
@@ -615,7 +638,18 @@ public class BattleManager : MonoBehaviour
             StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
     }
 
+    private IEnumerator PlayHeavyBeatVFX(GameObject vfx)
+    {
+        vfx.SetActive(true);
 
+        float beatSec = 0.5f;
+        if (FMODBeatListener2.Instance != null)
+            beatSec = FMODBeatListener2.Instance.SecondsPerBeat * 1f;
+
+        yield return new WaitForSeconds(beatSec);
+
+        vfx.SetActive(false);
+    }
 
     private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle,int beatsPerMeasure, bool perfect)
     {

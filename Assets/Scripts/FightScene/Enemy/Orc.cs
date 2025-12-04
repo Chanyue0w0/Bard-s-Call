@@ -113,6 +113,12 @@ public class Orc : EnemyBase
 
     private void OnDisable()
     {
+        if (chargeBarUI != null)
+            Destroy(chargeBarUI.gameObject);
+
+        if (currentChargeVfx != null)
+            Destroy(currentChargeVfx);
+
         FMODBeatListener2.OnGlobalBeat -= HandleBeat;
 
         if (anim != null)
@@ -393,4 +399,28 @@ public class Orc : EnemyBase
 
         transform.position = targetPos;
     }
+
+    // ======================
+    // 死亡處理（覆寫 EnemyBase）
+    // ======================
+    public override void OnDeath()
+    {
+        base.OnDeath();
+
+        // 移除 ChargeBarUI
+        if (chargeBarUI != null)
+        {
+            Destroy(chargeBarUI.gameObject);
+        }
+
+        // 移除 ChargeVFX（如果還在）
+        if (currentChargeVfx != null)
+        {
+            Destroy(currentChargeVfx);
+        }
+
+        // 保險：停止 Charging 狀態
+        isCharging = false;
+    }
+
 }

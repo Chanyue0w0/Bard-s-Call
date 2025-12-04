@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7099359726676069581}
-  - component: {fileID: 5181857276681444727}
   m_Layer: 0
   m_Name: HeavyBeatExpressionPixelVFX
   m_TagString: Untagged
@@ -33,20 +32,6 @@ Transform:
   - {fileID: 1530177307593050770}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5181857276681444727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 170749246252015400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474ca66447f10da438db6e38eb532a6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifeTime: 3
-  useUnscaledTime: 0
 --- !u!1 &1547649976328959180
 GameObject:
   m_ObjectHideFlags: 0
@@ -5154,8 +5139,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 1, g: 0.59542704, b: 0, a: 0.2}
-      maxColor: {r: 1, g: 0.83097446, b: 0.6509804, a: 0.5529412}
+      minColor: {r: 1, g: 0.59542704, b: 0, a: 1}
+      maxColor: {r: 1, g: 0.83097446, b: 0.6509804, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -10095,7 +10080,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0.76228404, b: 0.435849, a: 0.14901961}
+      maxColor: {r: 1, g: 0.76228404, b: 0.435849, a: 0.7607843}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 0.87058824, b: 0.4862745, a: 1}
@@ -14995,7 +14980,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0.5051096, b: 0, a: 0.5019608}
+      maxColor: {r: 1, g: 0.5051096, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
