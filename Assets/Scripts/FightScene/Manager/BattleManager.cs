@@ -719,36 +719,58 @@ public class BattleManager : MonoBehaviour
         int clampedStack = Mathf.Clamp(chargeStacks, 0, damageMatrix.Length - 1);
         int heavyDamage = damageMatrix[clampedStack] + GlobalIndex.RythmResonanceBuff;
 
-        // === 第四拍：重攻擊 ===
+        // === 第四拍：重攻擊（依照存活敵人的位置生成雷電） ===
         if (beatInCycle == beatsPerMeasure)
         {
-            Vector2 spawnPos = enemyPositions[1].position;
+            Debug.Log("[Mage HeavyAttack] 依照敵人存在位置生成雷電特效");
 
-            GameObject skillObj = Instantiate(charData.HeavyAttack.SkillPrefab, spawnPos, Quaternion.identity);
-            Debug.Log($"[Fever-Mage] 雷電 MultiStrikeSkill 生成於敵方第2位置！");
-
-            // 設定 MultiStrikeSkill 屬性
-            MultiStrikeSkill skill = skillObj.GetComponent<MultiStrikeSkill>();
-            if (skill != null)
+            // 取得所有敵人（給 MultiStrikeSkill 多目標使用）
+            List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
+            foreach (var e in EnemyTeamInfo)
             {
-                skill.attacker = attacker;
+                if (e != null && e.Actor != null && e.HP > 0)
+                    allEnemies.Add(e);
+            }
 
-                // 加入全體敵人為目標
-                List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
-                foreach (var enemy in EnemyTeamInfo)
+            // 沒敵人就不生成
+            if (allEnemies.Count == 0)
+            {
+                Debug.Log("[Mage HeavyAttack] 無敵人 → 不生成雷電");
+                BattleEffectManager.Instance.ResetChargeStacks(attacker);
+                yield break;
+            }
+
+            // ★ 依照每個敵人目前所在格子，生成雷電特效
+            foreach (var enemy in EnemyTeamInfo)
+            {
+                if (enemy == null || enemy.Actor == null || enemy.HP <= 0)
+                    continue;
+
+                // 依照敵人SlotTransform生成最準確的位置
+                Vector3 spawnPos = enemy.SlotTransform.position;
+
+                GameObject skillObj = Instantiate(
+                    charData.HeavyAttack.SkillPrefab,
+                    spawnPos,
+                    Quaternion.identity
+                );
+
+                MultiStrikeSkill skill = skillObj.GetComponent<MultiStrikeSkill>();
+                if (skill != null)
                 {
-                    if (enemy != null && enemy.Actor != null && enemy.HP > 0)
-                        allEnemies.Add(enemy);
+                    skill.attacker = attacker;
+
+                    // ★ 改成 ONLY 針對這個 enemy
+                    skill.targets = new List<BattleManager.TeamSlotInfo>() { enemy };
+
+                    skill.isPerfect = true;
+                    skill.isHeavyAttack = true;
+                    skill.damage = heavyDamage;
                 }
 
-                skill.targets = allEnemies;
-                skill.isPerfect = true;
-                skill.isHeavyAttack = true;
-                skill.damage = heavyDamage;   // ★ 使用矩陣 damage
             }
 
             BattleEffectManager.Instance.ResetChargeStacks(attacker);
-
             yield break;
         }
 
