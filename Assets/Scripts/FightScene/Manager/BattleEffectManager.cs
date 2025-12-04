@@ -46,6 +46,10 @@ public class BattleEffectManager : MonoBehaviour
     // -------------------------
     private Dictionary<BattleManager.TeamSlotInfo, int> mageChargeStacks = new Dictionary<BattleManager.TeamSlotInfo, int>();
 
+    
+
+    [Header("Holy CounterAttack（完美格檔反擊）")]
+    public GameObject holyCounterattackPrefab;
     // -------------------------
     // HolyEffect（對拍共鳴 BUFF）
     // -------------------------
@@ -378,14 +382,27 @@ public class BattleEffectManager : MonoBehaviour
 
                 if (heavyBlock)
                 {
-                    // ==============================
-                    // ★ 重拍格檔 → 完全免傷
-                    // ==============================
                     ShowBlockEffectPaladin(target);
-                    //ActivateHolyEffect();
-                    Debug.Log("【Paladin 重拍格檔】100% 免傷");
+                    Debug.Log("【Paladin 重拍格檔】100% 免傷（觸發神聖反擊）");
 
-                    // ★ 顯示被格擋後的 0 點傷害 
+                    // ★★★ 反擊生成 HolyCounterattack ★★★
+                    if (attacker != null && holyCounterattackPrefab != null)
+                    {
+                        Vector3 spawnPos = target.Actor.transform.position + new Vector3(0, 0.5f, 0);
+                        GameObject obj = GameObject.Instantiate(holyCounterattackPrefab, spawnPos, Quaternion.identity);
+
+                        FireBallSkill fire = obj.GetComponent<FireBallSkill>();
+                        if (fire != null)
+                        {
+                            fire.attacker = target;        // paladin 是反擊者
+                            fire.target = attacker;        // 攻擊者成為反擊目標
+                            fire.damage = 40 + GlobalIndex.RythmResonanceBuff;              // 自訂反擊傷害
+                            fire.isPerfect = true;         // 設定為 perfect hit
+                            fire.isHeavyAttack = true;     // 重擊屬性
+                        }
+                    }
+
+                    // 顯示格擋數字
                     DamageNumberManager.Instance.ShowBlocked(target.Actor.transform, 0);
 
                     return;
