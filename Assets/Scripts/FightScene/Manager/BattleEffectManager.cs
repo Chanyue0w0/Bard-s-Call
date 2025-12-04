@@ -517,7 +517,7 @@ public class BattleEffectManager : MonoBehaviour
 
     public void ActivateHolyEffect()
     {
-        int durationBeats = 4;
+        int durationBeats = 5;
 
         // 若已啟動 → 只刷新持續拍
         if (isHolyActive)
