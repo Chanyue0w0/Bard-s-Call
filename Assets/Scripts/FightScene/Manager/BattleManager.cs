@@ -879,8 +879,9 @@ public class BattleManager : MonoBehaviour
         else
         {
             // **重攻擊：全隊回復血量 +50**
-            Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復20HP！");
-            BattleEffectManager.Instance.HealTeamWithEffect(20 + GlobalIndex.RythmResonanceBuff);
+            //Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復20HP！");
+            //BattleEffectManager.Instance.HealTeamWithEffect(20 + GlobalIndex.RythmResonanceBuff);
+            BattleEffectManager.Instance.ActivateHolyEffect();
         }
 
         yield return null;

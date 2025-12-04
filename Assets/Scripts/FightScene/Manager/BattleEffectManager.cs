@@ -372,7 +372,7 @@ public class BattleEffectManager : MonoBehaviour
                     // ★ 重拍格檔 → 完全免傷
                     // ==============================
                     ShowBlockEffectPaladin(target);
-                    ActivateHolyEffect();
+                    //ActivateHolyEffect();
                     Debug.Log("【Paladin 重拍格檔】100% 免傷");
                     return;
                 }
@@ -381,31 +381,40 @@ public class BattleEffectManager : MonoBehaviour
                     // ==============================
                     // ★ 輕拍格檔 → 扣 30% 傷害
                     // ==============================
-                    int reducedDamage = Mathf.RoundToInt(rawDamage * 0.3f); // 只吃 30% 傷害
+                    int reducedDamage = Mathf.RoundToInt(rawDamage * 0.3f);   // 玩家實際承受
+                    int blockedDamage = rawDamage - reducedDamage;            // 被格檔掉的量（70%）
 
                     ShowBlockEffectPaladin(target);
-                    ActivateHolyEffect();
-                    Debug.Log($"【Paladin 輕拍格檔】受到 {reducedDamage} 傷害（70% 減傷）");
+                    //ActivateHolyEffect();
+                    Debug.Log($"【Paladin 輕拍格檔】受到 {reducedDamage} 傷害（格擋 {blockedDamage}）");
 
-                    // ===== 套用傷害至隊伍血條（完全沿用原本 OnHit 流程）=====
+                    // ========================================================
+                    // ★ 數字顯示：兩個數字
+                    //   1. 格擋的傷害（藍/灰） → ShowBlocked()
+                    //   2. 實際扣血（紅）→ ShowDamage()
+                    // ========================================================
+                    if (DamageNumberManager.Instance != null)
+                    {
+                        // Blocked 數字：顯示被減掉後的傷害量（70%）
+                        DamageNumberManager.Instance.ShowBlocked(target.Actor.transform, reducedDamage); //blockedDamage
+
+                        // 拿到的傷害：顯示實際扣的 30%
+                        //DamageNumberManager.Instance.ShowDamage(target.Actor.transform, reducedDamage);
+                    }
+
+                    // ===== 套用傷害至全隊共用 HP =====
                     GlobalIndex.CurrentTotalHP = Mathf.Max(0, GlobalIndex.CurrentTotalHP - reducedDamage);
                     playerTotalHPUI.SetHP(GlobalIndex.CurrentTotalHP, GlobalIndex.MaxTotalHP);
 
-                    if (DamageNumberManager.Instance != null)
-                        DamageNumberManager.Instance.ShowDamage(target.Actor.transform, reducedDamage);
-
-                    // Mage 被攻擊 → 中斷充電
-                    if (data.ClassType == BattleManager.UnitClass.Mage)
-                        ResetChargeStacks(target);
-
                     BattleManager.Instance.CheckPlayerDefeat();
                     return;
+
                 }
             }
 
             // ----------- 其他職業：沿用舊版完全格檔 -----------
             ShowBlockEffectPaladin(target);
-            ActivateHolyEffect();
+            //ActivateHolyEffect();
             Debug.Log($"【格檔成功】{target.UnitName} 擋下 {attacker?.UnitName} 的攻擊！");
             return;
         }
@@ -439,12 +448,12 @@ public class BattleEffectManager : MonoBehaviour
             }
 
             // 法師中斷充電
-            var data = target.Actor.GetComponent<CharacterData>();
-            if (data != null && data.ClassType == BattleManager.UnitClass.Mage)
-            {
-                ResetChargeStacks(target);
-                Debug.Log($"【充電中斷】{target.UnitName} 被攻擊 → 清除層數");
-            }
+            //var data = target.Actor.GetComponent<CharacterData>();
+            //if (data != null && data.ClassType == BattleManager.UnitClass.Mage)
+            //{
+            //    ResetChargeStacks(target);
+            //    Debug.Log($"【充電中斷】{target.UnitName} 被攻擊 → 清除層數");
+            //}
 
             // 判斷是否全隊死亡
             BattleManager.Instance.CheckPlayerDefeat();
@@ -797,16 +806,22 @@ public class BattleEffectManager : MonoBehaviour
             playerTotalHPUI.SetHP(GlobalIndex.CurrentTotalHP, GlobalIndex.MaxTotalHP);
 
         // 3. 個別角色顯示回復特效 & 綠色數字
+
+        // ============================
+        // ★ 顯示一次治療數字（中間角色）
+        // ============================
+        var mid = BattleManager.Instance.CTeamInfo[1];
+        Transform centerTransform = mid?.Actor?.transform;
+        // 3-1 顯示綠色 +healAmount
+        if (DamageNumberManager.Instance != null)
+        {
+            DamageNumberManager.Instance.ShowHeal(centerTransform, healAmount);
+        }
+
         var team = BattleManager.Instance.CTeamInfo;
         foreach (var ally in team)
         {
             if (ally == null || ally.Actor == null) continue;
-
-            // 3-1 顯示綠色 +healAmount
-            if (DamageNumberManager.Instance != null)
-            {
-                DamageNumberManager.Instance.ShowHeal(ally.Actor.transform, healAmount);
-            }
 
             // 3-2 生成治癒特效
             if (healVfxPrefab != null)

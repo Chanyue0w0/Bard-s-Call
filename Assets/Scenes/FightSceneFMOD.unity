@@ -5355,6 +5355,17 @@ MonoBehaviour:
   - {fileID: 6893444322088287586, guid: e6dea3b124fa49e47be6f333698452ea, type: 3}
   - {fileID: 2972361428040272383, guid: b9667bd44c83bfb44bdb690f4e4a2b26, type: 3}
   - {fileID: 5615004131614203636, guid: 5e08a6b4a78c12140983c1f1e75c7c69, type: 3}
+  blockedDigitPrefabs:
+  - {fileID: 7994987615773369376, guid: 402cfce4cc866104183181328fbcc1aa, type: 3}
+  - {fileID: 6151751985155876418, guid: 2b16b833f06202d42b3245c5e0c25ad9, type: 3}
+  - {fileID: 4590768582758019746, guid: 7964a447f8b9c714ba14d2a02614f039, type: 3}
+  - {fileID: 1864826971215131944, guid: b479d1263d4b9df45834dae7c05e063e, type: 3}
+  - {fileID: 1203754579838979934, guid: b181b7edc5c527e4dac99a751c2e95f5, type: 3}
+  - {fileID: 3250705208694197283, guid: 7a0aec1ef0211bf4c8989b8e51f46699, type: 3}
+  - {fileID: 6195941735277648095, guid: a2261b919d231c042b486e821ac1d24f, type: 3}
+  - {fileID: 6893444322088287586, guid: 81cbb873ef8719b469984f40920726f2, type: 3}
+  - {fileID: 2972361428040272383, guid: 3ff9132da6df1be49947cce65eef105b, type: 3}
+  - {fileID: 5615004131614203636, guid: 0db121ee0382b944f98a82ac64b1bdf4, type: 3}
   prewarmPerDigit: 8
   digitSpacing: 0.8
   groupOffsetY: 5
