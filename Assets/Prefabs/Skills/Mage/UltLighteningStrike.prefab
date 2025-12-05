@@ -14574,7 +14574,7 @@ MonoBehaviour:
   explosionPrefab: {fileID: 8714966469225416086, guid: b262996d3dc43634485ee3251a0d0107, type: 3}
   lifeTime: 0.5
   isPerfect: 0
-  isHeavyAttack: 0
+  isHeavyAttack: 1
   damage: 200
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
   uiCanvas: {fileID: 0}

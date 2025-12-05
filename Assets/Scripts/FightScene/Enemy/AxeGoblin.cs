@@ -21,6 +21,9 @@ public class AxeGoblin : EnemyBase
     public int minAttackBeats = 6;
     public int maxAttackBeats = 10;
 
+    [Header("受擊噴淚")]
+    private int damageTakenThisBeat = 0;
+    private int lastProcessedBeat = -1;
 
     [Header("衝刺 / 回歸設定")]
     public float dashTime = 0.05f;
@@ -76,20 +79,16 @@ public class AxeGoblin : EnemyBase
             anim.OnFrameEvent -= HandleAnimEvent;
     }
 
-    // ======================
-    // Beat
-    // ======================
-    //private void HandleBeat(int globalBeat)
-    //{
-    //    if (IsFeverLocked()) return;   // Fever 期間不攻擊
-    //    if (isMoving) return;          // 正在衝刺/回歸中不可重複攻擊
+    public override void OnDamaged(int dmg, bool isHeavyAttack)
+    {
+        base.OnDamaged(dmg, isHeavyAttack);
 
-    //    if (globalBeat - lastAttackBeat >= attackIntervalBeats)
-    //    {
-    //        lastAttackBeat = globalBeat;
-    //        DoAttack();
-    //    }
-    //}
+        if (anim == null) return;
+
+        // 只有 Idle 可以切 HitCry
+        if (anim.GetCurrentClipName() == "Idle" && isHeavyAttack)
+            anim.Play("HitCry", true);
+    }
 
     // ======================
     // Beat
@@ -97,6 +96,8 @@ public class AxeGoblin : EnemyBase
     private void HandleBeat(int globalBeat)
     {
         if (IsFeverLocked()) return;
+        if (isMoving) return;
+
         if (isMoving) return;
 
         if (globalBeat >= nextAttackBeat)
@@ -107,6 +108,24 @@ public class AxeGoblin : EnemyBase
             nextAttackBeat = globalBeat + Random.Range(minAttackBeats, maxAttackBeats + 1);
         }
     }
+
+    private void TryPlayHitCry(int beat)
+    {
+        // 必須在 Idle 狀態
+        if (anim == null) return;
+        if (anim.GetCurrentClipName() != "Idle") return;
+
+        // 下一拍沒有要攻擊  globalBeat + 1 > nextAttackBeat
+        if (beat + 1 >= nextAttackBeat) return;
+
+        // 本拍受到 >= 50 傷害才觸發
+        //if (damageTakenThisBeat < 50) return;
+
+        // 播放 HitCry 動畫
+        anim.Play("HitCry", true);
+        // Debug.Log($"{name} 受到重擊 → 播放 HitCry");
+    }
+
 
     public void DoAttack()
     {

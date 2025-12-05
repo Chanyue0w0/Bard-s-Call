@@ -9885,7 +9885,7 @@ MonoBehaviour:
   explosionPrefab: {fileID: 8166078708589751786, guid: 7cb10d9cf1a36e342aadda7c60f1d577, type: 3}
   travelTime: 0.3
   isPerfect: 0
-  isHeavyAttack: 0
+  isHeavyAttack: 1
   damage: 0
   targetPositionOffset: {x: 0, y: 0.5, z: 0}
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}

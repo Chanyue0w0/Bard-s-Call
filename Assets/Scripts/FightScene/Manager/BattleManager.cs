@@ -786,7 +786,7 @@ public class BattleManager : MonoBehaviour
                     skill.attacker = attacker;
                     skill.target = target;
                     skill.isPerfect = perfect;
-                    skill.isHeavyAttack = true;
+                    skill.isHeavyAttack = false;
                     skill.damage = 10 + GlobalIndex.RythmResonanceBuff;
                 }
             }
