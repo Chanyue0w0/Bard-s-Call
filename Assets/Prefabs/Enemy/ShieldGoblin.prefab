@@ -372,6 +372,16 @@ MonoBehaviour:
       hasTriggered: 0
     loop: 0
     holdLastFrame: 0
+  - clipName: HitCry
+    frames:
+    - sprite: {fileID: 21300000, guid: 41c0032674b95df41b744e3bcb77860b, type: 3}
+      beatLength: 1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 0
+    holdLastFrame: 0
   defaultClipName: Idle
   playDefaultOnStart: 1
 --- !u!1 &6655271926595468758
