@@ -119,14 +119,14 @@ public class MageGoblin : EnemyBase
     }
     private IEnumerator ShakeOneBeat()
     {
-        // 一拍 = FMODBeatListener2 的 beatDuration
         float beatDuration = FMODBeatListener2.Instance.SecondsPerBeat;
-        float shakeTime = beatDuration; // 抖完整一拍
+        float shakeTime = beatDuration * 2f; // 兩拍
 
-        Vector3 originalPos = transform.localPosition;
+        // ★★ 正確：使用敵人 Slot 標準站位（永遠不會錯）
+        Vector3 basePos = thisSlotInfo.SlotTransform.position;
 
-        float shakeMagnitude = 0.08f;  // 左右抖動強度（可調）
-        float shakeSpeed = 60f;        // 越高越快（可調）
+        float shakeMagnitude = 0.08f;
+        float shakeSpeed = 60f;
 
         float timer = 0f;
 
@@ -135,13 +135,14 @@ public class MageGoblin : EnemyBase
             timer += Time.deltaTime;
 
             float offset = Mathf.Sin(timer * shakeSpeed) * shakeMagnitude;
-            transform.localPosition = originalPos + new Vector3(offset, 0, 0);
+
+            transform.position = basePos + new Vector3(offset, 0, 0);
 
             yield return null;
         }
 
-        // 抖完回到原位
-        transform.localPosition = originalPos;
+        // ★ 回正到固定站位，不受衝刺影響
+        transform.position = basePos;
     }
 
     // ======================

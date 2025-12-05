@@ -363,7 +363,7 @@ public class Orc : EnemyBase
             yield break;
         }
 
-        originalPos = transform.position;
+        originalPos = thisSlotInfo.SlotTransform.position;
         Vector3 targetPos = target.Actor.transform.position + attackPositionOffset;
 
         // Step 1: ½Ä¨ë
