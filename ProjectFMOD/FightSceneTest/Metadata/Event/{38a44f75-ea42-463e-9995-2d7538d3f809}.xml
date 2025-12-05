@@ -23,7 +23,6 @@
 			<destination>{fe3b14c2-cfef-4b79-ba73-a3cd6ca3add8}</destination>
 		</relationship>
 		<relationship name="markerTracks">
-			<destination>{5a30f7b4-595e-42df-a2c9-106084933a22}</destination>
 			<destination>{5a2cc2b9-7312-4273-b15b-f1e4077a47e3}</destination>
 		</relationship>
 		<relationship name="groupTracks">
@@ -62,7 +61,6 @@
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{fe3b14c2-cfef-4b79-ba73-a3cd6ca3add8}" />
-	<object class="MarkerTrack" id="{5a30f7b4-595e-42df-a2c9-106084933a22}" />
 	<object class="MarkerTrack" id="{5a2cc2b9-7312-4273-b15b-f1e4077a47e3}" />
 	<object class="GroupTrack" id="{d132158a-2c04-402a-bb26-10d756b776c1}">
 		<relationship name="automationTracks">
@@ -90,10 +88,6 @@
 		<relationship name="modules">
 			<destination>{7c6077b5-13fa-4229-8d91-e08b054249c4}</destination>
 			<destination>{e330616d-8bf4-44f5-8129-41f067a5d431}</destination>
-		</relationship>
-		<relationship name="markers">
-			<destination>{c18fc4af-804e-488a-803c-6e9a740578c9}</destination>
-			<destination>{5e2760f4-e65c-4286-90ce-1f14b5fa06f0}</destination>
 		</relationship>
 	</object>
 	<object class="ParameterProxy" id="{df4d14d7-38b0-4424-84f9-38d5314b6bda}">
@@ -182,34 +176,6 @@
 		</relationship>
 		<relationship name="output">
 			<destination>{9df11c4f-e4c9-43a0-afc9-221b07b6eda8}</destination>
-		</relationship>
-	</object>
-	<object class="LoopRegion" id="{c18fc4af-804e-488a-803c-6e9a740578c9}">
-		<property name="position">
-			<value>0</value>
-		</property>
-		<property name="length">
-			<value>0.59999999999999998</value>
-		</property>
-		<relationship name="timeline">
-			<destination>{5f03520b-6635-467e-b910-cbd622463603}</destination>
-		</relationship>
-		<relationship name="markerTrack">
-			<destination>{5a30f7b4-595e-42df-a2c9-106084933a22}</destination>
-		</relationship>
-	</object>
-	<object class="TempoMarker" id="{5e2760f4-e65c-4286-90ce-1f14b5fa06f0}">
-		<property name="position">
-			<value>0</value>
-		</property>
-		<property name="tempo">
-			<value>100</value>
-		</property>
-		<relationship name="timeline">
-			<destination>{5f03520b-6635-467e-b910-cbd622463603}</destination>
-		</relationship>
-		<relationship name="markerTrack">
-			<destination>{5a2cc2b9-7312-4273-b15b-f1e4077a47e3}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusEffectChain" id="{5b0c1634-837c-493d-b728-42edef0908ae}">

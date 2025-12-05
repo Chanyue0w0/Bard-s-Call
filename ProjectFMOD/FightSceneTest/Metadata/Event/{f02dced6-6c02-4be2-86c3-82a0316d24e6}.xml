@@ -114,6 +114,7 @@
 		<relationship name="effects">
 			<destination>{dd8c63d6-3c50-4a2a-9446-36b2e6796cd0}</destination>
 			<destination>{bbb39a6d-9632-4483-9501-1d5f26104e14}</destination>
+			<destination>{bcfc5794-6dda-4ce3-b8af-fae8faea5998}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{67f59b57-e835-4e14-bf5d-84bcd0071566}" />
@@ -136,6 +137,11 @@
 	<object class="PannerEffect" id="{bbb39a6d-9632-4483-9501-1d5f26104e14}">
 		<property name="stereoPan">
 			<value>-20</value>
+		</property>
+	</object>
+	<object class="GainEffect" id="{bcfc5794-6dda-4ce3-b8af-fae8faea5998}">
+		<property name="gain">
+			<value>-1</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{65d93b85-69ce-42a8-aa60-7dfeed694fe9}">

@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{5f711d63-063c-48de-9dc6-212de477877d}">
 		<property name="name">
-			<value>Track01_Under the starry sky</value>
+			<value>CampTrack01_Under the starry sky(Advance)</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -42,9 +42,6 @@
 			<destination>{4c5e88f1-fee0-4de2-87c7-acd84b3dbbf5}</destination>
 			<destination>{4ff29fee-e5b1-4a23-8e24-7c8989d780ce}</destination>
 			<destination>{143ea0fd-fd83-49bd-a008-4a51a9795073}</destination>
-		</relationship>
-		<relationship name="banks">
-			<destination>{4a8936e9-18f1-4853-9601-81f9fb1e0c6a}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixer" id="{d6423651-1673-4cbf-9764-f8e836ef8ecc}">
