@@ -326,20 +326,34 @@ public class BattleEffectManager : MonoBehaviour
             var shieldGoblin = target.Actor.GetComponent<ShieldGoblin>();
             if (shieldGoblin != null && shieldGoblin.isBlocking)
             {
-                Debug.Log("【敵方格擋成功】");
+                Debug.Log("【敵方格檔成功】");
 
-                // ★ 顯示格擋的原始傷害（藍色數字）
+                // 1. 實際傷害（30%）
+                int reducedDamage = Mathf.RoundToInt(overrideDamage * 0.3f);
+
+                // 2. 顯示格擋數字
                 if (DamageNumberManager.Instance != null && attacker != null)
-                {
-                    int rawDamage = Mathf.RoundToInt(overrideDamage * 0.3f); //格檔70%傷害
+                    DamageNumberManager.Instance.ShowBlocked(target.Actor.transform, reducedDamage);
 
-                    DamageNumberManager.Instance.ShowBlocked(target.Actor.transform, rawDamage);
-                }
+                // 3. ★★★ 真正扣血（缺少的部分）★★★
+                target.HP -= reducedDamage;
+                if (target.HP < 0) target.HP = 0;
+
+                // 4. 呼叫敵人受傷反應
+                var enemyBaseTMP = target.Actor.GetComponent<EnemyBase>();
+                if (enemyBaseTMP != null)
+                    enemyBaseTMP.OnDamaged(reducedDamage, isHeavyAttack);
+
+                // 5. 更新血條
+                var enemyHBTMP = target.Actor?.GetComponentInChildren<HealthBarUI>();
+                if (enemyHBTMP != null) enemyHBTMP.ForceUpdate();
+
+                // 6. 檢查死亡
+                if (target.HP <= 0)
+                    HandleUnitDefeated(target);
 
                 return;
             }
-
-
             var darkKnight = target.Actor.GetComponent<DarkLongSwordKnight>();
             if (darkKnight != null)
             {
