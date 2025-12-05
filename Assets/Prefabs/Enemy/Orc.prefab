@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 1448619356940137575}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.01, y: 4.8, z: 0}
+  m_LocalPosition: {x: -0.01, y: 4.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -315,7 +315,7 @@ MonoBehaviour:
   maxAttackBeats: 15
   chargeBeats: 5
   stunBeats: 3
-  chargeInterruptDamageThreshold: 80
+  chargeInterruptDamageThreshold: 50
   dashTime: 0.05
   waitTime: 1
   returnTime: 0.05
@@ -417,6 +417,30 @@ MonoBehaviour:
     holdLastFrame: 0
   - clipName: Attack
     frames:
+    - sprite: {fileID: 21300000, guid: 66434b3f8e67a1348a8225ea74ebaef3, type: 3}
+      beatLength: 0.5
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 9e6fd369506aba849a796fb0fae7a254, type: 3}
+      beatLength: 0.5
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: f458778ae229702458d040a0c2abc28a, type: 3}
+      beatLength: 0.5
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: f42a7b6c59619fc4cb6a535e5743dbb8, type: 3}
+      beatLength: 0.5
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
     - sprite: {fileID: 21300000, guid: f458778ae229702458d040a0c2abc28a, type: 3}
       beatLength: 1
       triggerWarning: 1
@@ -437,6 +461,22 @@ MonoBehaviour:
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 0433f104812e3e047b5760e678b9a425, type: 3}
       beatLength: 0.5
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 0
+    holdLastFrame: 0
+  - clipName: HitCry
+    frames:
+    - sprite: {fileID: 21300000, guid: b2262ccd4b071ec439293a5737b09993, type: 3}
+      beatLength: 1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: b2262ccd4b071ec439293a5737b09993, type: 3}
+      beatLength: 1
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0

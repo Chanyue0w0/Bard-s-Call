@@ -144,19 +144,32 @@ public class Orc : EnemyBase
         // Charge 中
         if (isCharging)
         {
+            // ★ 改用 BattleEffectManager 的治療
+            if (thisSlotInfo != null)
+                BattleEffectManager.Instance.HealEnemy(thisSlotInfo, 10);
+
+            // Charge 是否結束
             if (globalBeat - chargeStartBeat >= chargeBeats)
-                FinishChargeAndStartAttack();
+                FinishCharge();    // ★ 不再開始 Attack
+
             return;
         }
 
-        // 普通狀態 → 看是否要開始 Charge
+
+        // 普通狀態 → 是否開始行動
         if (globalBeat >= nextAttackBeat)
         {
-            StartCharge(globalBeat);
+            bool doCharge = (Random.value < 0.5f);   // ★ 50% 機率 Charge
+
+            if (doCharge)
+                StartCharge(globalBeat);
+            else
+                DoAttack();
 
             nextAttackBeat = globalBeat + Random.Range(minAttackBeats, maxAttackBeats + 1);
         }
     }
+
 
     // ======================
     // Charge 流程
@@ -190,22 +203,23 @@ public class Orc : EnemyBase
         }
     }
 
-    private void FinishChargeAndStartAttack()
+    private void FinishCharge()
     {
         isCharging = false;
         chargeStartBeat = -1;
         damageAccumDuringCharge = 0;
 
         if (chargeBarUI != null)
-        {
             chargeBarUI.SetActive(false);
-        }
 
         if (currentChargeVfx != null)
             Destroy(currentChargeVfx);
 
-        DoAttack();
+        // ★ 不再 Attack，轉為 Idle
+        if (anim != null)
+            anim.Play("Idle", true);
     }
+
 
     private void InterruptChargeAndStun()
     {
@@ -233,8 +247,40 @@ public class Orc : EnemyBase
         stunEndBeat = currentBeat + stunBeats;
 
         if (anim != null)
-            anim.Play("Idle", true);
+        {
+            anim.Play("HitCry", true);
+            StartCoroutine(ShakeOneBeat());
+        }
     }
+
+    private IEnumerator ShakeOneBeat()
+    {
+        float beatDuration = FMODBeatListener2.Instance.SecondsPerBeat;
+        float shakeTime = beatDuration * 2f; // 兩拍
+
+        // ★★ 正確：使用敵人 Slot 標準站位（永遠不會錯）
+        Vector3 basePos = thisSlotInfo.SlotTransform.position;
+
+        float shakeMagnitude = 0.08f;
+        float shakeSpeed = 60f;
+
+        float timer = 0f;
+
+        while (timer < shakeTime)
+        {
+            timer += Time.deltaTime;
+
+            float offset = Mathf.Sin(timer * shakeSpeed) * shakeMagnitude;
+
+            transform.position = basePos + new Vector3(offset, 0, 0);
+
+            yield return null;
+        }
+
+        // ★ 回正到固定站位，不受衝刺影響
+        transform.position = basePos;
+    }
+
 
     private void ExitStun()
     {
@@ -268,6 +314,8 @@ public class Orc : EnemyBase
             }
         }
     }
+
+    
 
 
     // ======================

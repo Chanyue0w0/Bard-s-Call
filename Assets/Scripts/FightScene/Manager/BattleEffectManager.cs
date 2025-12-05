@@ -890,6 +890,49 @@ public class BattleEffectManager : MonoBehaviour
         }
     }
 
+    // ---------------------------------------------------------
+    // ★ 新增：治療單一敵人（顯示綠色數字，播放 healVFX）
+    // ---------------------------------------------------------
+    public void HealEnemy(BattleManager.TeamSlotInfo enemy, int healAmount)
+    {
+        if (enemy == null || enemy.Actor == null) return;
+
+        // 1. 回復 HP
+        enemy.HP = Mathf.Min(enemy.MaxHP, enemy.HP + healAmount);
+        Debug.Log($"【敵人回復】{enemy.UnitName} +{healAmount} → {enemy.HP}/{enemy.MaxHP}");
+
+        // 2. 顯示數字
+        if (DamageNumberManager.Instance != null)
+        {
+            DamageNumberManager.Instance.ShowHeal(enemy.Actor.transform, healAmount);
+        }
+
+        // 3. 顯示治療特效
+        if (healVfxPrefab != null)
+        {
+            Vector3 pos = enemy.Actor.transform.position;
+            GameObject fx = Instantiate(healVfxPrefab, pos, Quaternion.identity);
+            fx.transform.SetParent(enemy.Actor.transform, worldPositionStays: true);
+
+            var exp = fx.GetComponent<Explosion>();
+            if (exp != null)
+            {
+                exp.SetUseUnscaledTime(true);
+                exp.Initialize();
+            }
+            else
+            {
+                Destroy(fx, 1.5f);
+            }
+        }
+
+        // 4. 更新敵人血條
+        var hb = enemy.Actor.GetComponentInChildren<HealthBarUI>();
+        if (hb != null) hb.ForceUpdate();
+    }
+
+
+
     // 手動移除格檔特效（用於破防）
     public void RemoveBlockEffect(GameObject actor)
     {
