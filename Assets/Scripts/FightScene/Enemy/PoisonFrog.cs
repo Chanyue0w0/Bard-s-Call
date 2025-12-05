@@ -98,6 +98,47 @@ public class PoisonFrog : EnemyBase
             anim.Play("Attack", true);
     }
 
+    public override void OnDamaged(int dmg, bool isHeavyAttack)
+    {
+        base.OnDamaged(dmg, isHeavyAttack);
+
+        if (anim == null) return;
+
+        // 只有 Idle 狀態 且 heavy attack 才觸發噴淚與抖動
+        if (anim.GetCurrentClipName() == "Idle") // && isHeavyAttack
+        {
+            anim.Play("HitCry", true);
+            StartCoroutine(ShakeOneBeat());
+        }
+    }
+    private IEnumerator ShakeOneBeat()
+    {
+        // 一拍 = FMODBeatListener2 的 beatDuration
+        float beatDuration = FMODBeatListener2.Instance.SecondsPerBeat;
+        float shakeTime = beatDuration; // 抖完整一拍
+
+        Vector3 originalPos = transform.localPosition;
+
+        float shakeMagnitude = 0.08f;  // 左右抖動強度（可調）
+        float shakeSpeed = 60f;        // 越高越快（可調）
+
+        float timer = 0f;
+
+        while (timer < shakeTime)
+        {
+            timer += Time.deltaTime;
+
+            float offset = Mathf.Sin(timer * shakeSpeed) * shakeMagnitude;
+            transform.localPosition = originalPos + new Vector3(offset, 0, 0);
+
+            yield return null;
+        }
+
+        // 抖完回到原位
+        transform.localPosition = originalPos;
+    }
+
+
     // ======================
     // Animation Frame Events
     // ======================

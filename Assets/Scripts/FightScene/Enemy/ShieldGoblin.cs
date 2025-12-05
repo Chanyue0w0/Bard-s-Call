@@ -146,7 +146,7 @@ public class ShieldGoblin : EnemyBase
         if (anim == null) return;
 
         // 只有 Idle 狀態 且 heavy attack 才觸發噴淚與抖動
-        if (anim.GetCurrentClipName() == "Idle" && isHeavyAttack)
+        if (anim.GetCurrentClipName() == "Idle") // && isHeavyAttack
         {
             anim.Play("HitCry", true);
             StartCoroutine(ShakeOneBeat());

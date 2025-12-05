@@ -309,6 +309,8 @@ MonoBehaviour:
   explosionPrefab: {fileID: 1923612589021624723, guid: fcf5febfe05d8f7499d7c3a0a090d840, type: 3}
   explosionOffset: {x: 1, y: 2, z: 0}
   attackIntervalBeats: 12
+  minAttackBeats: 8
+  maxAttackBeats: 10
 --- !u!114 &1268902497537728516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,6 +378,16 @@ MonoBehaviour:
       triggerWarning: 0
       triggerAttack: 1
       triggerOnce: 1
+      hasTriggered: 0
+    loop: 0
+    holdLastFrame: 0
+  - clipName: HitCry
+    frames:
+    - sprite: {fileID: 21300000, guid: 3c215dfdb37e3144cb1560ca5662c9dd, type: 3}
+      beatLength: 1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
       hasTriggered: 0
     loop: 0
     holdLastFrame: 0
