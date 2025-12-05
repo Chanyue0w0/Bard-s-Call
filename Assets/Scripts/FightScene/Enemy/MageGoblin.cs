@@ -104,7 +104,16 @@ public class MageGoblin : EnemyBase
         }
     }
 
+    public override void OnDamaged(int dmg, bool isHeavyAttack)
+    {
+        base.OnDamaged(dmg, isHeavyAttack);
 
+        if (anim == null) return;
+
+        // 只有 Idle 可以切 HitCry
+        if (anim.GetCurrentClipName() == "Idle" && isHeavyAttack)
+            anim.Play("HitCry", true);
+    }
 
     // ======================
     // 產生魔法彈（使用 EnemySkillAttack）
