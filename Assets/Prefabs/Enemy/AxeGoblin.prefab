@@ -192,6 +192,8 @@ MonoBehaviour:
   attackPrefab: {fileID: 3110076587261334000, guid: 6555a642bc472d045921697f4edd82b9, type: 3}
   attackOffset: {x: 4, y: 3.3, z: 0}
   attackIntervalBeats: 8
+  minAttackBeats: 6
+  maxAttackBeats: 10
   dashTime: 0.05
   waitTime: 0.8
   returnTime: 0.05
@@ -263,6 +265,16 @@ MonoBehaviour:
       triggerWarning: 0
       triggerAttack: 1
       triggerOnce: 1
+      hasTriggered: 0
+    loop: 0
+    holdLastFrame: 0
+  - clipName: HitCry
+    frames:
+    - sprite: {fileID: 21300000, guid: c6d8a667222ec7949b0171ab1ad1fa0c, type: 3}
+      beatLength: 1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
       hasTriggered: 0
     loop: 0
     holdLastFrame: 0
