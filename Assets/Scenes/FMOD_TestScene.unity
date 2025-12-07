@@ -3117,7 +3117,7 @@ MonoBehaviour:
       Data2: 1178528322
       Data3: 1965921689
       Data4: 167301944
-    Path: event:/castanets
+    Path: event:/SoundEffects/BeatTapping
   judgementWindow: 0.1
   beatPulseImage: {fileID: 0}
   pulseScaleUp: 1.35
@@ -3170,7 +3170,7 @@ MonoBehaviour:
       Data2: 1178528322
       Data3: 1965921689
       Data4: 167301944
-    Path: event:/castanets
+    Path: event:/SoundEffects/BeatTapping
   perfectEffectPrefab: {fileID: 1259356716294875940, guid: 25258069acd2e144e94750c0d12b215a, type: 3}
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
   beatHitPointUI: {fileID: 1308469052}
@@ -3180,6 +3180,8 @@ MonoBehaviour:
   musicStartDelay: 3
   autoPerfect: 0
   GlobalBeatIndex: -1
+  comboResetTime: 3
+  comboText: {fileID: 0}
 --- !u!1 &1463850323
 GameObject:
   m_ObjectHideFlags: 0

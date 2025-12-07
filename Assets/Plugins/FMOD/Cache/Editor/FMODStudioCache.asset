@@ -24,34 +24,7 @@ MonoBehaviour:
   IsGlobal: 1
   Labels: []
   Exists: 1
---- !u!114 &-8281970883996706294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SoundEffects/InCombat/Elvin_Fever1
-  m_EditorClassIdentifier: 
-  Path: event:/SoundEffects/InCombat/Elvin_Fever1
-  Guid:
-    Data1: -1344601670
-    Data2: 1147272599
-    Data3: -1265541988
-    Data4: 768133308
-  Banks:
-  - {fileID: 6828801144302610801}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 10738
---- !u!114 &-7267743059909281153
+--- !u!114 &-6988522528094290108
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -61,77 +34,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Combat 02(test)/SpeedUp
+  m_Name: parameter:/SFXOnOff
   m_EditorClassIdentifier: 
-  Name: SpeedUp
-  StudioPath: 
+  Name: SFXOnOff
+  StudioPath: parameter:/SFXOnOff
   Min: 0
   Max: 1
-  Default: 0
+  Default: 1
   ID:
-    data1: 2561566142
-    data2: 2280091049
+    data1: 347430142
+    data2: 3786689968
   Type: 0
   IsGlobal: 1
   Labels: []
   Exists: 1
---- !u!114 &-7072112645868688054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Combat soundtracks/Combat 02(test)
-  m_EditorClassIdentifier: 
-  Path: event:/Combat soundtracks/Combat 02(test)
-  Guid:
-    Data1: 434358626
-    Data2: 1134784875
-    Data3: -2056539502
-    Data4: 52063315
-  Banks:
-  - {fileID: 6828801144302610801}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters:
-  - {fileID: -7267743059909281153}
-  - {fileID: -1499259642711051566}
-  - {fileID: 4077927675578896473}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 73239
---- !u!114 &-6944071819249771989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SoundEffects/castanets
-  m_EditorClassIdentifier: 
-  Path: event:/SoundEffects/castanets
-  Guid:
-    Data1: 950292341
-    Data2: 1178528322
-    Data3: 1965921689
-    Data4: 167301944
-  Banks:
-  - {fileID: 6828801144302610801}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 34
 --- !u!114 &-6820245803118602507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,7 +125,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 500
+  Length: 375
 --- !u!114 &-6382104013058297563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,7 +153,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 250
---- !u!114 &-5702172602962066140
+--- !u!114 &-5735730290262462618
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -246,25 +162,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Combat soundtracks/Combat 01(Ver2)
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/BeatTapping/SFXOnOff
   m_EditorClassIdentifier: 
-  Path: event:/Combat soundtracks/Combat 01(Ver2)
-  Guid:
-    Data1: 674071543
-    Data2: 1148673503
-    Data3: 1045085628
-    Data4: -886273377
-  Banks:
-  - {fileID: 6828801144302610801}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters:
-  - {fileID: 8969018651816513012}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 164338
+  Name: SFXOnOff
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 347430142
+    data2: 3786689968
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
 --- !u!114 &-5160720021122674706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,6 +204,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-4839157529601866447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/InCombat/MageGoblin_FireBall
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/InCombat/MageGoblin_FireBall
+  Guid:
+    Data1: -516454571
+    Data2: 1341517149
+    Data3: -603654978
+    Data4: -657993881
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 500
 --- !u!114 &-4515316486625746658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,54 +255,6 @@ MonoBehaviour:
   IsGlobal: 1
   Labels: []
   Exists: 1
---- !u!114 &-4010524670969239735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Track01_Under the starry sky/Rethys_Singing
-  m_EditorClassIdentifier: 
-  Name: Rethys_Singing
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 3444441535
-    data2: 522380165
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &-3413361900623884666
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Track01_Under the starry sky/Elvin_Singing
-  m_EditorClassIdentifier: 
-  Name: Elvin_Singing
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 3789758227
-    data2: 2476136529
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
 --- !u!114 &-2384467188881039204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,10 +270,10 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639000543720000000
+  lastModified: 639006967135579675
   FileSizes:
   - Name: Desktop
-    Value: 1874
+    Value: 1998
   Exists: 1
 --- !u!114 &-2053334069037838640
 MonoBehaviour:
@@ -411,54 +302,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 500
---- !u!114 &-1614427182467182393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Track01_Under the starry sky/StoryMode
-  m_EditorClassIdentifier: 
-  Name: StoryMode
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 150563050
-    data2: 3413159415
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &-1499259642711051566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Combat 02(test)/Fade
-  m_EditorClassIdentifier: 
-  Name: Fade
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 1
-  ID:
-    data1: 1054254998
-    data2: 1270778798
-  Type: 0
-  IsGlobal: 1
-  Labels: []
-  Exists: 1
 --- !u!114 &-945803733150903583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,6 +330,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 500
+--- !u!114 &-436136147696620892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/InCombat/RedFlash
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/InCombat/RedFlash
+  Guid:
+    Data1: -1337298093
+    Data2: 1176039833
+    Data3: -1624896377
+    Data4: -1321679031
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2000
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,26 +376,104 @@ MonoBehaviour:
   - {fileID: -6389526044575921169}
   - {fileID: -2053334069037838640}
   - {fileID: -5160720021122674706}
-  - {fileID: -7072112645868688054}
-  - {fileID: 7711974535112223974}
-  - {fileID: -6944071819249771989}
   - {fileID: -945803733150903583}
   - {fileID: 3959987825764264012}
   - {fileID: -6382104013058297563}
-  - {fileID: -8281970883996706294}
   - {fileID: 3760201016225271319}
   - {fileID: -6820245803118602507}
-  - {fileID: -5702172602962066140}
+  - {fileID: -436136147696620892}
+  - {fileID: -4839157529601866447}
+  - {fileID: 914812499203589540}
+  - {fileID: 5060741374952502760}
+  - {fileID: 5733580764830619373}
+  - {fileID: 8966415919217502151}
   EditorParameters:
   - {fileID: -9042979533456799273}
   - {fileID: -6458779747416126282}
   - {fileID: -4515316486625746658}
+  - {fileID: -6988522528094290108}
   MasterBanks:
   - {fileID: 6828801144302610801}
   StringsBanks:
   - {fileID: -2384467188881039204}
-  cacheTime: 639000543720000000
+  cacheTime: 639006967135579675
   cacheVersion: 131621
+--- !u!114 &914812499203589540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/BeatTapping
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/BeatTapping
+  Guid:
+    Data1: 950292341
+    Data2: 1178528322
+    Data3: 1965921689
+    Data4: 167301944
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -5735730290262462618}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 375
+--- !u!114 &1043605218707080918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Combat 01/Fade
+  m_EditorClassIdentifier: 
+  Name: Fade
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 1054254998
+    data2: 1270778798
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &2348280674453129525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/BeatMiss/SFXOnOff
+  m_EditorClassIdentifier: 
+  Name: SFXOnOff
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 347430142
+    data2: 3786689968
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
 --- !u!114 &2859834962261252091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -546,54 +494,6 @@ MonoBehaviour:
   ID:
     data1: 3184210469
     data2: 1770762347
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &3159140537950758691
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Track01_Under the starry sky/Fade
-  m_EditorClassIdentifier: 
-  Name: Fade
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 1
-  ID:
-    data1: 1054254998
-    data2: 1270778798
-  Type: 0
-  IsGlobal: 1
-  Labels: []
-  Exists: 1
---- !u!114 &3505315685561074207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Track01_Under the starry sky/Lion_Singing
-  m_EditorClassIdentifier: 
-  Name: Lion_Singing
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 1945021685
-    data2: 3842571557
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -619,7 +519,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 6828801144302610801}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
@@ -639,20 +539,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Combat soundtracks/Combat 01
   Guid:
-    Data1: -1728121694
-    Data2: 1240045944
-    Data3: -223885665
-    Data4: 1811423449
+    Data1: 674071543
+    Data2: 1148673503
+    Data3: 1045085628
+    Data4: -886273377
   Banks:
   - {fileID: 6828801144302610801}
   IsStream: 1
   Is3D: 0
-  IsOneShot: 0
-  Parameters: []
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 1043605218707080918}
   MinDistance: 1
   MaxDistance: 20
-  Length: 246880
---- !u!114 &4077927675578896473
+  Length: 372330
+--- !u!114 &4116085402732138012
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -662,20 +563,76 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Combat 02(test)/TrackUpgrade
+  m_Name: parameter:/CampTrack01_Under the starry sky/Fade
   m_EditorClassIdentifier: 
-  Name: TrackUpgrade
+  Name: Fade
   StudioPath: 
   Min: 0
-  Max: 3
-  Default: 0
+  Max: 1
+  Default: 1
   ID:
-    data1: 1954543863
-    data2: 2348278589
+    data1: 1054254998
+    data2: 1270778798
   Type: 0
   IsGlobal: 1
   Labels: []
   Exists: 1
+--- !u!114 &5060741374952502760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/BeatMiss
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/BeatMiss
+  Guid:
+    Data1: 24232882
+    Data2: 1297265228
+    Data3: -303347037
+    Data4: -132963501
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 2348280674453129525}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 500
+--- !u!114 &5733580764830619373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Camp soundtracks/CampTrack01_Under the starry sky
+  m_EditorClassIdentifier: 
+  Path: event:/Camp soundtracks/CampTrack01_Under the starry sky
+  Guid:
+    Data1: 2105392330
+    Data2: 1234526313
+    Data3: -1426828133
+    Data4: 879367610
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 4116085402732138012}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 199019
 --- !u!114 &6828801144302610801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -691,12 +648,12 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639000543720000000
+  lastModified: 639006967135413047
   FileSizes:
   - Name: Desktop
-    Value: 11066208
+    Value: 6250304
   Exists: 1
---- !u!114 &7711974535112223974
+--- !u!114 &8966415919217502151
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -706,49 +663,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Camp soundtracks/Track01_Under the starry sky
+  m_Name: event:/SoundEffects/InCombat/Elvin_Fever2
   m_EditorClassIdentifier: 
-  Path: event:/Camp soundtracks/Track01_Under the starry sky
+  Path: event:/SoundEffects/InCombat/Elvin_Fever2
   Guid:
-    Data1: 1601248611
-    Data2: 1222510140
-    Data3: 757188253
-    Data4: 2106030052
+    Data1: -1403530542
+    Data2: 1211619733
+    Data3: -787552382
+    Data4: 1484676168
   Banks:
   - {fileID: 6828801144302610801}
   IsStream: 1
   Is3D: 0
-  IsOneShot: 0
-  Parameters:
-  - {fileID: -4010524670969239735}
-  - {fileID: 3159140537950758691}
-  - {fileID: 3505315685561074207}
-  - {fileID: -1614427182467182393}
-  - {fileID: -3413361900623884666}
+  IsOneShot: 1
+  Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 108000
---- !u!114 &8969018651816513012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Combat 01(Ver2)/FeverTime
-  m_EditorClassIdentifier: 
-  Name: FeverTime
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 1053951074
-    data2: 953130862
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
+  Length: 18841
