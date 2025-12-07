@@ -14574,7 +14574,7 @@ MonoBehaviour:
   explosionPrefab: {fileID: 8714966469225416086, guid: b262996d3dc43634485ee3251a0d0107, type: 3}
   lifeTime: 0.5
   isPerfect: 0
-  isHeavyAttack: 0
+  isHeavyAttack: 1
   damage: 200
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
   uiCanvas: {fileID: 0}
@@ -24419,14 +24419,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8047655530541629134}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.15292206, y: -0, z: -0, w: 0.9882383}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
-  m_LocalScale: {x: 0.79494, y: 0.79494, z: 0.79494}
+  m_LocalRotation: {x: -0.064609095, y: -0, z: -0, w: 0.9979107}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.41724813, y: 1.0534544, z: 0.79494}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1728310197135046058}
   m_Father: {fileID: 8056765341650713605}
-  m_LocalEulerAnglesHint: {x: -17.593, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -7.409, y: 0, z: 0}
 --- !u!198 &8335114780516504654
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -24442,7 +24442,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
-  looping: 0
+  looping: 1
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0

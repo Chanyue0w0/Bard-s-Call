@@ -1,50 +1,251 @@
 using UnityEngine;
+using System.Collections;
 
 public class ShieldGoblin : EnemyBase
 {
-    [Header("防禦狀態")]
-    public bool isBlocking = true;
-    public bool isBroken = false;
+    public BeatSpriteAnimator anim;
+
+    [Header("警告特效 Prefab")]
+    public GameObject warningPrefab;
+    public Vector3 warningOffset;
+
+    [Header("格擋特效 Prefab")]
+    public GameObject blockVfxPrefab;
+    public Vector3 blockVfxOffset;
+
+    [Header("攻擊特效 Prefab（EnemySkillAttack）")]
+    public GameObject attackPrefab;
+    public Vector3 attackOffset;
+
+    [Header("攻擊間隔（拍）8~10 隨機")]
+    public int minIntervalBeats = 8;
+    public int maxIntervalBeats = 10;
+
+    private int nextAttackBeat = -999;
+    public bool isBlocking = false;
+    private int blockStartBeat = -1;
 
     private CharacterData charData;
 
+    // ======================
+    // Awake
+    // ======================
     protected override void Awake()
     {
-        base.Awake(); // ★ 自動配對索引
-    }
-
-    void Start()
-    {
+        base.Awake();
         charData = GetComponent<CharacterData>();
         if (charData == null)
+            Debug.LogWarning($"{name} 找不到 CharacterData");
+    }
+
+    private void Reset()
+    {
+        if (anim == null)
+            anim = GetComponent<BeatSpriteAnimator>();
+    }
+
+    private void OnEnable()
+    {
+        FMODBeatListener2.OnGlobalBeat += HandleBeat;
+
+        int now = FMODBeatListener2.Instance.GlobalBeatIndex;
+        nextAttackBeat = now + Random.Range(minIntervalBeats, maxIntervalBeats + 1);
+
+        if (anim != null)
+            anim.OnFrameEvent += HandleAnimEvent;
+    }
+
+    private void OnDisable()
+    {
+        FMODBeatListener2.OnGlobalBeat -= HandleBeat;
+
+        if (anim != null)
+            anim.OnFrameEvent -= HandleAnimEvent;
+    }
+
+    // ======================
+    // Beat Timing
+    // ======================
+    private void HandleBeat(int globalBeat)
+    {
+        if (IsFeverLocked()) return;
+
+        // ----------- 若正在格檔中：維持兩拍後攻擊 -----------
+        if (isBlocking)
         {
-            Debug.LogWarning("ShieldGoblin 缺少 CharacterData 組件。");
+            if (globalBeat - blockStartBeat >= 4)
+            {
+                isBlocking = false;
+                RemoveBlockEffect();
+                DoAttack();
+            }
             return;
         }
 
-        // 啟動永久格檔
-        BattleEffectManager.Instance.ActivateInfiniteBlock(gameObject, charData);
-        Debug.Log("【ShieldGoblin】啟動永久格檔狀態");
+        // ----------- 攻擊倒數 -----------
+        if (globalBeat >= nextAttackBeat)
+        {
+            StartBlock(globalBeat);
+        }
     }
 
-    public void BreakShield()
+    // ======================
+    // Start Block
+    // ======================
+    private void StartBlock(int globalBeat)
     {
-        if (isBroken) return;
+        isBlocking = true;
+        blockStartBeat = globalBeat;
 
-        isBroken = true;
-        isBlocking = false;
-        BattleEffectManager.Instance.RemoveBlockEffect(gameObject);
-        Debug.Log("【ShieldGoblin】防禦被重攻擊破壞！");
+        if (anim != null)
+            anim.Play("Block", true);
+
+        // BattleEffectManager 的敵人格擋
+        BattleEffectManager.Instance.ActivateEnemyBlock(
+            this.gameObject,
+            charData,
+            4
+        );
+
+        ShowBlockEffect();
     }
 
-    public bool IsBlocking()
+    private void ShowBlockEffect()
     {
-        return isBlocking && !isBroken;
+        if (blockVfxPrefab != null)
+        {
+            Instantiate(
+                blockVfxPrefab,
+                transform.position + blockVfxOffset,
+                Quaternion.identity
+            );
+        }
     }
 
-    //protected override void OnBeat()
-    //{
-    //    if (forceMove) return; // ★ 疊帶中不動作
-    //    // 可加呼吸動畫或特效
-    //}
+    private void RemoveBlockEffect()
+    {
+        // 若使用 ActivateEnemyBlock → BattleEffectManager 已處理特效的移除
+    }
+
+    // ======================
+    // Attack
+    // ======================
+    private void DoAttack()
+    {
+        if (anim != null)
+            anim.Play("Attack", true);
+
+        int now = FMODBeatListener2.Instance.GlobalBeatIndex;
+        nextAttackBeat = now + Random.Range(minIntervalBeats, maxIntervalBeats + 1);
+    }
+
+    public override void OnDamaged(int dmg, bool isHeavyAttack)
+    {
+        base.OnDamaged(dmg, isHeavyAttack);
+
+        if (anim == null) return;
+
+        // 只有 Idle 狀態 且 heavy attack 才觸發噴淚與抖動
+        if (anim.GetCurrentClipName() == "Idle") // && isHeavyAttack
+        {
+            anim.Play("HitCry", true);
+            StartCoroutine(ShakeOneBeat());
+        }
+    }
+    private IEnumerator ShakeOneBeat()
+    {
+        float beatDuration = FMODBeatListener2.Instance.SecondsPerBeat;
+        float shakeTime = beatDuration * 2f; // 兩拍
+
+        // ★★ 正確：使用敵人 Slot 標準站位（永遠不會錯）
+        Vector3 basePos = thisSlotInfo.SlotTransform.position;
+
+        float shakeMagnitude = 0.08f;
+        float shakeSpeed = 60f;
+
+        float timer = 0f;
+
+        while (timer < shakeTime)
+        {
+            timer += Time.deltaTime;
+
+            float offset = Mathf.Sin(timer * shakeSpeed) * shakeMagnitude;
+
+            transform.position = basePos + new Vector3(offset, 0, 0);
+
+            yield return null;
+        }
+
+        // ★ 回正到固定站位，不受衝刺影響
+        transform.position = basePos;
+    }
+    // ======================
+    // Frame Events
+    // ======================
+    private void HandleAnimEvent(BeatSpriteFrame frame)
+    {
+        if (IsFeverLocked()) return;
+
+        // ---------- Warning（與 MageGoblin 相同） ----------
+        if (frame.triggerWarning && warningPrefab != null)
+        {
+            SpawnWarning();
+        }
+
+        // ---------- Attack ----------
+        if (frame.triggerAttack)
+        {
+            SpawnAttackSkill();
+        }
+    }
+
+    // ======================
+    // Spawn Warning (MageGoblin 同版)
+    // ======================
+    private void SpawnWarning()
+    {
+        Instantiate(
+            warningPrefab,
+            transform.position + warningOffset,
+            Quaternion.identity
+        );
+    }
+
+    // ======================
+    // Spawn Attack Skill
+    // ======================
+    private void SpawnAttackSkill()
+    {
+        if (attackPrefab == null) return;
+
+        GameObject go = Instantiate(
+            attackPrefab,
+            transform.position,
+            Quaternion.identity
+        );
+
+        go.transform.position += attackOffset;
+
+        EnemySkillAttack skill = go.GetComponent<EnemySkillAttack>();
+        if (skill == null)
+        {
+            Debug.LogError($"攻擊 Prefab {attackPrefab.name} 缺少 EnemySkillAttack！");
+            return;
+        }
+
+        int damage = 20;
+
+        var target = BattleManager.Instance.CTeamInfo[0];
+        var attackerSlot = thisSlotInfo != null ? thisSlotInfo : selfSlot;
+
+        skill.Init(
+            attacker: attackerSlot,
+            target: target,
+            damage: damage,
+            travelTime: 0.22f,
+            isHeavyAttack: false,
+            spawnExplosion: true,
+            buffAction: null
+        );
+    }
 }

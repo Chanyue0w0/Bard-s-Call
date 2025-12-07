@@ -104,7 +104,46 @@ public class MageGoblin : EnemyBase
         }
     }
 
+    public override void OnDamaged(int dmg, bool isHeavyAttack)
+    {
+        base.OnDamaged(dmg, isHeavyAttack);
 
+        if (anim == null) return;
+
+        // 只有 Idle 狀態 且 heavy attack 才觸發噴淚與抖動
+        if (anim.GetCurrentClipName() == "Idle") // && isHeavyAttack
+        {
+            anim.Play("HitCry", true);
+            StartCoroutine(ShakeOneBeat());
+        }
+    }
+    private IEnumerator ShakeOneBeat()
+    {
+        float beatDuration = FMODBeatListener2.Instance.SecondsPerBeat;
+        float shakeTime = beatDuration * 2f; // 兩拍
+
+        // ★★ 正確：使用敵人 Slot 標準站位（永遠不會錯）
+        Vector3 basePos = thisSlotInfo.SlotTransform.position;
+
+        float shakeMagnitude = 0.08f;
+        float shakeSpeed = 60f;
+
+        float timer = 0f;
+
+        while (timer < shakeTime)
+        {
+            timer += Time.deltaTime;
+
+            float offset = Mathf.Sin(timer * shakeSpeed) * shakeMagnitude;
+
+            transform.position = basePos + new Vector3(offset, 0, 0);
+
+            yield return null;
+        }
+
+        // ★ 回正到固定站位，不受衝刺影響
+        transform.position = basePos;
+    }
 
     // ======================
     // 產生魔法彈（使用 EnemySkillAttack）

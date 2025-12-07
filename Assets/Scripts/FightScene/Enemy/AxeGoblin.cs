@@ -16,6 +16,15 @@ public class AxeGoblin : EnemyBase
     [Header("攻擊間隔（拍）")]
     public int attackIntervalBeats = 8;
 
+    [Header("攻擊頻率")]
+    private int nextAttackBeat = -999;
+    public int minAttackBeats = 6;
+    public int maxAttackBeats = 10;
+
+    [Header("受擊噴淚")]
+    private int damageTakenThisBeat = 0;
+    private int lastProcessedBeat = -1;
+
     [Header("衝刺 / 回歸設定")]
     public float dashTime = 0.05f;
     public float waitTime = 1.0f;
@@ -31,7 +40,6 @@ public class AxeGoblin : EnemyBase
 
     private Vector3 originalPos;  // 用於回歸初始位置
     private bool isMoving = false;
-
 
     // ======================
     // Awake
@@ -57,6 +65,8 @@ public class AxeGoblin : EnemyBase
 
         lastAttackBeat = FMODBeatListener2.Instance.GlobalBeatIndex;
 
+        nextAttackBeat = lastAttackBeat + Random.Range(minAttackBeats, maxAttackBeats + 1);
+
         if (anim != null)
             anim.OnFrameEvent += HandleAnimEvent;
     }
@@ -69,20 +79,82 @@ public class AxeGoblin : EnemyBase
             anim.OnFrameEvent -= HandleAnimEvent;
     }
 
+    public override void OnDamaged(int dmg, bool isHeavyAttack)
+    {
+        base.OnDamaged(dmg, isHeavyAttack);
+
+        if (anim == null) return;
+
+        // 只有 Idle 狀態 且 heavy attack 才觸發噴淚與抖動
+        if (anim.GetCurrentClipName() == "Idle") // && isHeavyAttack
+        {
+            anim.Play("HitCry", true);
+            StartCoroutine(ShakeOneBeat());
+        }
+    }
+    private IEnumerator ShakeOneBeat()
+    {
+        float beatDuration = FMODBeatListener2.Instance.SecondsPerBeat;
+        float shakeTime = beatDuration * 2f; // 兩拍
+
+        // ★★ 正確：使用敵人 Slot 標準站位（永遠不會錯）
+        Vector3 basePos = thisSlotInfo.SlotTransform.position;
+
+        float shakeMagnitude = 0.08f;
+        float shakeSpeed = 60f;
+
+        float timer = 0f;
+
+        while (timer < shakeTime)
+        {
+            timer += Time.deltaTime;
+
+            float offset = Mathf.Sin(timer * shakeSpeed) * shakeMagnitude;
+
+            transform.position = basePos + new Vector3(offset, 0, 0);
+
+            yield return null;
+        }
+
+        // ★ 回正到固定站位，不受衝刺影響
+        transform.position = basePos;
+    }
     // ======================
     // Beat
     // ======================
     private void HandleBeat(int globalBeat)
     {
-        if (IsFeverLocked()) return;   // Fever 期間不攻擊
-        if (isMoving) return;          // 正在衝刺/回歸中不可重複攻擊
+        if (IsFeverLocked()) return;
+        if (isMoving) return;
 
-        if (globalBeat - lastAttackBeat >= attackIntervalBeats)
+        if (isMoving) return;
+
+        if (globalBeat >= nextAttackBeat)
         {
-            lastAttackBeat = globalBeat;
             DoAttack();
+
+            // ★ 攻擊完抽下一次等待拍數
+            nextAttackBeat = globalBeat + Random.Range(minAttackBeats, maxAttackBeats + 1);
         }
     }
+
+    private void TryPlayHitCry(int beat)
+    {
+        // 必須在 Idle 狀態
+        if (anim == null) return;
+        if (anim.GetCurrentClipName() != "Idle") return;
+
+        // 下一拍沒有要攻擊  globalBeat + 1 > nextAttackBeat
+        if (beat + 1 >= nextAttackBeat) return;
+
+        // 本拍受到 >= 50 傷害才觸發
+        //if (damageTakenThisBeat < 50) return;
+
+        // 播放 HitCry 動畫
+        anim.Play("HitCry", true);
+        // Debug.Log($"{name} 受到重擊 → 播放 HitCry");
+    }
+
 
     public void DoAttack()
     {
@@ -188,7 +260,7 @@ public class AxeGoblin : EnemyBase
         }
 
         // 記錄初始位置
-        originalPos = transform.position;
+        originalPos = thisSlotInfo.SlotTransform.position;
 
         Vector3 targetPos = target.Actor.transform.position + attackPositionOffset;
 

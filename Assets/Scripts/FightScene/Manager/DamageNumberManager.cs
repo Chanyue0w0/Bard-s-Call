@@ -12,6 +12,10 @@ public class DamageNumberManager : MonoBehaviour
     [Header("數字粒子 Prefab (綠色治療版 0~9)")]   // ★ 新增：治療用
     public ParticleSystem[] healDigitPrefabs = new ParticleSystem[10];
 
+    [Header("數字粒子 Prefab (格擋用 0~9)")]  // ★ 新增：格擋數字
+    public ParticleSystem[] blockedDigitPrefabs = new ParticleSystem[10];
+
+    // 格擋專用池
     [Header("預熱設定")]
     public int prewarmPerDigit = 8;
 
@@ -27,9 +31,10 @@ public class DamageNumberManager : MonoBehaviour
     public string sortingLayerName = "Default";
     public int sortingOrder = 20;
 
-    // 內部池：分成紅傷與綠治
+    // 內部池：分成紅傷、綠治、藍擋
     private readonly Dictionary<int, Queue<ParticleSystem>> _damagePool = new();
     private readonly Dictionary<int, Queue<ParticleSystem>> _healPool = new();
+    private readonly Dictionary<int, Queue<ParticleSystem>> _blockedPool = new();
     private Transform _poolRoot;
 
     private void Awake()
@@ -43,6 +48,7 @@ public class DamageNumberManager : MonoBehaviour
         // 建立兩組池：傷害與治療
         PrewarmPool(digitPrefabs, _damagePool);
         PrewarmPool(healDigitPrefabs, _healPool);
+        PrewarmPool(blockedDigitPrefabs, _blockedPool);
     }
 
     private void PrewarmPool(ParticleSystem[] prefabs, Dictionary<int, Queue<ParticleSystem>> pool)
@@ -116,12 +122,21 @@ public class DamageNumberManager : MonoBehaviour
         ShowNumber(target, value, _healPool, healDigitPrefabs, "HealNumberGroup");
     }
 
+    // ===============================
+    // 顯示格擋傷害（藍色/灰色等 0~9）
+    // ===============================
+    public void ShowBlocked(Transform target, int value)
+    {
+        ShowNumber(target, value, _blockedPool, blockedDigitPrefabs, "BlockedNumberGroup");
+    }
+
+
     // 共用邏輯：生成數字群組
     private void ShowNumber(Transform target, int value,
         Dictionary<int, Queue<ParticleSystem>> pool, ParticleSystem[] prefabs, string groupName)
     {
         if (target == null) return;
-        if (value <= 0) return;
+        if (value < 0) return;
 
         var groupGO = new GameObject(groupName);
         var group = groupGO.AddComponent<DamageNumberGroup>();

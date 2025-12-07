@@ -100,6 +100,12 @@ public class BattleManager : MonoBehaviour
     public GameObject magicUseAuraPrefab;
     public float vfxLifetime = 1.5f;
 
+    [Header("Heavy Beat Expression VFX (三位玩家預設於場景 重拍提示特效)")]
+    public GameObject heavyBeatVFX_P1;
+    public GameObject heavyBeatVFX_P2;
+    public GameObject heavyBeatVFX_P3;
+
+
     [Header("Fever 大招展示位置")]
     public Transform feverUltShowingPoint;
 
@@ -119,9 +125,9 @@ public class BattleManager : MonoBehaviour
     private System.Action<InputAction.CallbackContext> attackP1Handler;
     private System.Action<InputAction.CallbackContext> attackP2Handler;
     private System.Action<InputAction.CallbackContext> attackP3Handler;
-    private System.Action<InputAction.CallbackContext> blockP1Handler;
-    private System.Action<InputAction.CallbackContext> blockP2Handler;
-    private System.Action<InputAction.CallbackContext> blockP3Handler;
+    //private System.Action<InputAction.CallbackContext> blockP1Handler;
+    //private System.Action<InputAction.CallbackContext> blockP2Handler;
+    //private System.Action<InputAction.CallbackContext> blockP3Handler;
 
     private void Awake()
     {
@@ -154,9 +160,9 @@ public class BattleManager : MonoBehaviour
         if (actionAttackP1 != null) { actionAttackP1.action.started += attackP1Handler; actionAttackP1.action.Enable(); }
         if (actionAttackP2 != null) { actionAttackP2.action.started += attackP2Handler; actionAttackP2.action.Enable(); }
         if (actionAttackP3 != null) { actionAttackP3.action.started += attackP3Handler; actionAttackP3.action.Enable(); }
-        if (actionBlockP1 != null) { actionBlockP1.action.started += blockP1Handler; actionBlockP1.action.Enable(); }
-        if (actionBlockP2 != null) { actionBlockP2.action.started += blockP2Handler; actionBlockP2.action.Enable(); }
-        if (actionBlockP3 != null) { actionBlockP3.action.started += blockP3Handler; actionBlockP3.action.Enable(); }
+        //if (actionBlockP1 != null) { actionBlockP1.action.started += blockP1Handler; actionBlockP1.action.Enable(); }
+        //if (actionBlockP2 != null) { actionBlockP2.action.started += blockP2Handler; actionBlockP2.action.Enable(); }
+        //if (actionBlockP3 != null) { actionBlockP3.action.started += blockP3Handler; actionBlockP3.action.Enable(); }
         if (actionFeverUltimate != null) { actionFeverUltimate.action.started += feverUltHandler; actionFeverUltimate.action.Enable(); }
     }
 
@@ -165,9 +171,9 @@ public class BattleManager : MonoBehaviour
         if (actionAttackP1 != null) actionAttackP1.action.started -= attackP1Handler;
         if (actionAttackP2 != null) actionAttackP2.action.started -= attackP2Handler;
         if (actionAttackP3 != null) actionAttackP3.action.started -= attackP3Handler;
-        if (actionBlockP1 != null) actionBlockP1.action.started -= blockP1Handler;
-        if (actionBlockP2 != null) actionBlockP2.action.started -= blockP2Handler;
-        if (actionBlockP3 != null) actionBlockP3.action.started -= blockP3Handler;
+        //if (actionBlockP1 != null) actionBlockP1.action.started -= blockP1Handler;
+        //if (actionBlockP2 != null) actionBlockP2.action.started -= blockP2Handler;
+        //if (actionBlockP3 != null) actionBlockP3.action.started -= blockP3Handler;
         if (actionFeverUltimate != null) { actionFeverUltimate.action.started -= feverUltHandler;}
 
         FMODBeatListener2.OnGlobalBeat -= HandleBeatEffects; // ★ 新增
@@ -568,6 +574,23 @@ public class BattleManager : MonoBehaviour
         // ★★★ 一小節拍數（通常是 4） ★★★
         int beatsPerMeasure = listener.BeatsPerMeasure;
 
+        // Heavy Beat (通常為第 beatsPerMeasure 拍)
+        bool isHeavyBeat = (beatInCycle == beatsPerMeasure);
+
+        // P1 P2 P3 對應的 VFX
+        GameObject heavyVfx = null;
+        switch (index)
+        {
+            case 0: heavyVfx = heavyBeatVFX_P1; break;
+            case 1: heavyVfx = heavyBeatVFX_P2; break;
+            case 2: heavyVfx = heavyBeatVFX_P3; break;
+        }
+
+        if (perfect && isHeavyBeat && heavyVfx != null)
+        {
+            StartCoroutine(PlayHeavyBeatVFX(heavyVfx));
+        }
+
         var target = FindEnemyByClass(attacker.ClassType);
 
         // ------------------------------------------------------------
@@ -584,7 +607,7 @@ public class BattleManager : MonoBehaviour
             }
 
             // 吟遊詩人重拍：無敵人也能治癒
-            if (attacker.ClassType == UnitClass.Bard && beatInCycle == beatsPerMeasure)
+            if (attacker.ClassType == UnitClass.Bard)
             {
                 Debug.Log("[特例] 吟遊詩人重攻擊在無敵人時仍可施放治癒");
                 StartCoroutine(HandleBardAttack(attacker, null, beatInCycle, beatsPerMeasure, perfect));
@@ -615,7 +638,18 @@ public class BattleManager : MonoBehaviour
             StartCoroutine(AttackSequence(attacker, target, target.SlotTransform.position, perfect));
     }
 
+    private IEnumerator PlayHeavyBeatVFX(GameObject vfx)
+    {
+        vfx.SetActive(true);
 
+        float beatSec = 0.5f;
+        if (FMODBeatListener2.Instance != null)
+            beatSec = FMODBeatListener2.Instance.SecondsPerBeat * 1f;
+
+        yield return new WaitForSeconds(beatSec);
+
+        vfx.SetActive(false);
+    }
 
     private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle,int beatsPerMeasure, bool perfect)
     {
@@ -685,36 +719,58 @@ public class BattleManager : MonoBehaviour
         int clampedStack = Mathf.Clamp(chargeStacks, 0, damageMatrix.Length - 1);
         int heavyDamage = damageMatrix[clampedStack] + GlobalIndex.RythmResonanceBuff;
 
-        // === 第四拍：重攻擊 ===
+        // === 第四拍：重攻擊（依照存活敵人的位置生成雷電） ===
         if (beatInCycle == beatsPerMeasure)
         {
-            Vector2 spawnPos = enemyPositions[1].position;
+            Debug.Log("[Mage HeavyAttack] 依照敵人存在位置生成雷電特效");
 
-            GameObject skillObj = Instantiate(charData.HeavyAttack.SkillPrefab, spawnPos, Quaternion.identity);
-            Debug.Log($"[Fever-Mage] 雷電 MultiStrikeSkill 生成於敵方第2位置！");
-
-            // 設定 MultiStrikeSkill 屬性
-            MultiStrikeSkill skill = skillObj.GetComponent<MultiStrikeSkill>();
-            if (skill != null)
+            // 取得所有敵人（給 MultiStrikeSkill 多目標使用）
+            List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
+            foreach (var e in EnemyTeamInfo)
             {
-                skill.attacker = attacker;
+                if (e != null && e.Actor != null && e.HP > 0)
+                    allEnemies.Add(e);
+            }
 
-                // 加入全體敵人為目標
-                List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
-                foreach (var enemy in EnemyTeamInfo)
+            // 沒敵人就不生成
+            if (allEnemies.Count == 0)
+            {
+                Debug.Log("[Mage HeavyAttack] 無敵人 → 不生成雷電");
+                BattleEffectManager.Instance.ResetChargeStacks(attacker);
+                yield break;
+            }
+
+            // ★ 依照每個敵人目前所在格子，生成雷電特效
+            foreach (var enemy in EnemyTeamInfo)
+            {
+                if (enemy == null || enemy.Actor == null || enemy.HP <= 0)
+                    continue;
+
+                // 依照敵人SlotTransform生成最準確的位置
+                Vector3 spawnPos = enemy.SlotTransform.position;
+
+                GameObject skillObj = Instantiate(
+                    charData.HeavyAttack.SkillPrefab,
+                    spawnPos,
+                    Quaternion.identity
+                );
+
+                MultiStrikeSkill skill = skillObj.GetComponent<MultiStrikeSkill>();
+                if (skill != null)
                 {
-                    if (enemy != null && enemy.Actor != null && enemy.HP > 0)
-                        allEnemies.Add(enemy);
+                    skill.attacker = attacker;
+
+                    // ★ 改成 ONLY 針對這個 enemy
+                    skill.targets = new List<BattleManager.TeamSlotInfo>() { enemy };
+
+                    skill.isPerfect = true;
+                    skill.isHeavyAttack = true;
+                    skill.damage = heavyDamage;
                 }
 
-                skill.targets = allEnemies;
-                skill.isPerfect = true;
-                skill.isHeavyAttack = true;
-                skill.damage = heavyDamage;   // ★ 使用矩陣 damage
             }
 
             BattleEffectManager.Instance.ResetChargeStacks(attacker);
-
             yield break;
         }
 
@@ -723,22 +779,20 @@ public class BattleManager : MonoBehaviour
         {
             if (target != null && charData.NormalAttacks != null)
             {
-                var heavy = Instantiate(charData.NormalAttacks[0].SkillPrefab, target.Actor.transform.position, Quaternion.identity);
-                var skill = heavy.GetComponent<FireBallSkill>();
+                var normal = Instantiate(charData.NormalAttacks[0].SkillPrefab, target.Actor.transform.position, Quaternion.identity);
+                var skill = normal.GetComponent<FireBallSkill>();
                 if (skill != null)
                 {
                     skill.attacker = attacker;
                     skill.target = target;
                     skill.isPerfect = perfect;
-                    skill.isHeavyAttack = true;
+                    skill.isHeavyAttack = false;
                     skill.damage = 10 + GlobalIndex.RythmResonanceBuff;
                 }
-
-                // 增加疊層 & 特效
-                BattleEffectManager.Instance.AddChargeStack(attacker);
-
-                Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
             }
+            // 增加疊層 & 特效
+            BattleEffectManager.Instance.AddChargeStack(attacker);
+            Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
         }
 
         yield return null;
@@ -818,7 +872,6 @@ public class BattleManager : MonoBehaviour
         // **普通攻擊：需要敵人存在**
         if (beatInCycle != beatsPerMeasure)
         {
-            if (target == null) yield break; // 沒敵人就不揮擊
             // **輕攻擊：全隊回復血量 +10**
             Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復10HP！");
             BattleEffectManager.Instance.HealTeamWithEffect(10 + GlobalIndex.RythmResonanceBuff);
@@ -826,8 +879,9 @@ public class BattleManager : MonoBehaviour
         else
         {
             // **重攻擊：全隊回復血量 +50**
-            Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復20HP！");
-            BattleEffectManager.Instance.HealTeamWithEffect(20 + GlobalIndex.RythmResonanceBuff);
+            //Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復20HP！");
+            //BattleEffectManager.Instance.HealTeamWithEffect(20 + GlobalIndex.RythmResonanceBuff);
+            BattleEffectManager.Instance.ActivateHolyEffect();
         }
 
         yield return null;
@@ -844,15 +898,19 @@ public class BattleManager : MonoBehaviour
 
         int index = System.Array.FindIndex(CTeamInfo, t => t == attacker);
 
+        bool isHeavy = (beatInCycle == beatsPerMeasure);
+
         // ---------------------------
         // ★ 第一步：所有 Paladin 攻擊 → 先格檔一拍
         // ---------------------------
         BattleEffectManager.Instance.ActivateBlock(
             index,
-            0.9f, //BeatManager.Instance.beatTravelTime
+            0.9f,
             charData,
-            attacker.Actor
+            attacker.Actor,
+            isHeavy //  ★ 傳進 BattleEffectManager
         );
+
 
         // *延遲 0.05 秒讓格檔特效確實生成（安全做法）
         yield return new WaitForSeconds(0.05f);
@@ -860,7 +918,6 @@ public class BattleManager : MonoBehaviour
         // ---------------------------
         // ★ 第二步：判斷 輕攻擊 / 重攻擊
         // ---------------------------
-        bool isHeavy = (beatInCycle == beatsPerMeasure);
 
         if (!isHeavy)
         {

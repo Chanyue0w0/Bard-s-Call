@@ -174,4 +174,10 @@ public abstract class EnemyBase : MonoBehaviour
     }
 
     public bool IsFeverLocked() => isFeverLock;
+
+    public virtual void OnDeath()
+    {
+        // 敵人死亡處理 …
+    }
+
 }

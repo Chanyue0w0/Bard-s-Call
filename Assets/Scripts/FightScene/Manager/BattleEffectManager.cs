@@ -17,12 +17,19 @@ public class BattleEffectManager : MonoBehaviour
     [Header("格檔成功特效")]
     public GameObject blockSuccessVfxPrefab;
 
+    [Header("敵方格擋管理")] 
+    private Dictionary<GameObject, bool> enemyBlocking = new();
+    private Dictionary<GameObject, Coroutine> enemyBlockCoroutines = new();
+    private Dictionary<GameObject, GameObject> enemyBlockEffects = new();
+
+
     [Header("Priest 回復特效")]
     public GameObject healVfxPrefab;
 
     // 每位角色的格檔狀態與協程追蹤
     private bool[] isBlocking = new bool[3];
     private Coroutine[] blockCoroutines = new Coroutine[3];
+    private bool[] isHeavyBlocking = new bool[3];
 
     public bool isHeavyAttack = false;
 
@@ -39,6 +46,10 @@ public class BattleEffectManager : MonoBehaviour
     // -------------------------
     private Dictionary<BattleManager.TeamSlotInfo, int> mageChargeStacks = new Dictionary<BattleManager.TeamSlotInfo, int>();
 
+    
+
+    [Header("Holy CounterAttack（完美格檔反擊）")]
+    public GameObject holyCounterattackPrefab;
     // -------------------------
     // HolyEffect（對拍共鳴 BUFF）
     // -------------------------
@@ -167,9 +178,11 @@ public class BattleEffectManager : MonoBehaviour
     }
 
 
-    public void ActivateBlock(int index, float beatDuration, CharacterData charData, GameObject actor)
+    public void ActivateBlock(int index, float beatDuration, CharacterData charData, GameObject actor, bool isHeavyBlock)
     {
         if (index < 0 || index >= isBlocking.Length) return;
+
+        isHeavyBlocking[index] = isHeavyBlock;
 
         // 若已有格檔 → 先停止舊的
         if (blockCoroutines[index] != null)
@@ -254,6 +267,46 @@ public class BattleEffectManager : MonoBehaviour
         Debug.Log($"【格檔結束】角色 {actor.name} 恢復可受傷");
     }
 
+    public void ActivateEnemyBlock(GameObject enemyObj, CharacterData charData, float durationBeats)
+    {
+        if (enemyObj == null) return;
+
+        // 1. 註冊
+        if (!enemyBlocking.ContainsKey(enemyObj))
+            enemyBlocking[enemyObj] = true;
+
+        // 2. 特效
+        Vector3 pos = enemyObj.transform.position;
+        GameObject fxPrefab = charData != null && charData.ShieldEffectPrefab != null
+            ? charData.ShieldEffectPrefab
+            : shieldVfxPrefab;
+
+        GameObject fx = Instantiate(fxPrefab, pos, Quaternion.identity);
+        fx.transform.SetParent(enemyObj.transform, worldPositionStays: true);
+
+        enemyBlockEffects[enemyObj] = fx;
+
+        // 3. 持續時間（算拍）
+        float sec = FMODBeatListener2.Instance.SecondsPerBeat * durationBeats;
+        if (enemyBlockCoroutines.ContainsKey(enemyObj) && enemyBlockCoroutines[enemyObj] != null)
+            StopCoroutine(enemyBlockCoroutines[enemyObj]);
+
+        enemyBlockCoroutines[enemyObj] = StartCoroutine(EnemyBlockRoutine(enemyObj, sec));
+    }
+
+    private IEnumerator EnemyBlockRoutine(GameObject enemyObj, float sec)
+    {
+        yield return new WaitForSeconds(sec);
+
+        // 關閉格擋
+        enemyBlocking[enemyObj] = false;
+
+        if (enemyBlockEffects.ContainsKey(enemyObj) && enemyBlockEffects[enemyObj] != null)
+            Destroy(enemyBlockEffects[enemyObj]);
+
+        enemyBlockEffects.Remove(enemyObj);
+        enemyBlockCoroutines.Remove(enemyObj);
+    }
 
 
     // =======================
@@ -270,24 +323,36 @@ public class BattleEffectManager : MonoBehaviour
         // =======================================
         if (target.Actor != null)
         {
-            var goblin = target.Actor.GetComponent<ShieldGoblin>();
-            if (goblin != null)
+            var shieldGoblin = target.Actor.GetComponent<ShieldGoblin>();
+            if (shieldGoblin != null && shieldGoblin.isBlocking)
             {
-                // 若格檔中且未破防
-                if (goblin.IsBlocking())
-                {
-                    // 若是重攻擊 → 破防
-                    if (isHeavyAttack)
-                    {
-                        goblin.BreakShield();
-                        Debug.Log($"【破防成功】{attacker.UnitName} 的重攻擊打破 {target.UnitName} 的防禦！");
-                    }
-                    else
-                    {
-                        Debug.Log($"【格檔成功】{target.UnitName} 擋下 {attacker.UnitName} 的攻擊！");
-                        return; // 不受傷害
-                    }
-                }
+                Debug.Log("【敵方格檔成功】");
+
+                // 1. 實際傷害（30%）
+                int reducedDamage = Mathf.RoundToInt(overrideDamage * 0.3f);
+
+                // 2. 顯示格擋數字
+                if (DamageNumberManager.Instance != null && attacker != null)
+                    DamageNumberManager.Instance.ShowBlocked(target.Actor.transform, reducedDamage);
+
+                // 3. ★★★ 真正扣血（缺少的部分）★★★
+                target.HP -= reducedDamage;
+                if (target.HP < 0) target.HP = 0;
+
+                // 4. 呼叫敵人受傷反應
+                var enemyBaseTMP = target.Actor.GetComponent<EnemyBase>();
+                if (enemyBaseTMP != null)
+                    enemyBaseTMP.OnDamaged(reducedDamage, isHeavyAttack);
+
+                // 5. 更新血條
+                var enemyHBTMP = target.Actor?.GetComponentInChildren<HealthBarUI>();
+                if (enemyHBTMP != null) enemyHBTMP.ForceUpdate();
+
+                // 6. 檢查死亡
+                if (target.HP <= 0)
+                    HandleUnitDefeated(target);
+
+                return;
             }
             var darkKnight = target.Actor.GetComponent<DarkLongSwordKnight>();
             if (darkKnight != null)
@@ -310,26 +375,92 @@ public class BattleEffectManager : MonoBehaviour
         }
 
         // =======================================
-        // 玩家方格檔判定（原有機制）
+        // 玩家方格檔判定（含 Paladin 輕拍/重拍邏輯）
         // =======================================
         int targetIndex = System.Array.FindIndex(BattleManager.Instance.CTeamInfo, t => t == target);
+
         if (targetIndex >= 0 && isBlocking[targetIndex])
         {
-            Vector3 spawnPos = target.Actor.transform.position;
-            Vector3 offset = new Vector3(0f, 1.0f, 0f); // 可調整高度
+            var data = target.Actor.GetComponent<CharacterData>();
+            bool isPaladin = (data != null && data.ClassType == BattleManager.UnitClass.Paladin);
 
-            GameObject fx = Instantiate(blockSuccessVfxPrefab, spawnPos + offset, Quaternion.identity);
+            // --- 取出完整傷害（後面敵人/玩家分支要用）---
+            int rawDamage = (overrideDamage >= 0)
+                ? overrideDamage
+                : Mathf.Max(0, Mathf.RoundToInt(attacker.Atk * (isPerfect ? 1f : 0f)));
 
-            // 讓特效跟著角色移動
-            fx.transform.SetParent(target.Actor.transform, worldPositionStays: true);
-            fx.transform.localPosition = offset;
+            // ----------- Paladin 特殊格檔 -----------
+            if (isPaladin)
+            {
+                bool heavyBlock = isHeavyBlocking[targetIndex];
 
-            VibrationManager.Instance.Vibrate("Block");
-            Debug.Log($"【格檔成功】{target.UnitName} 格檔 {attacker.UnitName} 的攻擊！");
+                if (heavyBlock)
+                {
+                    ShowBlockEffectPaladin(target);
+                    Debug.Log("【Paladin 重拍格檔】100% 免傷（觸發神聖反擊）");
 
-            // ★★★★★ HolyEffect：玩家格檔成功 → 啟動對拍共鳴
-            ActivateHolyEffect();
+                    // ★★★ 反擊生成 HolyCounterattack ★★★
+                    if (attacker != null && holyCounterattackPrefab != null)
+                    {
+                        Vector3 spawnPos = target.Actor.transform.position + new Vector3(0, 0.5f, 0);
+                        GameObject obj = GameObject.Instantiate(holyCounterattackPrefab, spawnPos, Quaternion.identity);
 
+                        FireBallSkill fire = obj.GetComponent<FireBallSkill>();
+                        if (fire != null)
+                        {
+                            fire.attacker = target;        // paladin 是反擊者
+                            fire.target = attacker;        // 攻擊者成為反擊目標
+                            fire.damage = 40 + GlobalIndex.RythmResonanceBuff;              // 自訂反擊傷害
+                            fire.isPerfect = true;         // 設定為 perfect hit
+                            fire.isHeavyAttack = true;     // 重擊屬性
+                        }
+                    }
+
+                    // 顯示格擋數字
+                    DamageNumberManager.Instance.ShowBlocked(target.Actor.transform, 0);
+
+                    return;
+                }
+                else
+                {
+                    // ==============================
+                    // ★ 輕拍格檔 → 扣 30% 傷害
+                    // ==============================
+                    int reducedDamage = Mathf.RoundToInt(rawDamage * 0.3f);   // 玩家實際承受
+                    int blockedDamage = rawDamage - reducedDamage;            // 被格檔掉的量（70%）
+
+                    ShowBlockEffectPaladin(target);
+                    //ActivateHolyEffect();
+                    Debug.Log($"【Paladin 輕拍格檔】受到 {reducedDamage} 傷害（格擋 {blockedDamage}）");
+
+                    // ========================================================
+                    // ★ 數字顯示：兩個數字
+                    //   1. 格擋的傷害（藍/灰） → ShowBlocked()
+                    //   2. 實際扣血（紅）→ ShowDamage()
+                    // ========================================================
+                    if (DamageNumberManager.Instance != null)
+                    {
+                        // Blocked 數字：顯示被減掉後的傷害量（70%）
+                        DamageNumberManager.Instance.ShowBlocked(target.Actor.transform, reducedDamage); //blockedDamage
+
+                        // 拿到的傷害：顯示實際扣的 30%
+                        //DamageNumberManager.Instance.ShowDamage(target.Actor.transform, reducedDamage);
+                    }
+
+                    // ===== 套用傷害至全隊共用 HP =====
+                    GlobalIndex.CurrentTotalHP = Mathf.Max(0, GlobalIndex.CurrentTotalHP - reducedDamage);
+                    playerTotalHPUI.SetHP(GlobalIndex.CurrentTotalHP, GlobalIndex.MaxTotalHP);
+
+                    BattleManager.Instance.CheckPlayerDefeat();
+                    return;
+
+                }
+            }
+
+            // ----------- 其他職業：沿用舊版完全格檔 -----------
+            ShowBlockEffectPaladin(target);
+            //ActivateHolyEffect();
+            Debug.Log($"【格檔成功】{target.UnitName} 擋下 {attacker?.UnitName} 的攻擊！");
             return;
         }
 
@@ -362,12 +493,12 @@ public class BattleEffectManager : MonoBehaviour
             }
 
             // 法師中斷充電
-            var data = target.Actor.GetComponent<CharacterData>();
-            if (data != null && data.ClassType == BattleManager.UnitClass.Mage)
-            {
-                ResetChargeStacks(target);
-                Debug.Log($"【充電中斷】{target.UnitName} 被攻擊 → 清除層數");
-            }
+            //var data = target.Actor.GetComponent<CharacterData>();
+            //if (data != null && data.ClassType == BattleManager.UnitClass.Mage)
+            //{
+            //    ResetChargeStacks(target);
+            //    Debug.Log($"【充電中斷】{target.UnitName} 被攻擊 → 清除層數");
+            //}
 
             // 判斷是否全隊死亡
             BattleManager.Instance.CheckPlayerDefeat();
@@ -412,13 +543,26 @@ public class BattleEffectManager : MonoBehaviour
 
     }
 
+    private void ShowBlockEffectPaladin(BattleManager.TeamSlotInfo target)
+    {
+        Vector3 spawnPos = target.Actor.transform.position;
+        Vector3 offset = new Vector3(0f, 1.0f, 0f);
+
+        GameObject fx = Instantiate(blockSuccessVfxPrefab, spawnPos + offset, Quaternion.identity);
+        fx.transform.SetParent(target.Actor.transform, worldPositionStays: true);
+        fx.transform.localPosition = offset;
+
+        VibrationManager.Instance.Vibrate("Block");
+    }
+
+
     // ======================================================
     // HolyEffect 系統（格檔成功時啟動）
     // ======================================================
 
     public void ActivateHolyEffect()
     {
-        int durationBeats = 4;
+        int durationBeats = 5;
 
         // 若已啟動 → 只刷新持續拍
         if (isHolyActive)
@@ -707,16 +851,22 @@ public class BattleEffectManager : MonoBehaviour
             playerTotalHPUI.SetHP(GlobalIndex.CurrentTotalHP, GlobalIndex.MaxTotalHP);
 
         // 3. 個別角色顯示回復特效 & 綠色數字
+
+        // ============================
+        // ★ 顯示一次治療數字（中間角色）
+        // ============================
+        var mid = BattleManager.Instance.CTeamInfo[1];
+        Transform centerTransform = mid?.Actor?.transform;
+        // 3-1 顯示綠色 +healAmount
+        if (DamageNumberManager.Instance != null)
+        {
+            DamageNumberManager.Instance.ShowHeal(centerTransform, healAmount);
+        }
+
         var team = BattleManager.Instance.CTeamInfo;
         foreach (var ally in team)
         {
             if (ally == null || ally.Actor == null) continue;
-
-            // 3-1 顯示綠色 +healAmount
-            if (DamageNumberManager.Instance != null)
-            {
-                DamageNumberManager.Instance.ShowHeal(ally.Actor.transform, healAmount);
-            }
 
             // 3-2 生成治癒特效
             if (healVfxPrefab != null)
@@ -739,6 +889,49 @@ public class BattleEffectManager : MonoBehaviour
             }
         }
     }
+
+    // ---------------------------------------------------------
+    // ★ 新增：治療單一敵人（顯示綠色數字，播放 healVFX）
+    // ---------------------------------------------------------
+    public void HealEnemy(BattleManager.TeamSlotInfo enemy, int healAmount)
+    {
+        if (enemy == null || enemy.Actor == null) return;
+
+        // 1. 回復 HP
+        enemy.HP = Mathf.Min(enemy.MaxHP, enemy.HP + healAmount);
+        Debug.Log($"【敵人回復】{enemy.UnitName} +{healAmount} → {enemy.HP}/{enemy.MaxHP}");
+
+        // 2. 顯示數字
+        if (DamageNumberManager.Instance != null)
+        {
+            DamageNumberManager.Instance.ShowHeal(enemy.Actor.transform, healAmount);
+        }
+
+        // 3. 顯示治療特效
+        if (healVfxPrefab != null)
+        {
+            Vector3 pos = enemy.Actor.transform.position;
+            GameObject fx = Instantiate(healVfxPrefab, pos, Quaternion.identity);
+            fx.transform.SetParent(enemy.Actor.transform, worldPositionStays: true);
+
+            var exp = fx.GetComponent<Explosion>();
+            if (exp != null)
+            {
+                exp.SetUseUnscaledTime(true);
+                exp.Initialize();
+            }
+            else
+            {
+                Destroy(fx, 1.5f);
+            }
+        }
+
+        // 4. 更新敵人血條
+        var hb = enemy.Actor.GetComponentInChildren<HealthBarUI>();
+        if (hb != null) hb.ForceUpdate();
+    }
+
+
 
     // 手動移除格檔特效（用於破防）
     public void RemoveBlockEffect(GameObject actor)
