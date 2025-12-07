@@ -617,8 +617,9 @@ public class FMODBeatListener2 : MonoBehaviour
         {
             if (bestIndex == lastJudgedBeatIndex)
             {
-                // 同一拍點不可重複判定
+                // 同拍第二次按 → 視為 Miss，需重置 Combo
                 result = Judge.Miss;
+                RegisterBeatResult(false);   // ★ 必加
                 return false;
             }
 
@@ -640,6 +641,7 @@ public class FMODBeatListener2 : MonoBehaviour
         {
             SpawnMissText();
             result = Judge.Miss;
+            RegisterBeatResult(false);
             return false;
         }
     }
@@ -693,6 +695,9 @@ public class FMODBeatListener2 : MonoBehaviour
     {
         if (isPerfect)
         {
+            // ★★★ Fever 累加在這裡 ★★★
+            FeverManager.Instance?.AddPerfect();
+
             comboCount++;
             lastHitTime = Time.time;
             UpdateComboUI();
@@ -708,6 +713,7 @@ public class FMODBeatListener2 : MonoBehaviour
         }
         else
         {
+            FeverManager.Instance?.AddMiss(); // ★ 保持 Fever 行為一致
             ResetCombo();
         }
     }
@@ -728,8 +734,16 @@ public class FMODBeatListener2 : MonoBehaviour
 
     private void UpdateComboUI()
     {
+        Debug.Log($"UpdateComboUI / comboCount = {comboCount} / comboText is null? {comboText == null}");
+
         if (comboText == null) return;
         comboText.text = comboCount > 0 ? comboCount.ToString() : "";
+    }
+
+
+    public int GetComboCount()
+    {
+        return comboCount;
     }
 
 }

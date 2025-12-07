@@ -9,7 +9,7 @@ public class FeverManager : MonoBehaviour
     [Range(0f, 100f)] public float currentFever = 0f;
     public float feverMax = 100f;
 
-    [Header("累積參數")]
+    [Header("累積參數 (舊參數仍保留，不使用移除)")]
     public float gainPerPerfect = 1.12f;
     public float bonusPerBar = 0.5f;
     public float missPenalty = 8f;
@@ -21,6 +21,24 @@ public class FeverManager : MonoBehaviour
     [Header("關聯 UI 元件")]
     public FeverUI feverUI;
     private bool feverTriggered = false;
+
+    // --------------------------------------------------
+    // ★★★ 新增：新版 Fever 累加設定（Combo 加成）★★★
+    // --------------------------------------------------
+    [Header("新版 Fever 累加設定")]
+    public float baseGain = 0.70f;        // 每次基本累加量
+    public float comboFactor = 0.60f;     // Combo 影響最大增幅
+    public int comboMax = 50;             // 50 Combo 達到滿倍率
+
+    private int CurrentCombo
+    {
+        get
+        {
+            if (FMODBeatListener2.Instance == null)
+                return 0;
+            return FMODBeatListener2.Instance.GetComboCount(); // 來自 Listener2
+        }
+    }
 
     // --------------------------------------------------
     // Fever 大招動畫控制
@@ -67,11 +85,16 @@ public class FeverManager : MonoBehaviour
     }
 
     // --------------------------------------------------
-    // Perfect / Miss 累積邏輯
+    // ★★★ Perfect / Miss 累積邏輯（新版）★★★
     // --------------------------------------------------
     public void AddPerfect()
     {
-        currentFever += gainPerPerfect;
+        int combo = CurrentCombo;
+
+        float comboRate = Mathf.Clamp01(combo / (float)comboMax);
+        float gain = baseGain + comboFactor * comboRate;
+
+        currentFever += gain;
         perfectCountInBar++;
 
         if (perfectCountInBar >= beatsPerBar)
@@ -84,11 +107,10 @@ public class FeverManager : MonoBehaviour
         UpdateFeverUI();
     }
 
+    // ★ Miss 不扣 Fever
     public void AddMiss()
     {
-        currentFever -= missPenalty;
-        perfectCountInBar = 0;
-        currentFever = Mathf.Max(currentFever, 0f);
+        perfectCountInBar = 0;    // 清除小節 Perfect 數
         UpdateFeverUI();
     }
 
@@ -109,23 +131,19 @@ public class FeverManager : MonoBehaviour
     {
         Debug.Log("[FeverManager] 啟動全隊大招動畫流程");
 
-        // 歸零防重觸發
         currentFever = 0f;
         feverTriggered = false;
         UpdateFeverUI();
 
-        // ★★★ 在這裡廣播事件，讓所有敵人立即鎖定 12 拍 ★★★
         OnFeverUltStart?.Invoke(12);
         Debug.Log("[FeverManager] 已通知所有敵人進入Fever鎖定狀態（12拍）");
 
         if (feverUltBackground != null)
             feverUltBackground.SetActive(true);
 
-        // 鏡頭聚焦
         if (mainCam != null && focusPoint != null)
             yield return StartCoroutine(CameraFocusZoom(true));
 
-        // 生成聚氣特效（第1拍期間）
         if (ultFocusVFXPrefab != null && BattleManager.Instance != null)
         {
             var bm = BattleManager.Instance;
@@ -143,19 +161,15 @@ public class FeverManager : MonoBehaviour
             }
         }
 
-        // 拍點節奏計算
         float secondsPerBeat = (BeatManager.Instance != null)
             ? (60f / BeatManager.Instance.bpm)
             : 0.6f;
 
-        // ★ 第1拍：聚焦中
         yield return new WaitForSeconds(secondsPerBeat * 1f);
 
-        // ★ 第2拍：開始鏡頭回復
         if (mainCam != null)
             StartCoroutine(CameraFocusZoom(false));
 
-        // ★ 第3拍：全隊施放大招
         yield return new WaitForSeconds(secondsPerBeat * 1f);
         if (BattleManager.Instance != null)
         {
@@ -163,7 +177,6 @@ public class FeverManager : MonoBehaviour
             BattleManager.Instance.TriggerFeverActions(phase: 3);
         }
 
-        // ★ 第4~第8拍：維持背景（收尾氣氛）
         yield return new WaitForSeconds(secondsPerBeat * 8f);
         if (feverUltBackground != null)
             feverUltBackground.SetActive(false);
