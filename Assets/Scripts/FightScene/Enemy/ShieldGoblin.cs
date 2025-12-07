@@ -189,6 +189,7 @@ public class ShieldGoblin : EnemyBase
         // ---------- Warning（與 MageGoblin 相同） ----------
         if (frame.triggerWarning && warningPrefab != null)
         {
+            FMODAudioPlayer.Instance.PlayAttackWarning(); //播放攻擊警告音效
             SpawnWarning();
         }
 

@@ -176,6 +176,7 @@ public class AxeGoblin : EnemyBase
         // =====================
         if (frame.triggerWarning && warningPrefab != null)
         {
+            FMODAudioPlayer.Instance.PlayAttackWarning(); //播放攻擊警告音效
             Instantiate(
                 warningPrefab,
                 transform.position + warningOffset,
@@ -189,6 +190,8 @@ public class AxeGoblin : EnemyBase
         if (frame.triggerAttack)
         {
             if (IsFeverLocked()) return; // double check 保險
+
+            FMODAudioPlayer.Instance.PlayAxeGoblinAttack(); //播放斧頭哥布林攻擊音效
 
             // 1. 產生攻擊技能
             SpawnAttackSkill();

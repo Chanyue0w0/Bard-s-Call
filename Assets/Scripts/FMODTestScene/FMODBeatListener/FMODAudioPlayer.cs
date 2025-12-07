@@ -61,5 +61,6 @@ public class FMODAudioPlayer : MonoBehaviour
     public void PlayFeverMusic() => Play(FeverMusic);
 
     public void PlayAxeGoblinAttack() => Play(AxeGoblin_NormalAttack);
+    public void PlayMageGoblinAttack() => Play(MageGoblin_NormalAttack);
     public void PlayAttackWarning() => Play(AttackWarning);
 }

@@ -340,6 +340,7 @@ public class Orc : EnemyBase
         // Warning 特效
         if (frame.triggerWarning && warningPrefab != null)
         {
+            FMODAudioPlayer.Instance.PlayAttackWarning(); //播放攻擊警告音效
             Instantiate(
                 warningPrefab,
                 transform.position + warningOffset,

@@ -90,6 +90,7 @@ public class MageGoblin : EnemyBase
         // ---------- Warning ----------
         if (frame.triggerWarning && warningPrefab != null)
         {
+            FMODAudioPlayer.Instance.PlayAttackWarning(); //播放攻擊警告音效
             Instantiate(
                 warningPrefab,
                 transform.position + warningOffset,
@@ -100,6 +101,8 @@ public class MageGoblin : EnemyBase
         // ---------- Attack ----------
         if (frame.triggerAttack)
         {
+
+            FMODAudioPlayer.Instance.PlayMageGoblinAttack(); //播放法師哥布林攻擊音效
             SpawnMagicBall();
         }
     }

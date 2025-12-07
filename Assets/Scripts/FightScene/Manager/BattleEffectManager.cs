@@ -394,6 +394,8 @@ public class BattleEffectManager : MonoBehaviour
             {
                 bool heavyBlock = isHeavyBlocking[targetIndex];
 
+                FMODAudioPlayer.Instance.PlayPaladinHeavy(); //播放聖騎士格擋音效
+
                 if (heavyBlock)
                 {
                     ShowBlockEffectPaladin(target);
@@ -455,10 +457,12 @@ public class BattleEffectManager : MonoBehaviour
                     return;
 
                 }
+
             }
 
             // ----------- 其他職業：沿用舊版完全格檔 -----------
             ShowBlockEffectPaladin(target);
+
             //ActivateHolyEffect();
             Debug.Log($"【格檔成功】{target.UnitName} 擋下 {attacker?.UnitName} 的攻擊！");
             return;

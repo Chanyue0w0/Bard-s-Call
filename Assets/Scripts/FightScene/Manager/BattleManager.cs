@@ -771,6 +771,7 @@ public class BattleManager : MonoBehaviour
             }
 
             BattleEffectManager.Instance.ResetChargeStacks(attacker);
+            FMODAudioPlayer.Instance.PlayMageHeavy(); //播放法師重攻擊音效
             yield break;
         }
 
@@ -792,6 +793,7 @@ public class BattleManager : MonoBehaviour
             }
             // 增加疊層 & 特效
             BattleEffectManager.Instance.AddChargeStack(attacker);
+            FMODAudioPlayer.Instance.PlayMageLight(); //播放法師輕攻擊音效
             Debug.Log($"[法師普攻] 第 {beatInCycle} 拍充能 +1 層。");
         }
 
@@ -875,6 +877,7 @@ public class BattleManager : MonoBehaviour
             // **輕攻擊：全隊回復血量 +10**
             Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復10HP！");
             BattleEffectManager.Instance.HealTeamWithEffect(10 + GlobalIndex.RythmResonanceBuff);
+            FMODAudioPlayer.Instance.PlayBardLight(); //播放吟遊詩人輕攻擊音效
         }
         else
         {
@@ -882,6 +885,7 @@ public class BattleManager : MonoBehaviour
             //Debug.Log($"[吟遊詩人重攻擊] {attacker.UnitName} 演奏治癒之歌，全隊回復20HP！");
             //BattleEffectManager.Instance.HealTeamWithEffect(20 + GlobalIndex.RythmResonanceBuff);
             BattleEffectManager.Instance.ActivateHolyEffect();
+            FMODAudioPlayer.Instance.PlayBardHeavy(); //播放吟遊詩人重攻擊音效
         }
 
         yield return null;
