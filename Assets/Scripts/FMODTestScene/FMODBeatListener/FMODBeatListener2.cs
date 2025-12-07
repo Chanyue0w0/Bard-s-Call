@@ -585,8 +585,8 @@ public class FMODBeatListener2 : MonoBehaviour
             float d = currentMusicTime - beatTimeline[i].time;
             float abs = Mathf.Abs(d);
 
-            if (abs > maxJudgeWindow)
-                continue;
+            //if (abs > maxJudgeWindow)
+            //    continue;
 
             if (abs < minAbsDelta)
             {
@@ -594,12 +594,18 @@ public class FMODBeatListener2 : MonoBehaviour
                 bestDelta = d;
                 bestIndex = i;
             }
+
         }
 
-        if (bestIndex == -1)
+        if (bestIndex == -1 || minAbsDelta > maxJudgeWindow)
         {
+            // 真 Miss
+            SpawnMissText();
+            result = Judge.Miss;
+            RegisterBeatResult(false);
             return false;
         }
+
 
         // ★★★ 這裡才是正確的循環拍來源！★★★
         CorrectedBeatInCycle = ((bestIndex % timeSigUpper) + timeSigUpper) % timeSigUpper + 1;
