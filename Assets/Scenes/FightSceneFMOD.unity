@@ -17386,45 +17386,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 500448708}
-  - component: {fileID: 500448707}
+  - component: {fileID: 500448709}
   m_Layer: 0
-  m_Name: AudioManager
+  m_Name: FMODAudioPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &500448707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500448706}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: -134592702
-      Data2: 1142622056
-      Data3: -617991272
-      Data4: 1802796627
-    Path: event:/BnB_Combat1_LoopAB
-  Event: 
-  EventPlayTrigger: 1
-  EventStopTrigger: 2
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  NonRigidbodyVelocity: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
+  m_IsActive: 1
 --- !u!4 &500448708
 Transform:
   m_ObjectHideFlags: 0
@@ -17440,6 +17409,88 @@ Transform:
   m_Children: []
   m_Father: {fileID: 398088045}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &500448709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500448706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f0b7355017b08d4194f83222cf20d42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Paladin_LightBeat:
+    Guid:
+      Data1: -1013083086
+      Data2: 1126134718
+      Data3: 1976306090
+      Data4: 1264960282
+    Path: event:/SoundEffects/InCombat/Paladin_NormalParry
+  Paladin_HeavyBeat:
+    Guid:
+      Data1: -1013083086
+      Data2: 1126134718
+      Data3: 1976306090
+      Data4: 1264960282
+    Path: event:/SoundEffects/InCombat/Paladin_NormalParry
+  Bard_LightBeat:
+    Guid:
+      Data1: 1239655239
+      Data2: 1205015726
+      Data3: 1673854602
+      Data4: 1829034111
+    Path: event:/SoundEffects/InCombat/Bard_NormalHeal
+  Bard_HeavyBeat:
+    Guid:
+      Data1: 25371841
+      Data2: 1155334362
+      Data3: 2072062350
+      Data4: -1039363940
+    Path: event:/SoundEffects/InCombat/Bard_Spell
+  Mage_LightBeat:
+    Guid:
+      Data1: -1362379364
+      Data2: 1189858603
+      Data3: -2066719311
+      Data4: -1462309100
+    Path: event:/SoundEffects/InCombat/Rethys_NormalAttack
+  Mage_HeavyBeat:
+    Guid:
+      Data1: -265433386
+      Data2: 1273129986
+      Data3: -1602043002
+      Data4: -433820367
+    Path: event:/SoundEffects/InCombat/Rethys_Spell
+  FeverMusic:
+    Guid:
+      Data1: -1403530542
+      Data2: 1211619733
+      Data3: -787552382
+      Data4: 1484676168
+    Path: event:/SoundEffects/InCombat/Elvin_Fever2
+  AxeGoblin_NormalAttack:
+    Guid:
+      Data1: 14085547
+      Data2: 1096907797
+      Data3: 566576282
+      Data4: -121142235
+    Path: event:/SoundEffects/InCombat/AxeGoblin_NormalAttack
+  MageGoblin_NormalAttack:
+    Guid:
+      Data1: -516454571
+      Data2: 1341517149
+      Data3: -603654978
+      Data4: -657993881
+    Path: event:/SoundEffects/InCombat/MageGoblin_FireBall
+  AttackWarning:
+    Guid:
+      Data1: -1337298093
+      Data2: 1176039833
+      Data3: -1624896377
+      Data4: -1321679031
+    Path: event:/SoundEffects/InCombat/RedFlash
 --- !u!1001 &513443394
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -56635,11 +56686,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicEvent:
     Guid:
-      Data1: -164559263
-      Data2: 1128257918
-      Data3: -1420859206
-      Data4: -439808027
-    Path: event:/BnB_Combat1(Ver2)
+      Data1: 674071543
+      Data2: 1148673503
+      Data3: 1045085628
+      Data4: -886273377
+    Path: event:/Combat soundtracks/Combat 01
   perfectSFX:
     Guid:
       Data1: 950292341
