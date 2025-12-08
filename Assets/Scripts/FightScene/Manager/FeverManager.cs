@@ -257,6 +257,9 @@ public class FeverManager : MonoBehaviour
             FeverQTEManager.Instance?.StartQTE();
         }
 
+        if (feverBeatCounter == 25)
+            FeverQTEManager.Instance.EndQTE();
+
         // Debug.Log($"[FeverManager] FEVER ©ç¼Æ¡G{feverBeatCounter}/{feverTotalBeats}");
 
         if (feverBeatCounter >= feverTotalBeats)

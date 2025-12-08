@@ -61,8 +61,15 @@ public class FeverQTEManager : MonoBehaviour
     public void EndQTE()
     {
         isFeverActive = false;
+
+        // ★ 先停止所有滑動動畫
+        StopAllCoroutines();
+        isSliding = false;
+
+        // ★ 再清除所有 QTE
         ClearAllQTE();
     }
+
 
     // ========================================================================
     // 預先生成 10 顆
@@ -232,8 +239,12 @@ public class FeverQTEManager : MonoBehaviour
     // ========================================================================
     public void ClearAllQTE()
     {
-        foreach (var obj in activeQTEs)
-            if (obj != null) Destroy(obj);
+        // ★ 逐一安全刪除
+        for (int i = 0; i < activeQTEs.Count; i++)
+        {
+            if (activeQTEs[i] != null)
+                Destroy(activeQTEs[i]);
+        }
 
         activeQTEs.Clear();
         qteTypes.Clear();
@@ -242,6 +253,7 @@ public class FeverQTEManager : MonoBehaviour
         lastType = '?';
         repeatCount = 0;
     }
+
 
     // ========================================================================
     // 連鎖機率衰減
