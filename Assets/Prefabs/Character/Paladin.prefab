@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 1643294760858356208}
   - component: {fileID: 8284256390940567861}
   - component: {fileID: 20111623230443619}
+  - component: {fileID: 5022622408447773404}
   m_Layer: 7
   m_Name: Paladin
   m_TagString: Hero
@@ -253,6 +254,19 @@ MonoBehaviour:
   jumpTime: 0.15
   shakeTime: 0.25
   shakeStrength: 0.3
+--- !u!114 &5022622408447773404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2912741584857405815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64f65979b0a62e94cade3da3966500f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 8284256390940567861}
 --- !u!1 &4903006136213224238
 GameObject:
   m_ObjectHideFlags: 0
