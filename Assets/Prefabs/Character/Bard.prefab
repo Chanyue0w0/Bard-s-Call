@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 3361052422287799873}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.01, y: 0, z: 0}
+  m_LocalPosition: {x: -0.11, y: 0.37, z: 0}
   m_LocalScale: {x: 1.1857529, y: 0.53785753, z: 1.1857529}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -94,9 +94,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8158479552114564748}
   - component: {fileID: 6347402537250545832}
-  - component: {fileID: 5894668438685926040}
   - component: {fileID: 8535338501439863612}
-  - component: {fileID: 372741867450944935}
+  - component: {fileID: 4435861750533921979}
   - component: {fileID: 5903065188219034040}
   - component: {fileID: -7196742910127215144}
   m_Layer: 7
@@ -176,22 +175,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5894668438685926040
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6258503229764174105}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseScale: {x: 0.5, y: 0.5, z: 0.5}
-  peakMultiplier: 1.2
-  holdDuration: 0.05
-  returnSpeed: 8
 --- !u!114 &8535338501439863612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,27 +214,19 @@ MonoBehaviour:
     DamageMultiplier: 0
     FixedDamage: 0
   ShieldEffectPrefab: {fileID: 0}
---- !u!95 &372741867450944935
-Animator:
-  serializedVersion: 5
+--- !u!114 &4435861750533921979
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6258503229764174105}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0dbf9da0b4ea6a14faf802693501a316, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d690aebafd9f1774f86ab8d4001393c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 5903065188219034040}
 --- !u!114 &5903065188219034040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,7 +265,7 @@ MonoBehaviour:
     holdLastFrame: 0
   - clipName: HandsUp
     frames:
-    - sprite: {fileID: 21300000, guid: 9a528c359f42e9347a1d143aa0a89a1b, type: 3}
+    - sprite: {fileID: 21300000, guid: 5665c4279ec60314c87948ce1697215d, type: 3}
       beatLength: 0.3
       triggerWarning: 0
       triggerAttack: 0
@@ -300,8 +275,38 @@ MonoBehaviour:
     holdLastFrame: 0
   - clipName: ChangeGuitar
     frames:
-    - sprite: {fileID: 21300000, guid: 9a528c359f42e9347a1d143aa0a89a1b, type: 3}
-      beatLength: 0.3
+    - sprite: {fileID: 21300000, guid: b088f43e66dff2e4688166ed999d82ed, type: 3}
+      beatLength: 0.25
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 5665c4279ec60314c87948ce1697215d, type: 3}
+      beatLength: 0.25
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 486050b884c565d4bbea0215eabee362, type: 3}
+      beatLength: 0.25
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 6a58c08f8cc58c849bfad9306a4d49d3, type: 3}
+      beatLength: 0.25
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: f449fe1fd38ed1f49898956df24a132b, type: 3}
+      beatLength: 0.25
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 71c036b91b2403541b65c13ca0864535, type: 3}
+      beatLength: 0.25
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
@@ -310,13 +315,29 @@ MonoBehaviour:
     holdLastFrame: 0
   - clipName: FeverComboStrike
     frames:
-    - sprite: {fileID: 21300000, guid: 9a528c359f42e9347a1d143aa0a89a1b, type: 3}
-      beatLength: 0.3
+    - sprite: {fileID: 21300000, guid: 2d35e104df11fff49bec5b622f0c8f6a, type: 3}
+      beatLength: 0.25
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
       hasTriggered: 0
-    loop: 0
+    - sprite: {fileID: 21300000, guid: 3bceca73f40913e4a97cfa2f1d9f8c75, type: 3}
+      beatLength: 0.25
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 1
+    holdLastFrame: 0
+  - clipName: FeverRelease
+    frames:
+    - sprite: {fileID: 21300000, guid: f5334e344cb0a044b93b74c30ba2e6d3, type: 3}
+      beatLength: 1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 1
     holdLastFrame: 0
   defaultClipName: Idle
   playDefaultOnStart: 1

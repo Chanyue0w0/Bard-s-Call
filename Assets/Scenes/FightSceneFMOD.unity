@@ -22537,6 +22537,11 @@ MonoBehaviour:
   baseGain: 0.7
   comboFactor: 0.6
   comboMax: 50
+  fadeParameterName: Fade
+  feverTotalBeats: 33
+  feverFadeOutBeats: 1
+  feverFadeInStartBeat: 29
+  feverFadeInBeats: 4
   feverUltBackground: {fileID: 2001828210}
   focusPoint: {fileID: 1795676078}
   cameraZoomScale: 0.5

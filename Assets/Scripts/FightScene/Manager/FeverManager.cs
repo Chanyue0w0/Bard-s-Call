@@ -214,11 +214,11 @@ public class FeverManager : MonoBehaviour
             StartCoroutine(CameraFocusZoom(false));
 
         yield return new WaitForSeconds(secondsPerBeat * 1f);
-        if (BattleManager.Instance != null)
-        {
-            Debug.Log("[FeverManager] 第3拍：全隊施放大招！");
-            BattleManager.Instance.TriggerFeverActions(phase: 3);
-        }
+        //if (BattleManager.Instance != null)
+        //{
+        //    Debug.Log("[FeverManager] 第3拍：全隊施放大招！");
+        //    BattleManager.Instance.TriggerFeverActions(phase: 3);
+        //}
 
         Debug.Log("[FeverManager] 大招動畫結束。");
     }
