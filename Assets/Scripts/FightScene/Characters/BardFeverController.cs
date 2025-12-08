@@ -12,10 +12,19 @@ public class BardFeverController : MonoBehaviour
 
     private Vector3 originalPos;
 
+    private SpriteRenderer spr;
+    private int originalSortingOrder;
+
+
     private void Awake()
     {
         FeverManager.OnFeverUltStart += HandleFeverStart;
         FeverManager.OnFeverEnd += HandleFeverEnd;
+
+        spr = GetComponentInChildren<SpriteRenderer>();
+        if (spr != null)
+            originalSortingOrder = spr.sortingOrder;   // 記錄原本的，例如 2
+
 
         if (anim == null)
             anim = GetComponentInChildren<BeatSpriteAnimator>();
@@ -38,6 +47,10 @@ public class BardFeverController : MonoBehaviour
         feverBeat = 0;
 
         transform.localPosition = originalPos;
+
+        if (spr != null)
+            spr.sortingOrder = 20;
+
 
         if (shakeRoutine != null)
             StopCoroutine(shakeRoutine);
@@ -66,6 +79,9 @@ public class BardFeverController : MonoBehaviour
             StopCoroutine(shakeRoutine);
 
         transform.localPosition = originalPos;
+
+        if (spr != null)
+            spr.sortingOrder = originalSortingOrder;
 
         if (anim != null)
             anim.Play("Idle", true);
@@ -101,7 +117,7 @@ public class BardFeverController : MonoBehaviour
         float spb = FMODBeatListener2.Instance.SecondsPerBeat;
 
         // -------------------------
-        // ★ 等到第 7 拍
+        // ★ 等到第 7.5 拍
         // -------------------------
         yield return new WaitUntil(() => feverBeat >= 7.5);
 
