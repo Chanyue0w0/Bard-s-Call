@@ -17471,18 +17471,18 @@ MonoBehaviour:
     Path: event:/SoundEffects/InCombat/Elvin_Fever2
   AxeGoblin_NormalAttack:
     Guid:
-      Data1: 14085547
-      Data2: 1096907797
-      Data3: 566576282
-      Data4: -121142235
-    Path: event:/SoundEffects/InCombat/AxeGoblin_NormalAttack
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: null
   MageGoblin_NormalAttack:
     Guid:
-      Data1: -516454571
-      Data2: 1341517149
-      Data3: -603654978
-      Data4: -657993881
-    Path: event:/SoundEffects/InCombat/MageGoblin_FireBall
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: null
   AttackWarning:
     Guid:
       Data1: 0
@@ -22527,13 +22527,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d6642efe88c5c4da476a83f353b003, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentFever: 0
+  currentFever: 95.1
   feverMax: 100
   gainPerPerfect: 1.12
   bonusPerBar: 0.5
   missPenalty: 8
   beatsPerBar: 4
   feverUI: {fileID: 7448186229776027133}
+  baseGain: 0.7
+  comboFactor: 0.6
+  comboMax: 50
   feverUltBackground: {fileID: 2001828210}
   focusPoint: {fileID: 1795676078}
   cameraZoomScale: 0.5

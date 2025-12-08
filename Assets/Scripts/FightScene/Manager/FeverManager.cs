@@ -41,6 +41,25 @@ public class FeverManager : MonoBehaviour
     }
 
     // --------------------------------------------------
+    // ★★★ 新增：Fever 音樂控制參數 ★★★
+    // --------------------------------------------------
+    [Header("Fever 音樂控制")]
+    [Tooltip("FMOD Global Parameter 名稱，用於淡入淡出主 BGM")]
+    public string fadeParameterName = "Fade";
+
+    [Tooltip("整個 Fever 持續拍數（目前僅備註，不強制控制流程邏輯）")]
+    public int feverTotalBeats = 33;
+
+    [Tooltip("開始 Fever 時，主 BGM 淡出所需拍數")]
+    public int feverFadeOutBeats = 1;
+
+    [Tooltip("從 Fever 開始後，第幾拍開始淡入主 BGM")]
+    public int feverFadeInStartBeat = 29;
+
+    [Tooltip("主 BGM 淡入所需拍數（例如 4 拍從 0 慢慢拉回 1）")]
+    public int feverFadeInBeats = 4;
+
+    // --------------------------------------------------
     // Fever 大招動畫控制
     // --------------------------------------------------
     [Header("Fever 大招演出參數")]
@@ -131,10 +150,21 @@ public class FeverManager : MonoBehaviour
     {
         Debug.Log("[FeverManager] 啟動全隊大招動畫流程");
 
+        // 1. 一啟動 Fever 就先處理音樂
+        //    - 立刻播放 Fever 專用音樂
+        //    - 同時讓主 BGM 依照拍點淡出 / 淡入
+        if (FMODAudioPlayer.Instance != null)
+        {
+            FMODAudioPlayer.Instance.PlayFeverMusic();
+        }
+        StartCoroutine(FeverMusicRoutine());
+
+        // 2. 原本 Fever 數值歸零
         currentFever = 0f;
         feverTriggered = false;
         UpdateFeverUI();
 
+        // 3. 通知敵人進入 Fever 鎖定狀態（暫時維持 12 拍，之後你要改 33 我們再動）
         OnFeverUltStart?.Invoke(12);
         Debug.Log("[FeverManager] 已通知所有敵人進入Fever鎖定狀態（12拍）");
 
@@ -184,7 +214,96 @@ public class FeverManager : MonoBehaviour
         Debug.Log("[FeverManager] 大招動畫結束。");
     }
 
+    // --------------------------------------------------
+    // ★★★ 新增：處理 Fever 期間主 BGM 的 Fade 流程 ★★★
+    // --------------------------------------------------
+    private IEnumerator FeverMusicRoutine()
+    {
+        // 一拍秒數：盡量用 FMOD 的 Listener 為準
+        float secondsPerBeat = 0.6f;
 
+        if (FMODBeatListener2.Instance != null)
+        {
+            secondsPerBeat = FMODBeatListener2.Instance.SecondsPerBeat;
+        }
+        else if (BeatManager.Instance != null)
+        {
+            secondsPerBeat = 60f / Mathf.Max(1f, BeatManager.Instance.bpm);
+        }
+
+        float fadeOutDuration = Mathf.Max(0.0f, feverFadeOutBeats) * secondsPerBeat;
+        float fadeInDuration = Mathf.Max(0.0f, feverFadeInBeats) * secondsPerBeat;
+
+        // 1. 開始 Fever 時：主 BGM 1 拍內從 1 → 0
+        yield return StartCoroutine(FadeGlobalParameter(
+            fadeParameterName,
+            1f,
+            0f,
+            fadeOutDuration
+        ));
+
+        Debug.Log("[FeverManager] 主BGM 已在 1 拍內淡出至 0。");
+
+        // 2. 等到第 29 拍再開始淡入
+        //    從 Fever 開始算：
+        //    - 第 1 拍 花在淡出
+        //    - 想在第 feverFadeInStartBeat 拍開始淡入
+        //    → 中間要額外等待 (startBeat - 1 - fadeOutBeats) 拍
+        int startBeat = Mathf.Max(1, feverFadeInStartBeat);
+        int fadeOutBeatsClamped = Mathf.Max(0, feverFadeOutBeats);
+
+        int extraWaitBeats = startBeat - 1 - fadeOutBeatsClamped;
+        if (extraWaitBeats > 0)
+        {
+            yield return new WaitForSeconds(extraWaitBeats * secondsPerBeat);
+        }
+
+        // 3. 從第 29 拍開始，在指定拍數內從 0 → 1 淡回主 BGM
+        if (fadeInDuration > 0f)
+        {
+            Debug.Log($"[FeverManager] 從第 {startBeat} 拍開始，在 {feverFadeInBeats} 拍內淡入主BGM。");
+            yield return StartCoroutine(FadeGlobalParameter(
+                fadeParameterName,
+                0f,
+                1f,
+                fadeInDuration
+            ));
+        }
+        else
+        {
+            // 若淡入時間設為 0，則直接拉回 1
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(fadeParameterName, 1f);
+        }
+
+        Debug.Log("[FeverManager] Fever 音樂流程：主BGM 已淡回 1。");
+    }
+
+    // --------------------------------------------------
+    // ★★★ 新增：共用 Global Parameter 淡入淡出工具 ★★★
+    // --------------------------------------------------
+    private IEnumerator FadeGlobalParameter(string paramName, float from, float to, float duration)
+    {
+        if (string.IsNullOrEmpty(paramName))
+            yield break;
+
+        if (duration <= 0f)
+        {
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(paramName, to);
+            yield break;
+        }
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.unscaledDeltaTime / duration;
+            float value = Mathf.Lerp(from, to, t);
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(paramName, value);
+            yield return null;
+        }
+
+        // 確保最後收在目標值
+        FMODUnity.RuntimeManager.StudioSystem.setParameterByName(paramName, to);
+    }
 
     private IEnumerator CameraFocusZoom(bool zoomIn)
     {
