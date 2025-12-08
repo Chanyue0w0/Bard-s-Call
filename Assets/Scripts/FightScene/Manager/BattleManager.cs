@@ -207,31 +207,34 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     private void OnFeverUltimate()
     {
-        //if (FeverManager.Instance == null) return;
+        if (FeverManager.Instance == null) return;
 
-        //// 使用新的 FMODBeatListener2
-        //if (FMODBeatListener2.Instance == null)
-        //{
-        //    Debug.LogWarning("[BattleManager] FMODBeatListener2.Instance 為 null，無法判定對拍！");
-        //    return;
-        //}
+        // 拍點判定
+        var listener = FMODBeatListener2.Instance;
+        if (listener == null) return;
 
-        //bool perfect = FMODBeatListener2.Instance.IsOnBeat();
-        //if (!perfect)
-        //{
-        //    Debug.Log("[BattleManager] Fever大招 Miss，未在節拍上，不觸發。");
-        //    return;
-        //}
+        bool hit = listener.IsOnBeat(
+            out FMODBeatListener2.Judge judge,
+            out int beatIndex,
+            out float delta
+        );
 
-        //if (FeverManager.Instance.currentFever < FeverManager.Instance.feverMax)
-        //{
-        //    Debug.Log("[BattleManager] Fever未滿，無法啟動大招。");
-        //    return;
-        //}
+        if (judge != FMODBeatListener2.Judge.Perfect)
+        {
+            Debug.Log("[BattleManager] Fever大招 Miss，未在節拍上，不觸發。");
+            return;
+        }
 
-        //Debug.Log("[BattleManager] 對拍成功且Fever滿值，啟動全隊大招！");
-        //StartCoroutine(FeverManager.Instance.HandleFeverUltimateSequence());
+        if (FeverManager.Instance.currentFever < FeverManager.Instance.feverMax)
+        {
+            Debug.Log("[BattleManager] Fever未滿，無法啟動大招。");
+            return;
+        }
+
+        Debug.Log("[BattleManager] 對拍成功且Fever滿值，啟動全隊大招！");
+        StartCoroutine(FeverManager.Instance.HandleFeverUltimateSequence());
     }
+
 
     // --------------------------------------------------
     // Fever 大招階段（第3拍觸發）
