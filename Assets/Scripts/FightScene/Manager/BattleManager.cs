@@ -85,6 +85,9 @@ public class BattleManager : MonoBehaviour
     public InputActionReference actionFeverUltimate;  // 新增輸入引用 (在 Inspector 綁定)
     private System.Action<InputAction.CallbackContext> feverUltHandler;
 
+    [Header("輸入（新 Input System）對應按鍵")]
+    private readonly char[] feverKeyMap = new char[] { 'X', 'Y', 'B', 'A' };
+
     [Header("時序與運動參數")]
     public float actionLockDuration = 0.5f;
     public float dashDuration = 0.05f;
@@ -105,6 +108,8 @@ public class BattleManager : MonoBehaviour
     public GameObject heavyBeatVFX_P2;
     public GameObject heavyBeatVFX_P3;
 
+    [Header("Fever 輸入狀態判定")]
+    private bool isFeverInputMode = false;
 
     [Header("Fever 大招展示位置")]
     public Transform feverUltShowingPoint;
@@ -188,6 +193,21 @@ public class BattleManager : MonoBehaviour
 
     }
 
+    //進入Fever輸入狀態
+    public void EnterFeverInputMode()
+    {
+        isFeverInputMode = true;
+        Debug.Log("[BattleManager] 進入 Fever Input 模式（忽略節奏、改由 QTE 處理）");
+    }
+
+    //退出Fever輸入狀態
+    public void ExitFeverInputMode()
+    {
+        isFeverInputMode = false;
+        Debug.Log("[BattleManager] 離開 Fever Input 模式（恢復節奏攻擊）");
+    }
+
+
     // --------------------------------------------------
     // 隊伍資料載入
     // --------------------------------------------------
@@ -208,6 +228,16 @@ public class BattleManager : MonoBehaviour
     private void OnFeverUltimate()
     {
         if (FeverManager.Instance == null) return;
+
+        if (isFeverInputMode)
+        {
+            // 轉換 index → char
+            char key = feverKeyMap[3];
+
+            // 傳給 QTE Manager
+            FeverQTEManager.Instance.OnPlayerHit(key);
+            return;
+        }
 
         // 拍點判定
         var listener = FMODBeatListener2.Instance;
@@ -527,6 +557,17 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     private void OnAttackKey(int index)
     {
+        if (isFeverInputMode)
+        {
+            // 轉換 index → char
+            char key = feverKeyMap[index];
+
+            // 傳給 QTE Manager
+            FeverQTEManager.Instance.OnPlayerHit(key);
+            return;
+        }
+
+
         if (_isActionLocked) return;
         if (index < 0 || index >= CTeamInfo.Length) return;
         if (CTeamInfo[index] == null) return;

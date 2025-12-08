@@ -157,6 +157,7 @@ public class FeverManager : MonoBehaviour
     public IEnumerator HandleFeverUltimateSequence()
     {
         Debug.Log("[FeverManager] 啟動全隊大招動畫流程");
+        BattleManager.Instance.EnterFeverInputMode();
 
         // ★ 啟動 33 拍生命週期
         isFeverActive = true;
@@ -249,6 +250,13 @@ public class FeverManager : MonoBehaviour
 
         feverBeatCounter++;
 
+        // ★★★ 第 9 拍：開始 QTE ★★★
+        if (feverBeatCounter == 9)
+        {
+            Debug.Log("[FeverManager] 第9拍 → 啟動 Fever QTE 系統");
+            FeverQTEManager.Instance?.StartQTE();
+        }
+
         // Debug.Log($"[FeverManager] FEVER 拍數：{feverBeatCounter}/{feverTotalBeats}");
 
         if (feverBeatCounter >= feverTotalBeats)
@@ -261,6 +269,8 @@ public class FeverManager : MonoBehaviour
     {
         if (!isFeverActive)
             return;
+
+        BattleManager.Instance.ExitFeverInputMode();
 
         isFeverActive = false;
         FMODBeatListener2.OnGlobalBeat -= TickFeverLife;
