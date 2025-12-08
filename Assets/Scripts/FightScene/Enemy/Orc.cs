@@ -97,8 +97,11 @@ public class Orc : EnemyBase
     // ======================
     // Enable / Disable
     // ======================
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        // 先讓 EnemyBase 做它的事情（Fever 鎖定訂閱、同步）
+        base.OnEnable();
+
         FMODBeatListener2.OnGlobalBeat += HandleBeat;
 
         int currentBeat = FMODBeatListener2.Instance != null
@@ -111,7 +114,7 @@ public class Orc : EnemyBase
             anim.OnFrameEvent += HandleAnimEvent;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         if (chargeBarUI != null)
             Destroy(chargeBarUI.gameObject);
@@ -123,6 +126,9 @@ public class Orc : EnemyBase
 
         if (anim != null)
             anim.OnFrameEvent -= HandleAnimEvent;
+
+        // 再讓 EnemyBase 收尾（解除 Fever 相關訂閱）
+        base.OnDisable();
     }
 
     // ======================

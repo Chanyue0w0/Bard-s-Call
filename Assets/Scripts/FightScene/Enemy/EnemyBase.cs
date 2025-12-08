@@ -10,7 +10,7 @@ public abstract class EnemyBase : MonoBehaviour
     // ★ Fever 鎖定狀態（新版、拍點倒數）
     // --------------------------------------------------
     protected bool isFeverLock = false;
-    protected int feverBeatsRemaining = 0;   // ★ 改成 int，真拍點扣減
+    protected int feverBeatsRemaining = 0;   // 真拍點扣減
 
     protected Vector3 basePosLocal;
     protected Vector3 basePosWorld;
@@ -53,6 +53,9 @@ public abstract class EnemyBase : MonoBehaviour
     {
         // ★ 拍點控制 Fever 倒數
         FMODBeatListener2.OnGlobalBeat += HandleFeverBeatTick;
+
+        // ★ 若當前正在 Fever → 新生成敵人也要立即進入鎖定
+        TrySyncWithCurrentFeverStatus();
     }
 
     protected virtual void OnDisable()
@@ -118,24 +121,44 @@ public abstract class EnemyBase : MonoBehaviour
         }
 
         // ★ Fever 不再在 Update() 裡扣減（避免提前解除）
-        // （此處已完全停用 Fever 倒數）
+        //   Fever 只在拍點事件 HandleFeverBeatTick 裡扣
     }
 
     // --------------------------------------------------
     // ★ Fever 拍點倒數：精準、不卡拍、不會提前解除
     // --------------------------------------------------
-    private void HandleFeverBeatTick(int globalBeat)
+    private void HandleFeverBeatTick(int beat)
     {
         if (!isFeverLock) return;
 
-        feverBeatsRemaining--;
+        // 每拍減少一次
+        feverBeatsRemaining -= 1;
 
         if (feverBeatsRemaining <= 0)
         {
             isFeverLock = false;
             feverBeatsRemaining = 0;
+            Debug.Log($"【Fever解除】{name} 自動於拍點倒數結束");
+        }
+    }
 
-            Debug.Log($"【Fever恢復】{name} 可再次行動（拍點精準解除）");
+    // ★ 新生成敵人時，若當前正在 Fever → 立即補同步
+    private void TrySyncWithCurrentFeverStatus()
+    {
+        var fever = FeverManager.Instance;
+        if (fever == null)
+            return;
+
+        if (fever.IsFeverActive)
+        {
+            isFeverLock = true;
+            feverBeatsRemaining = fever.RemainingFeverBeats;
+
+            // 保險：如果計算出來是 0，就不要鎖 0 拍，直接當作至少 1 拍
+            if (feverBeatsRemaining <= 0)
+                feverBeatsRemaining = 1;
+
+            Debug.Log($"【Fever補同步】{name} 新生成 → 鎖定剩餘 {feverBeatsRemaining} 拍");
         }
     }
 
@@ -172,6 +195,8 @@ public abstract class EnemyBase : MonoBehaviour
     // --------------------------------------------------
     public virtual void OnDamaged(int dmg, bool isHeavy)
     {
+        Debug.Log($"{name} 受傷！ dmg={dmg}");
+
         if (spr == null) return;
 
         if (hitFlashRoutine != null)

@@ -59,8 +59,11 @@ public class AxeGoblin : EnemyBase
             anim = GetComponent<BeatSpriteAnimator>();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        // 先讓 EnemyBase 做它的事情（Fever 鎖定訂閱、同步）
+        base.OnEnable();
+
         FMODBeatListener2.OnGlobalBeat += HandleBeat;
 
         lastAttackBeat = FMODBeatListener2.Instance.GlobalBeatIndex;
@@ -71,12 +74,15 @@ public class AxeGoblin : EnemyBase
             anim.OnFrameEvent += HandleAnimEvent;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         FMODBeatListener2.OnGlobalBeat -= HandleBeat;
 
         if (anim != null)
             anim.OnFrameEvent -= HandleAnimEvent;
+
+        // 再讓 EnemyBase 收尾（解除 Fever 相關訂閱）
+        base.OnDisable();
     }
 
     public override void OnDamaged(int dmg, bool isHeavyAttack)

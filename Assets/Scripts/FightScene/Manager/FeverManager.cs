@@ -403,4 +403,24 @@ public class FeverManager : MonoBehaviour
         feverTriggered = false;
         UpdateFeverUI();
     }
+
+    // --------------------------------------------------
+    // ★★★ 對外公開 Fever 狀態（給 EnemyBase 同步用）★★★
+    // --------------------------------------------------
+    public bool IsFeverActive
+    {
+        get { return isFeverActive; }
+    }
+
+    public int RemainingFeverBeats
+    {
+        get
+        {
+            if (!isFeverActive) return 0;
+
+            int remain = feverTotalBeats - feverBeatCounter;
+            return Mathf.Max(0, remain);
+        }
+    }
+
 }
