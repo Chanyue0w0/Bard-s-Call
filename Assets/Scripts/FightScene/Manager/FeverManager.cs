@@ -23,6 +23,14 @@ public class FeverManager : MonoBehaviour
     private bool feverTriggered = false;
 
     // --------------------------------------------------
+    // ★★★ Fever 週期管理 ★★★
+    // --------------------------------------------------
+    private bool isFeverActive = false;
+    private int feverBeatCounter = 0;
+
+    public static event System.Action OnFeverEnd;
+
+    // --------------------------------------------------
     // ★★★ 新增：新版 Fever 累加設定（Combo 加成）★★★
     // --------------------------------------------------
     [Header("新版 Fever 累加設定")]
@@ -150,6 +158,11 @@ public class FeverManager : MonoBehaviour
     {
         Debug.Log("[FeverManager] 啟動全隊大招動畫流程");
 
+        // ★ 啟動 33 拍生命週期
+        isFeverActive = true;
+        feverBeatCounter = 0;
+        FMODBeatListener2.OnGlobalBeat += TickFeverLife;
+
         // 1. 一啟動 Fever 就先處理音樂
         //    - 立刻播放 Fever 專用音樂
         //    - 同時讓主 BGM 依照拍點淡出 / 淡入
@@ -165,11 +178,11 @@ public class FeverManager : MonoBehaviour
         UpdateFeverUI();
 
         // 3. 通知敵人進入 Fever 鎖定狀態（暫時維持 12 拍，之後你要改 33 我們再動）
-        OnFeverUltStart?.Invoke(12);
+        OnFeverUltStart?.Invoke(feverTotalBeats);
         Debug.Log("[FeverManager] 已通知所有敵人進入Fever鎖定狀態（12拍）");
 
-        if (feverUltBackground != null)
-            feverUltBackground.SetActive(true);
+        // ★ 改成：啟動黑幕協程（整段 Fever 週期管理）
+        StartCoroutine(HandleFeverBlackout());
 
         if (mainCam != null && focusPoint != null)
             yield return StartCoroutine(CameraFocusZoom(true));
@@ -207,11 +220,58 @@ public class FeverManager : MonoBehaviour
             BattleManager.Instance.TriggerFeverActions(phase: 3);
         }
 
-        yield return new WaitForSeconds(secondsPerBeat * 8f);
+        Debug.Log("[FeverManager] 大招動畫結束。");
+    }
+
+    // --------------------------------------------------
+    // ★★★ Fever 黑幕：整段 Fever 期間顯示，結束時關閉 ★★★
+    // --------------------------------------------------
+    private IEnumerator HandleFeverBlackout()
+    {
+        if (feverUltBackground != null)
+            feverUltBackground.SetActive(true);
+
+        // 黑幕會持續到 Fever 結束
+        while (isFeverActive)
+            yield return null;
+
         if (feverUltBackground != null)
             feverUltBackground.SetActive(false);
 
-        Debug.Log("[FeverManager] 大招動畫結束。");
+        Debug.Log("[FeverManager] 黑幕已關閉（Fever 結束）");
+    }
+
+
+    private void TickFeverLife(int beatIndex)
+    {
+        if (!isFeverActive)
+            return;
+
+        feverBeatCounter++;
+
+        // Debug.Log($"[FeverManager] FEVER 拍數：{feverBeatCounter}/{feverTotalBeats}");
+
+        if (feverBeatCounter >= feverTotalBeats)
+        {
+            EndFever();
+        }
+    }
+
+    private void EndFever()
+    {
+        if (!isFeverActive)
+            return;
+
+        isFeverActive = false;
+        FMODBeatListener2.OnGlobalBeat -= TickFeverLife;
+
+        Debug.Log("[FeverManager] FEVER 已結束（33 拍）");
+
+        OnFeverEnd?.Invoke();
+
+        // ★ 保險再關閉一次黑幕（不會影響協程邏輯）
+        if (feverUltBackground != null)
+            feverUltBackground.SetActive(false);
     }
 
     // --------------------------------------------------
