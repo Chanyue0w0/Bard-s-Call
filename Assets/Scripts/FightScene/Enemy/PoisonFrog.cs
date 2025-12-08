@@ -203,11 +203,14 @@ public class PoisonFrog : EnemyBase
         var target = BattleManager.Instance.CTeamInfo[0];
         var attackerSlot = thisSlotInfo != null ? thisSlotInfo : selfSlot;
 
+        // ★★★ 核心修改：攻擊技能抵達時間為「0.5 拍」
+        float halfBeatTime = FMODBeatListener2.Instance.SecondsPerBeat * 0.5f;
+
         skill.Init(
             attacker: attackerSlot,
             target: target,
             damage: atk,
-            travelTime: 0.2f,
+            travelTime: halfBeatTime,
             isHeavyAttack: false,
             spawnExplosion: true,
             buffAction: (t) => BattleEffectManager.Instance.ApplyPoison(t, 5, 8)

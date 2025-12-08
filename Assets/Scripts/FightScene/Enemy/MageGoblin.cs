@@ -184,12 +184,15 @@ public class MageGoblin : EnemyBase
         var target = BattleManager.Instance.CTeamInfo[0];
         var attackerSlot = thisSlotInfo != null ? thisSlotInfo : selfSlot;
 
+        // ★★★ 核心修改：攻擊技能抵達時間為「0.5 拍」
+        float halfBeatTime = FMODBeatListener2.Instance.SecondsPerBeat * 0.5f;
+
         // ★ 不附加 buffAction
         skill.Init(
             attacker: attackerSlot,
             target: target,
             damage: damage,
-            travelTime: 0.22f,
+            travelTime: halfBeatTime,
             isHeavyAttack: false,
             spawnExplosion: true,
             buffAction: null   // ★ 不給毒、不給任何 buff
