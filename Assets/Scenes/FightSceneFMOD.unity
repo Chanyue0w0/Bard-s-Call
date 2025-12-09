@@ -6825,6 +6825,11 @@ MonoBehaviour:
   slideDurationMin: 0.08
   slideAcceleration: 0.05
   spawnXOffset: -1
+  qteComboTextObj: {fileID: 1899725626}
+  qteComboText: {fileID: 1277712766}
+  comboPulseScale: 1.2
+  comboPulseDuration: 0.15
+  comboShakeAmount: 4
 --- !u!1001 &324428585
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35966,7 +35971,7 @@ GameObject:
   - component: {fileID: 1277712767}
   - component: {fileID: 1277712766}
   m_Layer: 5
-  m_Name: ComboText
+  m_Name: FeverComboText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36004,7 +36009,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.87058824, g: 0.31295192, b: 0.22352938, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -63981,12 +63986,12 @@ GameObject:
   - component: {fileID: 1899725629}
   - component: {fileID: 1899725628}
   m_Layer: 5
-  m_Name: ComboText
+  m_Name: FeverComboText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1899725627
 RectTransform:
   m_ObjectHideFlags: 0

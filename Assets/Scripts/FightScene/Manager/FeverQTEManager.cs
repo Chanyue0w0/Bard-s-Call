@@ -50,6 +50,18 @@ public class FeverQTEManager : MonoBehaviour
 
     private int streakCount = 0;  // 目前連續數量
 
+    [Header("Combo UI")]
+    public GameObject qteComboTextObj;     // 指向 UI Text
+    public UnityEngine.UI.Text qteComboText;     // 指向 UI Text
+    public float comboPulseScale = 1.2f;         // 放大倍率
+    public float comboPulseDuration = 0.15f;     // 放大時間
+    public float comboShakeAmount = 4f;          // 震動幅度(px)
+
+    private int qteComboCount = 0;               // 目前成功數量
+    private Coroutine comboPulseRoutine;
+    private Vector3 comboOriginalScale;
+    private Vector3 comboOriginalPos;
+
 
     private void Awake()
     {
@@ -62,6 +74,11 @@ public class FeverQTEManager : MonoBehaviour
     public void StartQTE()
     {
         isFeverActive = true;
+
+        qteComboTextObj.SetActive(true);
+        qteComboCount = 0;
+        if (qteComboText != null)
+            qteComboText.text = "x0";
 
         ClearAllQTE();
         PreGenerateBuffer();
@@ -78,6 +95,12 @@ public class FeverQTEManager : MonoBehaviour
     public void EndQTE()
     {
         isFeverActive = false;
+
+
+        qteComboTextObj.SetActive(false);
+        qteComboCount = 0;
+        if (qteComboText != null)
+            qteComboText.text = "x0";
 
         // ★ 先停止所有滑動動畫
         StopAllCoroutines();
@@ -184,6 +207,13 @@ public class FeverQTEManager : MonoBehaviour
             Destroy(fx, 1.5f);
         }
 
+        // ★ 成功 Combo
+        qteComboCount++;
+        if (qteComboText != null)
+        {
+            qteComboText.text = "x" + qteComboCount;
+            StartComboPulse();
+        }
 
         // 刪除第一顆
         Destroy(activeQTEs[0]);
@@ -257,6 +287,52 @@ public class FeverQTEManager : MonoBehaviour
             activeQTEs[i].transform.position = Vector3.Lerp(endPoint.position, spawnPoint.position, t);
         }
     }
+
+    private void StartComboPulse()
+    {
+        if (qteComboText == null) return;
+
+        if (comboOriginalScale == Vector3.zero)
+            comboOriginalScale = qteComboText.transform.localScale;
+
+        if (comboOriginalPos == Vector3.zero)
+            comboOriginalPos = qteComboText.transform.localPosition;
+
+        if (comboPulseRoutine != null)
+            StopCoroutine(comboPulseRoutine);
+
+        comboPulseRoutine = StartCoroutine(ComboPulseRoutine());
+    }
+
+    private IEnumerator ComboPulseRoutine()
+    {
+        float t = 0f;
+        float dur = comboPulseDuration;
+
+        // 目標放大
+        Vector3 targetScale = comboOriginalScale * comboPulseScale;
+
+        while (t < dur)
+        {
+            t += Time.deltaTime;
+            float lerp = t / dur;
+
+            // 放大動畫
+            qteComboText.transform.localScale = Vector3.Lerp(comboOriginalScale, targetScale, lerp);
+
+            // 微震動
+            float shakeX = Mathf.Sin(Time.time * 60f) * comboShakeAmount;
+            float shakeY = Mathf.Cos(Time.time * 50f) * comboShakeAmount;
+            qteComboText.transform.localPosition = comboOriginalPos + new Vector3(shakeX, shakeY, 0) * 0.02f;
+
+            yield return null;
+        }
+
+        // 回到正常
+        qteComboText.transform.localScale = comboOriginalScale;
+        qteComboText.transform.localPosition = comboOriginalPos;
+    }
+
 
     // ========================================================================
     // 更新透明度
