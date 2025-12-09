@@ -235,7 +235,7 @@ public class FeverQTEManager : MonoBehaviour
         }
 
         RepositionAllImmediate();
-        ReapplyAlpha();
+        //ReapplyAlpha();
 
         // ¡¹ ¥[³t¡]¶V·Æ¶V§Ö¡^
         currentSlideDuration = Mathf.Max(slideDurationMin, currentSlideDuration - slideAcceleration);
