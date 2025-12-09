@@ -6820,8 +6820,8 @@ MonoBehaviour:
   endPoint: {fileID: 1521589048}
   qteCount: 4
   preGenerateCount: 10
-  slideDuration: 0.4
-  slideDurationMax: 0.4
+  slideDuration: 0.08
+  slideDurationMax: 0.08
   slideDurationMin: 0.08
   slideAcceleration: 0.05
   spawnXOffset: -1
