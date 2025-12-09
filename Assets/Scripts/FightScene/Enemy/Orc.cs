@@ -396,7 +396,7 @@ public class Orc : EnemyBase
             attacker: attackerSlot,
             target: target,
             damage: atk,
-            travelTime: halfBeatTime,
+            travelTime: dashTime,
             isHeavyAttack: false,
             spawnExplosion: true,
             buffAction: null

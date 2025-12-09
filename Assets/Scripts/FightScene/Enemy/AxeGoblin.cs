@@ -200,7 +200,7 @@ public class AxeGoblin : EnemyBase
             FMODAudioPlayer.Instance.PlayAxeGoblinAttack(); //播放斧頭哥布林攻擊音效
 
             // 1. 產生攻擊技能
-            SpawnAttackSkill();
+            //SpawnAttackSkill();
 
             // 2. 啟動攻擊移動流程（衝刺 → 等待 → 回歸）
             StartCoroutine(AttackMovementFlow());
@@ -246,7 +246,7 @@ public class AxeGoblin : EnemyBase
             attacker: attackerSlot,
             target: target,
             damage: atk,
-            travelTime: halfBeatTime,
+            travelTime: dashTime,
             isHeavyAttack: false,
             spawnExplosion: true,
             buffAction: null
@@ -278,6 +278,8 @@ public class AxeGoblin : EnemyBase
 
         // ---------- Step 1: 衝刺 ----------
         yield return MoveToPosition(targetPos, dashTime);
+        // ★★★★★ Dash 抵達瞬間才生成攻擊特效！
+        SpawnAttackSkill();
 
         // ---------- Step 2: 等待 ----------
         yield return new WaitForSeconds(waitTime);
