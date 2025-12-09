@@ -73,6 +73,13 @@ public class MonsterInstManager : MonoBehaviour
 
                 yield return new WaitForSeconds(spawnDelay);
 
+                // 2. ★ 新增：如果 Fever 正在播放，就等待 Fever 結束
+                while (FeverManager.Instance != null && FeverManager.Instance.IsFeverActive)
+                {
+                    // 等下幾幀再檢查一次
+                    yield return null;
+                }
+
                 // 進入下一關卡流程
                 SpawnNextStage();
 
