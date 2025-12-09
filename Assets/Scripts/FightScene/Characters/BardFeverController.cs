@@ -277,6 +277,8 @@ public class BardFeverController : MonoBehaviour
         // 1) 第七拍：啟動 + Alpha = 0
         demonObject.SetActive(true);
         SetDemonAlpha(0f); // ★ 一開始透明度 = 0
+        if (demonAnim != null)
+            demonAnim.Play("Idle", false);
 
         // 2) 7 → 9拍：淡入 (Alpha 0 → 100)
         float fadeInDuration = spb * 2f;  // 2拍

@@ -1063,7 +1063,9 @@ public class BattleEffectManager : MonoBehaviour
 
         foreach (var e in enemies)
         {
-            if (e == null) continue;
+            // ★ 這兩行是關鍵：沒 Actor 的格子視為沒敵人，完全不算血量
+            if (e == null || e.Actor == null)
+                continue;
 
             enemyTotalMaxHP += e.MaxHP;
             current += Mathf.Clamp(e.HP, 0, e.MaxHP);
@@ -1087,7 +1089,9 @@ public class BattleEffectManager : MonoBehaviour
 
         foreach (var e in enemies)
         {
-            if (e == null) continue;
+            if (e == null || e.Actor == null)
+                continue;
+
             current += Mathf.Clamp(e.HP, 0, e.MaxHP);
         }
 
