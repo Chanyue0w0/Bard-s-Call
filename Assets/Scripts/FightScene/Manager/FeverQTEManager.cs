@@ -48,6 +48,8 @@ public class FeverQTEManager : MonoBehaviour
     [Header("Slide-in Offset")]
     public float spawnXOffset = -1f;   // 新QTE從 spawnPoint 往左偏移多少
 
+    private int streakCount = 0;  // 目前連續數量
+
 
     private void Awake()
     {
@@ -301,30 +303,47 @@ public class FeverQTEManager : MonoBehaviour
     {
         char[] pool = new char[] { 'A', 'B', 'X', 'Y' };
 
+        // 第一次生成
         if (lastType == '?')
         {
             lastType = pool[Random.Range(0, pool.Length)];
-            repeatCount = 1;
+            streakCount = 1;
             return lastType;
         }
 
-        float continueProb = Mathf.Max(90f - (repeatCount - 1) * 10f, 30f) / 100f;
+        // --------
+        // 前 3 連擊：強制相同
+        // --------
+        if (streakCount < 3)
+        {
+            streakCount++;
+            return lastType;
+        }
+
+        // --------
+        // 第 4 顆開始：機率延續
+        // --------
+        int indexAfter3 = streakCount - 3;   // 第幾顆可變動 (1 = 第4顆)
+        float continueProb = Mathf.Clamp(90f - (indexAfter3 - 1) * 10f, 10f, 90f) / 100f;
 
         if (Random.value < continueProb)
         {
-            repeatCount++;
+            // 繼續同種
+            streakCount++;
             return lastType;
         }
-        else
-        {
-            List<char> others = new List<char>(pool);
-            others.Remove(lastType);
 
-            char newType = others[Random.Range(0, others.Count)];
-            lastType = newType;
-            repeatCount = 1;
+        // --------
+        // 否則更換種類
+        // --------
+        List<char> others = new List<char>(pool);
+        others.Remove(lastType);
 
-            return newType;
-        }
+        char newType = others[Random.Range(0, others.Count)];
+        lastType = newType;
+        streakCount = 1;
+
+        return lastType;
     }
+
 }
