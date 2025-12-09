@@ -25,6 +25,7 @@ public class FeverManager : MonoBehaviour
 
     [Header("Fever 滿槽提示 UI")]
     public GameObject feverFullUI;   // 想顯示的 UI
+    public GameObject feverFullPressHint;
 
 
     [Header("Fever 暫時隱藏的 UI（使用 CanvasGroup）")]
@@ -175,7 +176,10 @@ public class FeverManager : MonoBehaviour
 
             // ★ Fever 滿槽 → 顯示 UI
             if (feverFullUI != null)
+            {
                 feverFullUI.SetActive(true);
+                feverFullPressHint.SetActive(true);
+            }
         }
     }
 
@@ -192,7 +196,10 @@ public class FeverManager : MonoBehaviour
 
         // ★ 消耗 Fever → 關閉 UI
         if (feverFullUI != null)
+        {
             feverFullUI.SetActive(false);
+            feverFullPressHint.SetActive(false);
+        }
 
         foreach (var cg in feverHideUI)
         {
@@ -531,7 +538,10 @@ public class FeverManager : MonoBehaviour
         UpdateFeverUI();
         // ★ 保險：重置後關掉 UI
         if (feverFullUI != null)
+        {
             feverFullUI.SetActive(false);
+            feverFullPressHint.SetActive(false);
+        }
     }
 
     // --------------------------------------------------
