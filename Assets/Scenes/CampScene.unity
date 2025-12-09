@@ -1306,11 +1306,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -1305083262
-      Data2: 1156427069
-      Data3: -1987403342
-      Data4: -1375513600
-    Path: event:/BnB_Camp_soundtrack_01(full)
+      Data1: 2105392330
+      Data2: 1234526313
+      Data3: -1426828133
+      Data4: 879367610
+    Path: event:/Camp soundtracks/CampTrack01_Under the starry sky
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2
