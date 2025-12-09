@@ -279,7 +279,7 @@ public class BardFeverController : MonoBehaviour
         float fadeInDuration = spb * 2f;  // 2йч
         float t = 0f;
         float startA = 0f;
-        float endA = 100f / 255f;
+        float endA = 200f / 255f;
 
         while (t < fadeInDuration)
         {
@@ -300,7 +300,7 @@ public class BardFeverController : MonoBehaviour
 
         float fadeOutDuration = spb * 4f; // 4йч
         t = 0f;
-        startA = 100f / 255f;
+        startA = 200f / 255f;
         endA = 0f;
 
         while (t < fadeOutDuration)
