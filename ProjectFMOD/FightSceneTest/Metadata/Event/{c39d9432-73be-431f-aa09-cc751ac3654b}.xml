@@ -121,7 +121,6 @@
 			<destination>{6edd7174-aafb-45bb-833a-2831a6e9793e}</destination>
 			<destination>{c0661eff-5b65-4c31-9b45-3239108bf8ff}</destination>
 			<destination>{0c7fa50e-e87d-47bf-8298-84c6297effc2}</destination>
-			<destination>{0831eb1e-330e-4901-9a3e-80c7e4af1d51}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{096d8a63-6741-4428-8824-d8efc048fdc8}" />
@@ -145,6 +144,7 @@
 	<object class="MixerBusEffectChain" id="{a36b5378-d6bb-4249-895f-424691e6617d}">
 		<relationship name="effects">
 			<destination>{9385ac48-3a8a-422a-8884-b1cdf5953be0}</destination>
+			<destination>{198dd99f-ba3a-4a95-af94-4ac9b2a4f5a6}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{4ae4e226-762d-4618-a907-e546cd4dc5fd}" />
@@ -169,11 +169,6 @@
 		</property>
 		<property name="qualityB">
 			<value>0.602344871</value>
-		</property>
-	</object>
-	<object class="PannerEffect" id="{0831eb1e-330e-4901-9a3e-80c7e4af1d51}">
-		<property name="stereoPan">
-			<value>12</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{09f141ab-aae4-4c31-96d9-620666317a4b}">
@@ -215,4 +210,9 @@
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{9385ac48-3a8a-422a-8884-b1cdf5953be0}" />
+	<object class="PannerEffect" id="{198dd99f-ba3a-4a95-af94-4ac9b2a4f5a6}">
+		<property name="stereoPan">
+			<value>10</value>
+		</property>
+	</object>
 </objects>
