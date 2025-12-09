@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 19
   m_Sprite: {fileID: 21300000, guid: 814ad09d4865a614e91c537936190eca, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -128,8 +128,14 @@ MonoBehaviour:
     loop: 1
     holdLastFrame: 0
   - clipName: Release
-    frames: []
-    loop: 0
+    frames:
+    - sprite: {fileID: 21300000, guid: 67ffc447d17b56b4db42fd88fc3992a7, type: 3}
+      beatLength: 1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 1
     holdLastFrame: 0
   defaultClipName: Idle
   playDefaultOnStart: 1
@@ -363,6 +369,8 @@ MonoBehaviour:
   anim: {fileID: 5903065188219034040}
   burningEffectVFX: {fileID: 2580583283164494911, guid: 9feee80d585cdba4180215d40f5ee2a6, type: 3}
   fireExplosionVFX: {fileID: 4906878963830467661, guid: 891c7850a51d18347801fb2087231d3d, type: 3}
+  demonObject: {fileID: 2439267433166350862}
+  demonAnim: {fileID: 9109038194270002073}
 --- !u!114 &5903065188219034040
 MonoBehaviour:
   m_ObjectHideFlags: 0

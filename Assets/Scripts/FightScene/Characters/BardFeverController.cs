@@ -19,6 +19,10 @@ public class BardFeverController : MonoBehaviour
     private GameObject spawnedBurningVFX;
     public GameObject fireExplosionVFX;
 
+    public GameObject demonObject;                // Demon 子物件（整個GO）
+    private SpriteRenderer demonSR;               // 其 SpriteRenderer
+    public BeatSpriteAnimator demonAnim;          // Demon 的 BeatSpriteAnimator
+
 
     private void Awake()
     {
@@ -27,14 +31,21 @@ public class BardFeverController : MonoBehaviour
 
         spr = GetComponentInChildren<SpriteRenderer>();
         if (spr != null)
-            originalSortingOrder = spr.sortingOrder;   // 記錄原本的，例如 2
-
+            originalSortingOrder = spr.sortingOrder;
 
         if (anim == null)
             anim = GetComponentInChildren<BeatSpriteAnimator>();
 
         originalPos = transform.localPosition;
+
+        // ★ Demon 初始化（如果 Inspector 已指定）
+        if (demonObject != null)
+        {
+            demonSR = demonObject.GetComponentInChildren<SpriteRenderer>();
+            demonObject.SetActive(false);
+        }
     }
+
 
     private void OnDestroy()
     {
@@ -131,6 +142,10 @@ public class BardFeverController : MonoBehaviour
         // ★ 等到第 7.5 拍
         // -------------------------
         yield return new WaitUntil(() => feverBeat >= 7.5);
+
+        // ★ 啟動 Demon 動畫流程（平行）
+        if (demonObject != null)
+            StartCoroutine(DemonFlow());
 
         // -------------------------
         // ★ ChangeGuitar（1.5 拍，不 loop）
@@ -235,6 +250,67 @@ public class BardFeverController : MonoBehaviour
 
         transform.localPosition = originalPos;
     }
+
+    private IEnumerator DemonFlow()
+    {
+        float spb = FMODBeatListener2.Instance.SecondsPerBeat;
+
+        // 等到第 7 拍
+        yield return new WaitUntil(() => feverBeat >= 7);
+
+        // 1) 第七拍：啟動 + 設定 Alpha = 20
+        demonObject.SetActive(true);
+        SetDemonAlpha(20f / 255f);
+
+        // 2) 7 → 9拍：淡入 (Alpha 20 → 100)
+        float fadeInDuration = spb * 2f;  // 2拍
+        float t = 0f;
+        float startA = 20f / 255f;
+        float endA = 100f / 255f;
+
+        while (t < fadeInDuration)
+        {
+            t += Time.deltaTime;
+            float lerp = Mathf.Clamp01(t / fadeInDuration);
+            SetDemonAlpha(Mathf.Lerp(startA, endA, lerp));
+            yield return null;
+        }
+        SetDemonAlpha(endA);
+
+        // 3) 第25拍：播放 Release 動畫
+        yield return new WaitUntil(() => feverBeat >= 25);
+        if (demonAnim != null)
+            demonAnim.Play("Release", false);
+
+        // 4) 29 → 33拍：淡出 (Alpha 100 → 0)
+        yield return new WaitUntil(() => feverBeat >= 29);
+
+        float fadeOutDuration = spb * 4f; // 4拍
+        t = 0f;
+        startA = 100f / 255f;
+        endA = 0f;
+
+        while (t < fadeOutDuration)
+        {
+            t += Time.deltaTime;
+            float lerp = Mathf.Clamp01(t / fadeOutDuration);
+            SetDemonAlpha(Mathf.Lerp(startA, endA, lerp));
+            yield return null;
+        }
+
+        SetDemonAlpha(0f);
+        demonObject.SetActive(false);
+    }
+
+    private void SetDemonAlpha(float a)
+    {
+        if (demonSR == null) return;
+
+        Color c = demonSR.color;
+        c.a = a;
+        demonSR.color = c;
+    }
+
 
     // =============================================================
     // ★ FeverComboStrike 期間左右抖動
