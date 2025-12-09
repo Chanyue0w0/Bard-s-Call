@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class FeverManager : MonoBehaviour
 {
@@ -21,6 +22,15 @@ public class FeverManager : MonoBehaviour
     [Header("關聯 UI 元件")]
     public FeverUI feverUI;
     private bool feverTriggered = false;
+
+    [Header("Fever 滿槽提示 UI")]
+    public GameObject feverFullUI;   // 想顯示的 UI
+
+
+    [Header("Fever 暫時隱藏的 UI（使用 CanvasGroup）")]
+    public List<CanvasGroup> feverHideUI = new List<CanvasGroup>();
+
+    private List<float> originalAlpha = new List<float>();
 
     // --------------------------------------------------
     // ★★★ Fever 週期管理 ★★★
@@ -162,6 +172,10 @@ public class FeverManager : MonoBehaviour
             currentFever = feverMax;
             feverTriggered = true;
             Debug.Log("[FeverManager] Fever已滿，可使用大招。");
+
+            // ★ Fever 滿槽 → 顯示 UI
+            if (feverFullUI != null)
+                feverFullUI.SetActive(true);
         }
     }
 
@@ -172,6 +186,23 @@ public class FeverManager : MonoBehaviour
     {
         Debug.Log("[FeverManager] 啟動全隊大招動畫流程");
         BattleManager.Instance.EnterFeverInputMode();
+
+        // ★ Fever 開始 → UI 透明化
+        originalAlpha.Clear();
+
+        // ★ 消耗 Fever → 關閉 UI
+        if (feverFullUI != null)
+            feverFullUI.SetActive(false);
+
+        foreach (var cg in feverHideUI)
+        {
+            if (cg != null)
+            {
+                originalAlpha.Add(cg.alpha); // 記錄原本透明度
+                cg.alpha = 0f;               // 看不見
+            }
+        }
+
 
         // ★ 啟動 33 拍生命週期
         isFeverActive = true;
@@ -347,6 +378,17 @@ public class FeverManager : MonoBehaviour
 
         BattleManager.Instance.ExitFeverInputMode();
 
+        // ★ Fever 結束 → 恢復 UI alpha
+        for (int i = 0; i < feverHideUI.Count; i++)
+        {
+            if (feverHideUI[i] != null)
+            {
+                feverHideUI[i].alpha = originalAlpha[i];
+            }
+        }
+        originalAlpha.Clear();
+
+
         isFeverActive = false;
         FMODBeatListener2.OnGlobalBeat -= TickFeverLife;
 
@@ -487,6 +529,9 @@ public class FeverManager : MonoBehaviour
         perfectCountInBar = 0;
         feverTriggered = false;
         UpdateFeverUI();
+        // ★ 保險：重置後關掉 UI
+        if (feverFullUI != null)
+            feverFullUI.SetActive(false);
     }
 
     // --------------------------------------------------

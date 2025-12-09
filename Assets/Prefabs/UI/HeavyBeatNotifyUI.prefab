@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7369639355996623999}
   - component: {fileID: 5508040413087327451}
   - component: {fileID: 5131778725280024723}
+  - component: {fileID: 2201219093462814435}
   m_Layer: 5
   m_Name: HeavyBeatNotifyUI
   m_TagString: Untagged
@@ -29,7 +30,7 @@ RectTransform:
   m_GameObject: {fileID: 5030886368537041734}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -89,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseScale: {x: 0.8, y: 0.8, z: 0.8}
+  baseScale: {x: 2, y: 2, z: 2}
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
@@ -142,3 +143,15 @@ MonoBehaviour:
       beatLength: 0.1
     loop: 1
   applyFirstFrameOnEnable: 1
+--- !u!225 &2201219093462814435
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5030886368537041734}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
