@@ -45,8 +45,8 @@ public class MageFeverController : MonoBehaviour
 
         transform.localPosition = originalPos;
 
-        //if (spr != null)
-        //    spr.sortingOrder = 20;
+        if (spr != null)
+            spr.sortingOrder = 20;
 
         if (feverRoutine != null)
             StopCoroutine(feverRoutine);
@@ -116,6 +116,7 @@ public class MageFeverController : MonoBehaviour
         // 小跳 1 拍
         yield return StartCoroutine(JumpSmall(spb * 1f));
 
+        spr.sortingOrder = originalSortingOrder;
 
         // ===========================
         // ★ 等到第 32 拍
@@ -124,9 +125,11 @@ public class MageFeverController : MonoBehaviour
 
         //if (spr != null)
         //    spr.flipX = false;
+        spr.sortingOrder = 20;
 
         // 再跳一次
         yield return StartCoroutine(JumpSmall(spb * 1f));
+        spr.sortingOrder = originalSortingOrder;
     }
 
     // =============================================================
