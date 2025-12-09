@@ -6998,7 +6998,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 294284868}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -22974,8 +22974,6 @@ MonoBehaviour:
   - {fileID: 2072901172}
   - {fileID: 7448186229776027136}
   - {fileID: 4455289404305869507}
-  - {fileID: 294284874}
-  - {fileID: 1052835937}
   - {fileID: 5449277297355986478}
   baseGain: 0.7
   comboFactor: 0.6
