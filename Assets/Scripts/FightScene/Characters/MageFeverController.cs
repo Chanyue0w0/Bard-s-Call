@@ -45,8 +45,8 @@ public class MageFeverController : MonoBehaviour
 
         transform.localPosition = originalPos;
 
-        if (spr != null)
-            spr.sortingOrder = 20;
+        //if (spr != null)
+        //    spr.sortingOrder = 20;
 
         if (feverRoutine != null)
             StopCoroutine(feverRoutine);
