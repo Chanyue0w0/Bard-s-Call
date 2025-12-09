@@ -14,6 +14,7 @@ public class FeverQTEManager : MonoBehaviour
 
     [Header("VFX")]
     public GameObject spawnImpactVFX;
+    public GameObject hitExplosionVFX;   // ★ 新增：打擊爆炸特效
 
     [Header("Spawn Points")]
     public Transform spawnPoint;
@@ -169,6 +170,13 @@ public class FeverQTEManager : MonoBehaviour
         {
             Debug.Log($"[QTE] 錯誤輸入，期待 {expected}，收到 {inputType}");
             return;
+        }
+
+        if (hitExplosionVFX != null && activeQTEs[0] != null)
+        {
+            Vector3 pos = activeQTEs[0].transform.position;
+            GameObject fx = Instantiate(hitExplosionVFX, pos, Quaternion.identity);
+            Destroy(fx, 1.5f);
         }
 
         // 刪除第一顆
