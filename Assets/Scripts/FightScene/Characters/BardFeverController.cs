@@ -258,14 +258,14 @@ public class BardFeverController : MonoBehaviour
         // 等到第 7 拍
         yield return new WaitUntil(() => feverBeat >= 7);
 
-        // 1) 第七拍：啟動 + 設定 Alpha = 20
+        // 1) 第七拍：啟動 + Alpha = 0
         demonObject.SetActive(true);
-        SetDemonAlpha(20f / 255f);
+        SetDemonAlpha(0f); // ★ 一開始透明度 = 0
 
-        // 2) 7 → 9拍：淡入 (Alpha 20 → 100)
+        // 2) 7 → 9拍：淡入 (Alpha 0 → 100)
         float fadeInDuration = spb * 2f;  // 2拍
         float t = 0f;
-        float startA = 20f / 255f;
+        float startA = 0f;
         float endA = 100f / 255f;
 
         while (t < fadeInDuration)
@@ -275,7 +275,7 @@ public class BardFeverController : MonoBehaviour
             SetDemonAlpha(Mathf.Lerp(startA, endA, lerp));
             yield return null;
         }
-        SetDemonAlpha(endA);
+        SetDemonAlpha(endA);   // = 100 Alpha
 
         // 3) 第25拍：播放 Release 動畫
         yield return new WaitUntil(() => feverBeat >= 25);
