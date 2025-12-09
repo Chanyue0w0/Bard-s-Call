@@ -11,6 +11,9 @@ public class BattleEffectManager : MonoBehaviour
     public Image playerTotalHPUI_filledImg;
     public TotalPlayerHealthBarUI playerTotalHPUI;
 
+    [Header("血量危險提示 UI")]
+    public GameObject lowHPWarningObj;
+
     [Header("共用 Shield 特效（當角色未指定 ShieldEffectPrefab 時使用）")]
     public GameObject shieldVfxPrefab;
     private GameObject[] blockEffects = new GameObject[3];
@@ -21,7 +24,6 @@ public class BattleEffectManager : MonoBehaviour
     private Dictionary<GameObject, bool> enemyBlocking = new();
     private Dictionary<GameObject, Coroutine> enemyBlockCoroutines = new();
     private Dictionary<GameObject, GameObject> enemyBlockEffects = new();
-
 
     [Header("Priest 回復特效")]
     public GameObject healVfxPrefab;
@@ -453,6 +455,9 @@ public class BattleEffectManager : MonoBehaviour
                     GlobalIndex.CurrentTotalHP = Mathf.Max(0, GlobalIndex.CurrentTotalHP - reducedDamage);
                     playerTotalHPUI.SetHP(GlobalIndex.CurrentTotalHP, GlobalIndex.MaxTotalHP);
 
+                    // 更新低血量檢查
+                    UpdateLowHPWarning();
+
                     BattleManager.Instance.CheckPlayerDefeat();
                     return;
 
@@ -489,6 +494,8 @@ public class BattleEffectManager : MonoBehaviour
 
             // 更新統一血條 UI
             playerTotalHPUI.SetHP(GlobalIndex.CurrentTotalHP, GlobalIndex.MaxTotalHP);
+            // 更新低血量檢查
+            UpdateLowHPWarning();
 
             // 顯示傷害數字
             if (target.Actor != null && DamageNumberManager.Instance != null)
@@ -852,7 +859,11 @@ public class BattleEffectManager : MonoBehaviour
 
         // 2. 更新統一血條 UI
         if (playerTotalHPUI != null)
+        {
             playerTotalHPUI.SetHP(GlobalIndex.CurrentTotalHP, GlobalIndex.MaxTotalHP);
+            // 更新低血量檢查
+            UpdateLowHPWarning();
+        }
 
         // 3. 個別角色顯示回復特效 & 綠色數字
 
@@ -1015,5 +1026,17 @@ public class BattleEffectManager : MonoBehaviour
         var data = activeTaunts.Find(t => t.enemyObj == enemyObj);
         return data != null ? data.paladinObj : null;
     }
-    
+
+    public void UpdateLowHPWarning()
+    {
+        if (lowHPWarningObj == null) return;
+
+        float ratio = (float)GlobalIndex.CurrentTotalHP / GlobalIndex.MaxTotalHP;
+
+        if (ratio < 0.3f)
+            lowHPWarningObj.SetActive(true);
+        else
+            lowHPWarningObj.SetActive(false);
+    }
+
 }
