@@ -15,6 +15,8 @@ public class BardFeverController : MonoBehaviour
     private SpriteRenderer spr;
     private int originalSortingOrder;
 
+    public GameObject burningEffectVFX;
+    private GameObject spawnedBurningVFX;
 
     private void Awake()
     {
@@ -85,6 +87,13 @@ public class BardFeverController : MonoBehaviour
 
         if (anim != null)
             anim.Play("Idle", true);
+
+        if (spawnedBurningVFX != null)
+        {
+            Destroy(spawnedBurningVFX);
+            spawnedBurningVFX = null;
+        }
+
     }
 
     // -------------------------------------------------------------
@@ -132,6 +141,17 @@ public class BardFeverController : MonoBehaviour
         // -------------------------
         yield return StartCoroutine(JumpSmall(spb * 1f));  // 1拍跳躍
 
+        // ★ 跳躍結束後生成 BurningEffect
+        if (burningEffectVFX != null)
+        {
+            spawnedBurningVFX = Instantiate(
+                burningEffectVFX,
+                transform.position,
+                Quaternion.identity,
+                this.transform   // 跟隨 Bard
+            );
+        }
+
         // -------------------------
         // ★ 等待 ChangeGuitar 剩餘的 0.5 拍
         // -------------------------
@@ -154,6 +174,13 @@ public class BardFeverController : MonoBehaviour
         // ★ 等到第 25 拍
         // -------------------------
         yield return new WaitUntil(() => feverBeat >= 25);
+        // ★★★ 第 25 拍 → 刪除 BurningEffect
+        if (spawnedBurningVFX != null)
+        {
+            Destroy(spawnedBurningVFX);
+            spawnedBurningVFX = null;
+        }
+
 
         if (shakeRoutine != null)
             StopCoroutine(shakeRoutine);
