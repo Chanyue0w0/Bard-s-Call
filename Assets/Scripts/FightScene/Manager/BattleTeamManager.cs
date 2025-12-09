@@ -140,6 +140,9 @@ public class BattleTeamManager : MonoBehaviour
 
         if (BattleManager.Instance != null)
             BattleManager.Instance.LoadTeamData(this);
+
+        BattleEffectManager.Instance.InitEnemyTotalHP();
+
     }
 
     private void CreateHealthBar(BattleManager.TeamSlotInfo slot)

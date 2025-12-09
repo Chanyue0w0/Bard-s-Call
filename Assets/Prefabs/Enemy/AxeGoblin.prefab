@@ -260,7 +260,7 @@ MonoBehaviour:
       triggerAttack: 0
       triggerOnce: 1
       hasTriggered: 0
-    - sprite: {fileID: 21300000, guid: 41ab110ff9e2a484dad848b807feb3d4, type: 3}
+    - sprite: {fileID: 21300000, guid: 70e7e83e90db86046b7403e9170e4a6f, type: 3}
       beatLength: 1
       triggerWarning: 0
       triggerAttack: 1

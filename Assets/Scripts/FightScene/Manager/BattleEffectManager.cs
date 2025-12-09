@@ -11,6 +11,11 @@ public class BattleEffectManager : MonoBehaviour
     public Image playerTotalHPUI_filledImg;
     public TotalPlayerHealthBarUI playerTotalHPUI;
 
+    [Header("敵人統一血條（場景中已有，不要生成）")]
+    public TotalEnemyHealthBarUI enemyTotalHPUI;
+
+    private int enemyTotalMaxHP = 1;
+
     [Header("血量危險提示 UI")]
     public GameObject lowHPWarningObj;
 
@@ -341,6 +346,8 @@ public class BattleEffectManager : MonoBehaviour
                 target.HP -= reducedDamage;
                 if (target.HP < 0) target.HP = 0;
 
+                UpdateEnemyTotalHPUI();
+
                 // 4. 呼叫敵人受傷反應
                 var enemyBaseTMP = target.Actor.GetComponent<EnemyBase>();
                 if (enemyBaseTMP != null)
@@ -542,6 +549,8 @@ public class BattleEffectManager : MonoBehaviour
         {
             DamageNumberManager.Instance.ShowDamage(target.Actor.transform, finalDamage);
         }
+
+        UpdateEnemyTotalHPUI();
 
         // 檢查死亡
         if (target.HP <= 0)
@@ -944,6 +953,9 @@ public class BattleEffectManager : MonoBehaviour
         // 4. 更新敵人血條
         var hb = enemy.Actor.GetComponentInChildren<HealthBarUI>();
         if (hb != null) hb.ForceUpdate();
+
+        UpdateEnemyTotalHPUI();
+
     }
 
 
@@ -1037,6 +1049,52 @@ public class BattleEffectManager : MonoBehaviour
             lowHPWarningObj.SetActive(true);
         else
             lowHPWarningObj.SetActive(false);
+    }
+
+    // ================================================================
+    // 敵方總血量初始化（在開場 BattleTeamManager 設定完敵人隊伍後呼叫）
+    // ================================================================
+    public void InitEnemyTotalHP()
+    {
+        enemyTotalMaxHP = 0;
+        int current = 0;
+
+        var enemies = BattleManager.Instance.EnemyTeamInfo;
+
+        foreach (var e in enemies)
+        {
+            if (e == null) continue;
+
+            enemyTotalMaxHP += e.MaxHP;
+            current += Mathf.Clamp(e.HP, 0, e.MaxHP);
+        }
+
+        if (enemyTotalHPUI != null)
+        {
+            enemyTotalHPUI.SetHP(current, enemyTotalMaxHP);
+        }
+
+        Debug.Log($"【EnemyTotalHP 初始化】總血量 = {current}/{enemyTotalMaxHP}");
+    }
+
+    // ================================================================
+    // 敵方總血量更新（每次敵人扣血或回復後呼叫）
+    // ================================================================
+    public void UpdateEnemyTotalHPUI()
+    {
+        int current = 0;
+        var enemies = BattleManager.Instance.EnemyTeamInfo;
+
+        foreach (var e in enemies)
+        {
+            if (e == null) continue;
+            current += Mathf.Clamp(e.HP, 0, e.MaxHP);
+        }
+
+        if (enemyTotalHPUI != null)
+        {
+            enemyTotalHPUI.SetHP(current, enemyTotalMaxHP);
+        }
     }
 
 }
