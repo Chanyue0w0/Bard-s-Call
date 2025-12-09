@@ -172,12 +172,16 @@ public class FeverQTEManager : MonoBehaviour
             return;
         }
 
+        // ★★★ 加入 QTEHit 震動 ★★★
+        VibrationManager.Instance?.Vibrate("QTEHit");
+
         if (hitExplosionVFX != null && activeQTEs[0] != null)
         {
             Vector3 pos = activeQTEs[0].transform.position;
             GameObject fx = Instantiate(hitExplosionVFX, pos, Quaternion.identity);
             Destroy(fx, 1.5f);
         }
+
 
         // 刪除第一顆
         Destroy(activeQTEs[0]);

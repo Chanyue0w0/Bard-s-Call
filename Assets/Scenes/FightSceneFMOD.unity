@@ -46632,6 +46632,10 @@ MonoBehaviour:
     lowFrequency: 0
     highFrequency: 0
     duration: 0
+  - name: QTEHit
+    lowFrequency: 0.3
+    highFrequency: 0.698
+    duration: 0.2
 --- !u!1001 &1511408504
 PrefabInstance:
   m_ObjectHideFlags: 0
