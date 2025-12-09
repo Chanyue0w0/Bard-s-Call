@@ -314,6 +314,11 @@ public class FMODBeatListener2 : MonoBehaviour
             Instance = null;
     }
 
+    public void PlayPerfectSFX()
+    {
+        RuntimeManager.PlayOneShot(perfectSFX);
+    }
+
     // ================================
     // 初始化
     // ================================

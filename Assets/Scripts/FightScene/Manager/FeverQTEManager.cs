@@ -204,6 +204,8 @@ public class FeverQTEManager : MonoBehaviour
         // ¡¹¡¹¡¹ ¥[¤J QTEHit ¾_°Ê ¡¹¡¹¡¹
         VibrationManager.Instance?.Vibrate("QTEHit");
 
+        FMODBeatListener2.Instance.PlayPerfectSFX();
+
         if (hitExplosionVFX != null && activeQTEs[0] != null)
         {
             Vector3 pos = activeQTEs[0].transform.position;
