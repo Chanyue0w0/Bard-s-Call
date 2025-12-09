@@ -110,6 +110,10 @@ public class FeverQTEManager : MonoBehaviour
         ClearAllQTE();
     }
 
+    public int GetQTEComboCount()
+    {
+        return qteComboCount;
+    }
 
     // ========================================================================
     // 預先生成 10 顆

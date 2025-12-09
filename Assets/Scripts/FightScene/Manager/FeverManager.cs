@@ -30,6 +30,9 @@ public class FeverManager : MonoBehaviour
 
     public static event System.Action OnFeverEnd;
 
+    //public static event System.Action<int> OnFever25Beat;
+
+
     // --------------------------------------------------
     // ★★★ 新增：新版 Fever 累加設定（Combo 加成）★★★
     // --------------------------------------------------
@@ -37,6 +40,9 @@ public class FeverManager : MonoBehaviour
     public float baseGain = 0.70f;        // 每次基本累加量
     public float comboFactor = 0.60f;     // Combo 影響最大增幅
     public int comboMax = 50;             // 50 Combo 達到滿倍率
+
+    [Header("QTE總累加數量")]
+    public int totalQTEComboCount = 0;
 
     private int CurrentCombo
     {
@@ -258,7 +264,12 @@ public class FeverManager : MonoBehaviour
         }
 
         if (feverBeatCounter == 25)
+        {
+            totalQTEComboCount = FeverQTEManager.Instance.GetQTEComboCount();
             FeverQTEManager.Instance.EndQTE();
+            BattleManager.Instance.HandleBardFeverDamage(totalQTEComboCount);
+            //OnFever25Beat?.Invoke(totalQTEComboCount); //通知訂閱此的BardFeverController
+        }
 
         // Debug.Log($"[FeverManager] FEVER 拍數：{feverBeatCounter}/{feverTotalBeats}");
 

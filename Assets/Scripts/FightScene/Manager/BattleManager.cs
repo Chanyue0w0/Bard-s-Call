@@ -103,6 +103,10 @@ public class BattleManager : MonoBehaviour
     public GameObject magicUseAuraPrefab;
     public float vfxLifetime = 1.5f;
 
+    [Header("Demon Destruction Ray")]
+    public GameObject demonDestructionRayPrefab;   // 預設放入你的 Prefab（含 MultiStrikeSkill）
+    public Transform demonRaySpawnPoint;           // 生成位置（可用 Bard 前方或 Demon 前方）
+
     [Header("Heavy Beat Expression VFX (三位玩家預設於場景 重拍提示特效)")]
     public GameObject heavyBeatVFX_P1;
     public GameObject heavyBeatVFX_P2;
@@ -453,6 +457,81 @@ public class BattleManager : MonoBehaviour
         yield return Dash(actor, dashTargetPos, origin, dashDuration);
         Debug.Log("[Fever-Bard] 返回原位完成。");
     }
+
+    // =============================================
+    // Bard Fever：大招最終傷害（第25拍） DemonDestructionRay
+    // =============================================
+    public void HandleBardFeverDamage(int totalQTEComboCount)
+    {
+        // 取得 Bard slot
+        TeamSlotInfo bard = null;
+        foreach (var slot in CTeamInfo)
+        {
+            if (slot != null && slot.ClassType == UnitClass.Bard && slot.Actor != null)
+            {
+                bard = slot;
+                break;
+            }
+        }
+
+        if (bard == null)
+        {
+            Debug.LogWarning("[BardFever] 場上沒有 Bard，無法釋放 Demon Ray！");
+            return;
+        }
+
+        if (demonDestructionRayPrefab == null)
+        {
+            Debug.LogWarning("[BardFever] demonDestructionRayPrefab 未指定！");
+            return;
+        }
+
+        // 1. 計算傷害
+        int baseDamage = 100;
+        int bonusDamage = 0;
+
+        if (totalQTEComboCount < 10)
+            bonusDamage = totalQTEComboCount * 30;
+        else if (totalQTEComboCount < 20)
+            bonusDamage = (10 * 30) + ((totalQTEComboCount - 10) * 20);
+        else
+            bonusDamage = (10 * 30) + (10 * 20) + ((totalQTEComboCount - 20) * 10);
+
+        int finalDamage = baseDamage + bonusDamage;
+
+        // 2. 在 Bard 頭上生成 Demon Ray
+        Vector3 spawnPos = bard.Actor.transform.position + new Vector3(0f, 0.5f, 0f);
+
+        GameObject rayObj = Instantiate(
+            demonDestructionRayPrefab,
+            spawnPos,
+            Quaternion.identity
+        );
+
+        // 3. MultiStrikeSkill 設定
+        MultiStrikeSkill skill = rayObj.GetComponent<MultiStrikeSkill>();
+        if (skill != null)
+        {
+            skill.attacker = bard;  // ★ Bard 為攻擊者
+
+            List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
+            foreach (var enemy in EnemyTeamInfo)
+            {
+                if (enemy != null && enemy.Actor != null && enemy.HP > 0)
+                    allEnemies.Add(enemy);
+            }
+
+            skill.targets = allEnemies;
+            skill.isPerfect = true;
+            skill.isHeavyAttack = true;
+            skill.damage = finalDamage;
+        }
+        // ★★★ 加入 QTERelease 震動 ★★★
+        VibrationManager.Instance?.Vibrate("QTERelease");
+
+        Debug.Log($"[BardFever] Demon Ray Fired! Damage = {finalDamage}, Combo = {totalQTEComboCount}");
+    }
+
 
 
     // =============================================
