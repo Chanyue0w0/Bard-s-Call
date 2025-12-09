@@ -142,6 +142,7 @@ public class BattleTeamManager : MonoBehaviour
             BattleManager.Instance.LoadTeamData(this);
 
         BattleEffectManager.Instance.InitEnemyTotalHP();
+        BattleEffectManager.Instance.UpdateEnemyTotalHPUI();
 
     }
 

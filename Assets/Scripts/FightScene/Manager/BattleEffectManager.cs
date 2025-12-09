@@ -1095,10 +1095,21 @@ public class BattleEffectManager : MonoBehaviour
             current += Mathf.Clamp(e.HP, 0, e.MaxHP);
         }
 
+        // 更新數值
+        if (enemyTotalHPUI != null)
+            enemyTotalHPUI.SetHP(current, enemyTotalMaxHP);
+
+        // ★★★ 關鍵：自動控制 CanvasGroup Alpha ★★★
         if (enemyTotalHPUI != null)
         {
-            enemyTotalHPUI.SetHP(current, enemyTotalMaxHP);
+            CanvasGroup cg = enemyTotalHPUI.GetComponent<CanvasGroup>();
+
+            if (cg != null)
+            {
+                cg.alpha = (current > 0) ? 1f : 0f;
+            }
         }
     }
+
 
 }
