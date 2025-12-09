@@ -17,6 +17,8 @@ public class BardFeverController : MonoBehaviour
 
     public GameObject burningEffectVFX;
     private GameObject spawnedBurningVFX;
+    public GameObject fireExplosionVFX;
+
 
     private void Awake()
     {
@@ -219,6 +221,16 @@ public class BardFeverController : MonoBehaviour
             float lerp = t / (duration * 0.5f);
             transform.localPosition = Vector3.Lerp(peak, start, lerp);
             yield return null;
+        }
+
+        // ★★★ 落地瞬間特效：FireExplosion ★★★
+        if (fireExplosionVFX != null)
+        {
+            Instantiate(
+                fireExplosionVFX,
+                transform.position,            // 世界座標位置
+                Quaternion.identity
+            );
         }
 
         transform.localPosition = originalPos;

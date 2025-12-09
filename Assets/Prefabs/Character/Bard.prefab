@@ -228,6 +228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 5903065188219034040}
   burningEffectVFX: {fileID: 2580583283164494911, guid: 9feee80d585cdba4180215d40f5ee2a6, type: 3}
+  fireExplosionVFX: {fileID: 4906878963830467661, guid: 891c7850a51d18347801fb2087231d3d, type: 3}
 --- !u!114 &5903065188219034040
 MonoBehaviour:
   m_ObjectHideFlags: 0
