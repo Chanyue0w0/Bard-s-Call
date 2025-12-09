@@ -24,9 +24,12 @@ public class BardFeverController : MonoBehaviour
     private SpriteRenderer demonSR;               // 其 SpriteRenderer
     public BeatSpriteAnimator demonAnim;          // Demon 的 BeatSpriteAnimator
 
-    //[Header("Demon Destruction Ray")]
-    //public GameObject demonDestructionRayPrefab;   // 預設放入你的 Prefab（含 MultiStrikeSkill）
-    //public Transform demonRaySpawnPoint;           // 生成位置（可用 Bard 前方或 Demon 前方）
+    //[Header("Fever Extra VFX")]
+    //public GameObject showSparksVFX;
+    //public GameObject showFireWorkVFX;
+
+    //private GameObject spawnedSparks;
+    //private GameObject spawnedFireWork;
 
 
     private void Awake()
@@ -342,58 +345,5 @@ public class BardFeverController : MonoBehaviour
 
         transform.localPosition = originalPos;
     }
-
-    //public void TriggerDemonDestructionRay(int totalQTEComboCount)
-    //{
-    //    if (demonDestructionRayPrefab == null)
-    //    {
-    //        Debug.LogWarning("[BardFever] demonDestructionRayPrefab 未指定！");
-    //        return;
-    //    }
-
-    //    // 計算傷害
-    //    int baseDamage = 100;
-    //    int bonusDamage = 0;
-
-    //    if (totalQTEComboCount < 10)
-    //    {
-    //        bonusDamage = totalQTEComboCount * 30;
-    //    }
-    //    else if (totalQTEComboCount < 20)
-    //    {
-    //        bonusDamage = (10 * 30) + ((totalQTEComboCount - 10) * 20);
-    //    }
-    //    else
-    //    {
-    //        bonusDamage = (10 * 30) + (10 * 20) + ((totalQTEComboCount - 20) * 10);
-    //    }
-
-    //    int finalDamage = baseDamage + bonusDamage;
-
-    //    // 生成 Prefab
-    //    Transform spawnPos = demonRaySpawnPoint != null ? demonRaySpawnPoint : this.transform;
-    //    GameObject obj = Instantiate(demonDestructionRayPrefab, spawnPos.position, spawnPos.rotation);
-
-    //    // 設定 MultiStrikeSkill 屬性
-    //    MultiStrikeSkill skill = obj.GetComponent<MultiStrikeSkill>();
-    //    if (skill != null)
-    //    {
-    //        skill.attacker = null;
-
-    //        // 加入全體敵人為目標
-    //        List<BattleManager.TeamSlotInfo> allEnemies = new List<BattleManager.TeamSlotInfo>();
-    //        foreach (var enemy in EnemyTeamInfo)
-    //        {
-    //            if (enemy != null && enemy.Actor != null && enemy.HP > 0)
-    //                allEnemies.Add(enemy);
-    //        }
-
-    //        skill.targets = allEnemies;
-    //        skill.isPerfect = true;
-    //        skill.isHeavyAttack = true;
-    //    }
-
-    //    Debug.Log($"[BardFever] Demon Ray fired! Final Damage = {finalDamage}, Combo = {totalQTEComboCount}");
-    //}
 
 }

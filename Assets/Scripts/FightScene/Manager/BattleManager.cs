@@ -1354,4 +1354,39 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+
+    public Vector3 GetPlayerPosition(int index)
+    {
+        if (index < 0 || index >= CTeamInfo.Length)
+            return Vector3.zero;
+
+        var slot = CTeamInfo[index];
+        if (slot == null) return Vector3.zero;
+
+        if (slot.Actor != null)
+            return slot.Actor.transform.position;
+
+        if (slot.SlotTransform != null)
+            return slot.SlotTransform.position;
+
+        return Vector3.zero;
+    }
+
+    public Vector3 GetEnemyPosition(int index)
+    {
+        if (index < 0 || index >= EnemyTeamInfo.Length)
+            return Vector3.zero;
+
+        var slot = EnemyTeamInfo[index];
+        if (slot == null) return Vector3.zero;
+
+        if (slot.Actor != null)
+            return slot.Actor.transform.position;
+
+        if (slot.SlotTransform != null)
+            return slot.SlotTransform.position;
+
+        return Vector3.zero;
+    }
+
 }

@@ -89,6 +89,14 @@ public class FeverManager : MonoBehaviour
     [Header("Fever 大招特效")]
     public GameObject ultFocusVFXPrefab;
 
+    [Header("Fever 特效生成")]
+    public GameObject showSparksPrefab;
+    public GameObject showFireWorkPrefab;
+
+    private GameObject spawnedSparks;
+    private GameObject spawnedFireWork;
+
+
     public static event System.Action<int> OnFeverUltStart; // 參數為持續拍數
 
 
@@ -272,6 +280,59 @@ public class FeverManager : MonoBehaviour
         }
 
         // Debug.Log($"[FeverManager] FEVER 拍數：{feverBeatCounter}/{feverTotalBeats}");
+
+        // ★★★ 第 26 拍：生成 Sparks & FireWork（在玩家第二位角色位置） ★★★
+        if (feverBeatCounter == 26)
+        {
+            var bm = BattleManager.Instance;
+            if (bm != null && bm.CTeamInfo[1] != null)
+            {
+                Transform slotTransform = bm.CTeamInfo[1].SlotTransform;
+                if (slotTransform != null)
+                {
+                    // Sparks
+                    if (showSparksPrefab != null)
+                    {
+                        spawnedSparks = Instantiate(
+                            showSparksPrefab,
+                            slotTransform.position,
+                            Quaternion.identity
+                        );
+                    }
+
+                    // FireWork
+                    if (showFireWorkPrefab != null)
+                    {
+                        spawnedFireWork = Instantiate(
+                            showFireWorkPrefab,
+                            slotTransform.position,
+                            Quaternion.identity
+                        );
+                    }
+
+                    Debug.Log("[FeverManager] 第26拍 → 生成 Sparks & FireWork");
+                }
+            }
+        }
+
+
+        // ★★★ 第 33 拍：刪除所有 Sparks & FireWork ★★★
+        if (feverBeatCounter == 33)
+        {
+            if (spawnedSparks != null)
+            {
+                Destroy(spawnedSparks);
+                spawnedSparks = null;
+            }
+
+            if (spawnedFireWork != null)
+            {
+                Destroy(spawnedFireWork);
+                spawnedFireWork = null;
+            }
+
+            Debug.Log("[FeverManager] 第33拍 → 刪除 Sparks & FireWork");
+        }
 
         if (feverBeatCounter >= feverTotalBeats)
         {
