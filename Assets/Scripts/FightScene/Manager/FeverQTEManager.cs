@@ -12,6 +12,9 @@ public class FeverQTEManager : MonoBehaviour
     public GameObject prefabX;
     public GameObject prefabY;
 
+    [Header("VFX")]
+    public GameObject spawnImpactVFX;
+
     [Header("Spawn Points")]
     public Transform spawnPoint;
     public Transform endPoint;
@@ -20,6 +23,13 @@ public class FeverQTEManager : MonoBehaviour
 
     [Header("Slide Settings")]
     public float slideDuration = 0.15f; // 固定滑動時間（秒）
+    [Header("Slide Speed Control")]
+    public float slideDurationMax = 0.25f;   // 開場最慢
+    public float slideDurationMin = 0.08f;   // 加到最極限的速度
+    public float slideAcceleration = 0.015f; // 每次滑動加速量
+
+    private float currentSlideDuration;      // 目前使用的速度
+
 
     private List<GameObject> activeQTEs = new List<GameObject>();
     private List<char> qteTypes = new List<char>();
@@ -52,6 +62,10 @@ public class FeverQTEManager : MonoBehaviour
 
         ClearAllQTE();
         PreGenerateBuffer();
+
+        // ★ 重設速度到最慢（剛開始很慢）
+        currentSlideDuration = slideDurationMax;
+
         GenerateInitialActive();
     }
 
@@ -95,9 +109,10 @@ public class FeverQTEManager : MonoBehaviour
             SpawnOneQTE(t);
         }
 
-        RepositionAllImmediate();
-        ReapplyAlpha();
+        // ★ 不要瞬間定位，而是讓五顆滑進來
+        StartCoroutine(SlideAllQTEs());
     }
+
 
     // ========================================================================
     // 生成 QTE 不設定位置（稍後再滑動）
@@ -118,6 +133,13 @@ public class FeverQTEManager : MonoBehaviour
         Vector3 startPos = new Vector3(startX, spawnPoint.position.y, spawnPoint.position.z);
 
         obj.transform.position = startPos;
+
+        // ★★★ 生成 Impact VFX ★★★
+        if (spawnImpactVFX != null)
+        {
+            GameObject vfx = Instantiate(spawnImpactVFX, startPos, Quaternion.identity);
+            Destroy(vfx, 1.5f); // 依你的特效時長調整
+        }
     }
 
 
@@ -183,10 +205,12 @@ public class FeverQTEManager : MonoBehaviour
             endPos[i] = Vector3.Lerp(endPoint.position, spawnPoint.position, t);
         }
 
+        float duration = currentSlideDuration;   // ★ 改用動態速度
         float time = 0;
-        while (time < slideDuration)
+
+        while (time < duration)
         {
-            float lerp = time / slideDuration;
+            float lerp = time / duration;
 
             for (int i = 0; i < activeQTEs.Count; i++)
             {
@@ -198,12 +222,15 @@ public class FeverQTEManager : MonoBehaviour
             yield return null;
         }
 
-        // 最終矯正
         RepositionAllImmediate();
         ReapplyAlpha();
 
+        // ★ 加速（越滑越快）
+        currentSlideDuration = Mathf.Max(slideDurationMin, currentSlideDuration - slideAcceleration);
+
         isSliding = false;
     }
+
 
     // ========================================================================
     // 立即更新位置（初始化或滑動結束用）
