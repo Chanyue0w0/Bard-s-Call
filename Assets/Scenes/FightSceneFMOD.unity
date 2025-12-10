@@ -31776,7 +31776,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3bf476ab4fd2a5740b03a3f26a64e256, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3ed4b6a539c819f41aeaf90eb145320f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -37975,14 +37975,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4867924, g: 0.366472, b: 0.366472, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3bf476ab4fd2a5740b03a3f26a64e256, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5e73501c27c36e549b42b8a45cde5661, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -38053,14 +38053,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.95718515, g: 0.97735846, b: 0.24157348, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3bf476ab4fd2a5740b03a3f26a64e256, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c1d231f066ff27543a2228924af79bcf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -59820,14 +59820,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4004259, g: 0.020754695, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3bf476ab4fd2a5740b03a3f26a64e256, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 18532c634dd6da746bb1506ad2703fa1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -74547,11 +74547,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7823057389869482840, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0.000030518
+      value: -1.83
       objectReference: {fileID: 0}
     - target: {fileID: 7823057389869482840, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000030517578
+      value: 0.91999817
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
