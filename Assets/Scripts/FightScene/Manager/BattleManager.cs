@@ -231,6 +231,9 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     private void OnFeverUltimate()
     {
+        if (GlobalIndex.GameOver)//若遊戲結束
+            return;
+
         if (FeverManager.Instance == null) return;
 
         if (isFeverInputMode)
@@ -636,6 +639,9 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     private void OnAttackKey(int index)
     {
+        if (GlobalIndex.GameOver)//若遊戲結束
+            return;
+
         if (isFeverInputMode)
         {
             // 轉換 index → char
@@ -1308,6 +1314,8 @@ public class BattleManager : MonoBehaviour
         GlobalIndex.TotalBattleTime = 0;
         GlobalIndex.MaxCombo = 0;
 
+        GlobalIndex.GameOver = false;
+        //Time.timeScale = 1; //暫停時間
         // 切換回主畫面
         UnityEngine.SceneManagement.SceneManager.LoadScene("CampScene");
     }
@@ -1355,6 +1363,8 @@ public class BattleManager : MonoBehaviour
         {
             Debug.LogWarning("[BattleManager] LosePanel 未綁定！");
         }
+        //Time.timeScale = 0; //暫停時間
+        GlobalIndex.GameOver = true;
     }
 
 

@@ -135,6 +135,8 @@ public class MonsterInstManager : MonoBehaviour
             if (summaryComboText != null)
                 summaryComboText.text = $"最高連擊數 {GlobalIndex.MaxCombo} Combo";
 
+            GlobalIndex.GameOver = true;//遊戲結束
+
             // 顯示結算面板
             if (stageCompletePanel != null)
                 stageCompletePanel.SetActive(true);
@@ -182,12 +184,12 @@ public class MonsterInstManager : MonoBehaviour
             switch (stage)
             {
                 case 1:
-                    //teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
-                    //teamManager.EnemyTeamInfo[1].PrefabToSpawn = axeGoblinPrefab;
-                    //teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
-                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = woodTarget;
-                    teamManager.EnemyTeamInfo[1].PrefabToSpawn = woodTarget;
-                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = woodTarget;
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
+                    teamManager.EnemyTeamInfo[1].PrefabToSpawn = axeGoblinPrefab;
+                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
+                    //teamManager.EnemyTeamInfo[0].PrefabToSpawn = woodTarget;
+                    //teamManager.EnemyTeamInfo[1].PrefabToSpawn = woodTarget;
+                    //teamManager.EnemyTeamInfo[2].PrefabToSpawn = woodTarget;
                     //teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
                     //teamManager.EnemyTeamInfo[1].PrefabToSpawn = shieldGoblinPrefab;
                     //teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;
