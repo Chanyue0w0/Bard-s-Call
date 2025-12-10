@@ -41,11 +41,23 @@ public class CampSceneManager : MonoBehaviour
         }
     }
 
+    public void TutorialModeStart()
+    {
+        GlobalIndex.CurrentChapterIndex = 1;
+        GlobalIndex.CurrentLevelIndex = 0;
+        GlobalIndex.CurrentStageIndex = 0;
+        GlobalIndex.isTutorial = true;
+
+        Debug.Log("啟動教學模式：Chapter=1, Level=0, Stage=0");
+        LoadFightScene();
+    }
+
     public void EasyModeStart()
     {
         GlobalIndex.CurrentChapterIndex = 1;
         GlobalIndex.CurrentLevelIndex = 1;
         GlobalIndex.CurrentStageIndex = 0;
+        GlobalIndex.isTutorial = false;
 
         Debug.Log("啟動簡單模式：Chapter=1, Level=1, Stage=0");
         LoadFightScene();
@@ -56,6 +68,7 @@ public class CampSceneManager : MonoBehaviour
         GlobalIndex.CurrentChapterIndex = 1;
         GlobalIndex.CurrentLevelIndex = 2;
         GlobalIndex.CurrentStageIndex = 0;
+        GlobalIndex.isTutorial = false;
 
         Debug.Log("啟動困難模式：Chapter=1, Level=2, Stage=0");
         LoadFightScene();

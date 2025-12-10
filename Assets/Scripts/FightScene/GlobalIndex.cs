@@ -30,7 +30,7 @@ public class GlobalIndex : MonoBehaviour
 
     public static bool GameOver = false;           // 遊戲是否結束
     public static bool isTutorial = true;           // 遊戲是否正在教學
-    public static bool isTutorialPanelOpened = true;           // 遊戲是否正在教學圖片畫面
+    public static bool isTutorialPanelOpened = false;           // 遊戲是否正在教學圖片畫面
 
     // 隊伍資訊
     public static List<GameObject> PlayerTeamPrefabs = new List<GameObject>();

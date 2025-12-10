@@ -68,6 +68,9 @@ public class TutorialManager : MonoBehaviour
 
     private void OnEnable()
     {
+        if (!GlobalIndex.isTutorial)
+            return;
+        
         nextPageHandler = ctx => OnNextPage(ctx);
         previousPageHandler = ctx => OnPreviousPage(ctx);
 
@@ -86,6 +89,9 @@ public class TutorialManager : MonoBehaviour
 
     private void OnDisable()
     {
+        if (!GlobalIndex.isTutorial)
+            return;
+
         if (actionNextPage != null)
             actionNextPage.action.performed -= nextPageHandler;
 
