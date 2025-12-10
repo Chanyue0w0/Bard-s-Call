@@ -11,7 +11,7 @@ public class GlobalIndex : MonoBehaviour
 
     // 關卡資訊（★修改：改為三層結構）
     public static int CurrentChapterIndex = 1; // 章節
-    public static int CurrentLevelIndex = 0;   // 關卡
+    public static int CurrentLevelIndex = 1;   // 關卡
     public static int CurrentStageIndex = 0;   // 小關卡波數
     public static string CurrentStageName = "Forest01";
     public static string NextSceneName = "FightScene";
@@ -29,7 +29,7 @@ public class GlobalIndex : MonoBehaviour
     public static int MaxCombo = 0;           // 玩家最高連擊數
 
     public static bool GameOver = false;           // 遊戲是否結束
-    public static bool isTutorial = true;           // 遊戲是否正在教學
+    public static bool isTutorial = false;           // 遊戲是否正在教學
     public static bool isTutorialPanelOpened = false;           // 遊戲是否正在教學圖片畫面
 
     // 隊伍資訊

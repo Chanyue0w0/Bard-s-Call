@@ -124,24 +124,26 @@ public class MonsterInstManager : MonoBehaviour
         {
             Debug.Log("[MonsterInstManager] 關卡已通關，顯示結算面板。");
 
-            // ★ 紀錄總戰鬥時間
-            GlobalIndex.TotalBattleTime = battleTimer;
             battleEnded = true;
 
-            // ★ 更新結算文字
-            if (summaryTimeText != null)
-                summaryTimeText.text = $"通關時間 {GlobalIndex.TotalBattleTime:F1} 秒";
+            // ★ 紀錄總戰鬥時間
+            GlobalIndex.TotalBattleTime = battleTimer;
 
-            if (summaryComboText != null)
-                summaryComboText.text = $"最高連擊數 {GlobalIndex.MaxCombo} Combo";
+            //// ★ 更新結算文字
+            //if (summaryTimeText != null)
+            //    summaryTimeText.text = $"通關時間 {GlobalIndex.TotalBattleTime:F1} 秒";
 
-            GlobalIndex.GameOver = true;//遊戲結束
+            //if (summaryComboText != null)
+            //    summaryComboText.text = $"最高連擊數 {GlobalIndex.MaxCombo} Combo";
+
+            //GlobalIndex.GameOver = true;//遊戲結束
 
             // 顯示結算面板
-            if (stageCompletePanel != null)
-                stageCompletePanel.SetActive(true);
-            else
-                Debug.LogWarning("未指派 StageCompletePanel！");
+            BattleManager.Instance.ShowWinPanel();
+            //if (stageCompletePanel != null)
+            //    stageCompletePanel.SetActive(true);
+            //else
+            //    Debug.LogWarning("未指派 StageCompletePanel！");
 
             return;
         }
@@ -189,9 +191,9 @@ public class MonsterInstManager : MonoBehaviour
             switch (stage)
             {
                 case 1:
-                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
+                    //teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
                     teamManager.EnemyTeamInfo[1].PrefabToSpawn = axeGoblinPrefab;
-                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
+                    //teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
                     //teamManager.EnemyTeamInfo[0].PrefabToSpawn = woodTarget;
                     //teamManager.EnemyTeamInfo[1].PrefabToSpawn = woodTarget;
                     //teamManager.EnemyTeamInfo[2].PrefabToSpawn = woodTarget;
@@ -203,8 +205,8 @@ public class MonsterInstManager : MonoBehaviour
                 case 2:
                     //teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;
                     //teamManager.EnemyTeamInfo[0].PrefabToSpawn = orcPrefab;
-                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
-                    //teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
+                    //teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
                     break;
                 case 3:
                     teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
@@ -234,6 +236,7 @@ public class MonsterInstManager : MonoBehaviour
             }
             else if (stage == 6)
             {
+                //teamManager.EnemyTeamInfo[1].PrefabToSpawn = mageGoblinPrefab;
                 teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
                 teamManager.EnemyTeamInfo[1].PrefabToSpawn = mageGoblinPrefab;
                 teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;

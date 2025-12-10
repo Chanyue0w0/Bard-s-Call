@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
 {
@@ -82,6 +83,12 @@ public class BattleManager : MonoBehaviour
     public InputActionReference actionBlockP2;
     public InputActionReference actionBlockP3;
 
+    [Header("輸入 Win,LoseMenu （新 Input System）")]
+    public InputActionReference actionRestart;
+    public InputActionReference actionNextLevel;
+    public InputActionReference actionBackToMenu;
+
+
     [Header("Exit Game")]
     public InputActionReference actionExitGame;
 
@@ -134,11 +141,24 @@ public class BattleManager : MonoBehaviour
     private bool _isBlockingActive = false;
     private GameObject lastSuccessfulAttacker = null;
 
+    [Header("WinPanel (結算面板)")]
+    public GameObject winPanel; 
+    public Text summaryTimeText;
+    public Text summaryComboText;
+
+    [Header("LosePanel (結算面板)")]
+    public GameObject losePanel;
+    private bool isBattleEnded = false;
+
     // 用於安全解除 Input 綁定
     private System.Action<InputAction.CallbackContext> attackP1Handler;
     private System.Action<InputAction.CallbackContext> attackP2Handler;
     private System.Action<InputAction.CallbackContext> attackP3Handler;
     private System.Action<InputAction.CallbackContext> exitGameHandler;
+    private System.Action<InputAction.CallbackContext> restartHandler;
+    private System.Action<InputAction.CallbackContext> nextLevelHandler;
+    private System.Action<InputAction.CallbackContext> backToMenuHandler;
+
     //private System.Action<InputAction.CallbackContext> blockP1Handler;
     //private System.Action<InputAction.CallbackContext> blockP2Handler;
     //private System.Action<InputAction.CallbackContext> blockP3Handler;
@@ -185,6 +205,29 @@ public class BattleManager : MonoBehaviour
             actionExitGame.action.performed += exitGameHandler;
             actionExitGame.action.Enable();
         }
+
+        // Restart / BackToMenu 綁定
+        restartHandler = ctx => RestartBattle();
+        nextLevelHandler = ctx => NextBattle();
+        backToMenuHandler = ctx => BackToMenu();
+
+        if (actionRestart != null)
+        {
+            actionRestart.action.performed += restartHandler;
+            actionRestart.action.Disable();   // 平常不能按
+        }
+
+        if(actionNextLevel !=  null)
+        {
+            actionNextLevel.action.performed += nextLevelHandler;
+            actionNextLevel.action.Disable();   // 平常不能按
+        }
+
+        if (actionBackToMenu != null)
+        {
+            actionBackToMenu.action.performed += backToMenuHandler;
+            actionBackToMenu.action.Disable(); // 平常不能按
+        }
     }
 
     private void OnDisable()
@@ -199,6 +242,15 @@ public class BattleManager : MonoBehaviour
 
         if (actionExitGame != null)
             actionExitGame.action.performed -= exitGameHandler;
+
+        if (actionRestart != null)
+            actionRestart.action.performed -= restartHandler;
+
+        if (actionNextLevel != null)
+            actionNextLevel.action.performed -= nextLevelHandler;
+
+        if (actionBackToMenu != null)
+            actionBackToMenu.action.performed -= backToMenuHandler;
 
         FMODBeatListener2.OnGlobalBeat -= HandleBeatEffects; // ★ 新增
     }
@@ -1364,12 +1416,6 @@ public class BattleManager : MonoBehaviour
     }
 
 
-    // --------------------------------------------------
-    // 玩家失敗判定與 LosePanel 顯示
-    // --------------------------------------------------
-    [Header("戰敗 UI 面板")]
-    public GameObject losePanel;
-    private bool isBattleEnded = false;
 
     public void CheckPlayerDefeat()
     {
@@ -1395,6 +1441,35 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    public void ShowWinPanel()
+    {
+        if (winPanel != null)
+        {
+            winPanel.SetActive(true);
+            Debug.Log("[BattleManager] 勝利，開啟 WinPanel！");
+        }
+        else
+        {
+            Debug.LogWarning("[BattleManager] LosePanel 未綁定！");
+        }
+
+        // ★ 更新結算文字
+        if (summaryTimeText != null)
+            summaryTimeText.text = $"通關時間 {GlobalIndex.TotalBattleTime:F1} 秒";
+
+        if (summaryComboText != null)
+            summaryComboText.text = $"最高連擊數 {GlobalIndex.MaxCombo} Combo";
+
+        GlobalIndex.GameOver = true;//遊戲結束
+
+        // 啟用 NextLevel / BackToMenu 按鍵
+        if (actionNextLevel != null)
+            actionNextLevel.action.Enable();
+
+        if (actionBackToMenu != null)
+            actionBackToMenu.action.Enable();
+    }
+
     private void ShowLosePanel()
     {
         if (losePanel != null)
@@ -1408,6 +1483,64 @@ public class BattleManager : MonoBehaviour
         }
         //Time.timeScale = 0; //暫停時間
         GlobalIndex.GameOver = true;
+
+        // 啟用 Restart / BackToMenu 按鍵
+        if (actionRestart != null)
+            actionRestart.action.Enable();
+
+        if (actionBackToMenu != null)
+            actionBackToMenu.action.Enable();
+    }
+
+    private void NextBattle()
+    {
+        // 重置關卡索引（可視需求調整）
+        GlobalIndex.CurrentLevelIndex++;
+        GlobalIndex.CurrentStageIndex = 0;
+        GlobalIndex.TotalBattleTime = 0;
+        GlobalIndex.MaxCombo = 0;
+        GlobalIndex.GameOver = false;
+        GlobalIndex.isTutorial = false;
+        GlobalIndex.isTutorialPanelOpened = false;
+        GlobalIndex.CurrentTotalHP = 200;
+        GlobalIndex.MaxTotalHP = 200;
+        GlobalIndex.RythmResonanceBuff = 0; // 對拍共鳴臨時加乘
+
+        if(GlobalIndex.CurrentLevelIndex > 2)
+        {
+            ReturnToCampScene();
+        }
+        else
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(
+                UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
+            );
+
+        }
+
+    }
+
+    private void RestartBattle()
+    {
+        // 重置關卡索引（可視需求調整）
+        GlobalIndex.CurrentStageIndex = 0;
+        GlobalIndex.TotalBattleTime = 0;
+        GlobalIndex.MaxCombo = 0;
+        GlobalIndex.GameOver = false;
+        GlobalIndex.isTutorial = false;
+        GlobalIndex.isTutorialPanelOpened = false;
+        GlobalIndex.CurrentTotalHP = 200;
+        GlobalIndex.MaxTotalHP = 200;
+        GlobalIndex.RythmResonanceBuff = 0; // 對拍共鳴臨時加乘
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
+        );
+    }
+
+    private void BackToMenu()
+    {
+        ReturnToCampScene();  // 你原本的回主畫面功能
     }
 
 

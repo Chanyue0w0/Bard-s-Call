@@ -225,6 +225,74 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "PanelActionMap",
+            "id": "a3fcc2a8-d47b-4251-a545-2a4367a2f28b",
+            "actions": [
+                {
+                    "name": "Restart",
+                    "type": "Button",
+                    "id": "133504a3-a0f5-4e02-bcc9-b52d20a4adfe",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NextLevel",
+                    "type": "Button",
+                    "id": "7a019dec-2b7b-4d93-a09a-4426280bec5d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "BackToCamp",
+                    "type": "Button",
+                    "id": "4e0e6632-574c-48e0-8989-8c287582dc45",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a36f11aa-6d33-4564-a7f7-dfc74c02752e",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Restart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "290b51de-b0e1-4db5-aee0-569b717a5254",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NextLevel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7eb1f69d-e44c-4eb0-9e14-646a779cb0d2",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BackToCamp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
