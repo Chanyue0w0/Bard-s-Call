@@ -28,7 +28,9 @@ public class GlobalIndex : MonoBehaviour
     public static float TotalBattleTime = 0f; // 本場戰鬥累積秒數
     public static int MaxCombo = 0;           // 玩家最高連擊數
 
-    public static bool GameOver = false;           // 玩家最高連擊數
+    public static bool GameOver = false;           // 遊戲是否結束
+    public static bool isTutorial = true;           // 遊戲是否正在教學
+    public static bool isTutorialPanelOpened = true;           // 遊戲是否正在教學圖片畫面
 
     // 隊伍資訊
     public static List<GameObject> PlayerTeamPrefabs = new List<GameObject>();

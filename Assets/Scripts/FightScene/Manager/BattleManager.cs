@@ -255,6 +255,8 @@ public class BattleManager : MonoBehaviour
     {
         if (GlobalIndex.GameOver)//若遊戲結束
             return;
+        if (GlobalIndex.isTutorialPanelOpened)//若遊戲教學中
+            return;
 
         if (FeverManager.Instance == null) return;
 
@@ -663,6 +665,8 @@ public class BattleManager : MonoBehaviour
     {
         if (GlobalIndex.GameOver)//若遊戲結束
             return;
+        if (GlobalIndex.isTutorialPanelOpened)//若遊戲教學中
+            return;
 
         if (isFeverInputMode)
         {
@@ -859,6 +863,11 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator HandleMageAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, int beatsPerMeasure, bool perfect)
     {
+        if (GlobalIndex.isTutorial && TutorialManager.Instance != null)
+        {
+            TutorialManager.Instance.AddMissionProgress(TutorialManager.TutorialCallType.Mage);
+        }
+
         var actor = attacker.Actor.transform;
         var charData = attacker.Actor.GetComponent<CharacterData>();
         if (charData == null) yield break;
@@ -1018,6 +1027,11 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     private IEnumerator HandleBardAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, int beatsPerMeasure, bool perfect)
     {
+        if (GlobalIndex.isTutorial && TutorialManager.Instance != null)
+        {
+            TutorialManager.Instance.AddMissionProgress(TutorialManager.TutorialCallType.Bard);
+        }
+
         var actor = attacker.Actor.transform;
         var charData = attacker.Actor.GetComponent<CharacterData>();
         if (charData == null) yield break;
@@ -1047,6 +1061,11 @@ public class BattleManager : MonoBehaviour
     // --------------------------------------------------
     private IEnumerator HandlePaladinAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle, int beatsPerMeasure, bool perfect)
     {
+        if (GlobalIndex.isTutorial && TutorialManager.Instance != null)
+        {
+            TutorialManager.Instance.AddMissionProgress(TutorialManager.TutorialCallType.Paladin);
+        }
+
         var actor = attacker.Actor.transform;
         var charData = attacker.Actor.GetComponent<CharacterData>();
         if (charData == null) yield break;
@@ -1337,6 +1356,8 @@ public class BattleManager : MonoBehaviour
         GlobalIndex.MaxCombo = 0;
 
         GlobalIndex.GameOver = false;
+        GlobalIndex.isTutorial = false;
+        GlobalIndex.isTutorialPanelOpened = false;
         //Time.timeScale = 1; //暫停時間
         // 切換回主畫面
         UnityEngine.SceneManagement.SceneManager.LoadScene("CampScene");
