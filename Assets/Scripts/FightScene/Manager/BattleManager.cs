@@ -1048,6 +1048,7 @@ public class BattleManager : MonoBehaviour
 
         if (!isHeavy)
         {
+            FMODAudioPlayer.Instance.PlayPaladinHeavy(); //播放聖騎士重拍音效
             // ---------------------------
             // ★ 輕攻擊 → 只有格檔，不做任何攻擊行為
             // ---------------------------
@@ -1059,6 +1060,8 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
+
+            FMODAudioPlayer.Instance.PlayPaladinLight(); //播放聖騎士輕拍音效
             // =========================================================
             // 3. ★★★ Paladin 重攻擊：射出 FireBallSkill（40 傷害）★★★
             // =========================================================

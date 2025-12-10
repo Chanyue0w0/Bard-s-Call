@@ -8,6 +8,7 @@ public class FMODAudioPlayer : MonoBehaviour
     [Header("Paladin")]
     public EventReference Paladin_LightBeat;
     public EventReference Paladin_HeavyBeat;
+    public EventReference Paladin_Blocked;
 
     [Header("Bard")]
     public EventReference Bard_LightBeat;
@@ -51,6 +52,7 @@ public class FMODAudioPlayer : MonoBehaviour
     // ============================================================
     public void PlayPaladinLight() => Play(Paladin_LightBeat);
     public void PlayPaladinHeavy() => Play(Paladin_HeavyBeat);
+    public void PlayPaladinBlocked() => Play(Paladin_Blocked);
 
     public void PlayBardLight() => Play(Bard_LightBeat);
     public void PlayBardHeavy() => Play(Bard_HeavyBeat);

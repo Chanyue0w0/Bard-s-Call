@@ -17856,12 +17856,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Paladin_LightBeat:
     Guid:
-      Data1: -1013083086
-      Data2: 1126134718
-      Data3: 1976306090
-      Data4: 1264960282
-    Path: event:/SoundEffects/InCombat/Paladin_NormalParry
+      Data1: 1784335233
+      Data2: 1134328948
+      Data3: 1490434947
+      Data4: 784402289
+    Path: event:/SoundEffects/InCombat/Paladin_SheildCall
   Paladin_HeavyBeat:
+    Guid:
+      Data1: 1784335233
+      Data2: 1134328948
+      Data3: 1490434947
+      Data4: 784402289
+    Path: event:/SoundEffects/InCombat/Paladin_SheildCall
+  Paladin_Blocked:
     Guid:
       Data1: -1013083086
       Data2: 1126134718
@@ -17902,7 +17909,7 @@ MonoBehaviour:
       Data2: 1211619733
       Data3: -787552382
       Data4: 1484676168
-    Path: event:/SoundEffects/InCombat/Elvin_Fever2
+    Path: event:/SoundEffects/Fever 1/Elvin_Fever2
   AxeGoblin_NormalAttack:
     Guid:
       Data1: 0

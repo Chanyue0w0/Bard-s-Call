@@ -403,7 +403,7 @@ public class BattleEffectManager : MonoBehaviour
             {
                 bool heavyBlock = isHeavyBlocking[targetIndex];
 
-                FMODAudioPlayer.Instance.PlayPaladinHeavy(); //播放聖騎士格擋音效
+                FMODAudioPlayer.Instance.PlayPaladinBlocked(); //播放聖騎士格擋音效
 
                 if (heavyBlock)
                 {

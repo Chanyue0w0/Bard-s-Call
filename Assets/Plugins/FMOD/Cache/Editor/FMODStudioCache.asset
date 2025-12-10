@@ -270,10 +270,10 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639006967135579675
+  lastModified: 639009867633077593
   FileSizes:
   - Name: Desktop
-    Value: 1998
+    Value: 2212
   Exists: 1
 --- !u!114 &-2053334069037838640
 MonoBehaviour:
@@ -386,7 +386,10 @@ MonoBehaviour:
   - {fileID: 914812499203589540}
   - {fileID: 5060741374952502760}
   - {fileID: 5733580764830619373}
-  - {fileID: 8966415919217502151}
+  - {fileID: 4184911543979826329}
+  - {fileID: 159013605488410174}
+  - {fileID: 1865111798421919596}
+  - {fileID: 2274858875765797329}
   EditorParameters:
   - {fileID: -9042979533456799273}
   - {fileID: -6458779747416126282}
@@ -396,8 +399,35 @@ MonoBehaviour:
   - {fileID: 6828801144302610801}
   StringsBanks:
   - {fileID: -2384467188881039204}
-  cacheTime: 639006967135579675
+  cacheTime: 639009867633077593
   cacheVersion: 131621
+--- !u!114 &159013605488410174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/CombatResult/Defeat
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/CombatResult/Defeat
+  Guid:
+    Data1: -1525290567
+    Data2: 1112406282
+    Data3: 1737690257
+    Data4: 408492603
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 6709
 --- !u!114 &914812499203589540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -450,6 +480,61 @@ MonoBehaviour:
   IsGlobal: 1
   Labels: []
   Exists: 1
+--- !u!114 &1865111798421919596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/Fever 1/Elvin_Fever2
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/Fever 1/Elvin_Fever2
+  Guid:
+    Data1: -1403530542
+    Data2: 1211619733
+    Data3: -787552382
+    Data4: 1484676168
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 4444257825030528466}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 18841
+--- !u!114 &2274858875765797329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/CombatResult/Victory
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/CombatResult/Victory
+  Guid:
+    Data1: -556557314
+    Data2: 1179004212
+    Data3: 97476277
+    Data4: -101757988
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5555
 --- !u!114 &2348280674453129525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -577,6 +662,57 @@ MonoBehaviour:
   IsGlobal: 1
   Labels: []
   Exists: 1
+--- !u!114 &4184911543979826329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundEffects/InCombat/Paladin_SheildCall
+  m_EditorClassIdentifier: 
+  Path: event:/SoundEffects/InCombat/Paladin_SheildCall
+  Guid:
+    Data1: 1784335233
+    Data2: 1134328948
+    Data3: 1490434947
+    Data4: 784402289
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 620
+--- !u!114 &4444257825030528466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Elvin_Fever2/FeverCombo
+  m_EditorClassIdentifier: 
+  Name: FeverCombo
+  StudioPath: 
+  Min: 0
+  Max: 48
+  Default: 0
+  ID:
+    data1: 2175966070
+    data2: 446319943
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &5060741374952502760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -648,35 +784,8 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639006967135413047
+  lastModified: 639009867632979274
   FileSizes:
   - Name: Desktop
-    Value: 6250304
+    Value: 7977600
   Exists: 1
---- !u!114 &8966415919217502151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SoundEffects/InCombat/Elvin_Fever2
-  m_EditorClassIdentifier: 
-  Path: event:/SoundEffects/InCombat/Elvin_Fever2
-  Guid:
-    Data1: -1403530542
-    Data2: 1211619733
-    Data3: -787552382
-    Data4: 1484676168
-  Banks:
-  - {fileID: 6828801144302610801}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 18841
