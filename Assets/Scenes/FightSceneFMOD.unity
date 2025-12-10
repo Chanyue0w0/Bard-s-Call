@@ -36969,6 +36969,7 @@ MonoBehaviour:
   actionBlockP1: {fileID: -4214764935672719900, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionBlockP2: {fileID: 1523397817175261001, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionBlockP3: {fileID: -4770925364837056878, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionExitGame: {fileID: -1423954388285841098, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionFeverUltimate: {fileID: -2312394656301023162, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionLockDuration: 0.3
   dashDuration: 0.05

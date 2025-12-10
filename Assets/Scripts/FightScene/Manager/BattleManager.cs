@@ -81,6 +81,10 @@ public class BattleManager : MonoBehaviour
     public InputActionReference actionBlockP1;
     public InputActionReference actionBlockP2;
     public InputActionReference actionBlockP3;
+
+    [Header("Exit Game")]
+    public InputActionReference actionExitGame;
+
     [Header("Fever 大招輸入")]
     public InputActionReference actionFeverUltimate;  // 新增輸入引用 (在 Inspector 綁定)
     private System.Action<InputAction.CallbackContext> feverUltHandler;
@@ -134,6 +138,7 @@ public class BattleManager : MonoBehaviour
     private System.Action<InputAction.CallbackContext> attackP1Handler;
     private System.Action<InputAction.CallbackContext> attackP2Handler;
     private System.Action<InputAction.CallbackContext> attackP3Handler;
+    private System.Action<InputAction.CallbackContext> exitGameHandler;
     //private System.Action<InputAction.CallbackContext> blockP1Handler;
     //private System.Action<InputAction.CallbackContext> blockP2Handler;
     //private System.Action<InputAction.CallbackContext> blockP3Handler;
@@ -163,6 +168,7 @@ public class BattleManager : MonoBehaviour
         //blockP2Handler = ctx => OnBlockKey(1);
         //blockP3Handler = ctx => OnBlockKey(2);
         feverUltHandler = ctx => OnFeverUltimate();
+        exitGameHandler = ctx => OnExitGamePerformed();
 
         FMODBeatListener2.OnGlobalBeat += HandleBeatEffects; // ★ 新增
 
@@ -173,6 +179,12 @@ public class BattleManager : MonoBehaviour
         //if (actionBlockP2 != null) { actionBlockP2.action.started += blockP2Handler; actionBlockP2.action.Enable(); }
         //if (actionBlockP3 != null) { actionBlockP3.action.started += blockP3Handler; actionBlockP3.action.Enable(); }
         if (actionFeverUltimate != null) { actionFeverUltimate.action.started += feverUltHandler; actionFeverUltimate.action.Enable(); }
+
+        if (actionExitGame != null)
+        {
+            actionExitGame.action.performed += exitGameHandler;
+            actionExitGame.action.Enable();
+        }
     }
 
     private void OnDisable()
@@ -185,8 +197,18 @@ public class BattleManager : MonoBehaviour
         //if (actionBlockP3 != null) actionBlockP3.action.started -= blockP3Handler;
         if (actionFeverUltimate != null) { actionFeverUltimate.action.started -= feverUltHandler;}
 
+        if (actionExitGame != null)
+            actionExitGame.action.performed -= exitGameHandler;
+
         FMODBeatListener2.OnGlobalBeat -= HandleBeatEffects; // ★ 新增
     }
+
+    private void OnExitGamePerformed()
+    {
+        if (GlobalIndex.GameOver) return;
+        ReturnToCampScene();
+    }
+
 
     //聆聽Beat，提供每拍效果偵測
     private void HandleBeatEffects(int beat)
