@@ -178,8 +178,13 @@ public class MonsterInstManager : MonoBehaviour
 
         // 從第一個位置開始依序填入
         List<int> slots = new List<int>() { 0, 1, 2 };
-
-        if (level == 1)
+        if(level == 0)
+        {
+            teamManager.EnemyTeamInfo[0].PrefabToSpawn = woodTarget;
+            teamManager.EnemyTeamInfo[1].PrefabToSpawn = woodTarget;
+            teamManager.EnemyTeamInfo[2].PrefabToSpawn = woodTarget;
+        }
+        else if (level == 1)
         {
             switch (stage)
             {
