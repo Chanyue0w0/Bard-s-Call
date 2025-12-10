@@ -152,7 +152,7 @@ public class Orc : EnemyBase
         {
             // ★ 改用 BattleEffectManager 的治療
             if (thisSlotInfo != null)
-                BattleEffectManager.Instance.HealEnemy(thisSlotInfo, 10);
+                BattleEffectManager.Instance.HealEnemy(thisSlotInfo, 30);
 
             // Charge 是否結束
             if (globalBeat - chargeStartBeat >= chargeBeats)

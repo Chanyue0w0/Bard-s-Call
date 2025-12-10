@@ -237,6 +237,7 @@ MonoBehaviour:
   mageGoblinPrefab: {fileID: 5150830981652259710, guid: 7aeb72abcfca02c4599cf721d5632064, type: 3}
   poisonFrogPrefab: {fileID: 7851229232848655062, guid: 5be26d3f0ba5d4a45bed6ffdb842afc1, type: 3}
   orcPrefab: {fileID: 5608500958824098529, guid: f31f88e4700963643b5ca6db6aefc424, type: 3}
+  woodTarget: {fileID: 2439587355997071516, guid: 23d4cba150a79164582c6a87bc836dee, type: 3}
   teamManager: {fileID: 589954060}
   checkInterval: 1
   spawnDelay: 1

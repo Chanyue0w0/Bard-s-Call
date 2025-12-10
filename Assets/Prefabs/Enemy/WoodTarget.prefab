@@ -197,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseScale: {x: 0.3, y: 0.3, z: 0.3}
-  peakMultiplier: 1.1
+  peakMultiplier: 1.05
   holdDuration: 0.05
   returnSpeed: 8
 --- !u!1 &6138287058761997903

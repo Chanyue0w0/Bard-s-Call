@@ -13,6 +13,7 @@ public class MonsterInstManager : MonoBehaviour
     public GameObject mageGoblinPrefab;
     public GameObject poisonFrogPrefab;
     public GameObject orcPrefab;
+    public GameObject woodTarget;
     //public GameObject darkKnightPrefab;
 
     [Header("關聯組件")]
@@ -181,9 +182,12 @@ public class MonsterInstManager : MonoBehaviour
             switch (stage)
             {
                 case 1:
-                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
-                    teamManager.EnemyTeamInfo[1].PrefabToSpawn = axeGoblinPrefab;
-                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
+                    //teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
+                    //teamManager.EnemyTeamInfo[1].PrefabToSpawn = axeGoblinPrefab;
+                    //teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = woodTarget;
+                    teamManager.EnemyTeamInfo[1].PrefabToSpawn = woodTarget;
+                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = woodTarget;
                     //teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
                     //teamManager.EnemyTeamInfo[1].PrefabToSpawn = shieldGoblinPrefab;
                     //teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;
