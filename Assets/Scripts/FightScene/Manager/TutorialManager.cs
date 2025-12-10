@@ -26,6 +26,9 @@ public class TutorialManager : MonoBehaviour
     [Header("Mission Hint 相關")]
     public GameObject missionHintRoot;          // 整個 MissionHint 物件
     public Text missionHintText;            // 顯示文字的 TMP 元件
+    [Header("Mission 完成特效")]
+    public GameObject missionCompleteEffectPrefab;
+
 
     public enum TutorialCallType
     {
@@ -366,7 +369,28 @@ public class TutorialManager : MonoBehaviour
 
         // 完成當前階段
         if (currentMissionCount >= missionTargetCount)
+        {
+            PlayMissionCompleteEffect();  // ★ 這裡新增
             GoToNextMission();
+        }
+
+    }
+
+    private void PlayMissionCompleteEffect()
+    {
+        if (missionCompleteEffectPrefab == null || missionHintRoot == null)
+            return;
+
+        // 產生特效在 UI 裡
+        GameObject effect = Instantiate(missionCompleteEffectPrefab, missionHintRoot.transform);
+
+        // 避免超大或遮到 UI
+        RectTransform rt = effect.GetComponent<RectTransform>();
+        if (rt != null)
+        {
+            rt.anchoredPosition = Vector2.zero;
+            rt.localScale = Vector3.one;
+        }
     }
 
 
