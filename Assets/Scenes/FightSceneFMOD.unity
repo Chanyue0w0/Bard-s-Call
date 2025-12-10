@@ -70362,11 +70362,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6605164388181476191, guid: 49fc3da80503fc3469e8130a9aceba55, type: 3}
   m_PrefabInstance: {fileID: 1127229239759333543}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2006310091 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6872593940623200489, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-  m_PrefabInstance: {fileID: 8193060171871770197}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2010752643
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71276,24 +71271,17 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5044766107964702005, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
   m_PrefabInstance: {fileID: 8193060171871770197}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2006310091}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1fc6b7fa80026a444a6e900ba6fce7f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!225 &4455289404305869507
+--- !u!225 &4455289404305869507 stripped
 CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 2845383823386816614, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
+  m_PrefabInstance: {fileID: 8193060171871770197}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2006310091}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1001 &5027490728809139567
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71465,10 +71453,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1719361670}
     m_Modifications:
-    - target: {fileID: 1858311700776148470, guid: 20295d615772bdd40b0430ee237c9bc3, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -0.11138916
-      objectReference: {fileID: 0}
     - target: {fileID: 3650277769689277172, guid: 20295d615772bdd40b0430ee237c9bc3, type: 3}
       propertyPath: m_Name
       value: TotalEnemyHealthBar
@@ -71561,10 +71545,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7551993815318450099, guid: 20295d615772bdd40b0430ee237c9bc3, type: 3}
-      propertyPath: m_Direction
+    - target: {fileID: 7474648544202299978, guid: 20295d615772bdd40b0430ee237c9bc3, type: 3}
+      propertyPath: m_Type
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7474648544202299978, guid: 20295d615772bdd40b0430ee237c9bc3, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 96f36cb4f19819244a2fbf772a1e30b8, type: 3}
+    - target: {fileID: 7474648544202299978, guid: 20295d615772bdd40b0430ee237c9bc3, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7474648544202299978, guid: 20295d615772bdd40b0430ee237c9bc3, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8880674118367578555, guid: 20295d615772bdd40b0430ee237c9bc3, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8880674118367578555, guid: 20295d615772bdd40b0430ee237c9bc3, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 799d9a778f527be4db94ae57502ee7d7, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -71736,10 +71740,34 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5556979487578799221, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
-      propertyPath: m_IsActive
+    - target: {fileID: 2866570156089788662, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_Type
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2866570156089788662, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 307df045139473d43819904556241802, type: 3}
+    - target: {fileID: 2866570156089788662, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2866570156089788662, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2866570156089788662, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4140533020208695616, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4140533020208695616, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2b8b7cecc472ff94f91f92d44d715292, type: 3}
     - target: {fileID: 7279901405869851545, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
       propertyPath: m_Name
       value: BeatFeverBar
@@ -71786,16 +71814,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2939371516262811841, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2939371516262811841, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 1e6e26f221f9c674782a48e75f097613, type: 3}
+    - target: {fileID: 2939371516262811841, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
       propertyPath: m_Color.b
-      value: 0.2356924
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2939371516262811841, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
       propertyPath: m_Color.g
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2939371516262811841, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: m_Color.r
-      value: 0.011764705
       objectReference: {fileID: 0}
     - target: {fileID: 3008806576873534768, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
       propertyPath: m_Pivot.x
@@ -71881,21 +71913,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: TotalHealthBar
       objectReference: {fileID: 0}
-    - target: {fileID: 8774348397184648853, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: m_Enabled
+    - target: {fileID: 8967052988514289813, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
+      propertyPath: m_Type
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8774348397184648853, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      propertyPath: peakMultiplier
-      value: 1.05
-      objectReference: {fileID: 0}
+    - target: {fileID: 8967052988514289813, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 799d9a778f527be4db94ae57502ee7d7, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6872593940623200489, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4455289404305869507}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1efa768a2afa2f14282c638d2cdc99db, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
