@@ -121,7 +121,7 @@ public class TutorialManager : MonoBehaviour
         if(GlobalIndex.isTutorial && GlobalIndex.CurrentChapterIndex == 1 && GlobalIndex.CurrentLevelIndex == 0 && GlobalIndex.CurrentStageIndex == 0)
         {
             InitTutorial();
-            UpdateCloseButtonVisibility();
+            //UpdateCloseButtonVisibility();
         }
 
     }
@@ -219,7 +219,7 @@ public class TutorialManager : MonoBehaviour
             if (patternPanels[currentPatternIndex] != null)
                 patternPanels[currentPatternIndex].SetActive(true);
         }
-        UpdateCloseButtonVisibility();
+        //UpdateCloseButtonVisibility();
 
     }
 
@@ -245,7 +245,7 @@ public class TutorialManager : MonoBehaviour
         if (patternPanels[currentPatternIndex] != null)
             patternPanels[currentPatternIndex].SetActive(true);
 
-        UpdateCloseButtonVisibility();
+        //UpdateCloseButtonVisibility();
     }
 
 
@@ -280,13 +280,13 @@ public class TutorialManager : MonoBehaviour
         SkipPatternAndStartMission();
     }
 
-    private void UpdateCloseButtonVisibility()
-    {
-        if (closeTutorialButton == null) return;
+    //private void UpdateCloseButtonVisibility()
+    //{
+    //    if (closeTutorialButton == null) return;
 
-        bool isLastPage = (currentPatternIndex == patternPanels.Length - 1);
-        closeTutorialButton.SetActive(isLastPage);
-    }
+    //    bool isLastPage = (currentPatternIndex == patternPanels.Length - 1);
+    //    closeTutorialButton.SetActive(isLastPage);
+    //}
 
 
     // ============================================================
