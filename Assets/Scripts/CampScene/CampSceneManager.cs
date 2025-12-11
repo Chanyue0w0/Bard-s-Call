@@ -19,6 +19,13 @@ public class CampSceneManager : MonoBehaviour
     public int currentLevelIndex = 0;
 
     // ------------------------------------------------------------
+    // ★★★ 新增：對應每個關卡的提示圖片（按選擇關卡顯示）
+    // ------------------------------------------------------------
+    [Header("關卡提示圖片（依序放 0=教學 / 1=簡單 / 2=困難）")]
+    public List<GameObject> levelHintImages = new List<GameObject>();
+
+
+    // ------------------------------------------------------------
     // Input System — ActionReference
     // ------------------------------------------------------------
     [Header("輸入（新 Input System）")]
@@ -37,19 +44,27 @@ public class CampSceneManager : MonoBehaviour
     private System.Action<InputAction.CallbackContext> goLevelHandler;
     private System.Action<InputAction.CallbackContext> closeMapHandler;
 
+
+    // ------------------------------------------------------------
+    // Awake：預設選擇關卡 = 0
+    // ------------------------------------------------------------
+    private void Start()
+    {
+        currentLevelIndex = 0;
+        UpdateLevelHintImage();
+    }
+
     // ------------------------------------------------------------
     // OnEnable 綁定
     // ------------------------------------------------------------
     private void OnEnable()
     {
-        // ★ 依照你的風格建立 handler
         startGameHandler = ctx => OnStartGame();
         nextLevelHandler = ctx => OnNextLevel();
         lastLevelHandler = ctx => OnLastLevel();
         goLevelHandler = ctx => OnGoLevel();
         closeMapHandler = ctx => OnCloseMap();
 
-        // ★ 以下全部比照 BattleManager 的寫法
         if (actionStartGame != null)
         {
             actionStartGame.action.performed += startGameHandler;
@@ -82,7 +97,7 @@ public class CampSceneManager : MonoBehaviour
     }
 
     // ------------------------------------------------------------
-    // OnDisable 解除綁定
+    // OnDisable
     // ------------------------------------------------------------
     private void OnDisable()
     {
@@ -102,6 +117,8 @@ public class CampSceneManager : MonoBehaviour
             actionCloseMap.action.performed -= closeMapHandler;
     }
 
+
+
     // ------------------------------------------------------------
     // 1. StartGame
     // ------------------------------------------------------------
@@ -109,6 +126,7 @@ public class CampSceneManager : MonoBehaviour
     {
         Debug.Log("按下 StartGame：開啟選擇面板");
         OpenLevelChoosePanel();
+        UpdateLevelHintImage();
     }
 
     // ------------------------------------------------------------
@@ -121,6 +139,7 @@ public class CampSceneManager : MonoBehaviour
             currentLevelIndex = 0;
 
         Debug.Log("按下 NextLevel：切換到關卡 index = " + currentLevelIndex);
+        UpdateLevelHintImage();
     }
 
     // ------------------------------------------------------------
@@ -133,6 +152,7 @@ public class CampSceneManager : MonoBehaviour
             currentLevelIndex = levelList.Count - 1;
 
         Debug.Log("按下 LastLevel：切換到關卡 index = " + currentLevelIndex);
+        UpdateLevelHintImage();
     }
 
     // ------------------------------------------------------------
@@ -140,9 +160,6 @@ public class CampSceneManager : MonoBehaviour
     // ------------------------------------------------------------
     private void OnGoLevel()
     {
-        //if (!levelChoosePanelAcive)
-        //    return;
-
         Debug.Log("按下 GoLevel：讀取關卡 Index = " + currentLevelIndex);
 
         int selected = levelList[currentLevelIndex];
@@ -169,6 +186,21 @@ public class CampSceneManager : MonoBehaviour
     }
 
     // ------------------------------------------------------------
+    // ★★★ 關卡提示圖更新（你要的重點）
+    // ------------------------------------------------------------
+    private void UpdateLevelHintImage()
+    {
+        if (levelHintImages == null || levelHintImages.Count == 0)
+            return;
+
+        for (int i = 0; i < levelHintImages.Count; i++)
+        {
+            if (levelHintImages[i] != null)
+                levelHintImages[i].SetActive(i == currentLevelIndex);
+        }
+    }
+
+    // ------------------------------------------------------------
     // UI Panel 控制
     // ------------------------------------------------------------
     public void OpenLevelChoosePanel()
@@ -192,7 +224,7 @@ public class CampSceneManager : MonoBehaviour
     }
 
     // ------------------------------------------------------------
-    // Level Start (你原本的內容)
+    // Level Start
     // ------------------------------------------------------------
     public void TutorialModeStart()
     {

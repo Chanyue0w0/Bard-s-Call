@@ -1920,6 +1920,10 @@ MonoBehaviour:
   levelChoosePanel: {fileID: 1421029291}
   levelList: 000000000100000002000000
   currentLevelIndex: 0
+  levelHintImages:
+  - {fileID: 138596701}
+  - {fileID: 344395429}
+  - {fileID: 336255676}
   actionStartGame: {fileID: -3298210549466276681, guid: 4bc2cd1acefec804d84e1f7084fea9d8, type: 3}
   actionNextLevel: {fileID: -6911903159796217053, guid: 4bc2cd1acefec804d84e1f7084fea9d8, type: 3}
   actionLastLevel: {fileID: -979898476263944704, guid: 4bc2cd1acefec804d84e1f7084fea9d8, type: 3}
