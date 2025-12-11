@@ -18447,11 +18447,11 @@ MonoBehaviour:
     Path: null
   AttackWarning:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: null
+      Data1: -1337298093
+      Data2: 1176039833
+      Data3: -1624896377
+      Data4: -1321679031
+    Path: event:/SoundEffects/InCombat/RedFlash
 --- !u!1 &511028833
 GameObject:
   m_ObjectHideFlags: 0
@@ -37600,7 +37600,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1160555323
 Transform:
   m_ObjectHideFlags: 0
