@@ -63,6 +63,15 @@ public class BardFeverController : MonoBehaviour
         //FeverManager.OnFever25Beat -= OnFever25Beat;
     }
 
+    private void Start()
+    {
+        // ★ Demon 初始化（如果 Inspector 已指定）
+        if (demonObject != null)
+        {
+            demonSR = demonObject.GetComponentInChildren<SpriteRenderer>();
+            demonObject.SetActive(false);
+        }
+    }
     //private void OnFever25Beat(int totalQTEComboCount)
     //{
     //    TriggerDemonDestructionRay(totalQTEComboCount);

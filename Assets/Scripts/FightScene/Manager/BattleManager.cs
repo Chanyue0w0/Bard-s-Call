@@ -258,6 +258,7 @@ public class BattleManager : MonoBehaviour
     private void OnExitGamePerformed()
     {
         if (GlobalIndex.GameOver) return;
+        if (GetFeverInputMode()) return;
         ReturnToCampScene();
     }
 
@@ -285,6 +286,10 @@ public class BattleManager : MonoBehaviour
         Debug.Log("[BattleManager] 離開 Fever Input 模式（恢復節奏攻擊）");
     }
 
+    public bool GetFeverInputMode()
+    {
+        return isFeverInputMode;
+    }
 
     // --------------------------------------------------
     // 隊伍資料載入

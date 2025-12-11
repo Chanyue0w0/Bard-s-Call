@@ -492,6 +492,9 @@ public class BattleEffectManager : MonoBehaviour
         // ===============================
         if (targetIndex >= 0)
         {
+            if (BattleManager.Instance.GetFeverInputMode()) //Feverª¬ºA¤£¨ü¶Ë
+                return;
+
             GlobalIndex.CurrentTotalHP = Mathf.Max(
                 0,
                 GlobalIndex.CurrentTotalHP - finalDamage
