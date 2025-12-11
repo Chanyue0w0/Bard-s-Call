@@ -40,9 +40,9 @@ public class TutorialManager : MonoBehaviour
     // 顯示文字標題
     private readonly string[] missionTitles = new string[]
     {
-        "呼叫聖騎士",
-        "呼叫吟遊詩人",
-        "呼叫法師"
+        "使用聖騎士格擋",
+        "使用吟遊詩人回血",
+        "使用法師攻擊"
     };
 
     private int currentMissionIndex = -1;       // -1 表示還沒進入操作教學
@@ -405,8 +405,8 @@ public class TutorialManager : MonoBehaviour
         if (missionHintRoot != null)
             missionHintRoot.SetActive(false);
 
-        if (missionFinishedHintRoot != null)
-            missionFinishedHintRoot.SetActive(true);
+        //if (missionFinishedHintRoot != null)
+            //missionFinishedHintRoot.SetActive(true);
 
         // 之後等玩家長按 Option（InputSystem）呼叫 OnOptionExitTutorial
     }

@@ -114,7 +114,14 @@ public class MonsterInstManager : MonoBehaviour
         Debug.Log($"[MonsterInstManager] 章節 {chapter} - 關卡 {level} - 當前 Stage {stage}");
 
         // 檢查 Stage 上限
-        int maxStage = (level == 1) ? 5 : 4; // Level1打4關、Level2打5關
+        //int maxStage = (level == 1) ? 5 : 4; // Level1打4關、Level2打5關
+        int maxStage = 0; // Level1打4關、Level2打5關
+        if (level == 0)
+            maxStage = 1;
+        else if (level == 1)
+            maxStage = 5;
+        else if (level == 2)
+            maxStage = 4;
 
         // ★ 更新關卡顯示 UI
         if (stageProgressText != null)
@@ -210,7 +217,7 @@ public class MonsterInstManager : MonoBehaviour
                     //teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
                     break;
                 case 3:
-                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = axeGoblinPrefab;
+                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
                     teamManager.EnemyTeamInfo[1].PrefabToSpawn = mageGoblinPrefab;
                     break;
                 case 4:
@@ -219,7 +226,6 @@ public class MonsterInstManager : MonoBehaviour
                     teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
                     break;
                 case 5:
-                    teamManager.EnemyTeamInfo[0].PrefabToSpawn = shieldGoblinPrefab;
                     teamManager.EnemyTeamInfo[2].PrefabToSpawn = poisonFrogPrefab;
                     break;
             }
@@ -243,7 +249,6 @@ public class MonsterInstManager : MonoBehaviour
                 case 4:
                     teamManager.EnemyTeamInfo[0].PrefabToSpawn = orcPrefab;
                     teamManager.EnemyTeamInfo[1].PrefabToSpawn = mageGoblinPrefab;
-                    teamManager.EnemyTeamInfo[2].PrefabToSpawn = mageGoblinPrefab;
                     break;
                 //case 5:
                 //    teamManager.EnemyTeamInfo[0].PrefabToSpawn = orcPrefab;
