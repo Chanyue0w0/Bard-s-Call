@@ -270,7 +270,7 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639009867633077593
+  lastModified: 639010479772745640
   FileSizes:
   - Name: Desktop
     Value: 2212
@@ -351,12 +351,12 @@ MonoBehaviour:
   Banks:
   - {fileID: 6828801144302610801}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 2000
+  Length: 1251
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,7 +399,7 @@ MonoBehaviour:
   - {fileID: 6828801144302610801}
   StringsBanks:
   - {fileID: -2384467188881039204}
-  cacheTime: 639009867633077593
+  cacheTime: 639010480044886415
   cacheVersion: 131621
 --- !u!114 &159013605488410174
 MonoBehaviour:
@@ -507,7 +507,7 @@ MonoBehaviour:
   - {fileID: 4444257825030528466}
   MinDistance: 1
   MaxDistance: 20
-  Length: 18841
+  Length: 19200
 --- !u!114 &2274858875765797329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -784,8 +784,8 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639009867632979274
+  lastModified: 639010480044886415
   FileSizes:
   - Name: Desktop
-    Value: 7977600
+    Value: 8719392
   Exists: 1
