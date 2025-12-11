@@ -23565,7 +23565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d6642efe88c5c4da476a83f353b003, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentFever: 99
+  currentFever: 0
   feverMax: 100
   gainPerPerfect: 1.12
   bonusPerBar: 0.5
@@ -74434,6 +74434,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5556979487578799221, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6273309060401677726, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
+      propertyPath: m_Value
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6589332616997081744, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
