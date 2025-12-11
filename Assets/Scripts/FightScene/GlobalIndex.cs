@@ -27,6 +27,7 @@ public class GlobalIndex : MonoBehaviour
 
     public static float TotalBattleTime = 0f; // 本場戰鬥累積秒數
     public static int MaxCombo = 0;           // 玩家最高連擊數
+    public static int MaxFeverCombo = 0;           // 玩家最高Fever連擊數
 
     public static bool GameOver = false;           // 遊戲是否結束
     public static bool isTutorial = false;           // 遊戲是否正在教學

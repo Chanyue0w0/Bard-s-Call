@@ -1411,6 +1411,7 @@ public class BattleManager : MonoBehaviour
         GlobalIndex.CurrentStageIndex = 0;
         GlobalIndex.TotalBattleTime = 0;
         GlobalIndex.MaxCombo = 0;
+        GlobalIndex.MaxFeverCombo = 0;
 
         GlobalIndex.GameOver = false;
         GlobalIndex.isTutorial = false;
@@ -1463,7 +1464,7 @@ public class BattleManager : MonoBehaviour
             summaryTimeText.text = $"通關時間 {GlobalIndex.TotalBattleTime:F1} 秒";
 
         if (summaryComboText != null)
-            summaryComboText.text = $"最高連擊數 {GlobalIndex.MaxCombo} Combo";
+            summaryComboText.text = $"最高Fever連擊數 {GlobalIndex.MaxFeverCombo} Combo";
 
         GlobalIndex.GameOver = true;//遊戲結束
 
@@ -1504,6 +1505,7 @@ public class BattleManager : MonoBehaviour
         GlobalIndex.CurrentStageIndex = 0;
         GlobalIndex.TotalBattleTime = 0;
         GlobalIndex.MaxCombo = 0;
+        GlobalIndex.MaxFeverCombo = 0;
         GlobalIndex.GameOver = false;
         GlobalIndex.isTutorial = false;
         GlobalIndex.isTutorialPanelOpened = false;
@@ -1531,6 +1533,7 @@ public class BattleManager : MonoBehaviour
         GlobalIndex.CurrentStageIndex = 0;
         GlobalIndex.TotalBattleTime = 0;
         GlobalIndex.MaxCombo = 0;
+        GlobalIndex.MaxFeverCombo = 0;
         GlobalIndex.GameOver = false;
         GlobalIndex.isTutorial = false;
         GlobalIndex.isTutorialPanelOpened = false;
