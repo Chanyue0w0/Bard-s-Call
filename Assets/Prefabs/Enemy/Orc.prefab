@@ -336,12 +336,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterName: Orc
   ClassType: 6
-  MaxHP: 1200
-  HP: 1200
+  MaxHP: 800
+  HP: 800
   MaxMP: 0
   MP: 0
-  OriginAtk: 100
-  Atk: 100
+  OriginAtk: 60
+  Atk: 60
   NormalAttacks: []
   HeavyAttack:
     SkillName: 
