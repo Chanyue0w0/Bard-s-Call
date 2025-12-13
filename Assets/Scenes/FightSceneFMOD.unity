@@ -3753,7 +3753,6 @@ GameObject:
   - component: {fileID: 762947547}
   - component: {fileID: 762947548}
   - component: {fileID: 762947549}
-  - component: {fileID: 762947550}
   m_Layer: 0
   m_Name: B Button
   m_TagString: Untagged
@@ -3771,7 +3770,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.2, y: 2.48, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2026558225}
@@ -3817,7 +3816,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -966832563, guid: d4638eb75c55a004bb15f14fb3b0573e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 249456f058e16ab4aa36b1a5c6ac6134, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.7490196}
   m_FlipX: 0
   m_FlipY: 0
@@ -3840,24 +3839,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseScale: {x: 0.2, y: 0.2, z: 0.2}
+  baseScale: {x: 0.4, y: 0.4, z: 0.4}
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
---- !u!114 &762947550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 762947546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474ca66447f10da438db6e38eb532a6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifeTime: 10
-  useUnscaledTime: 0
 --- !u!1 &788886713
 GameObject:
   m_ObjectHideFlags: 0
@@ -5664,7 +5649,6 @@ GameObject:
   - component: {fileID: 1183916858}
   - component: {fileID: 1183916859}
   - component: {fileID: 1183916860}
-  - component: {fileID: 1183916861}
   m_Layer: 0
   m_Name: X Button
   m_TagString: Untagged
@@ -5682,7 +5666,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 2.48, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 683276622}
@@ -5728,7 +5712,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1489365111, guid: d4638eb75c55a004bb15f14fb3b0573e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6cfbda372b0005f42beab66043e17c0b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.7490196}
   m_FlipX: 0
   m_FlipY: 0
@@ -5751,24 +5735,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseScale: {x: 0.2, y: 0.2, z: 0.2}
+  baseScale: {x: 0.4, y: 0.4, z: 0.4}
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
---- !u!114 &1183916861
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1183916857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474ca66447f10da438db6e38eb532a6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifeTime: 10
-  useUnscaledTime: 0
 --- !u!1 &1214683033
 GameObject:
   m_ObjectHideFlags: 0
@@ -8374,7 +8344,6 @@ GameObject:
   - component: {fileID: 1779930175}
   - component: {fileID: 1779930176}
   - component: {fileID: 1779930177}
-  - component: {fileID: 1779930178}
   m_Layer: 0
   m_Name: Y Button
   m_TagString: Untagged
@@ -8392,7 +8361,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 2.48, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1710813560}
@@ -8438,7 +8407,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 245532618, guid: d4638eb75c55a004bb15f14fb3b0573e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e6f8a7f3c9e6fd64ba38d4c29495f735, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.7490196}
   m_FlipX: 0
   m_FlipY: 0
@@ -8461,24 +8430,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b86faeb4c153e4d9f1fc81bbd51011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseScale: {x: 0.2, y: 0.2, z: 0.2}
+  baseScale: {x: 0.4, y: 0.4, z: 0.4}
   peakMultiplier: 1.2
   holdDuration: 0.05
   returnSpeed: 8
---- !u!114 &1779930178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1779930174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474ca66447f10da438db6e38eb532a6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifeTime: 10
-  useUnscaledTime: 0
 --- !u!1001 &1788309125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8818,6 +8773,10 @@ MonoBehaviour:
   - {fileID: 1239045379}
   - {fileID: 1615267832}
   patternBackGroundPanel: {fileID: 1156506907}
+  buttonHintShow:
+  - {fileID: 1183916857}
+  - {fileID: 1779930174}
+  - {fileID: 762947546}
   missionHintRoot: {fileID: 1569561209}
   missionHintText: {fileID: 935212011}
   missionCompleteEffectPrefab: {fileID: 7847649155168037335, guid: fa825aa93037c4e4dbaa62dc6540300a, type: 3}
@@ -10341,15 +10300,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1820610915870613329, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
       propertyPath: baseScale.x
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1820610915870613329, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
       propertyPath: baseScale.y
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1820610915870613329, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
       propertyPath: baseScale.z
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2108316202681953875, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
       propertyPath: m_Pivot.x
@@ -10453,15 +10412,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4216222550527761841, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4216222550527761841, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4216222550527761841, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4216222550527761841, guid: 8eaf13da575f259438a19d2a85fb526e, type: 3}
       propertyPath: m_AnchoredPosition.y

@@ -17,6 +17,9 @@ public class TutorialManager : MonoBehaviour
     public GameObject[] patternPanels;
     public GameObject patternBackGroundPanel;
 
+
+    public GameObject[] buttonHintShow;
+
     private int currentPatternIndex = 0;
     private bool patternPhaseFinished = false;
 
@@ -118,12 +121,18 @@ public class TutorialManager : MonoBehaviour
 
     private void Start()
     {
-        if(GlobalIndex.isTutorial && GlobalIndex.CurrentChapterIndex == 1 && GlobalIndex.CurrentLevelIndex == 0 && GlobalIndex.CurrentStageIndex == 0)
+        for (int i = 0; i < buttonHintShow.Length; i++)
+        {
+            if (buttonHintShow[i] != null)
+                buttonHintShow[i].SetActive(false);
+        }
+
+        if (GlobalIndex.isTutorial && GlobalIndex.CurrentChapterIndex == 1 && GlobalIndex.CurrentLevelIndex == 0 && GlobalIndex.CurrentStageIndex == 0)
         {
             InitTutorial();
             //UpdateCloseButtonVisibility();
         }
-
+        
     }
 
     private void InitTutorial()
@@ -140,6 +149,12 @@ public class TutorialManager : MonoBehaviour
             }
             currentPatternIndex = 0;
             patternPhaseFinished = false;
+        }
+
+        for (int i = 0; i < buttonHintShow.Length; i++)
+        {
+            if (buttonHintShow[i] != null)
+                buttonHintShow[i].SetActive(true);
         }
 
         patternBackGroundPanel.SetActive(true);
