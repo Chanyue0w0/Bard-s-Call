@@ -4009,6 +4009,28 @@ MonoBehaviour:
   snapClip: {fileID: 8300000, guid: 277c65c02fc66854aacf73eba0b3f340, type: 3}
   comboText: {fileID: 1914947629}
   comboResetTime: 3
+--- !u!114 &817213385 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2701763959415225630, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+  m_PrefabInstance: {fileID: 1645541350597723057}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d961d6e21986844ac4d5f0af6bd72a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &817213387 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+  m_PrefabInstance: {fileID: 1645541350597723057}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5268661f352c40b48a441c646753e826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &827559798
 GameObject:
   m_ObjectHideFlags: 0
@@ -6433,6 +6455,9 @@ MonoBehaviour:
     NormalAttackNames: []
     NormalAttackPrefabs: []
     AssignedKeyIndex: 0
+  bossData: {fileID: 817213385}
+  bossAnimator: {fileID: 817213387}
+  bossNormalAttackIndex: 0
   actionAttackP1: {fileID: 2043867421210978648, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionAttackP2: {fileID: -8060893466954798792, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionAttackP3: {fileID: 8643363546054971998, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
@@ -10279,13 +10304,17 @@ PrefabInstance:
       propertyPath: clips.Array.data[3].frames.Array.data[6].beatLength
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 2701763959415225630, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: normalAttacks.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3396663125325857987, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.62
+      value: -2.11
       objectReference: {fileID: 0}
     - target: {fileID: 3396663125325857987, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.25
+      value: -0.34
       objectReference: {fileID: 0}
     - target: {fileID: 3396663125325857987, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: m_LocalPosition.z

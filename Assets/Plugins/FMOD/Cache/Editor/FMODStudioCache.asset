@@ -297,7 +297,7 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639209213349757089
+  lastModified: 639209216972526877
   FileSizes:
   - Name: Desktop
     Value: 2258
@@ -427,7 +427,7 @@ MonoBehaviour:
   - {fileID: 6828801144302610801}
   StringsBanks:
   - {fileID: -2384467188881039204}
-  cacheTime: 639209213349757089
+  cacheTime: 639209216972526877
   cacheVersion: 131621
 --- !u!114 &159013605488410174
 MonoBehaviour:
@@ -812,7 +812,7 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639209213349726881
+  lastModified: 639209216972506904
   FileSizes:
   - Name: Desktop
     Value: 10356608

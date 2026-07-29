@@ -73,6 +73,22 @@ public class BattleManager : MonoBehaviour
     [Header("敵方三格資料")]
     public TeamSlotInfo[] EnemyTeamInfo = new TeamSlotInfo[3];  // ★ 改名避免 enum 衝突
 
+    [Header("魔王操作資料")]
+    [SerializeField] private BossData bossData;
+
+    [SerializeField] private BeatSpriteAnimator bossAnimator;
+
+    [Header("魔王普通攻擊連段狀態")]
+    [SerializeField] private int bossNormalAttackIndex = 0;
+    private readonly string[] bossNormalAttackClipNames =
+    {
+        "NormalAttack1",
+        "NormalAttack2",
+        "NormalAttack3",
+        "NormalAttack4"
+    };
+
+
     [Header("輸入（新 Input System）")]
     public InputActionReference actionAttackP1;
     public InputActionReference actionAttackP2;
@@ -177,6 +193,14 @@ public class BattleManager : MonoBehaviour
             CTeamInfo = new TeamSlotInfo[3];
         if (EnemyTeamInfo == null || EnemyTeamInfo.Length == 0)
             EnemyTeamInfo = new TeamSlotInfo[3];
+        
+        // 魔王動畫元件沒有另外指定時，
+        // 嘗試從 BossData 所在角色中尋找。
+        if (bossData != null && bossAnimator == null)
+        {
+            bossAnimator =
+                bossData.GetComponentInChildren<BeatSpriteAnimator>();
+        }
     }
 
     private void OnEnable()
@@ -735,7 +759,15 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
+        // 一般戰鬥中，OnAttackKey(0) 改為魔王普通攻擊。
+        if (index == 0)
+        {
+            HandleBossNormalAttackInput();
+            return;
+        }
 
+        // 以下保留原本勇者操作程式。
+        // 現階段 OnAttackKey(1)、OnAttackKey(2) 還會走舊流程。
         if (_isActionLocked) return;
         if (index < 0 || index >= CTeamInfo.Length) return;
         if (CTeamInfo[index] == null) return;
@@ -861,6 +893,128 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(beatSec);
 
         vfx.SetActive(false);
+    }
+
+    private void HandleBossNormalAttackInput()
+    {
+        // ============================================================
+        // 1. 確認魔王資料與動畫元件
+        // ============================================================
+        if (bossData == null)
+        {
+            Debug.LogWarning("[BattleManager] 尚未指定 BossData。");
+            return;
+        }
+
+        if (bossAnimator == null)
+        {
+            bossAnimator =
+                bossData.GetComponentInChildren<BeatSpriteAnimator>();
+
+            if (bossAnimator == null)
+            {
+                Debug.LogWarning(
+                    "[BattleManager] 魔王物件中找不到 BeatSpriteAnimator。"
+                );
+                return;
+            }
+        }
+
+        // ============================================================
+        // 2. 取得 FMOD 節拍判定
+        // ============================================================
+        FMODBeatListener2 listener = FMODBeatListener2.Instance;
+
+        if (listener == null)
+        {
+            Debug.LogWarning(
+                "[BattleManager] FMODBeatListener2 尚未初始化。"
+            );
+            return;
+        }
+
+        bool hit = listener.IsOnBeat(
+            out FMODBeatListener2.Judge judge,
+            out int nearestBeatIndex,
+            out float deltaSec
+        );
+
+        bool isPerfect =
+            hit &&
+            judge == FMODBeatListener2.Judge.Perfect;
+
+        // ============================================================
+        // 3. Miss：不播放攻擊，連段回到第一段
+        // ============================================================
+        if (!isPerfect)
+        {
+            bossNormalAttackIndex = 0;
+
+            Debug.Log(
+                "[Boss] 普通攻擊 Miss，下一次從第 1 段開始。"
+            );
+
+            return;
+        }
+
+        // ============================================================
+        // 4. 決定目前可使用的普通攻擊段數
+        // ============================================================
+        int usableAttackCount = Mathf.Clamp(
+            bossData.unlockedNormalAttackCount,
+            1,
+            bossNormalAttackClipNames.Length
+        );
+
+        // 防止 Index 因 Inspector 或執行時修改而超出範圍
+        if (bossNormalAttackIndex < 0 ||
+            bossNormalAttackIndex >= usableAttackCount)
+        {
+            bossNormalAttackIndex = 0;
+        }
+
+        // ============================================================
+        // 5. 取得目前段數的動畫名稱
+        // ============================================================
+        string attackClipName =
+            bossNormalAttackClipNames[bossNormalAttackIndex];
+
+        int currentAttackStage =
+            bossNormalAttackIndex + 1;
+
+        // ============================================================
+        // 6. 播放 BeatSpriteAnimator 動畫
+        // ============================================================
+        bossAnimator.Play(
+            attackClipName,
+            true
+        );
+
+        // BeatSpriteAnimator 找不到名稱時，Play() 會直接返回。
+        // 播放後確認目前 Clip 是否真的切換成功。
+        if (bossAnimator.GetCurrentClipName() != attackClipName)
+        {
+            Debug.LogError(
+                $"[BattleManager] BeatSpriteAnimator 找不到動畫 Clip：{attackClipName}"
+            );
+
+            bossNormalAttackIndex = 0;
+            return;
+        }
+
+        Debug.Log(
+            $"[Boss] Perfect！播放普通攻擊第 {currentAttackStage} 段：{attackClipName}"
+        );
+
+        // ============================================================
+        // 7. 推進到下一段
+        // ============================================================
+        bossNormalAttackIndex++;
+
+        if (bossNormalAttackIndex >= usableAttackCount)
+        {
+            bossNormalAttackIndex = 0;
+        }
     }
 
     private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle,int beatsPerMeasure, bool perfect)
