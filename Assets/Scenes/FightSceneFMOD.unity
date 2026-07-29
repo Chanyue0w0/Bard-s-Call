@@ -7955,11 +7955,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicEvent:
     Guid:
-      Data1: 674071543
-      Data2: 1148673503
-      Data3: 1045085628
-      Data4: -886273377
-    Path: event:/Combat soundtracks/Combat 01
+      Data1: -828298974
+      Data2: 1313164958
+      Data3: -1883781964
+      Data4: 1275469654
+    Path: event:/Combat soundtracks/JohnWeak_Track01
   perfectSFX:
     Guid:
       Data1: 950292341

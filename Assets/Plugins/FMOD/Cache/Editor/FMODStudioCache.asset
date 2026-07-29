@@ -1,5 +1,32 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9178534774717084848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Combat soundtracks/JohnWeak_Track01
+  m_EditorClassIdentifier: 
+  Path: event:/Combat soundtracks/JohnWeak_Track01
+  Guid:
+    Data1: -828298974
+    Data2: 1313164958
+    Data3: -1883781964
+    Data4: 1275469654
+  Banks:
+  - {fileID: 6828801144302610801}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 123216
 --- !u!114 &-9042979533456799273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,10 +297,10 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639010430620000000
+  lastModified: 639209213349757089
   FileSizes:
   - Name: Desktop
-    Value: 2212
+    Value: 2258
   Exists: 1
 --- !u!114 &-2053334069037838640
 MonoBehaviour:
@@ -390,6 +417,7 @@ MonoBehaviour:
   - {fileID: 159013605488410174}
   - {fileID: 1865111798421919596}
   - {fileID: 2274858875765797329}
+  - {fileID: -9178534774717084848}
   EditorParameters:
   - {fileID: -9042979533456799273}
   - {fileID: -6458779747416126282}
@@ -399,7 +427,7 @@ MonoBehaviour:
   - {fileID: 6828801144302610801}
   StringsBanks:
   - {fileID: -2384467188881039204}
-  cacheTime: 639010430620000000
+  cacheTime: 639209213349757089
   cacheVersion: 131621
 --- !u!114 &159013605488410174
 MonoBehaviour:
@@ -784,8 +812,8 @@ MonoBehaviour:
   Path: ProjectFMOD/FightSceneTest/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639010430620000000
+  lastModified: 639209213349726881
   FileSizes:
   - Name: Desktop
-    Value: 8719392
+    Value: 10356608
   Exists: 1
