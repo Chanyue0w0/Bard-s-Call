@@ -4795,7 +4795,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -228, y: 236}
+  m_AnchoredPosition: {x: -359, y: 273}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &907776511
@@ -10821,7 +10821,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2701763959415225630, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: normalAttackVfxOffsets.Array.data[1].x
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2701763959415225630, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: normalAttackVfxOffsets.Array.data[2].x
@@ -10845,7 +10845,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3396663125325857987, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.0083
+      value: -3.32
       objectReference: {fileID: 0}
     - target: {fileID: 3396663125325857987, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: m_LocalPosition.y
