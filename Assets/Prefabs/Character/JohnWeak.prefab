@@ -154,7 +154,7 @@ MonoBehaviour:
     - sprite: {fileID: 21300000, guid: c952a455e9314a04ba294cbc8d9f99af, type: 3}
       beatLength: 0.3
       triggerWarning: 0
-      triggerAttack: 0
+      triggerAttack: 1
       triggerOnce: 0
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 79f5075cded49e6488a431c5e64544fb, type: 3}
@@ -200,7 +200,7 @@ MonoBehaviour:
     - sprite: {fileID: 21300000, guid: 15b7f0ca3b58101448cf2d2175054555, type: 3}
       beatLength: 0.3
       triggerWarning: 0
-      triggerAttack: 0
+      triggerAttack: 1
       triggerOnce: 0
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: a14a1ab040aa2a54eb6ea30f2ba5baa8, type: 3}
@@ -234,7 +234,7 @@ MonoBehaviour:
     - sprite: {fileID: 21300000, guid: d56c9fbb864b5d24380f1e89a100cdeb, type: 3}
       beatLength: 0.3
       triggerWarning: 0
-      triggerAttack: 0
+      triggerAttack: 1
       triggerOnce: 0
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 4d346ad28497e36439db7dc0924f8122, type: 3}
@@ -306,13 +306,13 @@ MonoBehaviour:
       triggerOnce: 0
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 4323674c46dc7554fba95279a0cd219e, type: 3}
-      beatLength: 0.8
+      beatLength: 0.2
       triggerWarning: 0
-      triggerAttack: 0
+      triggerAttack: 1
       triggerOnce: 0
       hasTriggered: 0
     - sprite: {fileID: 21300000, guid: 7b4971dd35fa9a944b4949bc0cd198d7, type: 3}
-      beatLength: 0.1
+      beatLength: 0.6
       triggerWarning: 0
       triggerAttack: 0
       triggerOnce: 0
