@@ -673,8 +673,7 @@ public class BattleManager : MonoBehaviour
             bossNormalAttackIndex = 0;
         }
     }
-    private void HandleBossNormalAttackHit(
-    string attackClipName)
+    private void HandleBossNormalAttackHit(string attackClipName)
     {
         // ============================================================
         // 1. 確認是否存在待處理攻擊
@@ -781,6 +780,44 @@ public class BattleManager : MonoBehaviour
             $"Combo={comboCount}，" +
             $"增加={addedScore}，" +
             $"總分={ScoreManager.Instance.CurrentScore}"
+        );
+    }
+    private void SpawnBossNormalAttackVfx(string attackClipName)
+    {
+        // NormalAttack1 → 0
+        // NormalAttack2 → 1
+        // NormalAttack3 → 2
+        // NormalAttack4 → 3
+        int attackIndex =
+            System.Array.IndexOf(
+                bossNormalAttackClipNames,
+                attackClipName
+            );
+
+        int vfxIndex =
+            bossData.normalAttackVfxIndex[
+                attackIndex
+            ];
+
+        GameObject vfxPrefab =
+            bossData.normalAttackVfxPrefabs[
+                vfxIndex
+            ];
+
+        Vector3 vfxOffset =
+            bossData.normalAttackVfxOffsets[
+                vfxIndex
+            ];
+
+        Vector3 spawnPosition =
+            bossData.transform.TransformPoint(
+                vfxOffset
+            );
+
+        Instantiate(
+            vfxPrefab,
+            spawnPosition,
+            bossData.transform.rotation
         );
     }
     private void HandleBossBlockInput()
@@ -1025,7 +1062,13 @@ public class BattleManager : MonoBehaviour
                 $"[Boss] 普通攻擊命中時機：{currentClipName}"
             );
 
-            HandleBossNormalAttackHit(currentClipName);
+            SpawnBossNormalAttackVfx(
+                currentClipName
+            );
+
+            HandleBossNormalAttackHit(
+                currentClipName
+            );
 
             return;
         }
