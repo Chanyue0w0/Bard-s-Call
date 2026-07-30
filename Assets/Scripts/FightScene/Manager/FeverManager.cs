@@ -315,7 +315,7 @@ public class FeverManager : MonoBehaviour
             if (totalQTEComboCount > GlobalIndex.MaxFeverCombo)
                 GlobalIndex.MaxFeverCombo = totalQTEComboCount;
             FeverQTEManager.Instance.EndQTE();
-            BattleManager.Instance.HandleBardFeverDamage(totalQTEComboCount);
+            //BattleManager.Instance.HandleBardFeverDamage(totalQTEComboCount);
             //OnFever25Beat?.Invoke(totalQTEComboCount); //通知訂閱此的BardFeverController
         }
 
