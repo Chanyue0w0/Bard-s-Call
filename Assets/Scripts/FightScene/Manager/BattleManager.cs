@@ -1136,9 +1136,6 @@ public class BattleManager : MonoBehaviour
     }
     private void HandleBossBlockInput()
     {
-        // ----------------------------------------
-        // 1. 確認資料
-        // ----------------------------------------
         if (bossData == null)
             return;
 
@@ -1151,10 +1148,9 @@ public class BattleManager : MonoBehaviour
                 return;
         }
 
-        // ----------------------------------------
-        // 2. 判定節拍
-        // ----------------------------------------
-        var listener = FMODBeatListener2.Instance;
+        FMODBeatListener2 listener =
+            FMODBeatListener2.Instance;
+
         if (listener == null)
             return;
 
@@ -1164,25 +1160,28 @@ public class BattleManager : MonoBehaviour
             out float delta
         );
 
-        if (!hit || judge != FMODBeatListener2.Judge.Perfect)
+        bool isSuccessful =
+            hit &&
+            (
+                judge == FMODBeatListener2.Judge.Perfect ||
+                judge == FMODBeatListener2.Judge.Great
+            );
+
+        if (!isSuccessful)
         {
             Debug.Log("[Boss] Block Miss");
             return;
         }
 
-        // ----------------------------------------
-        // 3. 播放 Block 動畫
-        // ----------------------------------------
         bossAnimator.Play("Block", true);
 
-        Debug.Log("[Boss] Perfect Block");
+        Debug.Log(
+            $"[Boss] {judge} Block"
+        );
     }
 
     private void HandleBossHeavyAttackInput()
     {
-        // ============================================================
-        // 1. 確認魔王資料與動畫元件
-        // ============================================================
         if (bossData == null)
         {
             Debug.LogWarning(
@@ -1205,9 +1204,6 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        // ============================================================
-        // 2. 取得 FMOD 節拍判定
-        // ============================================================
         FMODBeatListener2 listener =
             FMODBeatListener2.Instance;
 
@@ -1225,14 +1221,14 @@ public class BattleManager : MonoBehaviour
             out float deltaSec
         );
 
-        bool isPerfect =
+        bool isSuccessful =
             hit &&
-            judge == FMODBeatListener2.Judge.Perfect;
+            (
+                judge == FMODBeatListener2.Judge.Perfect ||
+                judge == FMODBeatListener2.Judge.Great
+            );
 
-        // ============================================================
-        // 3. Miss：不播放重擊
-        // ============================================================
-        if (!isPerfect)
+        if (!isSuccessful)
         {
             Debug.Log(
                 "[Boss] 重擊 Miss，不播放動畫。"
@@ -1240,17 +1236,14 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        // ============================================================
-        // 4. 播放重擊動畫
-        // ============================================================
-        const string heavyAttackClipName = "HeavyAttack";
+        const string heavyAttackClipName =
+            "HeavyAttack";
 
         bossAnimator.Play(
             heavyAttackClipName,
             true
         );
 
-        // 確認 BeatSpriteAnimator 是否成功切換動畫
         if (bossAnimator.GetCurrentClipName() !=
             heavyAttackClipName)
         {
@@ -1260,11 +1253,10 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        // 重擊會中斷普通攻擊連段
         bossNormalAttackIndex = 0;
 
         Debug.Log(
-            "[Boss] Perfect！播放重擊動畫 HeavyAttack。"
+            $"[Boss] {judge}！播放重擊動畫 HeavyAttack。"
         );
     }
 
