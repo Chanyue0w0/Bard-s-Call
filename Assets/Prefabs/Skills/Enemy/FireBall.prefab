@@ -85,6 +85,7 @@ MonoBehaviour:
   isPerfect: 0
   isHeavyAttack: 0
   damage: 0
+  targetPositionOffset: {x: 0, y: 0, z: 0}
   missTextPrefab: {fileID: 3270388252734509178, guid: 7134e47ec1d1cb1418844e1c6b3d7ed5, type: 3}
   uiCanvas: {fileID: 0}
 --- !u!58 &6222711399343778694
@@ -24322,8 +24323,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.99607843, g: 0.6039216, b: 0.3764706, a: 1}
-  m_Intensity: 0
-  m_Range: 8
+  m_Intensity: 16.554289
+  m_Range: 6.9482293
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
