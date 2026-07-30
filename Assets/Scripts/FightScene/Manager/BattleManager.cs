@@ -785,24 +785,51 @@ public class BattleManager : MonoBehaviour
     }
     private void HandleBossBlockInput()
     {
+        // ============================================================
+        // 1. 確認魔王資料
+        // ============================================================
         if (bossData == null)
+        {
+            Debug.LogWarning(
+                "[BattleManager] 尚未指定 BossData。"
+            );
             return;
+        }
 
+        // ============================================================
+        // 2. 確認魔王動畫元件
+        // ============================================================
         if (bossAnimator == null)
         {
             bossAnimator =
                 bossData.GetComponentInChildren<BeatSpriteAnimator>();
 
             if (bossAnimator == null)
+            {
+                Debug.LogWarning(
+                    "[BattleManager] 魔王物件中找不到 BeatSpriteAnimator。"
+                );
                 return;
+            }
         }
 
+        // ============================================================
+        // 3. 確認節拍判定系統
+        // ============================================================
         FMODBeatListener2 listener =
             FMODBeatListener2.Instance;
 
         if (listener == null)
+        {
+            Debug.LogWarning(
+                "[BattleManager] FMODBeatListener2 尚未初始化。"
+            );
             return;
+        }
 
+        // ============================================================
+        // 4. 執行節拍判定
+        // ============================================================
         bool hit = listener.IsOnBeat(
             out FMODBeatListener2.Judge judge,
             out int beatIndex,
@@ -816,16 +843,75 @@ public class BattleManager : MonoBehaviour
                 judge == FMODBeatListener2.Judge.Great
             );
 
+        // ============================================================
+        // 5. Miss：不播放格擋、不增加分數
+        // ============================================================
         if (!isSuccessful)
         {
-            Debug.Log("[Boss] Block Miss");
+            Debug.Log(
+                "[Boss] Block Miss，不播放格擋動畫，也不增加分數。"
+            );
+
             return;
         }
 
-        bossAnimator.Play("Block", true);
+        // ============================================================
+        // 6. 播放格擋動畫
+        // ============================================================
+        const string blockClipName = "Block";
+
+        bossAnimator.Play(
+            blockClipName,
+            true
+        );
+
+        // 確認動畫是否成功播放
+        if (bossAnimator.GetCurrentClipName() != blockClipName)
+        {
+            Debug.LogError(
+                $"[BattleManager] BeatSpriteAnimator 找不到動畫 Clip：{blockClipName}"
+            );
+
+            return;
+        }
+
+        // ============================================================
+        // 7. 確認分數系統
+        // ============================================================
+        if (ScoreManager.Instance == null)
+        {
+            Debug.LogWarning(
+                "[BattleManager] ScoreManager 尚未初始化，" +
+                "格擋判定成功但無法增加分數。"
+            );
+
+            return;
+        }
+
+        // ============================================================
+        // 8. 取得目前 Combo
+        //
+        // IsOnBeat 成功時已經先將 Combo +1，
+        // 因此這裡取得的 Combo 包含本次格擋。
+        // ============================================================
+        int comboCount =
+            listener.GetComboCount();
+
+        // ============================================================
+        // 9. 呼叫 ScoreManager 增加格擋分數
+        // ============================================================
+        int addedScore =
+            ScoreManager.Instance.AddScore(
+                judge,
+                ScoreManager.ScoreActionType.Block,
+                comboCount
+            );
 
         Debug.Log(
-            $"[Boss] {judge} Block"
+            $"[Boss] {judge} Block 成功，" +
+            $"Combo={comboCount}，" +
+            $"增加分數={addedScore}，" +
+            $"目前總分={ScoreManager.Instance.CurrentScore}"
         );
     }
 
