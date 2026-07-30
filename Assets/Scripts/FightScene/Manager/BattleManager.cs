@@ -431,7 +431,7 @@ public class BattleManager : MonoBehaviour
     #region Fever 技能細節實作
 
     // =============================================
-    // 1. 聖騎士 Fever：全體嘲諷攻擊
+    // 1. 聖騎士 Fever：
     // =============================================
     private IEnumerator HandlePaladinFever(TeamSlotInfo paladin, CharacterData data)
     {
@@ -765,6 +765,11 @@ public class BattleManager : MonoBehaviour
             HandleBossNormalAttackInput();
             return;
         }
+        if (index == 1)
+        {
+            HandleBossBlockInput();
+            return;
+        }
 
         // 以下保留原本勇者操作程式。
         // 現階段 OnAttackKey(1)、OnAttackKey(2) 還會走舊流程。
@@ -1015,6 +1020,50 @@ public class BattleManager : MonoBehaviour
         {
             bossNormalAttackIndex = 0;
         }
+    }
+
+    private void HandleBossBlockInput()
+    {
+        // ----------------------------------------
+        // 1. 確認資料
+        // ----------------------------------------
+        if (bossData == null)
+            return;
+
+        if (bossAnimator == null)
+        {
+            bossAnimator =
+                bossData.GetComponentInChildren<BeatSpriteAnimator>();
+
+            if (bossAnimator == null)
+                return;
+        }
+
+        // ----------------------------------------
+        // 2. 判定節拍
+        // ----------------------------------------
+        var listener = FMODBeatListener2.Instance;
+        if (listener == null)
+            return;
+
+        bool hit = listener.IsOnBeat(
+            out FMODBeatListener2.Judge judge,
+            out int beatIndex,
+            out float delta
+        );
+
+        if (!hit || judge != FMODBeatListener2.Judge.Perfect)
+        {
+            Debug.Log("[Boss] Block Miss");
+            return;
+        }
+
+        // ----------------------------------------
+        // 3. 播放 Block 動畫
+        // ----------------------------------------
+        bossAnimator.Play("Block", true);
+
+        Debug.Log("[Boss] Perfect Block");
     }
 
     private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle,int beatsPerMeasure, bool perfect)

@@ -10174,7 +10174,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: clips.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: clips.Array.data[2].clipName
@@ -10185,11 +10185,19 @@ PrefabInstance:
       value: NormalAttack3
       objectReference: {fileID: 0}
     - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].clipName
+      value: Block
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: clips.Array.data[2].frames.Array.size
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: clips.Array.data[3].frames.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.size
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
@@ -10249,6 +10257,30 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: a14a1ab040aa2a54eb6ea30f2ba5baa8, type: 3}
     - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[0].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b761a0ede3d047b4aa361816fb138f08, type: 3}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[1].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d266c8a968b25c04fa121b11ad6b7c3e, type: 3}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[2].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f91253eb51eac0542811b31e3685a6d3, type: 3}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[3].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: cb5495184f40a4346a41028f43439d31, type: 3}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[4].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 45077831bc891614e81b341ca27edb41, type: 3}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[5].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 45077831bc891614e81b341ca27edb41, type: 3}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: clips.Array.data[2].frames.Array.data[0].beatLength
       value: 0.1
       objectReference: {fileID: 0}
@@ -10304,6 +10336,30 @@ PrefabInstance:
       propertyPath: clips.Array.data[3].frames.Array.data[6].beatLength
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[0].beatLength
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[1].beatLength
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[2].beatLength
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[3].beatLength
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[4].beatLength
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459209280469140500, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: clips.Array.data[4].frames.Array.data[5].beatLength
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 2701763959415225630, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
       propertyPath: normalAttacks.Array.size
       value: 0
@@ -10352,6 +10408,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: JohnWeak
       objectReference: {fileID: 0}
+    - target: {fileID: 4792087951059104652, guid: f3ff1ba44b38fa940a8401bf3862b418, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4bbfe10ab0c70004cb7a47740549f1a8, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
