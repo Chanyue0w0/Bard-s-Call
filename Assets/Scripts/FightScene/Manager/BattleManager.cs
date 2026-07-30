@@ -87,7 +87,10 @@ public class BattleManager : MonoBehaviour
         "NormalAttack3",
         "NormalAttack4"
     };
+    [Header("魔王攻擊待處理資料")]
+    private bool hasPendingBossAttack = false;
 
+    private FMODBeatListener2.Judge pendingBossAttackJudge;
 
     [Header("輸入（新 Input System）")]
     public InputActionReference actionAttackP1;
@@ -970,16 +973,20 @@ public class BattleManager : MonoBehaviour
             out float deltaSec
         );
 
-        bool isPerfect =
-            hit &&
-            judge == FMODBeatListener2.Judge.Perfect;
+        bool isSuccessful =
+        hit &&
+        (
+            judge == FMODBeatListener2.Judge.Perfect ||
+            judge == FMODBeatListener2.Judge.Great
+        );
 
         // ============================================================
         // 3. Miss：不播放攻擊，連段回到第一段
         // ============================================================
-        if (!isPerfect)
+        if (!isSuccessful)
         {
             bossNormalAttackIndex = 0;
+            hasPendingBossAttack = false;
 
             Debug.Log(
                 "[Boss] 普通攻擊 Miss，下一次從第 1 段開始。"
@@ -1033,6 +1040,11 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
+        // 保存這次攻擊的節拍判定，
+        // 等動畫走到 triggerAttack 時再進行得分判定。
+        hasPendingBossAttack = true;
+        pendingBossAttackJudge = judge;
+
         Debug.Log(
             $"[Boss] Perfect！播放普通攻擊第 {currentAttackStage} 段：{attackClipName}"
         );
@@ -1048,6 +1060,80 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private TeamSlotInfo FindFirstHero()
+    {
+        for (int i = 0; i < CTeamInfo.Length; i++)
+        {
+            TeamSlotInfo hero = CTeamInfo[i];
+
+            if (hero == null)
+                continue;
+
+            if (hero.Actor == null)
+                continue;
+
+            return hero;
+        }
+
+        return null;
+    }
+
+    private void HandleBossNormalAttackHit(
+    string attackClipName)
+    {
+        if (!hasPendingBossAttack)
+        {
+            Debug.LogWarning(
+                $"[Boss] {attackClipName} 出現 triggerAttack，" +
+                "但目前沒有待處理的普通攻擊。"
+            );
+
+            return;
+        }
+
+        hasPendingBossAttack = false;
+
+        TeamSlotInfo target = FindFirstHero();
+
+        if (target == null || target.Actor == null)
+        {
+            Debug.Log(
+                $"[Boss] {attackClipName} 找不到首位勇者。"
+            );
+
+            return;
+        }
+
+        HeroCombatState targetState =
+            target.Actor.GetComponent<HeroCombatState>();
+
+        // Component 可能掛在 Actor 的父物件
+        if (targetState == null)
+        {
+            targetState =
+                target.Actor.GetComponentInParent<HeroCombatState>();
+        }
+
+        bool isTargetBlocking =
+            targetState != null &&
+            targetState.IsBlocking;
+
+        if (isTargetBlocking)
+        {
+            Debug.Log(
+                $"[Boss] {attackClipName} 被首位勇者格擋，無法得分。"
+            );
+
+            return;
+        }
+
+        Debug.Log(
+            $"[Boss] {attackClipName} 成功命中首位勇者，" +
+            $"判定={pendingBossAttackJudge}，可以獲得分數。"
+        );
+
+        // 下一步在此呼叫既有的加分方法
+    }
     private void HandleBossBlockInput()
     {
         // ----------------------------------------

@@ -15,8 +15,9 @@ public class FMODBeatListener2 : MonoBehaviour
     [Header("Perfect 音效")]
     public EventReference perfectSFX;
 
-    [Header("Perfect / Miss UI")]
+    [Header("Perfect / Great / Miss UI")]
     public GameObject perfectEffectPrefab;
+    public GameObject greatEffectPrefab;
     public GameObject missTextPrefab;
     public RectTransform beatHitPointUI;
 
@@ -554,6 +555,7 @@ public class FMODBeatListener2 : MonoBehaviour
         Miss,
         Late,
         Early,
+        Great,
         Perfect
     }
 
@@ -624,37 +626,47 @@ public class FMODBeatListener2 : MonoBehaviour
 
         float absDelta = Mathf.Abs(bestDelta);
 
+        // 同一拍重複輸入
+        if (bestIndex == lastJudgedBeatIndex)
+        {
+            result = Judge.Miss;
+
+            SpawnMissText();
+            RegisterBeatResult(false);
+
+            return false;
+        }
+
+        // Perfect
         if (absDelta <= perfectWindow)
         {
-            if (bestIndex == lastJudgedBeatIndex)
-            {
-                // 同拍第二次按 → 視為 Miss，需重置 Combo
-                result = Judge.Miss;
-                RegisterBeatResult(false);   // ★ 必加
-                return false;
-            }
-
             result = Judge.Perfect;
-
             lastJudgedBeatIndex = bestIndex;
 
-            RuntimeManager.PlayOneShot(perfectSFX);
+            if (!perfectSFX.IsNull)
+            {
+                PlayPerfectSFX();
+            }
 
-            // 播放特效與音效
             SpawnPerfectEffect();
-
-            // ★★★ Perfect → Combo 系統
             RegisterBeatResult(true);
 
             return true;
         }
-        else
+
+        // Great
+        result = Judge.Great;
+        lastJudgedBeatIndex = bestIndex;
+
+        if (!perfectSFX.IsNull)
         {
-            SpawnMissText();
-            result = Judge.Miss;
-            RegisterBeatResult(false);
-            return false;
+            PlayPerfectSFX();
         }
+
+        SpawnGreatEffect();
+        RegisterBeatResult(true);
+
+        return true;
     }
 
     private void SpawnPerfectEffect()
@@ -679,6 +691,46 @@ public class FMODBeatListener2 : MonoBehaviour
         }
     }
 
+    private void SpawnGreatEffect()
+    {
+        if (greatEffectPrefab == null)
+            return;
+
+        if (beatHitPointUI == null)
+            return;
+
+        GameObject obj =
+            Instantiate(greatEffectPrefab, beatHitPointUI);
+
+        RectTransform rt =
+            obj.GetComponent<RectTransform>();
+
+        if (rt != null)
+        {
+            rt.anchorMin =
+                beatHitPointUI.anchorMin;
+
+            rt.anchorMax =
+                beatHitPointUI.anchorMax;
+
+            rt.anchoredPosition =
+                Vector2.zero;
+
+            rt.localScale =
+                Vector3.one;
+        }
+        else
+        {
+            obj.transform.localPosition =
+                Vector3.zero;
+
+            obj.transform.localRotation =
+                Quaternion.identity;
+
+            obj.transform.localScale =
+                Vector3.one;
+        }
+    }
     private void SpawnMissText()
     {
         if (missTextPrefab == null || beatHitPointUI == null)
@@ -702,29 +754,32 @@ public class FMODBeatListener2 : MonoBehaviour
     // ============================================================
     // Combo 系統（沿用 BeatJudge 行為）
     // ============================================================
-    private void RegisterBeatResult(bool isPerfect)
+    private void RegisterBeatResult(bool isSuccess)
     {
-        if (isPerfect)
+        if (isSuccess)
         {
-            // ★★★ Fever 累加在這裡 ★★★
             FeverManager.Instance?.AddPerfect();
 
             comboCount++;
             lastHitTime = Time.time;
             UpdateComboUI();
 
-            // ★ 更新最大連擊
             if (comboCount > GlobalIndex.MaxCombo)
+            {
                 GlobalIndex.MaxCombo = comboCount;
+            }
 
             if (comboTimerCoroutine != null)
+            {
                 StopCoroutine(comboTimerCoroutine);
+            }
 
-            comboTimerCoroutine = StartCoroutine(ComboTimeout());
+            comboTimerCoroutine =
+                StartCoroutine(ComboTimeout());
         }
         else
         {
-            FeverManager.Instance?.AddMiss(); // ★ 保持 Fever 行為一致
+            FeverManager.Instance?.AddMiss();
             ResetCombo();
         }
     }

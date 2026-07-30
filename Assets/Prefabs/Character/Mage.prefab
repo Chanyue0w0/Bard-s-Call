@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 767516820050819641}
   - component: {fileID: 9163207940900645416}
   - component: {fileID: 2249195658242142326}
+  - component: {fileID: 4625117931595983509}
   m_Layer: 7
   m_Name: Mage
   m_TagString: Hero
@@ -351,6 +352,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 767516820050819641}
+--- !u!114 &4625117931595983509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8859153221285552973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08adcdbf9b7a3ff49b698fa21d9725c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBlocking: 0
 --- !u!1001 &747358080466750173
 PrefabInstance:
   m_ObjectHideFlags: 0
