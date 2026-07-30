@@ -91,7 +91,9 @@ public class FMODBeatListener2 : MonoBehaviour
     private float lastHitTime = 0f;
     [SerializeField] private float comboResetTime = 3f;
 
-    [SerializeField] private UnityEngine.UI.Text comboText;   // 若有 UI 顯示，可拖進來
+    [Header("Score / Combo Legacy UI")]
+    [SerializeField] private UnityEngine.UI.Text totalScoreText;
+    [SerializeField] private UnityEngine.UI.Text comboText;
     private Coroutine comboTimerCoroutine;
 
 
@@ -138,8 +140,41 @@ public class FMODBeatListener2 : MonoBehaviour
         public int timeSigUpper;
         public int timeSigLower;
     }
-    
 
+
+    private void OnEnable()
+    {
+        TrySubscribeScoreManager();
+    }
+    private void TrySubscribeScoreManager()
+    {
+        if (ScoreManager.Instance == null)
+            return;
+
+        ScoreManager.Instance.OnScoreChanged -=
+            HandleScoreChanged;
+
+        ScoreManager.Instance.OnScoreChanged +=
+            HandleScoreChanged;
+    }
+
+    private void HandleScoreChanged(int newScore)
+    {
+        if (totalScoreText == null)
+            return;
+
+        totalScoreText.text =
+            $"{newScore:N0}";
+    }
+
+    private void OnDisable()
+    {
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.OnScoreChanged -=
+                HandleScoreChanged;
+        }
+    }
     // ================================
     // Life Cycle
     // ================================
@@ -158,10 +193,19 @@ public class FMODBeatListener2 : MonoBehaviour
     {
         InitializeFMOD();
 
+        TrySubscribeScoreManager();
+
+        UpdateComboUI();
+        UpdateTotalScoreUI();
+
         if (musicStartDelay > 0f)
+        {
             Invoke(nameof(StartMusic), musicStartDelay);
+        }
         else
+        {
             StartMusic();
+        }
     }
 
     private void StartMusic()
@@ -800,12 +844,31 @@ public class FMODBeatListener2 : MonoBehaviour
 
     private void UpdateComboUI()
     {
-        Debug.Log($"UpdateComboUI / comboCount = {comboCount} / comboText is null? {comboText == null}");
+        if (comboText == null)
+            return;
 
-        if (comboText == null) return;
-        comboText.text = comboCount > 0 ? comboCount.ToString() : "";
+        comboText.text =
+            comboCount > 0
+                ? $"x {comboCount}"
+                : "";
     }
 
+    private void UpdateTotalScoreUI()
+    {
+        if (totalScoreText == null)
+            return;
+
+        int totalScore = 0;
+
+        if (ScoreManager.Instance != null)
+        {
+            totalScore =
+                ScoreManager.Instance.CurrentScore;
+        }
+
+        totalScoreText.text =
+            $"{totalScore:N0}";
+    }
 
     public int GetComboCount()
     {
