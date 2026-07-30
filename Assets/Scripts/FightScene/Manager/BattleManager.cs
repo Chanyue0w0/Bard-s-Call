@@ -771,6 +771,11 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
+        if (index == 2)
+        {
+            HandleBossHeavyAttackInput();
+            return;
+        }
         // 以下保留原本勇者操作程式。
         // 現階段 OnAttackKey(1)、OnAttackKey(2) 還會走舊流程。
         if (_isActionLocked) return;
@@ -1064,6 +1069,96 @@ public class BattleManager : MonoBehaviour
         bossAnimator.Play("Block", true);
 
         Debug.Log("[Boss] Perfect Block");
+    }
+
+    private void HandleBossHeavyAttackInput()
+    {
+        // ============================================================
+        // 1. 確認魔王資料與動畫元件
+        // ============================================================
+        if (bossData == null)
+        {
+            Debug.LogWarning(
+                "[BattleManager] 尚未指定 BossData。"
+            );
+            return;
+        }
+
+        if (bossAnimator == null)
+        {
+            bossAnimator =
+                bossData.GetComponentInChildren<BeatSpriteAnimator>();
+
+            if (bossAnimator == null)
+            {
+                Debug.LogWarning(
+                    "[BattleManager] 魔王物件中找不到 BeatSpriteAnimator。"
+                );
+                return;
+            }
+        }
+
+        // ============================================================
+        // 2. 取得 FMOD 節拍判定
+        // ============================================================
+        FMODBeatListener2 listener =
+            FMODBeatListener2.Instance;
+
+        if (listener == null)
+        {
+            Debug.LogWarning(
+                "[BattleManager] FMODBeatListener2 尚未初始化。"
+            );
+            return;
+        }
+
+        bool hit = listener.IsOnBeat(
+            out FMODBeatListener2.Judge judge,
+            out int nearestBeatIndex,
+            out float deltaSec
+        );
+
+        bool isPerfect =
+            hit &&
+            judge == FMODBeatListener2.Judge.Perfect;
+
+        // ============================================================
+        // 3. Miss：不播放重擊
+        // ============================================================
+        if (!isPerfect)
+        {
+            Debug.Log(
+                "[Boss] 重擊 Miss，不播放動畫。"
+            );
+            return;
+        }
+
+        // ============================================================
+        // 4. 播放重擊動畫
+        // ============================================================
+        const string heavyAttackClipName = "HeavyAttack";
+
+        bossAnimator.Play(
+            heavyAttackClipName,
+            true
+        );
+
+        // 確認 BeatSpriteAnimator 是否成功切換動畫
+        if (bossAnimator.GetCurrentClipName() !=
+            heavyAttackClipName)
+        {
+            Debug.LogError(
+                $"[BattleManager] BeatSpriteAnimator 找不到動畫 Clip：{heavyAttackClipName}"
+            );
+            return;
+        }
+
+        // 重擊會中斷普通攻擊連段
+        bossNormalAttackIndex = 0;
+
+        Debug.Log(
+            "[Boss] Perfect！播放重擊動畫 HeavyAttack。"
+        );
     }
 
     private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle,int beatsPerMeasure, bool perfect)

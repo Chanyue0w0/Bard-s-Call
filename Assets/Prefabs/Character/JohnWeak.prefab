@@ -165,6 +165,160 @@ MonoBehaviour:
       hasTriggered: 0
     loop: 0
     holdLastFrame: 0
+  - clipName: NormalAttack2
+    frames:
+    - sprite: {fileID: 21300000, guid: 21cd6f4632bdbc642b0e8f352fd68c36, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 305da61586a0dd64882eb6887668dfbb, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 294b3e1a05eb0654697c9b876b8a701a, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: c5582bf3c6556be45b329b686bf36d68, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 283fddd686ca9cd438b276321f549e7d, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 15b7f0ca3b58101448cf2d2175054555, type: 3}
+      beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: a14a1ab040aa2a54eb6ea30f2ba5baa8, type: 3}
+      beatLength: 0.2
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 0
+    holdLastFrame: 0
+  - clipName: NormalAttack3
+    frames:
+    - sprite: {fileID: 21300000, guid: 7d0513ab188ddd948b39ed138556b55a, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 6de896c895adf3e42a8717df889590a5, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: b6395fdf73187624a8a2918858dd55ff, type: 3}
+      beatLength: 0.2
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: d56c9fbb864b5d24380f1e89a100cdeb, type: 3}
+      beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 4d346ad28497e36439db7dc0924f8122, type: 3}
+      beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 0
+    holdLastFrame: 0
+  - clipName: Block
+    frames:
+    - sprite: {fileID: 21300000, guid: b761a0ede3d047b4aa361816fb138f08, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: d266c8a968b25c04fa121b11ad6b7c3e, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: f91253eb51eac0542811b31e3685a6d3, type: 3}
+      beatLength: 0.2
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: cb5495184f40a4346a41028f43439d31, type: 3}
+      beatLength: 0.5
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 45077831bc891614e81b341ca27edb41, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 0
+    holdLastFrame: 0
+  - clipName: HeavyAttack
+    frames:
+    - sprite: {fileID: 21300000, guid: 2957615001128864abf8bb601ced3437, type: 3}
+      beatLength: 0.2
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 6151b60f52373d64a862764c5032736f, type: 3}
+      beatLength: 0.3
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 475134115b39571419f48a053d8efe0a, type: 3}
+      beatLength: 0.5
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: b7a3f05b681f82d43bf825f885fdbdef, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 4323674c46dc7554fba95279a0cd219e, type: 3}
+      beatLength: 0.8
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    - sprite: {fileID: 21300000, guid: 7b4971dd35fa9a944b4949bc0cd198d7, type: 3}
+      beatLength: 0.1
+      triggerWarning: 0
+      triggerAttack: 0
+      triggerOnce: 0
+      hasTriggered: 0
+    loop: 0
+    holdLastFrame: 0
   defaultClipName: Idle
   playDefaultOnStart: 1
 --- !u!114 &7180143402813813577
@@ -197,20 +351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bossId: BOSS_JOHN_WEAK
   bossName: John Weak
-  idleClipName: Idle
-  missClipName: Miss
   unlockedNormalAttackCount: 3
-  normalAttacks: []
-  guardAction:
-    actionId: 
-    displayName: 
-    animationClipName: 
-    actionPrefab: {fileID: 0}
-  heavyAttack:
-    actionId: 
-    displayName: 
-    animationClipName: 
-    actionPrefab: {fileID: 0}
 --- !u!1 &4727748565218457277
 GameObject:
   m_ObjectHideFlags: 0
