@@ -252,6 +252,20 @@ public class BattleManager : MonoBehaviour
             actionBackToMenu.action.performed += backToMenuHandler;
             actionBackToMenu.action.Disable(); // 平常不能按
         }
+
+        // 魔王動畫事件綁定
+        if (bossAnimator == null && bossData != null)
+        {
+            bossAnimator =
+                bossData.GetComponentInChildren<BeatSpriteAnimator>();
+        }
+
+        if (bossAnimator != null)
+        {
+            // 避免重複綁定
+            bossAnimator.OnFrameEvent -= HandleBossAnimationFrameEvent;
+            bossAnimator.OnFrameEvent += HandleBossAnimationFrameEvent;
+        }
     }
 
     private void OnDisable()
@@ -276,7 +290,14 @@ public class BattleManager : MonoBehaviour
         if (actionBackToMenu != null)
             actionBackToMenu.action.performed -= backToMenuHandler;
 
+        if (bossAnimator != null)
+        {
+            bossAnimator.OnFrameEvent -= HandleBossAnimationFrameEvent;
+        }
+
         FMODBeatListener2.OnGlobalBeat -= HandleBeatEffects; // ★ 新增
+
+
     }
 
     private void OnExitGamePerformed()
@@ -1159,6 +1180,50 @@ public class BattleManager : MonoBehaviour
         Debug.Log(
             "[Boss] Perfect！播放重擊動畫 HeavyAttack。"
         );
+    }
+
+    private void HandleBossAnimationFrameEvent(
+    BeatSpriteFrame frame)
+    {
+        if (frame == null)
+            return;
+
+        // 目前只監聽攻擊觸發幀
+        if (!frame.triggerAttack)
+            return;
+
+        if (bossAnimator == null)
+            return;
+
+        string currentClipName =
+            bossAnimator.GetCurrentClipName();
+
+        Debug.Log(
+            $"[Boss] 收到 triggerAttack 動畫事件，Clip={currentClipName}"
+        );
+
+        // 普通攻擊事件
+        if (currentClipName == "NormalAttack1" ||
+            currentClipName == "NormalAttack2" ||
+            currentClipName == "NormalAttack3" ||
+            currentClipName == "NormalAttack4")
+        {
+            Debug.Log(
+                $"[Boss] 普通攻擊命中時機：{currentClipName}"
+            );
+
+            return;
+        }
+
+        // 重擊事件
+        if (currentClipName == "HeavyAttack")
+        {
+            Debug.Log(
+                "[Boss] 重擊命中時機：HeavyAttack"
+            );
+
+            return;
+        }
     }
 
     private IEnumerator HandleWarriorAttack(TeamSlotInfo attacker, TeamSlotInfo target, int beatInCycle,int beatsPerMeasure, bool perfect)
