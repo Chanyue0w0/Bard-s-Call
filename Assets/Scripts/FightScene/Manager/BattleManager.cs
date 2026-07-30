@@ -673,8 +673,12 @@ public class BattleManager : MonoBehaviour
             bossNormalAttackIndex = 0;
         }
     }
-    private void HandleBossNormalAttackHit(string attackClipName)
+    private void HandleBossNormalAttackHit(
+    string attackClipName)
     {
+        // ============================================================
+        // 1. 確認是否存在待處理攻擊
+        // ============================================================
         if (!hasPendingBossAttack)
         {
             Debug.LogWarning(
@@ -685,23 +689,34 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
+        FMODBeatListener2.Judge attackJudge =
+            pendingBossAttackJudge;
+
+        // 防止同一段動畫重複 triggerAttack 時重複加分
         hasPendingBossAttack = false;
 
-        TeamSlotInfo target = FindFirstHero();
+        // ============================================================
+        // 2. 尋找首位勇者
+        // ============================================================
+        TeamSlotInfo target =
+            FindFirstHero();
 
         if (target == null || target.Actor == null)
         {
             Debug.Log(
-                $"[Boss] {attackClipName} 找不到首位勇者。"
+                $"[Boss] {attackClipName} 找不到首位勇者，" +
+                "本次不增加分數。"
             );
 
             return;
         }
 
+        // ============================================================
+        // 3. 檢查勇者是否正在格擋
+        // ============================================================
         HeroCombatState targetState =
             target.Actor.GetComponent<HeroCombatState>();
 
-        // Component 可能掛在 Actor 的父物件
         if (targetState == null)
         {
             targetState =
@@ -715,18 +730,58 @@ public class BattleManager : MonoBehaviour
         if (isTargetBlocking)
         {
             Debug.Log(
-                $"[Boss] {attackClipName} 被首位勇者格擋，無法得分。"
+                $"[Boss] {attackClipName} 被首位勇者 " +
+                $"{target.UnitName} 格擋，本次不增加分數。"
             );
 
             return;
         }
 
-        Debug.Log(
-            $"[Boss] {attackClipName} 成功命中首位勇者，" +
-            $"判定={pendingBossAttackJudge}，可以獲得分數。"
-        );
+        // ============================================================
+        // 4. 確認 ScoreManager
+        // ============================================================
+        if (ScoreManager.Instance == null)
+        {
+            Debug.LogWarning(
+                "[BattleManager] ScoreManager 尚未初始化，" +
+                "普通攻擊成功命中，但無法增加分數。"
+            );
 
-        // 下一步在此呼叫既有的加分方法
+            return;
+        }
+
+        // ============================================================
+        // 5. 取得目前 Combo
+        // ============================================================
+        int comboCount = 0;
+
+        FMODBeatListener2 listener =
+            FMODBeatListener2.Instance;
+
+        if (listener != null)
+        {
+            comboCount =
+                listener.GetComboCount();
+        }
+
+        // ============================================================
+        // 6. 增加普通攻擊分數
+        // ============================================================
+        int addedScore =
+            ScoreManager.Instance.AddScore(
+                attackJudge,
+                ScoreManager.ScoreActionType.NormalAttack,
+                comboCount
+            );
+
+        Debug.Log(
+            $"[Boss] {attackClipName} 成功命中 " +
+            $"{target.UnitName}，" +
+            $"判定={attackJudge}，" +
+            $"Combo={comboCount}，" +
+            $"增加={addedScore}，" +
+            $"總分={ScoreManager.Instance.CurrentScore}"
+        );
     }
     private void HandleBossBlockInput()
     {
@@ -883,6 +938,8 @@ public class BattleManager : MonoBehaviour
             Debug.Log(
                 $"[Boss] 普通攻擊命中時機：{currentClipName}"
             );
+
+            HandleBossNormalAttackHit(currentClipName);
 
             return;
         }

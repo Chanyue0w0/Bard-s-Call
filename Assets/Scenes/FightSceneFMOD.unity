@@ -379,6 +379,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 105473652}
   m_CullTransparentMesh: 1
+--- !u!1 &107527309
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 107527310}
+  - component: {fileID: 107527311}
+  m_Layer: 0
+  m_Name: ScoreManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &107527310
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107527309}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 398088045}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &107527311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107527309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9fd0bffeac8eb4eb65d1e8a1384415, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  perfectBaseScore: 100
+  greatBaseScore: 70
+  normalAttackMultiplier: 1
+  heavyAttackMultiplier: 1
+  blockMultiplier: 1
+  skillMultiplier: 1
+  feverMultiplier: 1
+  comboStep: 10
+  comboBonusPerStep: 0.1
+  maxComboMultiplier: 3
+  currentScore: 0
+  perfectCount: 0
+  greatCount: 0
 --- !u!1 &118123065
 GameObject:
   m_ObjectHideFlags: 0
@@ -2157,6 +2214,7 @@ Transform:
   - {fileID: 1485250902}
   - {fileID: 43713145}
   - {fileID: 120396313}
+  - {fileID: 107527310}
   - {fileID: 577140060}
   - {fileID: 322008488}
   - {fileID: 1671276746}
