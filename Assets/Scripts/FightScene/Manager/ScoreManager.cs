@@ -324,6 +324,31 @@ public class ScoreManager : MonoBehaviour
         );
     }
 
+    public int SubtractScore(int amount)
+    {
+        amount = Mathf.Max(
+            0,
+            amount
+        );
+
+        int previousScore =
+            currentScore;
+
+        currentScore =
+            Mathf.Max(
+                0,
+                currentScore - amount
+            );
+
+        int actualDeducted =
+            previousScore - currentScore;
+
+        OnScoreChanged?.Invoke(
+            currentScore
+        );
+
+        return actualDeducted;
+    }
     // ============================================================
     // ­«¸m
     // ============================================================

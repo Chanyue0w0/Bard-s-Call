@@ -229,24 +229,29 @@ MonoBehaviour:
   MP: 0
   OriginAtk: 100
   Atk: 100
+  NormalAttackIntervalBeats: 6
+  NormalAttackBeatOffset: 4
   NormalAttacks:
   - SkillName: ElectricStrike
-    SkillPrefab: {fileID: 1352887301582631612, guid: 912b44e80aaba76429c6ec2b72925062, type: 3}
+    SkillPrefab: {fileID: 8714966469225416086, guid: b262996d3dc43634485ee3251a0d0107, type: 3}
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0
+    ScoreDamage: 30
   HeavyAttack:
     SkillName: UltLightenungStrike
     SkillPrefab: {fileID: 7438099246538764141, guid: cdc428e0f62d2e944ac748ebd112d5c0, type: 3}
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0
+    ScoreDamage: 0
   Skills:
   - SkillName: UltLighteningStrike
     SkillPrefab: {fileID: 7438099246538764141, guid: cdc428e0f62d2e944ac748ebd112d5c0, type: 3}
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0
+    ScoreDamage: 0
   ShieldEffectPrefab: {fileID: 7125099269266668700, guid: 3797ab3f5e2aa6148869788f506a8635, type: 3}
 --- !u!114 &-9000765520436358034
 MonoBehaviour:
@@ -339,6 +344,11 @@ MonoBehaviour:
   jumpTime: 0.15
   shakeTime: 0.25
   shakeStrength: 0.3
+  hitTiltAngle: 30
+  hitBackDistance: 0.3
+  hitJumpHeight: 0.12
+  hitOutTime: 0.1
+  hitReturnTime: 0.18
 --- !u!114 &2249195658242142326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,7 +374,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08adcdbf9b7a3ff49b698fa21d9725c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isBlocking: 0
+  IsBlocking: 0
+  hitStunRemainingBeats: 0
 --- !u!1001 &747358080466750173
 PrefabInstance:
   m_ObjectHideFlags: 0

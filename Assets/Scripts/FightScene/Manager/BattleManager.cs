@@ -91,6 +91,9 @@ public class BattleManager : MonoBehaviour
     private bool hasPendingBossAttack = false;
     [Header("魔王普通攻擊命中爆炸特效")]
     [SerializeField] private GameObject fireExplosionPrefab;
+    [Header("勇者普通攻擊特效生成點設定")]
+    [SerializeField]
+    private Transform bossHeroAttackHitPoint;
 
     private FMODBeatListener2.Judge pendingBossAttackJudge;
 
@@ -320,6 +323,225 @@ public class BattleManager : MonoBehaviour
         BattleEffectManager.Instance.TickTauntBeats(); // 可選
         BattleEffectManager.Instance.TickHolyEffect();
 
+        // 先檢查本拍能否攻擊
+        HandleHeroAutoAttacks(beat);
+
+        // 本拍結束後再減少硬直拍數
+        TickHeroCombatStates();
+    }
+
+    private void HandleHeroAutoAttacks(int beat)
+    {
+        if (CTeamInfo == null)
+            return;
+
+        for (int i = 0;
+             i < CTeamInfo.Length;
+             i++)
+        {
+            TeamSlotInfo hero =
+                CTeamInfo[i];
+
+            if (hero == null ||
+                hero.Actor == null)
+            {
+                continue;
+            }
+
+            CharacterData characterData =
+                hero.Actor.GetComponent<CharacterData>();
+
+            if (characterData == null)
+            {
+                characterData =
+                    hero.Actor
+                        .GetComponentInChildren<CharacterData>();
+            }
+
+            if (characterData == null)
+            {
+                Debug.LogWarning(
+                    $"[BattleManager] 勇者位置 {i} " +
+                    "找不到 CharacterData。"
+                );
+                continue;
+            }
+
+            HeroCombatState combatState =
+                hero.Actor.GetComponent<HeroCombatState>();
+
+            if (combatState == null)
+            {
+                combatState =
+                    hero.Actor
+                        .GetComponentInChildren<HeroCombatState>();
+            }
+
+            if (combatState == null)
+            {
+                Debug.LogWarning(
+                    $"[BattleManager] 勇者位置 {i} " +
+                    "找不到 HeroCombatState。"
+                );
+                continue;
+            }
+
+            if (!combatState.CanUseNormalAttack(
+                    characterData,
+                    beat))
+            {
+                continue;
+            }
+
+            combatState.MarkNormalAttackUsed(
+                beat
+            );
+
+            ExecuteHeroNormalAttack(
+                characterData,
+                i
+            );
+        }
+    }
+
+    private void ExecuteHeroNormalAttack(CharacterData characterData,int heroIndex)
+    {
+        SkillInfo normalAttack =
+            characterData.MainNormal;
+
+        if (normalAttack == null)
+        {
+            Debug.LogWarning(
+                $"[BattleManager] " +
+                $"{characterData.CharacterName} " +
+                "沒有設定普通攻擊。"
+            );
+            return;
+        }
+
+        GameObject heroActor = CTeamInfo[heroIndex].Actor;
+
+        if (heroActor != null)
+        {
+            PressedAnimation pressedAnimation =
+                heroActor.GetComponent<PressedAnimation>();
+
+            if (pressedAnimation == null)
+            {
+                pressedAnimation =
+                    heroActor.GetComponentInChildren<PressedAnimation>();
+            }
+
+            if (pressedAnimation != null)
+            {
+                pressedAnimation.PlayAttack();
+            }
+        }
+
+        // ----------------------------------------
+        // 1. 生成普通攻擊特效
+        // ----------------------------------------
+        if (normalAttack.SkillPrefab != null)
+        {
+            Vector3 spawnPosition =
+                bossHeroAttackHitPoint != null
+                    ? bossHeroAttackHitPoint.position
+                    : bossData.transform.position;
+
+            Quaternion spawnRotation =
+                bossHeroAttackHitPoint != null
+                    ? bossHeroAttackHitPoint.rotation
+                    : Quaternion.identity;
+
+            Instantiate(
+                normalAttack.SkillPrefab,
+                spawnPosition,
+                spawnRotation
+            );
+        }
+
+        // ----------------------------------------
+        // 2. 扣除分數
+        // ----------------------------------------
+        int scoreDamage =
+            Mathf.Max(
+                0,
+                normalAttack.ScoreDamage
+            );
+
+        int actualDeducted = 0;
+
+        if (ScoreManager.Instance != null)
+        {
+            actualDeducted =
+                ScoreManager.Instance.SubtractScore(
+                    scoreDamage
+                );
+        }
+
+        Debug.Log(
+            $"[Hero Normal Attack] " +
+            $"HeroIndex={heroIndex}，" +
+            $"角色={characterData.CharacterName}，" +
+            $"攻擊={normalAttack.SkillName}，" +
+            $"設定扣分={scoreDamage}，" +
+            $"實際扣分={actualDeducted}"
+        );
+    }
+
+    private void PlayHeroHitAnimation(GameObject heroActor)
+    {
+        if (heroActor == null)
+            return;
+
+        PressedAnimation pressedAnimation =
+            heroActor.GetComponent<PressedAnimation>();
+
+        if (pressedAnimation == null)
+        {
+            pressedAnimation =
+                heroActor.GetComponentInChildren<PressedAnimation>();
+        }
+
+        if (pressedAnimation != null)
+        {
+            pressedAnimation.PlayHit();
+        }
+    }
+
+    private void TickHeroCombatStates()
+    {
+        if (CTeamInfo == null)
+            return;
+
+        for (int i = 0;
+             i < CTeamInfo.Length;
+             i++)
+        {
+            TeamSlotInfo hero =
+                CTeamInfo[i];
+
+            if (hero == null ||
+                hero.Actor == null)
+            {
+                continue;
+            }
+
+            HeroCombatState combatState =
+                hero.Actor.GetComponent<HeroCombatState>();
+
+            if (combatState == null)
+            {
+                combatState =
+                    hero.Actor
+                        .GetComponentInChildren<HeroCombatState>();
+            }
+
+            if (combatState == null)
+                continue;
+
+            combatState.TickBeat();
+        }
     }
 
     //進入Fever輸入狀態
@@ -677,6 +899,23 @@ public class BattleManager : MonoBehaviour
     }
     private void HandleBossNormalAttackHit(string attackClipName)
     {
+        for (int i = 0; i < CTeamInfo.Length;i++)
+        {
+            TeamSlotInfo hero =
+                CTeamInfo[i];
+
+            if (hero == null ||
+                hero.Actor == null)
+            {
+                continue;
+            }
+
+            // 只播放受傷動畫，
+            // 不進入硬直，也不影響普通攻擊時程。
+            PlayHeroHitAnimation(
+                hero.Actor
+            );
+        }
         // ============================================================
         // 1. 確認是否存在待處理攻擊
         // ============================================================

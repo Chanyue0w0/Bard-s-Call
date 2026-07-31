@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83aebeb4487f9af4587e28f850d85599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CharacterName: 
+  CharacterName: Paladin
   ClassType: 5
   MaxHP: 180
   HP: 180
@@ -161,24 +161,29 @@ MonoBehaviour:
   MP: 0
   OriginAtk: 10
   Atk: 10
+  NormalAttackIntervalBeats: 4
+  NormalAttackBeatOffset: 2
   NormalAttacks:
   - SkillName: ShieldStrike
     SkillPrefab: {fileID: 7644720516478480896, guid: 0f8383c82c3cff5428ebe196fd76b16e, type: 3}
     MPCost: 0
-    DamageMultiplier: 10
-    FixedDamage: 1
+    DamageMultiplier: 0
+    FixedDamage: 0
+    ScoreDamage: 20
   HeavyAttack:
     SkillName: HolyFire
     SkillPrefab: {fileID: 5937286420890160073, guid: 79552c7774d52584f9d4ae4dc5c5d850, type: 3}
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0
+    ScoreDamage: 0
   Skills:
   - SkillName: HolyStrike
     SkillPrefab: {fileID: 4588907083462827215, guid: b8469d0c03f33b940bbd55aca467cc25, type: 3}
     MPCost: 0
     DamageMultiplier: 0
     FixedDamage: 0
+    ScoreDamage: 0
   ShieldEffectPrefab: {fileID: 0}
 --- !u!95 &1643294760858356208
 Animator:
@@ -255,6 +260,11 @@ MonoBehaviour:
   jumpTime: 0.15
   shakeTime: 0.25
   shakeStrength: 0.3
+  hitTiltAngle: 30
+  hitBackDistance: 0.3
+  hitJumpHeight: 0.12
+  hitOutTime: 0.1
+  hitReturnTime: 0.18
 --- !u!114 &5022622408447773404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,7 +290,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08adcdbf9b7a3ff49b698fa21d9725c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isBlocking: 0
+  IsBlocking: 0
+  hitStunRemainingBeats: 0
 --- !u!1 &4903006136213224238
 GameObject:
   m_ObjectHideFlags: 0
