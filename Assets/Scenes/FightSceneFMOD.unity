@@ -661,6 +661,17 @@ MonoBehaviour:
   - {fileID: 6893444322088287586, guid: 81cbb873ef8719b469984f40920726f2, type: 3}
   - {fileID: 2972361428040272383, guid: 3ff9132da6df1be49947cce65eef105b, type: 3}
   - {fileID: 5615004131614203636, guid: 0db121ee0382b944f98a82ac64b1bdf4, type: 3}
+  scoreDigitPrefabs:
+  - {fileID: 7994987615773369376, guid: 05a522f13dca3da4491b3a809f3f3252, type: 3}
+  - {fileID: 6151751985155876418, guid: 129bc2d0b3fda7d47bde93109bccf994, type: 3}
+  - {fileID: 4590768582758019746, guid: 91bd590d32a03ea408f466c3bdc66ce9, type: 3}
+  - {fileID: 1864826971215131944, guid: 6aa15680d44b24f47b638aab90c0b822, type: 3}
+  - {fileID: 1203754579838979934, guid: 1fa639bb2b2aeac41bb5cb0780ec0185, type: 3}
+  - {fileID: 3250705208694197283, guid: 75970a56cd4ca604c80cd8c3c82ca5e5, type: 3}
+  - {fileID: 6195941735277648095, guid: 7497aa67a4dc86b4193d3bd7f11639ca, type: 3}
+  - {fileID: 6893444322088287586, guid: 2d69ba261eca6124091afaf286bd9012, type: 3}
+  - {fileID: 2972361428040272383, guid: 632dbcaab7ab62e46bcfd710a22e5c62, type: 3}
+  - {fileID: 5615004131614203636, guid: afbf3610f409b1a4f8b3dca07664eb60, type: 3}
   prewarmPerDigit: 8
   digitSpacing: 0.8
   groupOffsetY: 3

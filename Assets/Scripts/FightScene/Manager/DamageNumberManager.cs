@@ -15,6 +15,9 @@ public class DamageNumberManager : MonoBehaviour
     [Header("數字粒子 Prefab (格擋用 0~9)")]  // ★ 新增：格擋數字
     public ParticleSystem[] blockedDigitPrefabs = new ParticleSystem[10];
 
+    [Header("數字粒子 Prefab（黃色加分版 0~9）")] 
+    public ParticleSystem[] scoreDigitPrefabs = new ParticleSystem[10];
+
     // 格擋專用池
     [Header("預熱設定")]
     public int prewarmPerDigit = 8;
@@ -35,6 +38,7 @@ public class DamageNumberManager : MonoBehaviour
     private readonly Dictionary<int, Queue<ParticleSystem>> _damagePool = new();
     private readonly Dictionary<int, Queue<ParticleSystem>> _healPool = new();
     private readonly Dictionary<int, Queue<ParticleSystem>> _blockedPool = new();
+    private readonly Dictionary<int, Queue<ParticleSystem>> _scorePool = new();
     private Transform _poolRoot;
 
     private void Awake()
@@ -49,6 +53,7 @@ public class DamageNumberManager : MonoBehaviour
         PrewarmPool(digitPrefabs, _damagePool);
         PrewarmPool(healDigitPrefabs, _healPool);
         PrewarmPool(blockedDigitPrefabs, _blockedPool);
+        PrewarmPool(scoreDigitPrefabs,_scorePool);
     }
 
     private void PrewarmPool(ParticleSystem[] prefabs, Dictionary<int, Queue<ParticleSystem>> pool)
@@ -129,7 +134,13 @@ public class DamageNumberManager : MonoBehaviour
     {
         ShowNumber(target, value, _blockedPool, blockedDigitPrefabs, "BlockedNumberGroup");
     }
-
+    // ===============================
+    // 顯示加分數字（黃色）
+    // ===============================
+    public void ShowScore(Transform target,int value)
+    {
+        ShowNumber(target,value,_scorePool,scoreDigitPrefabs,"ScoreNumberGroup");
+    }
 
     // 共用邏輯：生成數字群組
     private void ShowNumber(Transform target, int value,

@@ -479,6 +479,10 @@ public class BattleManager : MonoBehaviour
                 );
         }
 
+        if (actualDeducted > 0 && DamageNumberManager.Instance != null && bossData != null)
+        {
+            DamageNumberManager.Instance.ShowDamage(bossData.transform, actualDeducted);
+        }
         Debug.Log(
             $"[Hero Normal Attack] " +
             $"HeroIndex={heroIndex}，" +
@@ -1013,6 +1017,10 @@ public class BattleManager : MonoBehaviour
                 ScoreManager.ScoreActionType.NormalAttack,
                 comboCount
             );
+        if (addedScore > 0 && DamageNumberManager.Instance != null && target.Actor != null)
+        {
+            DamageNumberManager.Instance.ShowScore(target.Actor.transform, addedScore);
+        }
 
         Debug.Log(
             $"[Boss] {attackClipName} 成功命中 " +
@@ -1204,6 +1212,14 @@ public class BattleManager : MonoBehaviour
                 ScoreManager.ScoreActionType.Block,
                 comboCount
             );
+
+        if (addedScore > 0 && DamageNumberManager.Instance != null)
+        {
+            DamageNumberManager.Instance.ShowScore(
+                DamageNumberManager.Instance.transform,
+                addedScore
+            );
+        }
 
         Debug.Log(
             $"[Boss] {judge} Block 成功，" +
