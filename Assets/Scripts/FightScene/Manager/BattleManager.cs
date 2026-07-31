@@ -89,6 +89,8 @@ public class BattleManager : MonoBehaviour
     };
     [Header("魔王攻擊待處理資料")]
     private bool hasPendingBossAttack = false;
+    [Header("魔王普通攻擊命中爆炸特效")]
+    [SerializeField] private GameObject fireExplosionPrefab;
 
     private FMODBeatListener2.Judge pendingBossAttackJudge;
 
@@ -820,6 +822,26 @@ public class BattleManager : MonoBehaviour
             bossData.transform.rotation
         );
     }
+    private void SpawnFireExplosionOnAllHeroes()
+    {
+        for (int i = 0; i < CTeamInfo.Length; i++)
+        {
+            TeamSlotInfo hero = CTeamInfo[i];
+
+            if (hero == null || hero.Actor == null)
+                continue;
+
+            Vector3 spawnPosition =
+                    hero.Actor.transform.position +
+                    new Vector3(0f, 0.5f, 0f);
+
+            Instantiate(
+                fireExplosionPrefab,
+                spawnPosition,
+                Quaternion.identity
+            );
+        }
+    }
     private void HandleBossBlockInput()
     {
         // ============================================================
@@ -1062,10 +1084,15 @@ public class BattleManager : MonoBehaviour
                 $"[Boss] 普通攻擊命中時機：{currentClipName}"
             );
 
+            // 魔王本體的攻擊特效
             SpawnBossNormalAttackVfx(
                 currentClipName
             );
 
+            // 三位勇者位置生成爆炸
+            SpawnFireExplosionOnAllHeroes();
+
+            // 執行命中與得分判定
             HandleBossNormalAttackHit(
                 currentClipName
             );
