@@ -33,6 +33,42 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "UpDance",
+                    "type": "Button",
+                    "id": "c3d9d64d-bf0a-4af7-b155-52f9013646c7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DownDance",
+                    "type": "Button",
+                    "id": "06975688-3671-4ae1-bb6a-ba5ca13de8dd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightDance",
+                    "type": "Button",
+                    "id": "a0618d22-8e76-48bf-99e4-0c8c4a310f67",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftDance",
+                    "type": "Button",
+                    "id": "60450a51-f749-4084-9454-c2333728a91d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "FeverUlt",
                     "type": "Button",
                     "id": "a0bbd5bf-f90d-468b-bc36-7037fd24bd22",
@@ -133,6 +169,94 @@
                     "processors": "",
                     "groups": "FightControlScheme",
                     "action": "Character3Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "64efe37a-5f7b-472c-a8cd-4a37d61da6aa",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "UpDance",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "562a0b63-03b6-40c0-a6d1-ed2f27f816f4",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "UpDance",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f54e3dbd-a863-4a1c-9adb-2f0cb78d090d",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "DownDance",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3faf59a2-9231-42b6-b35c-349cc65dc94c",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "DownDance",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e4258e7a-4814-47fb-878d-cf799ebbb75e",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "RightDance",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e99d7938-82c6-41f3-8620-a83971023795",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "RightDance",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e5f4de69-c4a3-4de7-bb35-945c6d5fb96a",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "LeftDance",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2d90d514-87f6-4e6c-8cbd-e9f32512604c",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "FightControlScheme",
+                    "action": "LeftDance",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
