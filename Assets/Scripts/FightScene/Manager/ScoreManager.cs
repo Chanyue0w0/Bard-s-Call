@@ -367,6 +367,16 @@ public class ScoreManager : MonoBehaviour
         );
     }
 
+    public int AddDirectScore(int amount)
+    {
+        amount = Mathf.Max(0, amount);
+
+        currentScore += amount;
+        OnScoreChanged?.Invoke(currentScore);
+
+        return amount;
+    }
+
     // ============================================================
     // 測試用途
     // 可以在 Inspector 元件右上角選單執行

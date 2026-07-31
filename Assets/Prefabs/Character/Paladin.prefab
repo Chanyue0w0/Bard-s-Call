@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 20111623230443619}
   - component: {fileID: 5022622408447773404}
   - component: {fileID: 8913750459001544774}
+  - component: {fileID: 6315087742889178858}
   m_Layer: 7
   m_Name: Paladin
   m_TagString: Hero
@@ -292,6 +293,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsBlocking: 0
   hitStunRemainingBeats: 0
+--- !u!61 &6315087742889178858
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2912741584857405815}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 1.8461539}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0}
+    oldSize: {x: 4.6153846, y: 3.6923077}
+    newSize: {x: 9.36, y: 12.46}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 4.6153846, y: 3.6923077}
+  m_EdgeRadius: 0
 --- !u!1 &4903006136213224238
 GameObject:
   m_ObjectHideFlags: 0
