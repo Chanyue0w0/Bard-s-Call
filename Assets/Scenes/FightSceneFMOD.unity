@@ -6803,9 +6803,15 @@ MonoBehaviour:
   actionAttackP3: {fileID: 8643363546054971998, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionRotateLeft: {fileID: 677001074062244605, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionRotateRight: {fileID: -5368929452861908880, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
-  actionBlockP1: {fileID: -4214764935672719900, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionBlockP1: {fileID: 0}
   actionBlockP2: {fileID: 1523397817175261001, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionBlockP3: {fileID: -4770925364837056878, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionDanceUp: {fileID: 3404527858941908434, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionDanceDown: {fileID: 8296166740295799105, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionDanceLeft: {fileID: -2033373433034425967, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  actionDanceRight: {fileID: 4787005808751364094, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
+  meteorSkillPrefab: {fileID: 0}
+  meteorSkillSpawnPoint: {fileID: 0}
   actionRestart: {fileID: -8687757241320962947, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionNextLevel: {fileID: -7461535152041243241, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}
   actionBackToMenu: {fileID: -6272256624505798630, guid: 3cd4a754d66185f4aa4de56e7822a561, type: 3}

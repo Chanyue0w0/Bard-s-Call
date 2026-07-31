@@ -16,6 +16,13 @@ public class BattleManager : MonoBehaviour
         Player,
         Enemy
     }
+    private enum DanceDirection
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
 
     [System.Serializable]
     public enum UnitClass
@@ -106,6 +113,21 @@ public class BattleManager : MonoBehaviour
     public InputActionReference actionBlockP1;
     public InputActionReference actionBlockP2;
     public InputActionReference actionBlockP3;
+    [Header("舞蹈輸入")]
+    public InputActionReference actionDanceUp;
+    public InputActionReference actionDanceDown;
+    public InputActionReference actionDanceLeft;
+    public InputActionReference actionDanceRight;
+    [Header("Meteor Skill")]
+    [SerializeField] private GameObject meteorSkillPrefab;
+    [SerializeField] private Transform meteorSkillSpawnPoint;
+
+    private readonly List<DanceDirection> danceInputSequence = new List<DanceDirection>();
+
+    private System.Action<InputAction.CallbackContext> danceUpHandler;
+    private System.Action<InputAction.CallbackContext> danceDownHandler;
+    private System.Action<InputAction.CallbackContext> danceLeftHandler;
+    private System.Action<InputAction.CallbackContext> danceRightHandler;
 
     [Header("輸入 Win,LoseMenu （新 Input System）")]
     public InputActionReference actionRestart;
@@ -222,6 +244,11 @@ public class BattleManager : MonoBehaviour
         feverUltHandler = ctx => OnFeverUltimate();
         exitGameHandler = ctx => OnExitGamePerformed();
 
+        danceUpHandler = ctx => HandleDanceInput(DanceDirection.Up);
+        danceDownHandler = ctx => HandleDanceInput(DanceDirection.Down);
+        danceLeftHandler = ctx => HandleDanceInput(DanceDirection.Left);
+        danceRightHandler = ctx => HandleDanceInput(DanceDirection.Right);
+
         FMODBeatListener2.OnGlobalBeat += HandleBeatEffects; // ★ 新增
 
         if (actionAttackP1 != null) { actionAttackP1.action.started += attackP1Handler; actionAttackP1.action.Enable(); }
@@ -231,6 +258,11 @@ public class BattleManager : MonoBehaviour
         //if (actionBlockP2 != null) { actionBlockP2.action.started += blockP2Handler; actionBlockP2.action.Enable(); }
         //if (actionBlockP3 != null) { actionBlockP3.action.started += blockP3Handler; actionBlockP3.action.Enable(); }
         if (actionFeverUltimate != null) { actionFeverUltimate.action.started += feverUltHandler; actionFeverUltimate.action.Enable(); }
+
+        if (actionDanceUp != null) { actionDanceUp.action.started += danceUpHandler; actionDanceUp.action.Enable(); }
+        if (actionDanceDown != null) { actionDanceDown.action.started += danceDownHandler; actionDanceDown.action.Enable(); }
+        if (actionDanceLeft != null) { actionDanceLeft.action.started += danceLeftHandler; actionDanceLeft.action.Enable(); }
+        if (actionDanceRight != null) { actionDanceRight.action.started += danceRightHandler; actionDanceRight.action.Enable(); }
 
         if (actionExitGame != null)
         {
@@ -284,6 +316,12 @@ public class BattleManager : MonoBehaviour
         //if (actionBlockP1 != null) actionBlockP1.action.started -= blockP1Handler;
         //if (actionBlockP2 != null) actionBlockP2.action.started -= blockP2Handler;
         //if (actionBlockP3 != null) actionBlockP3.action.started -= blockP3Handler;
+
+        if (actionDanceUp != null) actionDanceUp.action.started -= danceUpHandler;
+        if (actionDanceDown != null) actionDanceDown.action.started -= danceDownHandler;
+        if (actionDanceLeft != null) actionDanceLeft.action.started -= danceLeftHandler;
+        if (actionDanceRight != null) actionDanceRight.action.started -= danceRightHandler;
+
         if (actionFeverUltimate != null) { actionFeverUltimate.action.started -= feverUltHandler;}
 
         if (actionExitGame != null)
@@ -297,6 +335,11 @@ public class BattleManager : MonoBehaviour
 
         if (actionBackToMenu != null)
             actionBackToMenu.action.performed -= backToMenuHandler;
+
+        if (actionDanceUp != null) actionDanceUp.action.Disable();
+        if (actionDanceDown != null) actionDanceDown.action.Disable();
+        if (actionDanceLeft != null) actionDanceLeft.action.Disable();
+        if (actionDanceRight != null) actionDanceRight.action.Disable();
 
         if (bossAnimator != null)
         {
@@ -315,6 +358,111 @@ public class BattleManager : MonoBehaviour
         ReturnToCampScene();
     }
 
+    private void HandleDanceInput(DanceDirection direction)
+    {
+        if (GlobalIndex.GameOver) return;
+        if (GlobalIndex.isTutorialPanelOpened) return;
+        if (isFeverInputMode) return;
+
+        if (bossData == null)
+        {
+            Debug.LogWarning("[BattleManager] 尚未指定 BossData，無法播放舞蹈動畫。");
+            return;
+        }
+
+        if (bossAnimator == null) bossAnimator = bossData.GetComponentInChildren<BeatSpriteAnimator>();
+
+        if (bossAnimator == null)
+        {
+            Debug.LogWarning("[BattleManager] 魔王物件中找不到 BeatSpriteAnimator。");
+            return;
+        }
+
+        PlayDanceAnimation(direction);
+        RegisterDanceInput(direction);
+    }
+
+    private void PlayDanceAnimation(DanceDirection direction)
+    {
+        string clipName = "";
+
+        switch (direction)
+        {
+            case DanceDirection.Up: clipName = "UpDance"; break;
+            case DanceDirection.Down: clipName = "DownDance"; break;
+            case DanceDirection.Left: clipName = "LeftDance"; break;
+            case DanceDirection.Right: clipName = "RightDance"; break;
+        }
+
+        bossAnimator.Play(clipName, true);
+
+        if (bossAnimator.GetCurrentClipName() != clipName)
+        {
+            Debug.LogWarning($"[BattleManager] 找不到舞蹈動畫 Clip：{clipName}");
+            return;
+        }
+
+        Debug.Log($"[Dance] 播放動畫：{clipName}");
+    }
+
+    private void RegisterDanceInput(DanceDirection direction)
+    {
+        DanceDirection[] shakingCommand =
+        {
+        DanceDirection.Up,
+        DanceDirection.Down,
+        DanceDirection.Left,
+        DanceDirection.Right
+    };
+
+        int expectedIndex = danceInputSequence.Count;
+
+        if (direction == shakingCommand[expectedIndex])
+        {
+            danceInputSequence.Add(direction);
+            Debug.Log($"[Dance] 指令正確：{direction}，進度={danceInputSequence.Count}/4");
+        }
+        else
+        {
+            danceInputSequence.Clear();
+
+            if (direction == DanceDirection.Up) danceInputSequence.Add(direction);
+
+            Debug.Log($"[Dance] 指令錯誤，重新開始。當前進度={danceInputSequence.Count}/4");
+        }
+
+        if (danceInputSequence.Count < 4) return;
+
+        danceInputSequence.Clear();
+        ExecuteShakingSkill();
+    }
+
+    private void ExecuteShakingSkill()
+    {
+        const string skillClipName = "ShakingSkill";
+
+        bossAnimator.Play(skillClipName, true);
+
+        if (bossAnimator.GetCurrentClipName() != skillClipName)
+        {
+            Debug.LogWarning($"[BattleManager] 找不到技能動畫 Clip：{skillClipName}");
+            return;
+        }
+
+        if (meteorSkillPrefab != null)
+        {
+            Vector3 spawnPosition = meteorSkillSpawnPoint != null ? meteorSkillSpawnPoint.position : bossData.transform.position;
+            Quaternion spawnRotation = meteorSkillSpawnPoint != null ? meteorSkillSpawnPoint.rotation : Quaternion.identity;
+
+            Instantiate(meteorSkillPrefab, spawnPosition, spawnRotation);
+        }
+        else
+        {
+            Debug.LogWarning("[BattleManager] 尚未指定 Meteor Skill Prefab。");
+        }
+
+        Debug.Log("[Dance] 成功輸入 Up、Down、Left、Right，施放 ShakingSkill 與 Meteor！");
+    }
 
     //聆聽Beat，提供每拍效果偵測
     private void HandleBeatEffects(int beat)
